@@ -90,6 +90,18 @@ Thus that prior is rejected for every
 stem:[C_{NR}<{stage1-critical-cnr}].  The `score_power=0.5` and
 `score_power=1.0` thresholds are not rejected even at stem:[C_{NR}=0].
 
+=== Robustness grid
+
+The analytical frontier can be read directly from the following generated
+table.  The grid is illustrative; only the analytical critical value defines
+the boundary.
+
+.Stage-1 lower bound as unresolved frame-incompatible final-return filers increase
+[%header,format=csv]
+|===
+include::{docdir}/data/stage1_frontier_table.csv[]
+|===
+
 This is the paper's stage-1 identification result.  It does not require a point
 estimate of stem:[C_{NR}], and it does not imply that the unconditional filing
 rate is point identified.

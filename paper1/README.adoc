@@ -11,8 +11,10 @@ available for redistribution/reproduction.
 
 [source,shell]
 ----
-asciidoctor paper1/index.adoc
+python paper1/scripts/generate_stage1_attributes.py --check
+python paper1/scripts/generate_frontier_table.py --check
 python paper1/scripts/validate_claim_registry.py
+asciidoctor paper1/index.adoc
 ----
 
 == Authority order

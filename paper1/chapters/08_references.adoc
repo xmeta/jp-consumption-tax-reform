@@ -1,0 +1,34 @@
+[bibliography]
+== References
+
+- [[[manski2003]]] Manski, Charles F. 2003. _Partial Identification of Probability Distributions_. New York: Springer. DOI: 10.1007/b97478.
+
+- [[[tamer2010]]] Tamer, Elie. 2010. “Partial Identification in Econometrics.” _Annual Review of Economics_ 2: 167–195. DOI: 10.1146/annurev.economics.050708.143401.
+
+- [[[chernozhukov-hong-tamer2007]]] Chernozhukov, Victor, Han Hong, and Elie Tamer. 2007. “Estimation and Confidence Regions for Parameter Sets in Econometric Models.” _Econometrica_ 75(5): 1243–1284. DOI: 10.1111/j.1468-0262.2007.00794.x.
+
+- [[[kline-tamer2023]]] Kline, Brendan, and Elie Tamer. 2023. “Recent Developments in Partial Identification.” _Annual Review of Economics_ 15: 125–150. DOI: 10.1146/annurev-economics-051520-021124.
+
+- [[[saez-slemrod-giertz2012]]] Saez, Emmanuel, Joel Slemrod, and Seth H. Giertz. 2012. “The Elasticity of Taxable Income with Respect to Marginal Tax Rates: A Critical Review.” _Journal of Economic Literature_ 50(1): 3–50. DOI: 10.1257/jel.50.1.3.
+
+- [[[bourguignon-spadaro2006]]] Bourguignon, François, and Amedeo Spadaro. 2006. “Microsimulation as a Tool for Evaluating Redistribution Policies.” _Journal of Economic Inequality_ 4(1): 77–106. DOI: 10.1007/s10888-005-9012-6.
+
+- [[[sutherland-figari2013]]] Sutherland, Holly, and Francesco Figari. 2013. “EUROMOD: The European Union Tax-Benefit Microsimulation Model.” _International Journal of Microsimulation_ 6(1): 4–26. DOI: 10.34196/ijm.00075.
+
+- [[[ohno2023]]] Ohno, Taro. 2023. “Development of Microsimulation and Burden Structure of Personal Income Taxation.” _Public Policy Review_ 19(4): 1–38. DOI: 10.57520/prippr.19-4-2.
+
+== Official statistical sources
+
+* Statistics Bureau of Japan. 2024. _National Survey of Family Income, Consumption and Wealth: Sample Design_. https://www.stat.go.jp/data/zenkokukakei/2024/pdf/hyohon2024.pdf
+
+* Statistics Bureau of Japan. 2020. _Population Census_. https://www.stat.go.jp/data/kokusei/2020/
+
+* National Tax Agency. FY2024. _Annual Statistics Report_. Table 2-1(1), self-assessment income tax. https://www.nta.go.jp/publication/statistics/kokuzeicho/r06/R06.pdf
+
+* Statistics Bureau of Japan. 2024. _Report on Internal Migration in Japan Derived from the Basic Resident Registration_. https://www.stat.go.jp/data/idou/2024np/jissu/pdf/gaiyou.pdf
+
+* Ministry of Health, Labour and Welfare. 2024. _Vital Statistics of Japan, Final Data_. https://www.mhlw.go.jp/toukei/saikin/hw/jinkou/kakutei24/
+
+* Ishikawa Prefecture. 2020. _Population Census Summary_. https://toukei.pref.ishikawa.lg.jp/dl/4461/R2census_jinkou.pdf
+
+* National Tax Agency. FY2024. _Status of Information Exchange under Tax Treaties_. https://www.nta.go.jp/information/release/pdf/0026001-016.pdf
