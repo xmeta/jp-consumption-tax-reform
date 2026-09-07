@@ -1,0 +1,52 @@
+= F71561 Stage-1 Filing Participation: Population-Overlap Diagnostic
+:revdate: 2026-09-08
+
+== Result
+
+This module sharpens the previously unresolved first-stage filing-participation problem without promoting it to an identified result.
+
+Using only official aggregate population counts, the conditional Fréchet-style overlap construction gives:
+
+* conservative F71561 mother-population person lower bound: `121,419,541`
+* conservative domestic out-of-mother upper bound: `4,726,558`
+* conditional return-filer overlap lower bound: `18,635,442`
+* candidate tax-unit upper bound: `126,146,099`
+* conditional stage-1 filing-rate lower bound: `14.7729%`
+
+The recovered V6 threshold for `score_power=2.0` is 2.20%. Under exact population-universe correspondence, the conditional lower bound is therefore above that threshold. Erasing this rejection would require at least `15,860,228` additional NTA filer records that are not represented by the domestic frame assumptions used here.
+
+== Why this is still conditional
+
+The result MUST NOT be labelled a formal identified lower bound yet.
+
+Two bridge conditions remain open:
+
+. the 2024 NTA filing-person count must be reconciled with the F71561 domestic mother-population universe, including non-resident returns, quasi-final returns/deaths, and other timing/population mismatches;
+. the broad F71561-compatible candidate-tax-unit definition must be shown to contain every in-frame return filer used in the overlap numerator.
+
+Until those checks are closed, `income_tax = NOT_READY` remains unchanged.
+
+== Construction
+
+The 2024 National Survey of Family Income, Consumption and Wealth sample design states that its mother population uses 2020 Census results reorganized to 2024 municipality boundaries, excludes Okunoto from the mother-population estimate, includes ordinary two-or-more-person households, and defines the single-person mother population by removing students from one-person general households.
+
+Table 4 reports `21,142,885` one-person general households, `602,771` students, and `20,540,114` included single-person households.
+
+For a deliberately conservative geographic adjustment, this diagnostic subtracts the entire 2020 Ishikawa population (`1,132,526`) from the nationwide two-plus general-household person count rather than trying to estimate only the four excluded Okunoto municipalities.
+
+The denominator is bounded above by the entire 2020 Census population (`126,146,099`), not by a fitted pseudo-filer count.
+
+== Sources
+
+* Statistics Bureau of Japan, 2024 National Survey of Family Income, Consumption and Wealth, sample-design document, Table 4.
+* Statistics Bureau of Japan, 2020 Population Census / Japan Statistical Yearbook.
+* National Tax Agency, 2024 self-assessment income-tax statistics (`23,362` thousand return filers).
+* Recovered V6 stage-1 threshold diagnostic for `Amax`.
+
+== Reproduction
+
+[source,shell]
+----
+python research/stage1_filing_bound/46_income_tax_stage1_population_overlap.py
+python research/stage1_filing_bound/test_stage1_population_overlap.py
+----

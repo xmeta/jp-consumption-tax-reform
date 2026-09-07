@@ -1,0 +1,10 @@
+name,value,unit,role,source,source_note
+nta_return_filers_2024,23362000,persons,numerator,National Tax Agency 2024 self-assessment income-tax statistics,"Exact published count: 23,362 thousand"
+census_total_population_2020,126146099,persons,universe_upper,Statistics Bureau 2020 Population Census,"Conservative upper bound on F71561-compatible candidate tax units"
+census_general_household_persons_2020,123162995,persons,frame_component,Statistics Bureau 2020 Population Census,"Persons in private/general households"
+census_single_households_2020,21151042,persons,frame_component,Statistics Bureau 2020 Population Census,"Single-person households; one person per household"
+f71561_single_mother_households_2024_design,20540114,persons,frame_component,Statistics Bureau 2024 NSFCW sample design Table 4,"2020 Census frame reorganized to 2024 municipalities; excludes student singles and Okunoto"
+ishikawa_total_population_2020,1132526,persons,geographic_exclusion_upper,Statistics Bureau 2020 Population Census,"Deliberately overbounds the four excluded Okunoto municipalities by all Ishikawa residents"
+threshold_score_power_0p5,0.8271,share,prior_threshold,Recovered V6 stage-1 threshold diagnostic,"Amax for score_power=0.5"
+threshold_score_power_1p0,0.2668,share,prior_threshold,Recovered V6 stage-1 threshold diagnostic,"Amax for score_power=1.0"
+threshold_score_power_2p0,0.0220,share,prior_threshold,Recovered V6 stage-1 threshold diagnostic,"Amax for score_power=2.0"
