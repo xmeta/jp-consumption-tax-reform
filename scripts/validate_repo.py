@@ -1,0 +1,36 @@
+#!/usr/bin/env python3
+from pathlib import Path
+import re
+import sys
+
+ROOT = Path(__file__).resolve().parents[1]
+required = [
+    ROOT / "README.adoc",
+    ROOT / "STATUS.adoc",
+    ROOT / "PACKAGE_INTEGRITY.adoc",
+    ROOT / "docs/objective_function.adoc",
+    ROOT / "docs/identification.adoc",
+    ROOT / "docs/reproducibility.adoc",
+]
+missing = [str(p.relative_to(ROOT)) for p in required if not p.exists()]
+status_path = ROOT / "STATUS.adoc"
+status = status_path.read_text(encoding="utf-8") if status_path.exists() else ""
+errors = []
+if missing:
+    errors.append("missing required files: " + ", ".join(missing))
+for token in [
+    "Income-tax behavioral response |NOT_READY",
+    "Pseudo-filer statutory MTR |SENSITIVITY_ONLY",
+    "repository_migration |PARTIAL",
+]:
+    if token not in status:
+        errors.append("required status marker missing: " + token)
+
+if re.search(r"true statutory MTR distribution.*identified", status, re.I):
+    errors.append("forbidden overclaim detected")
+
+if errors:
+    print("\n".join("ERROR: " + e for e in errors))
+    sys.exit(1)
+
+print("repository scientific-state validation: OK")

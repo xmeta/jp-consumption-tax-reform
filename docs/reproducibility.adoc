@@ -1,0 +1,22 @@
+= 再現性・完全性契約
+:revdate: 2026-09-08
+
+== 移行規則
+
+旧パッケージに存在したという記録だけでは、Git上の成果物の存在を保証しない。
+完全移植までは `repository_migration=PARTIAL` とする。
+
+== 完全移植の受入条件
+
+. 44本の研究スクリプトとvalidatorの実体をGitへ収容する。
+. 全入力データに出典・取得日・変換履歴を持たせる。
+. fresh cloneからheartbeat/full-runを実行する。
+. validatorが成功する。
+. file manifestを生成し、SHA-256を再計算する。
+. 再計算後にworking treeがcleanである。
+. 上記をCIでも検証する。
+
+== 科学的完全性
+
+出力ファイルだけが存在しても、その生成スクリプト・入力・バージョンが欠ける場合は再現済みと判定しない。
+外部検証のpoint agreementと統計的coverageを区別する。

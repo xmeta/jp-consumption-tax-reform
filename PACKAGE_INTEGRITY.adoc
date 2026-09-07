@@ -1,0 +1,21 @@
+= Package Integrity
+:revdate: 2026-09-08
+
+== Current state
+
+`repository_migration=PARTIAL`.
+
+この記録は旧パッケージの44研究スクリプト＋validatorが新Gitリポジトリへ完全移植済みであることを意味しない。
+Git上に存在しmanifest検証を通過したファイルだけを現在の再現可能成果物として扱う。
+
+== Integrity contract
+
+* `MANIFEST.sha256` はGit管理対象ファイル（manifest自身を除く）のSHA-256を記録する。
+* `scripts/generate_manifest.py` がmanifestを決定的に生成する。
+* `scripts/check_manifest.py` が欠落・追加・内容差異を検証する。
+* CIは科学状態validatorとmanifest検証の双方を通過しなければならない。
+
+== Migration completion gate
+
+旧44スクリプト＋validatorを復元し、fresh cloneでfull-run、validator、manifest再生成・再検証が全て成功した時だけ
+`repository_migration=COMPLETE` へ変更できる。

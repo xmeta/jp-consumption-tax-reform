@@ -1,0 +1,29 @@
+= Research Status
+:revdate: 2026-09-08
+
+== Migration
+
+[cols="1,2"]
+|===
+|repository_migration |PARTIAL
+|prior_package |44 research scripts + validator
+|current_authority |このGitリポジトリに実在し、検証されたファイルのみ
+|===
+
+== Identification status
+
+[cols="2,1,3"]
+|===
+|Component |Status |Permitted interpretation
+|Income-tax behavioral response |NOT_READY |政策最適化の確定入力にしない
+|Income-tax liability / surtax |READY_STATIC_ONLY |静学的税額・帰着の範囲のみ
+|Pseudo-filer statutory MTR |SENSITIVITY_ONLY |ETI等の感度分析入力のみ
+|F71561-compatible return-filing rate |FIRST_STAGE_NOT_READY |次の主要識別課題
+|NTA Table 3-1 external holdout |POINT_VALIDATION_PASSED |5/5主要区分0.1pp以内、最大0.08444pp。統計的CIではない
+|===
+
+== Non-claims
+
+* pseudo-filer構成から真の申告者MTR分布を識別したとは主張しない。
+* 外部ホールドアウト一致を統計的信頼区間や因果識別と読み替えない。
+* モデルシミュレーションを政府公式の実質GDP予測とは呼ばない。
