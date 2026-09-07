@@ -1,19 +1,15 @@
 #!/usr/bin/env python3
-"""Population-overlap diagnostic for the F71561 stage-1 filing bridge.
+"""Nominal population-overlap benchmark for the F71561 stage-1 bridge.
 
-This script does NOT declare the filing rate point-identified.  It computes a
-conservative overlap bound conditional on two unresolved bridge conditions:
+The 2024 survey mother-population counts are estimated from the 2020 Census
+frame.  They are not treated as a literal lower bound on the set of persons
+present in 2024.
 
-1. NTA 2024 return-filer persons must be mapped to the same domestic-person
-   universe as the F71561 mother population.  Script 47 bounds several timing
-   and quasi-final-return contamination channels, but non-resident filing
-   remains unresolved.
-2. A return filer inside the F71561 mother population must belong to the broad
-   F71561-compatible candidate tax-unit universe used by the stage-1 model.
+This script therefore computes the overlap that would obtain under exact
+population-set correspondence.  Scripts 47 and 48 then allocate tracked and
+untracked overlap loss against this benchmark.
 
-The output is therefore a CONDITIONAL diagnostic, not a READY identification
-result.  The useful result is the very large residual contamination required
-to erase the score_power=2.0 rejection.
+Nothing in this file point-identifies the filing rate.
 """
 from pathlib import Path
 import csv
@@ -33,25 +29,21 @@ def compute(v):
     total = v["census_total_population_2020"]
     general = v["census_general_household_persons_2020"]
     single = v["census_single_households_2020"]
-    single_mother = v["f71561_single_mother_households_2024_design"]
+    single_frame = v["f71561_single_mother_households_2024_design"]
     okunoto_general = v["okunoto_general_household_persons_2020"]
     filers = v["nta_final_return_filers_2024"]
 
     two_plus_general = general - single
-    # The exact Okunoto two-plus person count is not needed for a lower
-    # bound. Subtracting all Okunoto general-household persons is a
-    # conservative upper bound on its two-plus contribution.
-    mother_person_lower = (
-        two_plus_general - okunoto_general + single_mother
+
+    # Published-frame benchmark.  Subtracting all Okunoto general-household
+    # persons is conservative relative to subtracting only its two-plus part.
+    mother_frame_benchmark = (
+        two_plus_general - okunoto_general + single_frame
     )
-    out_of_mother_domestic_upper = total - mother_person_lower
-    overlap_filer_lower_conditional = max(
-        0.0, filers - out_of_mother_domestic_upper
-    )
-    candidate_tax_unit_upper = total
-    filing_rate_lower_conditional = (
-        overlap_filer_lower_conditional / candidate_tax_unit_upper
-    )
+    nominal_outside = total - mother_frame_benchmark
+    nominal_overlap = max(0.0, filers - nominal_outside)
+    candidate_upper = total
+    c0_pretracked_rate = nominal_overlap / candidate_upper
 
     rows = []
     for key, label in [
@@ -60,32 +52,25 @@ def compute(v):
         ("threshold_score_power_2p0", "score_power_2.0"),
     ]:
         threshold = v[key]
-        contamination_break_even = (
-            overlap_filer_lower_conditional
-            - candidate_tax_unit_upper * threshold
-        )
+        break_even = nominal_overlap - candidate_upper * threshold
         rows.append({
             "prior": label,
             "Amax_threshold": threshold,
-            "conditional_stage1_lower": filing_rate_lower_conditional,
-            "conditional_rejected_without_untracked_contamination":
-                filing_rate_lower_conditional > threshold,
-            "additional_untracked_filers_needed_to_erase_rejection":
-                max(0.0, contamination_break_even),
-            "status":
-                "CONDITIONAL_ONLY_PENDING_POPULATION_BRIDGE",
+            "c0_pretracked_rate": c0_pretracked_rate,
+            "reject_at_zero_untracked_before_tracked_allowance":
+                c0_pretracked_rate > threshold,
+            "mismatch_break_even_before_tracked_allowance":
+                max(0.0, break_even),
+            "status": "NOMINAL_BRIDGE_BENCHMARK",
         })
 
     diagnostics = {
         "two_plus_general_household_persons_2020": two_plus_general,
-        "f71561_mother_person_lower_bound": mother_person_lower,
-        "out_of_mother_domestic_person_upper_bound":
-            out_of_mother_domestic_upper,
-        "conditional_return_filer_overlap_lower":
-            overlap_filer_lower_conditional,
-        "candidate_tax_unit_upper_bound": candidate_tax_unit_upper,
-        "conditional_stage1_filing_rate_lower":
-            filing_rate_lower_conditional,
+        "f71561_mother_person_benchmark": mother_frame_benchmark,
+        "nominal_outside_person_benchmark": nominal_outside,
+        "nominal_return_filer_overlap_benchmark": nominal_overlap,
+        "candidate_person_upper": candidate_upper,
+        "c0_pretracked_participation_benchmark": c0_pretracked_rate,
     }
     return diagnostics, rows
 

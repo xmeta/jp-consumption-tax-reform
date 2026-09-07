@@ -1,4 +1,4 @@
-= Candidate-person Coverage Lemma
+= Candidate-person Denominator Lemma
 :revdate: 2026-09-08
 :stem: latexmath
 
@@ -7,44 +7,37 @@
 The stage-1 denominator is intentionally not a fitted pseudo-filer count.
 It is the entire 2020 Census population, `126,146,099` persons.
 
-This makes the denominator loose but permits a simple coverage argument.
+For the static Census frame, this is a deliberately loose upper benchmark for
+the number of individual income-tax candidates.
 
 == Lemma
 
-For the static 2020 Census frame, let stem:[T] be the number of individual
-income-tax candidate persons relevant to the filing-participation calculation
-and stem:[P] the total Census population.
-
-Because Japanese self-assessment income tax is filed by individual persons,
-and every in-frame candidate used here must correspond to a person in that
-population,
+Let stem:[T_0] be the number of candidate persons inside the static 2020 Census
+person frame and stem:[P] the total Census population. Then
 
 [stem]
 ++++
-T \le P = 126,146,099.
+T_0 \le P=126{,}146{,}099.
 ++++
 
-Therefore replacing the unknown stem:[T] with stem:[P] can only weakly lower
-the filing-participation lower bound.
+Replacing stem:[T_0] by stem:[P] can therefore only reduce the benchmark rate
+conditional on a given overlap numerator.
 
 == Scope
 
-This lemma does not claim that every Census person is a plausible filer.
-Children, institutional residents and many other persons are deliberately
-included in stem:[P].  Their inclusion makes the denominator more
-conservative.
+This lemma says nothing about exact correspondence between the 2020 person
+frame and the 2024 survey/tax populations.
 
-The lemma also does not place persons outside the static Census frame into
-stem:[P].  Post-Census births and international inflows are instead handled
-adversarially as contamination in script 47.
+Children, institutional residents, and many other persons are deliberately
+included in stem:[P]. Conversely, post-Census population changes, residence
+status, survey eligibility, and other frame-definition differences are not
+resolved by this denominator choice.
 
-Non-resident final-return filers who are outside the resident/Census bridge are
-represented by the unresolved contamination parameter stem:[C_{NR}].
+Those unresolved correspondence issues are represented by the total untracked
+mismatch budget stem:[C_U] in the stage-1 robustness frontier.
 
 == Consequence
 
-The former open condition "prove candidate tax-unit coverage" is closed for
-this conservative person-denominator formulation.
-
-The remaining identification problem is not denominator coverage but the upper
-bound on frame-incompatible final-return filers, dominated by stem:[C_{NR}].
+The denominator itself is intentionally conservative within the static Census
+frame. The substantive unresolved issue is the cross-time and cross-system
+population correspondence, which remains explicit in stem:[C_U].
