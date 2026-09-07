@@ -88,7 +88,7 @@ def main():
     diagnostics, rows = compute(load_inputs())
     with OUTPUT.open("w", encoding="utf-8", newline="") as f:
         fieldnames = list(rows[0])
-        w = csv.DictWriter(f, fieldnames=fieldnames)
+        w = csv.DictWriter(f, fieldnames=fieldnames, lineterminator="\n")
         w.writeheader()
         w.writerows(rows)
 
