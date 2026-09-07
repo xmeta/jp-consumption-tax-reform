@@ -1,0 +1,50 @@
+= Candidate-person Coverage Lemma
+:revdate: 2026-09-08
+:stem: latexmath
+
+== Purpose
+
+The stage-1 denominator is intentionally not a fitted pseudo-filer count.
+It is the entire 2020 Census population, `126,146,099` persons.
+
+This makes the denominator loose but permits a simple coverage argument.
+
+== Lemma
+
+For the static 2020 Census frame, let stem:[T] be the number of individual
+income-tax candidate persons relevant to the filing-participation calculation
+and stem:[P] the total Census population.
+
+Because Japanese self-assessment income tax is filed by individual persons,
+and every in-frame candidate used here must correspond to a person in that
+population,
+
+[stem]
+++++
+T \le P = 126,146,099.
+++++
+
+Therefore replacing the unknown stem:[T] with stem:[P] can only weakly lower
+the filing-participation lower bound.
+
+== Scope
+
+This lemma does not claim that every Census person is a plausible filer.
+Children, institutional residents and many other persons are deliberately
+included in stem:[P].  Their inclusion makes the denominator more
+conservative.
+
+The lemma also does not place persons outside the static Census frame into
+stem:[P].  Post-Census births and international inflows are instead handled
+adversarially as contamination in script 47.
+
+Non-resident final-return filers who are outside the resident/Census bridge are
+represented by the unresolved contamination parameter stem:[C_{NR}].
+
+== Consequence
+
+The former open condition "prove candidate tax-unit coverage" is closed for
+this conservative person-denominator formulation.
+
+The remaining identification problem is not denominator coverage but the upper
+bound on frame-incompatible final-return filers, dominated by stem:[C_{NR}].

@@ -68,14 +68,17 @@ population-definition mismatches.
 
 == Why the result is still not READY
 
-Two conditions remain open:
+The conservative candidate-person denominator coverage condition is closed by
+link:candidate_person_coverage.adoc[candidate_person_coverage.adoc]: individual
+income-tax candidates in the static Census frame cannot exceed the total
+Census population used as the denominator upper bound.
 
-. bound NTA return filers that are outside the resident/census-based bridge,
-  especially non-resident self-assessment filers;
-. prove that the broad F71561-compatible candidate-tax-unit universe contains
-  every in-frame filer used by the overlap numerator.
+The principal remaining bridge is to bound NTA final-return filers outside the
+resident/Census-compatible frame, especially non-resident filers.  The public
+source audit is recorded in
+link:nonresident_source_audit.adoc[nonresident_source_audit.adoc].
 
-Until these are closed, `income_tax = NOT_READY` remains unchanged.
+Until that bridge is closed, `income_tax = NOT_READY` remains unchanged.
 
 == Survey-frame facts
 

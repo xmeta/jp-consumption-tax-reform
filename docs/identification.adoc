@@ -42,3 +42,14 @@ contaminationが必要となる。
 従って、この結果は +score_power=2.0+ に対する強い頑健性診断であるが、
 非居住者申告者等の上限が閉じるまでは正式な識別下限へ昇格しない。
 +income_tax = NOT_READY+ は維持する。
+
+
+=== Candidate-person denominator coverage
+
+stage-1の分母はpseudo-filer数ではなく、2020国勢調査の全人口126,146,099人を
+上限として使う。個人所得税の候補単位は個人であるため、静的Census frame内の
+候補人数は全人口を超えない。この置換は申告参加率の下限を弱める方向にしか働かない。
+
+従ってcandidate-person coverage条件はこの保守的定式化では閉じる。
+残る主要未識別量は、非居住者等のCensus/resident frame外確定申告者
+stem:[C_{NR}] である。
