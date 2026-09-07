@@ -59,6 +59,47 @@ if actual_raw != catalog_paths:
         f"missing={sorted(catalog_paths-actual_raw)}"
     )
 
+derived_rows = read_csv("data/derived_catalog.csv")
+derived_paths = set()
+for r in derived_rows:
+    rel = r["derived_file"]
+    if rel in derived_paths:
+        errors.append(f"duplicate derived_file: {rel}")
+        continue
+    derived_paths.add(rel)
+    path = ROOT / rel
+    if not path.exists():
+        errors.append(f"derived file missing: {rel}")
+        continue
+    if sha256(path) != r["sha256"]:
+        errors.append(f"derived SHA mismatch: {rel}")
+    if path.stat().st_size != int(r["bytes"]):
+        errors.append(f"derived byte-size mismatch: {rel}")
+    with path.open(encoding="utf-8", newline="") as f:
+        actual_rows = max(0, sum(1 for _ in f) - 1)
+    if actual_rows != int(r["row_count"]):
+        errors.append(f"derived row-count mismatch: {rel}")
+    for sid in split_ids(r["source_ids"]):
+        if sid not in catalog:
+            errors.append(f"{rel}: unknown derived source_id {sid}")
+    generator = r["generator"]
+    if generator != "manual_transcription_verified":
+        gp = ROOT / generator
+        if not gp.exists():
+            errors.append(f"{rel}: generator missing: {generator}")
+
+actual_derived = {
+    str(p.relative_to(ROOT))
+    for p in (ROOT / "data/derived").glob("*")
+    if p.is_file()
+}
+if actual_derived != derived_paths:
+    errors.append(
+        "derived catalog coverage mismatch: "
+        f"unregistered={sorted(actual_derived-derived_paths)} "
+        f"missing={sorted(derived_paths-actual_derived)}"
+    )
+
 official_rows = read_csv("data/derived/stage1_official_inputs.csv")
 official = {}
 for r in official_rows:

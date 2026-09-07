@@ -31,6 +31,8 @@ claim_id
   unless the generating source chain is restored.
 * `data/source_catalog.csv` records publisher, URL, raw file, locator,
   SHA-256, byte size, and evidence status for every raw file.
+* `data/derived_catalog.csv` records every derived file, its generator,
+  upstream source IDs, row count, SHA-256, and derivation status.
 * `data/input_provenance.csv` gives value-level provenance for every active
   stage-1 input.
 * `data/claim_evidence.csv` maps each Paper 1 claim to its evidence artifacts,
@@ -69,6 +71,13 @@ The CI provenance gate verifies:
 
 . every file under `data/raw/` is registered exactly once;
 . every raw SHA-256 and byte size matches the catalog;
+. every file under `data/derived/` is registered exactly once with its
+  generator, source IDs, row count, SHA-256, and byte size;
+. e-Stat 7-153-1 and 7-156-1 are re-extracted from the committed raw XLSX;
+. all 430 decile/component cells in 7-153-1 exactly equal the corresponding
+  `00_総世帯` cells in 7-156-1;
+. the 14 original leaf household types are derived from the official hierarchy,
+  not hard-coded as the extraction authority;
 . every active stage-1 input is covered exactly once by value provenance;
 . official values point to registered raw official sources;
 . recovery values remain labelled `RECOVERY_ONLY`;
