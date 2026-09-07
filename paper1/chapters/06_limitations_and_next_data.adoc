@@ -1,39 +1,51 @@
 == Limitations and data improvements
 
-The principal limitation is not numerical optimization.  It is the mismatch
+The principal limitation is not numerical optimization. It is the mismatch
 between public household aggregates and the filer-level population needed for
 marginal income-tax incidence.
 
-=== Remaining non-resident bridge
+=== Untracked frame mismatch
+
+The 2024 F71561 mother population is estimated from the 2020 Census frame
+rearranged to 2024 municipality boundaries. It is therefore not a directly
+observed 2024 set of persons that can be intersected mechanically with the NTA
+final-return population.
+
+We leave all additional overlap loss beyond the deliberately tracked allowance
+as stem:[C_U]. This quantity can include:
+
+* non-resident final-return filers outside the resident/Census bridge;
+* remaining 2020-to-2024 population timing mismatch;
+* survey eligibility and household-frame differences;
+* other unmeasured population-definition mismatches.
+
+The reproduced result is therefore a robustness function in stem:[C_U], not an
+identified point value or unconditional lower bound.
 
 Public NTA tables examined for this study do not provide a compatible
-resident/non-resident cross-tab of final-return persons.
-
-We therefore leave the count of frame-incompatible final-return filers,
-stem:[C_{NR}], explicit.  The result is a robustness frontier, not a point
-estimate.
-
-The NTA reports 920,649 statutory-report information records concerning
-payments to non-residents supplied to foreign tax authorities in FY2024.
-This quantity is not used as an upper bound: it counts information records,
-not deduplicated final-return persons, and its coverage does not match the
-self-assessment filing population.
+resident/non-resident cross-tab of final-return persons. The NTA also reports
+920,649 statutory-report information records concerning payments to
+non-residents supplied to foreign tax authorities in FY2024, but that is a
+record count rather than a deduplicated final-return-person bound and is not
+used to set stem:[C_U].
 
 === Data that would materially tighten identification
 
 The highest-value additional data would be:
 
+. a directly comparable 2024 person-frame count or micro-level crosswalk
+  between the survey mother population and tax-return population;
 . a resident/non-resident count of FY2024 final-return persons on a
   conceptually compatible basis;
 . anonymized filer microdata or sufficiently detailed tabulations linking
   taxable-income components, deductions, filing status, and tax liability;
-. public cross-tabs that connect household income deciles to tax-unit
+. public cross-tabs connecting household income deciles to tax-unit
   characteristics without synthetic assignment;
 . repeated-year equivalents permitting validation of stability and transport.
 
 === Scope of policy conclusions
 
-The identified results in this paper do not establish an optimal consumption
+The reproduced results in this paper do not establish an optimal consumption
 tax rate, an optimal income-tax schedule, or a structural macroeconomic effect.
 
 A later policy-optimization paper may condition on transparent behavioral

@@ -8,7 +8,7 @@ REGISTRY = ROOT / "paper1/data/claim_registry.csv"
 
 ALLOWED = {
     "OBSERVED_PUBLIC",
-    "PARTIAL_IDENTIFIED_REPRODUCED",
+    "ROBUSTNESS_FRONTIER_REPRODUCED",
     "SENSITIVITY_ONLY_RECOVERABLE",
     "DOCUMENTED_PRIOR_RUN_NOT_REPRODUCED",
     "READY_STATIC_ONLY",
@@ -17,7 +17,7 @@ ALLOWED = {
 
 REQUIRED = {f"P1-C{i:02d}" for i in range(1, 13)}
 LOCAL_SOURCE_STATUSES = {
-    "PARTIAL_IDENTIFIED_REPRODUCED",
+    "ROBUSTNESS_FRONTIER_REPRODUCED",
     "READY_STATIC_ONLY",
     "NOT_READY",
 }
@@ -59,12 +59,12 @@ def main():
                 errors.append(f"{cid}: local source missing: {src}")
 
     by_id = {r["claim_id"]: r for r in rows}
-    if by_id["P1-C08"]["status"] != "PARTIAL_IDENTIFIED_REPRODUCED":
-        errors.append("P1-C08 must remain reproduced partial identification")
-    if by_id["P1-C09"]["status"] != "PARTIAL_IDENTIFIED_REPRODUCED":
-        errors.append("P1-C09 must remain reproduced partial identification")
+    if by_id["P1-C08"]["status"] != "ROBUSTNESS_FRONTIER_REPRODUCED":
+        errors.append("P1-C08 must remain a reproduced robustness frontier")
+    if by_id["P1-C09"]["status"] != "DOCUMENTED_PRIOR_RUN_NOT_REPRODUCED":
+        errors.append("P1-C09 recovered threshold must remain unreproduced")
     if by_id["P1-C10"]["status"] != "NOT_READY":
-        errors.append("P1-C10 non-resident count must remain NOT_READY")
+        errors.append("P1-C10 untracked frame mismatch must remain NOT_READY")
     for cid in ("P1-C11", "P1-C12"):
         if by_id[cid]["status"] != "NOT_READY":
             errors.append(f"{cid} must remain NOT_READY")
@@ -77,6 +77,7 @@ def main():
         "income_tax = READY",
         "filing rate is point identified",
         "fully sharp identified set",
+        "score_power=2.0 prior is rejected whenever",
     ]
     for phrase in prohibited:
         if phrase.lower() in paper.lower():

@@ -4,12 +4,30 @@
 This appendix is not part of the reproduced empirical result set.
 
 The V6 handoff records post-base analyses whose source files were lost during a
-runtime reset.  They remain useful only as recovery targets.
+runtime reset. They remain useful only as recovery targets and labelled
+numerical applications.
+
+=== Recovered stage-1 threshold application
+
+The V6 handoff records a `score_power=2.0` admissibility threshold of 2.20%.
+The source chain that generated that threshold has not yet been restored.
+
+Applying the *reproduced general robustness formula* to that *unreproduced
+recovered threshold* gives a break-even untracked mismatch budget of
+
+[stem]
+++++
+C_U^*(0.022)=8{,}578{,}123.822.
+++++
+
+This numerical value is not a reproduced main result because one of its inputs,
+the 2.20% threshold, is recovery-only. It is retained here so a future source
+reconstruction can be checked against the V6 record.
 
 === Restricted-LP endpoints
 
 The handoff records restricted-LP marginal-rate endpoints generated under
-additional assumptions.  Because the post-base source chain has not been
+additional assumptions. Because the post-base source chain has not been
 restored, these endpoints are not used in the main text, tables, theorem, or
 abstract.
 

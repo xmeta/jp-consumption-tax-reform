@@ -1,46 +1,47 @@
-== Stage-1 filing-participation frontier
+== Stage-1 filing-participation robustness frontier
 
-The first selection step asks how many F71561-compatible candidate persons can
-be guaranteed to overlap the NTA final-return population.
+The first selection step asks how strongly the public survey-frame benchmark
+can constrain overlap with the NTA final-return population.
 
-We deliberately avoid estimating a filing probability by pseudo-filer fitting.
-Instead, we construct a worst-case overlap bound and expose the remaining
-population mismatch as an explicit nuisance count.
+We do not estimate a filing probability by pseudo-filer fitting. We first form
+a nominal overlap benchmark and then expose all additional untracked
+population/frame mismatch as an explicit budget.
 
-=== Conservative population bridge
+=== Published frame benchmark
 
-Let stem:[F={stage1-final-return-filers}] denote NTA FY2024 final-return persons,
-stem:[P={stage1-candidate-upper}] the total 2020 Census population used as a conservative
-candidate-person upper bound, and stem:[M_L={stage1-mother-lower}] a conservative
-lower bound on persons represented by the F71561 mother population.
+Let stem:[F={stage1-final-return-filers}] denote the observed NTA FY2024
+final-return count, stem:[P={stage1-candidate-upper}] the entire 2020 Census
+population used as a deliberately loose person denominator, and
+stem:[M_0={stage1-mother-benchmark}] the published F71561 mother-population
+frame benchmark reconstructed from the 2020-Census-based survey design.
 
-.Stage-1 inputs and identification roles
+.Stage-1 objects and roles
 [cols="1,2,2,3",options="header"]
 |===
 |ID |Object |Status |Role
 |O1 |stem:[F] final-return persons |Observed public aggregate |Exact NTA final-return row; no behavioral interpretation
-|B1 |stem:[P] candidate-person count |Conservative upper bound |Entire Census population, so denominator coverage is weakly conservative
-|B2 |stem:[M_L] F71561 mother persons |Conservative lower bound |Built from public survey-frame and Census restrictions
-|B3 |stem:[D] tracked contamination |Adversarial allowance |Birth, international-inflow, and death channels are allocated entirely against identification
-|U1 |stem:[C_{NR}] frame-incompatible filers |Unresolved |Left explicit; no point estimate or unsupported upper bound is imposed
+|B1 |stem:[P] person denominator |Deliberately loose benchmark |Entire Census population; not a fitted tax-unit count
+|B2 |stem:[M_0] F71561 mother-population size |Published frame benchmark |2020-Census-based estimate used by the 2024 survey design; not asserted to be a 2024 person-set lower bound
+|B3 |stem:[D] tracked mismatch allowance |Adversarial allowance |Observable timing/death channels are allocated entirely against the nominal overlap
+|U1 |stem:[C_U] additional overlap loss |Unresolved mismatch budget |Includes non-resident and any other untracked frame/timing/eligibility mismatch
 |===
 
-The Fréchet lower overlap before additional contamination is
+Under exact set correspondence, the nominal Fréchet overlap benchmark is
 
 [stem]
 ++++
-B_0 = \max\{0,F-(P-M_L)\}={stage1-overlap-lower}.
+B_0 =
+\max\{0,F-(P-M_0)\}
+=
+{stage1-nominal-overlap}.
 ++++
 
-The construction uses the exact four-municipality Okunoto exclusion and a
-deliberately loose person denominator.  The denominator therefore weakens,
-rather than strengthens, the inferred filing-participation lower bound.
+This quantity is a benchmark, not an unconditional identified overlap.
 
-
-=== Adversarial tracked contamination
+=== Tracked mismatch allowance
 
 To avoid optimistic alignment assumptions, we allocate several observable
-population-timing channels entirely against the overlap:
+population-timing channels entirely against the nominal overlap:
 
 * all 2020--2024 births: stem:[3{,}836{,}677];
 * all 2020--2024 gross international inflows: stem:[2{,}643{,}204];
@@ -51,68 +52,63 @@ Their sum is
 
 [stem]
 ++++
-D={stage1-tracked-upper}.
+D={stage1-tracked-allowance}.
 ++++
 
-This is intentionally conservative.  The categories can overlap, many persons
-are not filers, and the full-year 2020 counts include events before the Census
-reference date.
+This allowance is intentionally adverse. The categories can overlap, many
+persons are not filers, and the full-year 2020 counts include events before
+the Census reference date.
 
-After allocating stem:[D], the residual overlap at zero additional mismatch is
+After allocating stem:[D], the residual benchmark is
 
 [stem]
 ++++
-B_0-D={stage1-residual-cnr0},
+B_R =
+\max\{0,B_0-D\}
+=
+{stage1-residual-benchmark}.
 ++++
 
-which corresponds to {stage1-cnr0-pct}% of the candidate-person upper bound.
+At zero additional untracked mismatch, this corresponds to a benchmark rate of
+{stage1-robustness-rate-cu0-pct}%.
 
-=== Unresolved frame-incompatible filers
+=== General untracked-mismatch frontier
 
-Let stem:[C_{NR}] denote additional final-return filers incompatible with the
-resident/Census bridge, principally unresolved non-resident cases.
-
-The identified robustness frontier is
+Let stem:[C_U\ge0] be an analyst-specified upper budget for further reduction
+in the nominal overlap. The reproduced robustness function is
 
 [stem]
 ++++
-L(C_{NR})=
-\frac{\max\{0,{stage1-residual-cnr0}-C_{NR}\}}
-{{stage1-candidate-upper}}.
+R(C_U)=
+\frac{\max\{0,B_R-C_U\}}{P}.
 ++++
 
-For an admissibility threshold stem:[A], rejection occurs whenever
-
-[stem]
-++++
-C_{NR} <
-\max\{0,{stage1-residual-cnr0}-{stage1-candidate-upper}A\}.
-++++
-
-For the recovered V6 `score_power=2.0` threshold ({stage1-score2-threshold-pct}%), the
-critical value is
+For any externally supplied admissibility threshold stem:[A\in[0,1]], the
+benchmark-adjusted rate remains above stem:[A] whenever
 
 [stem]
 ++++
-C^*_{NR}={stage1-critical-cnr}.
+C_U<C_U^*(A),
+\qquad
+C_U^*(A)=\max\{0,B_R-PA\}.
 ++++
 
-Thus that prior is rejected for every
-stem:[C_{NR}<{stage1-critical-cnr}].  The `score_power=0.5` and
-`score_power=1.0` thresholds are not rejected even at stem:[C_{NR}=0].
+This is the main stage-1 result. The function stem:[C_U^*(A)] gives the exact
+break-even mismatch budget implied by the public-data benchmark for any
+externally supplied threshold. It does not identify the actual value of
+stem:[C_U] and therefore does not unconditionally reject any threshold.
 
 === Robustness grid
 
-The analytical frontier can be read directly from the following generated
-table.  The grid is illustrative; only the analytical critical value defines
-the boundary.
+The following generated grid illustrates stem:[R(C_U)] without relying on any
+recovered V6 threshold.
 
-.Stage-1 lower bound as unresolved frame-incompatible final-return filers increase
+.Stage-1 robustness rate as the total untracked mismatch budget increases
 [%header,format=csv]
 |===
 include::{docdir}/data/stage1_frontier_table.csv[]
 |===
 
-This is the paper's stage-1 identification result.  It does not require a point
-estimate of stem:[C_{NR}], and it does not imply that the unconditional filing
-rate is point identified.
+A recovered numerical application to the V6 `score_power=2.0` threshold is
+kept only in the recovery appendix until the threshold-generating source chain
+is restored and reproduced.

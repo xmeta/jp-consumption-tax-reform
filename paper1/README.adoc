@@ -2,10 +2,13 @@
 
 This directory contains the first-submission manuscript only.
 
-It does not claim an optimal VAT rate or a structural macro effect.
-The paper asks what can be identified about Japanese personal income-tax
-marginal incidence using public aggregate data when filer microdata are not
-available for redistribution/reproduction.
+It does not claim an optimal VAT rate, a structural macro effect, a
+point-identified filer MTR distribution, or an unconditional filing-rate lower
+bound.
+
+The paper asks which identification and robustness statements remain defensible
+when reproducible public aggregate data are available but filer microdata are
+not.
 
 == Build
 
@@ -20,7 +23,7 @@ asciidoctor paper1/index.adoc
 == Authority order
 
 . Reproduced Git results and official public-source inputs.
-. Explicit partial-identification propositions.
-. Recovered V6 prior-run results, labelled as recovery-required.
+. Reproduced robustness-frontier propositions with unresolved quantities kept explicit.
+. Recovered V6 prior-run results, labelled recovery-only.
 . Sensitivity-only constructions.
 . NOT_READY quantities, which cannot enter headline conclusions.

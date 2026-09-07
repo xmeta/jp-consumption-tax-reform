@@ -5,7 +5,7 @@ import csv
 import sys
 
 ROOT = Path(__file__).resolve().parents[2]
-SOURCE = ROOT / "research/stage1_filing_bound/nonresident_frontier_grid.csv"
+SOURCE = ROOT / "research/stage1_filing_bound/untracked_frontier_grid.csv"
 OUTPUT = ROOT / "paper1/data/stage1_frontier_table.csv"
 
 
@@ -15,27 +15,23 @@ def build():
 
     out = []
     for row in rows:
-        c = float(row["C_NR"])
-        label = row["scenario"]
-        if label == "score2_break_even":
-            c_display = f"{c:,.3f}"
-            scenario = "score_power=2.0 break-even"
-        else:
-            c_display = f"{c:,.0f}"
-            scenario = label
-        lb_pct = float(row["lower_bound_pct"])
-        reject = row["reject_score_power_2_0"] == "True"
+        c = float(row["C_U"])
+        remaining = float(row["remaining_overlap_benchmark"])
+        rate = float(row["robustness_rate_pct"])
         out.append([
-            scenario,
-            c_display,
-            f"{lb_pct:.4f}%",
-            "Rejected" if reject else "Not rejected",
+            row["scenario"],
+            f"{c:,.0f}",
+            f"{remaining:,.0f}",
+            f"{rate:.4f}%",
         ])
     return out
 
 
 def render(rows):
-    lines = ["Scenario,C_NR persons,Participation lower bound,score_power=2.0"]
+    lines = [
+        "Scenario,C_U persons,Remaining nominal overlap benchmark,"
+        "Robustness rate"
+    ]
     for row in rows:
         escaped = []
         for cell in row:

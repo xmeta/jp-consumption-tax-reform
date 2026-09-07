@@ -10,7 +10,7 @@ OUTPUT = ROOT / "paper1/data/stage1_attributes.adoc"
 
 spec = importlib.util.spec_from_file_location(
     "frontier48",
-    RESEARCH / "48_income_tax_stage1_nonresident_frontier.py",
+    RESEARCH / "48_income_tax_stage1_untracked_frontier.py",
 )
 m = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(m)
@@ -22,26 +22,29 @@ def fmt_int(x):
 
 def build():
     v = m.frontier47.overlap.load_inputs()
-    d46, rows46 = m.frontier47.overlap.compute(v)
+    d46, _ = m.frontier47.overlap.compute(v)
     s47, _ = m.frontier47.compute(v)
-    s48, rows48 = m.compute(v)
-    r2_46 = next(r for r in rows46 if r["prior"] == "score_power_2.0")
-    r2_48 = next(r for r in rows48 if r["prior"] == "score_power_2.0")
+    s48 = m.compute(v)
 
     attrs = {
-        "stage1-final-return-filers": fmt_int(v["nta_final_return_filers_2024"]),
-        "stage1-candidate-upper": fmt_int(d46["candidate_tax_unit_upper_bound"]),
-        "stage1-mother-lower": fmt_int(d46["f71561_mother_person_lower_bound"]),
-        "stage1-outside-upper": fmt_int(d46["out_of_mother_domestic_person_upper_bound"]),
-        "stage1-overlap-lower": fmt_int(d46["conditional_return_filer_overlap_lower"]),
-        "stage1-c0-pretracked-pct": f'{100*d46["conditional_stage1_filing_rate_lower"]:.4f}',
-        "stage1-tracked-upper": fmt_int(s47["tracked_contamination_upper"]),
-        "stage1-residual-cnr0": fmt_int(s48["residual_numerator_at_C_NR_0"]),
-        "stage1-cnr0-pct": f'{100*s48["lower_bound_at_C_NR_0"]:.5f}',
-        "stage1-score2-threshold-pct": f'{100*r2_46["Amax_threshold"]:.2f}',
-        "stage1-critical-cnr": f'{r2_48["critical_C_NR_strict"]:,.3f}',
-        "stage1-critical-cnr-share-pct":
-            f'{100*r2_48["critical_C_NR_share_of_candidate_upper"]:.4f}',
+        "stage1-final-return-filers":
+            fmt_int(v["nta_final_return_filers_2024"]),
+        "stage1-candidate-upper":
+            fmt_int(d46["candidate_person_upper"]),
+        "stage1-mother-benchmark":
+            fmt_int(d46["f71561_mother_person_benchmark"]),
+        "stage1-nominal-outside":
+            fmt_int(d46["nominal_outside_person_benchmark"]),
+        "stage1-nominal-overlap":
+            fmt_int(d46["nominal_return_filer_overlap_benchmark"]),
+        "stage1-nominal-rate-pct":
+            f'{100*d46["c0_pretracked_participation_benchmark"]:.4f}',
+        "stage1-tracked-allowance":
+            fmt_int(s47["tracked_mismatch_allowance"]),
+        "stage1-residual-benchmark":
+            fmt_int(s48["residual_benchmark_after_tracked_allowance"]),
+        "stage1-robustness-rate-cu0-pct":
+            f'{100*s48["robustness_rate_at_C_U_0"]:.5f}',
     }
 
     lines = [

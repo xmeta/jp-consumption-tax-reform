@@ -1,4 +1,4 @@
-= Partial Identification of Personal Income-Tax Marginal Incidence from Public Aggregate Data: Evidence from Japan
+= Identification and Robustness Frontiers for Personal Income-Tax Marginal Incidence from Public Aggregate Data: Evidence from Japan
 :doctype: article
 :lang: en
 :toc: left
@@ -13,22 +13,27 @@ include::data/stage1_attributes.adoc[]
 --
 We study what can be learned about Japanese personal income-tax marginal
 incidence from public aggregate data when filer microdata are unavailable for
-a reproducible analysis.  Rather than mapping household aggregates directly
+a reproducible analysis. Rather than mapping household aggregates directly
 into a synthetic filer distribution, we separate population selection,
-tax-liability information, and marginal-rate assumptions.  For the first-stage
-filing bridge we derive an explicit robustness frontier in the unresolved count
-of frame-incompatible final-return filers.  Under deliberately adverse
-allowances for births, international inflows, and deaths, the recovered
-`score_power=2.0` prior is rejected whenever the unresolved count is below
-{stage1-critical-cnr} persons.  Other marginal-incidence quantities remain sensitivity
-only or not identified.  A machine-readable claim registry prevents recovered
-or calibrated results from being presented as reproduced identified facts.
+tax-liability information, and marginal-rate assumptions.
+
+For the first-stage filing bridge, the 2024 survey mother population is treated
+as a published 2020-Census-based frame benchmark rather than as a directly
+observed 2024 person set. We derive a reproduced robustness function in an
+explicit total untracked mismatch budget, stem:[C_U], and a general break-even
+budget stem:[C_U^*(A)] for any externally supplied admissibility threshold
+stem:[A]. The actual value of stem:[C_U] is not identified, so the analysis
+does not claim an unconditional filing-rate lower bound.
+
+Other marginal-incidence quantities remain sensitivity-only, recovery-only, or
+not identified. A machine-readable claim registry prevents calibrated or
+unreproduced results from being presented as reproduced identified facts.
 --
 
 [IMPORTANT]
 ====
-This manuscript distinguishes reproduced identified results from recovered
-prior-run evidence.  The claim-level authority is
+This manuscript distinguishes reproduced robustness results from recovered
+prior-run evidence. The claim-level authority is
 `data/claim_registry.csv`.
 ====
 
