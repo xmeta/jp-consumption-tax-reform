@@ -35,7 +35,7 @@ def compute(v):
     single = v["census_single_households_2020"]
     single_mother = v["f71561_single_mother_households_2024_design"]
     okunoto_general = v["okunoto_general_household_persons_2020"]
-    filers = v["nta_return_filers_2024"]
+    filers = v["nta_final_return_filers_2024"]
 
     two_plus_general = general - single
     # The exact Okunoto two-plus person count is not needed for a lower

@@ -20,10 +20,10 @@ assert int(summary["tracked_contamination_upper"]) == 8_085_259
 
 by_prior = {r["prior"]: r for r in rows}
 r2 = by_prior["score_power_2.0"]
-assert int(r2["total_break_even_contamination"]) == 16_935_307
-assert int(r2["residual_unresolved_contamination_to_erase_rejection"]) == 8_850_048
+assert int(r2["total_break_even_contamination"]) == 16_663_382
+assert int(r2["residual_unresolved_contamination_to_erase_rejection"]) == 8_578_123
 assert abs(
-    r2["residual_share_of_candidate_upper"] - 0.07015713440333973
+    r2["residual_share_of_candidate_upper"] - 0.06800149897619902
 ) < 1e-14
 
 assert by_prior["score_power_1.0"][

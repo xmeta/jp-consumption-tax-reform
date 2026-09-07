@@ -1,0 +1,76 @@
+= NTA Non-resident Filing Source Audit
+:revdate: 2026-09-08
+
+== Question
+
+Can the published NTA aggregate statistics directly identify or upper-bound the
+number of non-resident persons included in the 2024 final-return count used by
+the F71561 stage-1 bridge?
+
+== Finding
+
+No direct resident/non-resident final-return person cross-tab was found in the
+official published tables examined for this audit.
+
+This is a source-availability finding, not a claim that NTA has no such
+administrative data internally.
+
+== Exact numerator correction
+
+The FY2024 NTA Annual Statistics Report, table 2-1(1), reports:
+
+* total self-assessment / cases processed actual persons: `23,362,184`;
+* final-return persons: `23,090,075`;
+* amended-return persons: `145,620`.
+
+For filing participation, this repository therefore uses the exact
+`23,090,075` final-return row rather than the broader 23,362,184 total.
+
+== Published table coverage examined
+
+The FY2024 self-assessment income-tax chapter publishes taxation status,
+income-range counts, income-type counts and prefectural tables.  Its notes say
+the chapter is a complete survey of people who filed final returns or whose
+cases were processed for 2024 income.
+
+The published self-assessment table taxonomy examined here does not expose a
+residence-status dimension.
+
+The withholding-income-tax chapter separately publishes
+"statistics of taxation on non-residents, etc."  That table reports payment
+amounts and withholding tax amounts by income type.  It is not a count of
+non-resident self-assessment filers and is therefore not used as a person
+bound.
+
+The NTA guidance also confirms that non-residents can be required to file a
+Japanese final return for domestic-source income, so setting the non-resident
+filer count to zero would be invalid.
+
+== Consequence for identification
+
+Let `C_NR` denote the unresolved part of filer contamination attributable to
+non-resident and other residence-definition mismatches not already covered by
+the deliberately adverse timing/death bounds.
+
+The stage-1 result remains a contamination frontier in `C_NR`.
+No point value is imputed.
+
+For `score_power=2.0`, after the tracked adverse contamination upper bound is
+allocated, an additional `8,578,124` filer records are required to erase the
+current rejection.
+
+== Official sources
+
+* NTA FY2024 Annual Statistics Report:
+  https://www.nta.go.jp/publication/statistics/kokuzeicho/r06/R06.pdf
+* NTA self-assessment income-tax sample survey:
+  https://www.nta.go.jp/publication/statistics/kokuzeicho/shinkokuhyohon/top.htm
+* NTA guidance on non-residents with Japanese domestic-source income:
+  https://www.nta.go.jp/taxes/shiraberu/taxanswer/shotoku/1926.htm
+
+== Audit status
+
+`NONRESIDENT_PERSON_COUNT = NOT_PUBLISHED_IN_TABLES_EXAMINED`
+
+This unresolved quantity must remain explicit unless a directly compatible
+official count or a legally valid upper bound is obtained.

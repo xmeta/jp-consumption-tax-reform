@@ -1,5 +1,5 @@
 name,value,unit,role,source,source_url,source_note
-nta_return_filers_2024,23362000,persons,numerator,National Tax Agency 2024 self-assessment income-tax statistics,https://www.nta.go.jp/publication/statistics/kokuzeicho/shinkoku2024/pdf/02_gaiyo.pdf,"Exact published count: 23,362 thousand"
+nta_final_return_filers_2024,23090075,persons,numerator,National Tax Agency FY2024 Annual Statistics Report Table 2-1(1),https://www.nta.go.jp/publication/statistics/kokuzeicho/r06/R06.pdf,"Exact final-return row; preferred for filing participation. Total self-assessment/cases processed is 23,362,184"
 census_total_population_2020,126146099,persons,universe_upper,Statistics Bureau 2020 Population Census,https://www.stat.go.jp/data/kokusei/2020/,"Conservative candidate tax-unit upper bound"
 census_general_household_persons_2020,123162995,persons,frame_component,Statistics Bureau 2020 Population Census,https://www.stat.go.jp/data/kokusei/2020/,"Persons in general households"
 census_single_households_2020,21151042,persons,frame_component,Statistics Bureau 2020 Population Census,https://www.stat.go.jp/data/kokusei/2020/,"One-person general households"

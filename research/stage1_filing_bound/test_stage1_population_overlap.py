@@ -15,8 +15,8 @@ d, rows = m.compute(v)
 
 assert int(d["f71561_mother_person_lower_bound"]) == 122_494_621
 assert int(d["out_of_mother_domestic_person_upper_bound"]) == 3_651_478
-assert int(d["conditional_return_filer_overlap_lower"]) == 19_710_522
-assert abs(d["conditional_stage1_filing_rate_lower"] - 0.15625153814704965) < 1e-14
+assert int(d["conditional_return_filer_overlap_lower"]) == 19_438_597
+assert abs(d["conditional_stage1_filing_rate_lower"] - 0.15409590271990892) < 1e-14
 
 by_prior = {r["prior"]: r for r in rows}
 assert by_prior["score_power_2.0"][
@@ -30,6 +30,6 @@ assert by_prior["score_power_0.5"][
 ] is False
 assert int(by_prior["score_power_2.0"][
     "additional_untracked_filers_needed_to_erase_rejection"
-]) == 16_935_307
+]) == 16_663_382
 
 print("stage1 population-overlap tests: OK")

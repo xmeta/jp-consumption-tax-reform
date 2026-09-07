@@ -16,18 +16,18 @@ Official aggregate counts imply:
 
 * conservative F71561 mother-population person lower bound: `122,494,621`
 * conservative domestic out-of-mother upper bound: `3,651,478`
-* conditional return-filer overlap lower bound: `19,710,522`
+* conditional return-filer overlap lower bound: `19,438,597`
 * candidate tax-unit upper bound: `126,146,099`
-* zero-extra-contamination stage-1 lower bound: `15.6252%`
+* zero-extra-contamination stage-1 lower bound: `15.4096%`
 
 The recovered V6 threshold for `score_power=2.0` is `2.20%`.
 With no additional out-of-frame contamination, erasing that rejection requires
-`16,935,308` filer records.
+`16,663,383` filer records.
 
 == Formal contamination frontier
 
-Let (F) be NTA return filers, (P) the conservative candidate-person upper
-bound, (M_L) the F71561 mother-person lower bound, and (C) additional filer
+Let stem:[F] be NTA final-return filers, stem:[P] the conservative candidate-person upper
+bound, stem:[M_L] the F71561 mother-person lower bound, and stem:[C] additional filer
 records not represented by the population bridge.
 
 [stem]
@@ -37,14 +37,14 @@ B_0 = \max\{0, F-(P-M_L)\},
 L(C)=\frac{\max\{0,B_0-C\}}{P}.
 ++++
 
-For a prior threshold (A), the prior is rejected whenever
+For a prior threshold stem:[A], the prior is rejected whenever
 
 [stem]
 ++++
 C < C^*(A)=B_0-PA.
 ++++
 
-For `score_power=2.0`, (C^*=16,935,307.822).
+For `score_power=2.0`, stem:[C^*=16,663,382.822].
 
 == Adversarially tracked contamination
 
@@ -60,7 +60,7 @@ inflows include events before the 2020-10-01 Census; both features deliberately
 make this an upper bound rather than a fitted estimate.
 
 After allocating this entire amount adversarially, `score_power=2.0` still
-requires a further `8,850,049` unresolved filer records (7.0157% of the
+requires a further `8,578,124` unresolved filer records (6.8001% of the
 candidate-person upper bound) to erase the rejection.
 
 This residual is primarily a target for bounding non-resident and other
@@ -98,8 +98,8 @@ students and `20,540,114` included single-person households.
   https://www.stat.go.jp/data/zenkokukakei/2024/pdf/hyohon2024.pdf
 * Ishikawa Prefecture, 2020 Population Census summary:
   https://toukei.pref.ishikawa.lg.jp/dl/4461/R2census_jinkou.pdf
-* National Tax Agency, 2024 self-assessment income-tax statistics:
-  https://www.nta.go.jp/publication/statistics/kokuzeicho/shinkoku2024/pdf/02_gaiyo.pdf
+* National Tax Agency, FY2024 Annual Statistics Report, table 2-1(1):
+  https://www.nta.go.jp/publication/statistics/kokuzeicho/r06/R06.pdf
 * Statistics Bureau, Basic Resident Register migration report 2024:
   https://www.stat.go.jp/data/idou/2024np/jissu/pdf/gaiyou.pdf
 * MHLW, final 2024 vital statistics:
