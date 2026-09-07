@@ -1,0 +1,34 @@
+[appendix]
+== Recovery-only evidence
+
+This appendix is not part of the reproduced empirical result set.
+
+The V6 handoff records post-base analyses whose source files were lost during a
+runtime reset.  They remain useful only as recovery targets.
+
+=== Restricted-LP endpoints
+
+The handoff records restricted-LP marginal-rate endpoints generated under
+additional assumptions.  Because the post-base source chain has not been
+restored, these endpoints are not used in the main text, tables, theorem, or
+abstract.
+
+=== External composition holdout
+
+The handoff records a five-category NTA Table 3-1 point-agreement diagnostic:
+all five primary categories were within 0.1 percentage point, with a maximum
+absolute difference of 0.08444 percentage point.
+
+This number is retained solely to verify a future source reconstruction.
+It is not treated as a current reproduced validation result and is not a
+confidence-coverage statement.
+
+=== Promotion rule
+
+A recovery-only item can enter the reproduced result set only after:
+
+. source code and input provenance are restored;
+. the result is regenerated from a fresh checkout;
+. executable tests or equivalent verification pass;
+. the SHA-256 manifest is regenerated and validated;
+. the claim registry status is updated in the same reviewed commit.

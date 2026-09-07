@@ -14,21 +14,20 @@ The repository also checks a SHA-256 manifest and a scientific-state validator.
 === Recovered prior-run evidence
 
 The V6 handoff records additional analyses whose post-base source files were
-lost during a runtime reset.  These include restricted-LP endpoints and an
-external NTA Table 3-1 composition holdout.
+lost during a runtime reset.  These are excluded from the reproduced empirical
+results of the present manuscript.
 
-Those results are useful as recovery targets and as evidence about what had
-previously been computed, but they are not promoted to current reproduced
-results until their source and input chain are restored.
+Their recovery metadata are retained only in the recovery appendix so that
+future source restoration can be checked against the prior run without
+silently upgrading unreproduced numbers into evidence.
 
 === Point agreement is not confidence coverage
 
-The V6 record reports that five primary NTA composition categories agreed with
-an external holdout within 0.1 percentage point, with maximum absolute
-difference 0.08444 percentage point.
-
-This is a point-agreement diagnostic.  It is not a confidence interval,
-coverage probability, or causal validation statement.
+More generally, numerical agreement with an external aggregate table is a
+point-agreement diagnostic unless a sampling model and inferential procedure
+justify a confidence statement.  The claim registry therefore prohibits
+relabeling recovered point agreement as confidence coverage or causal
+validation.
 
 === Machine-readable claims
 

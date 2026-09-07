@@ -14,6 +14,17 @@ stem:[P={stage1-candidate-upper}] the total 2020 Census population used as a con
 candidate-person upper bound, and stem:[M_L={stage1-mother-lower}] a conservative
 lower bound on persons represented by the F71561 mother population.
 
+.Stage-1 inputs and identification roles
+[cols="1,2,2,3",options="header"]
+|===
+|ID |Object |Status |Role
+|O1 |stem:[F] final-return persons |Observed public aggregate |Exact NTA final-return row; no behavioral interpretation
+|B1 |stem:[P] candidate-person count |Conservative upper bound |Entire Census population, so denominator coverage is weakly conservative
+|B2 |stem:[M_L] F71561 mother persons |Conservative lower bound |Built from public survey-frame and Census restrictions
+|B3 |stem:[D] tracked contamination |Adversarial allowance |Birth, international-inflow, and death channels are allocated entirely against identification
+|U1 |stem:[C_{NR}] frame-incompatible filers |Unresolved |Left explicit; no point estimate or unsupported upper bound is imposed
+|===
+
 The Fréchet lower overlap before additional contamination is
 
 [stem]
