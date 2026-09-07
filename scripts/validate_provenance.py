@@ -229,11 +229,17 @@ active_required = {
     "OBSERVED_PUBLIC",
     "ROBUSTNESS_FRONTIER_REPRODUCED",
     "READY_STATIC_ONLY",
+    "SENSITIVITY_ONLY_REPRODUCED",
 }
 for cid, claim in claims.items():
     ev_statuses = {r["evidence_status"] for r in by_claim.get(cid, [])}
     if claim["status"] in active_required:
-        if not ev_statuses & {"ACTIVE_OFFICIAL", "ACTIVE_REPRODUCED", "ACTIVE_STATE"}:
+        if not ev_statuses & {
+            "ACTIVE_OFFICIAL",
+            "ACTIVE_REPRODUCED",
+            "ACTIVE_REPRODUCED_SENSITIVITY",
+            "ACTIVE_STATE",
+        }:
             errors.append(f"{cid}: active claim lacks active evidence")
         if ev_statuses <= {"RECOVERY_ONLY", "RECOVERY_GAP"}:
             errors.append(f"{cid}: active claim relies only on recovery evidence")

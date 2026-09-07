@@ -34,7 +34,7 @@ unreproduced results from being presented as reproduced identified facts.
 ====
 This manuscript distinguishes reproduced robustness results from recovered
 prior-run evidence. The claim-level authority is
-`data/claim_registry.csv`.
+`paper1/data/claim_registry.csv`.
 ====
 
 include::chapters/00_scope_and_contribution.adoc[]

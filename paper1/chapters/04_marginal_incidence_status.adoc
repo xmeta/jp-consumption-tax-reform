@@ -3,17 +3,66 @@
 The stage-1 result does not by itself identify the filer-level statutory
 marginal-tax-rate distribution.
 
-=== Pseudo-filer construction
+=== Reproducible pseudo-filer sensitivity construction
 
-A recovered pseudo-filer script applies tax-law rules to calibrated household
-income components and matches observed tax-liability moments using nuisance
-scales.  Its own documentation states that F71561 is not filer microdata and
-that the resulting MTR distribution is not the true identified filer
-distribution.
+The repository now contains an independently reproducible pseudo-filer
+sensitivity core under
+`research/income_tax_pseudofiler/`.
 
-Accordingly, pseudo-filer MTRs are retained as `SENSITIVITY_ONLY`.  They may
-parameterize ETI or stress-test scenarios, but they cannot supply the headline
-identified incidence result.
+The core is generated from repository-tracked official-source-derived inputs:
+F71561 household-type/decile aggregates, the F71911 household-size and age
+bridge, F71531 tax and social-insurance moments, and versioned 2026 National Tax
+Agency statutory parameters.  The raw official source files, source locators,
+and SHA-256 values are retained in the repository.
+
+For each decile and sensitivity scenario, the construction allocates aggregate
+income components to pseudo tax units, applies the statutory income
+transformations and tax brackets, and chooses a nuisance income scale to match
+the observed aggregate income-tax liability moment or, at statutory
+discontinuities, the nearest achievable moment.
+
+The nuisance scale is a calibration device.  It is not a behavioral,
+structural, or causal parameter.
+
+The construction evaluates nine explicit scenarios over ten income deciles.
+The generated outputs and executable tests are regenerated in CI.  Its
+reproducibility status is therefore
+`SENSITIVITY_ONLY_REPRODUCED`.
+
+This is a reproducibility statement, not an identification statement.
+
+The construction still does not observe:
+
+* filer-level income;
+* filer status for the F71561 household cells;
+* within-cell joint income and deduction distributions;
+* actual household tax-unit partitioning;
+* filer-level age assignment;
+* the true joint distribution of taxable income and statutory marginal rates.
+
+Accordingly, the generated pseudo-filer MTRs may parameterize ETI or stress-test
+scenarios, but they cannot supply the headline identified incidence result and
+cannot be treated as point-identified inputs to optimal-policy conclusions.
+
+The historical V6 file `18_income_tax_pseudofiler_mtr.py` remains a separate
+`RECOVERY_GAP`.  The status above refers to the new independently
+reproducible sensitivity core, not to byte-identical restoration of the lost
+historical implementation.
+
+=== Calibration and statutory rounding
+
+The aggregate moment calibration uses a continuous quick-table convention,
+matching the historical sensitivity-construction convention.  The repository
+then recomputes ordinary national income tax under the statutory rule that
+taxable income is rounded down to the nearest JPY 1,000.
+
+These two quantities are reported separately.
+
+The 2026 basic deduction also changes discontinuously at statutory total-income
+thresholds.  Some extreme sensitivity scenarios therefore cannot hit the
+aggregate liability moment exactly with one nuisance scale.  Such cases are
+reported as nearest-achievable sensitivity diagnostics; the tax-law
+discontinuity is not smoothed away to improve fit.
 
 === Static liability versus behavioral incidence
 

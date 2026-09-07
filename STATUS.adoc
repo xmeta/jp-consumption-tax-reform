@@ -17,7 +17,7 @@
 |Component |Status |Permitted interpretation
 |Income-tax behavioral response |NOT_READY |政策最適化の確定入力にしない
 |Income-tax liability / surtax |READY_STATIC_ONLY |静学的税額・帰着の範囲のみ
-|Pseudo-filer statutory MTR |SENSITIVITY_ONLY |ETI等の感度分析入力のみ
+|Pseudo-filer statutory MTR |SENSITIVITY_ONLY_REPRODUCED |公式raw/derived dataから再生成可能な感度分析モデル。ETI等の感度分析入力のみに用い、真の申告者MTR分布や点識別された政策入力とは扱わない
 |F71561 stage-1 population bridge |ROBUSTNESS_FRONTIER |任意の外部閾値 stem:[A] に対するbreak-even総未追跡mismatch budget stem:[C_U^*(A)] を再現可能に計算する。実際の stem:[C_U] や申告率は未識別
 |Recovered score_power thresholds |DOCUMENTED_PRIOR_RUN_NOT_REPRODUCED |回復用メタデータのみ。主結果へ使わない
 |NTA Table 3-1 external holdout |DOCUMENTED_PRIOR_RUN_NOT_REPRODUCED |回復用メタデータのみ。統計的CI・現行再現結果として扱わない

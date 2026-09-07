@@ -84,6 +84,21 @@ def ordinary_income_tax_rate_2026(taxable_income_yen):
     return float(r["rate"])
 
 
+def ordinary_national_income_tax_continuous_proxy_2026(taxable_income_yen):
+    """Continuous quick-table proxy used only for aggregate moment calibration.
+
+    Unlike the legal tax calculation, this helper does not round taxable income
+    down to 1,000 yen.  It preserves the historical V6 moment-calibration
+    convention and makes the nuisance scale continuously calibratable.  Exact
+    statutory tax is recomputed separately with ordinary_national_income_tax_2026.
+    """
+    x = max(float(taxable_income_yen), 0.0)
+    if x <= 0:
+        return 0.0
+    r = _find("income_tax_rate", x)
+    return max(x * float(r["rate"]) - float(r["quick_deduction_yen"]), 0.0)
+
+
 def ordinary_national_income_tax_2026(taxable_income_yen):
     """Ordinary national income tax, before Reconstruction Special Income Tax.
 

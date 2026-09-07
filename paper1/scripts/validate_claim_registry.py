@@ -10,6 +10,7 @@ ALLOWED = {
     "OBSERVED_PUBLIC",
     "ROBUSTNESS_FRONTIER_REPRODUCED",
     "SENSITIVITY_ONLY_RECOVERABLE",
+    "SENSITIVITY_ONLY_REPRODUCED",
     "DOCUMENTED_PRIOR_RUN_NOT_REPRODUCED",
     "READY_STATIC_ONLY",
     "NOT_READY",
@@ -19,6 +20,7 @@ REQUIRED = {f"P1-C{i:02d}" for i in range(1, 13)}
 LOCAL_SOURCE_STATUSES = {
     "ROBUSTNESS_FRONTIER_REPRODUCED",
     "READY_STATIC_ONLY",
+    "SENSITIVITY_ONLY_REPRODUCED",
     "NOT_READY",
 }
 
@@ -59,6 +61,8 @@ def main():
                 errors.append(f"{cid}: local source missing: {src}")
 
     by_id = {r["claim_id"]: r for r in rows}
+    if by_id["P1-C03"]["status"] != "SENSITIVITY_ONLY_REPRODUCED":
+        errors.append("P1-C03 pseudo-filer must remain reproduced sensitivity-only")
     if by_id["P1-C08"]["status"] != "ROBUSTNESS_FRONTIER_REPRODUCED":
         errors.append("P1-C08 must remain a reproduced robustness frontier")
     if by_id["P1-C09"]["status"] != "DOCUMENTED_PRIOR_RUN_NOT_REPRODUCED":
