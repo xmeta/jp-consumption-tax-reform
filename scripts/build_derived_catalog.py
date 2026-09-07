@@ -82,6 +82,14 @@ SPECS = [
         "DERIVED_REPRODUCED_SENSITIVITY_INPUT",
         "Backward-compatible pseudo-filer sensitivity bridge; exact mean household size is not identified because 6+ is top-coded",
     ),
+    (
+        "NTA-2026-STATUTORY-PARAMETERS",
+        "income_tax_2026_statutory_parameters.csv",
+        "scripts/build_income_tax_2026_statutory_parameters.py",
+        "NTA-2026-TAX-REFORM;NTA-2026-INCOME-TAX;NTA-SALARY-DEDUCTION-1410;NTA-INCOME-TAX-RATE-2260;NTA-2026-PENSION-TAX;NTA-2026-PENSION-DETAIL",
+        "DERIVED_REPRODUCED_VERIFIED_RULES",
+        "Versioned 2026 statutory tax parameters with official source locators and raw SHA-256 values",
+    ),
 ]
 
 

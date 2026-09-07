@@ -79,6 +79,18 @@ The proxy must not be promoted to a point-identified structural input.
 The age-65+ ratio in the same bridge is a published aggregate person ratio and
 does not identify filer-level age composition.
 
+=== Statutory tax parameters
+
+`data/derived/income_tax_2026_statutory_parameters.csv` is the versioned
+authority for the 2026 pseudo-filer statutory calculations. Each rule carries
+an NTA source ID, locator, and raw-source SHA-256.
+
+Machine-readable HTML values are checked against committed snapshots. Rules
+transcribed from official PDFs are explicitly labelled
+`VERIFIED_TRANSCRIPTION_PDF` and must retain a page/table locator. Tax-law
+parameters are not allowed to remain as anonymous constants inside the research
+calculation.
+
 == Validation
 
 The CI provenance gate verifies:
