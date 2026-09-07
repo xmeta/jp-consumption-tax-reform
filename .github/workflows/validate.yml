@@ -13,6 +13,16 @@ jobs:
         with:
           python-version: "3.12"
 
+      - name: Rebuild source catalog and provenance-derived inputs
+        run: |
+          python scripts/build_source_catalog.py
+          python scripts/build_input_provenance.py
+          python scripts/build_stage1_inputs.py
+
+      - name: Validate source and claim provenance
+        run: |
+          python scripts/validate_provenance.py
+
       - name: Reproduce stage-1 frontiers
         run: |
           python research/stage1_filing_bound/46_income_tax_stage1_population_overlap.py
