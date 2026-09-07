@@ -1,0 +1,95 @@
+= Proposition: F71561 Stage-1 Robustness Frontier
+:revdate: 2026-09-08
+:stem: latexmath
+
+== Proposition
+
+Let:
+
+* stem:[F=23{,}090{,}075] be NTA FY2024 final-return persons;
+* stem:[P=126{,}146{,}099] be the conservative candidate-person upper bound;
+* stem:[M_L=122{,}494{,}621] be the conservative F71561 mother-person lower bound;
+* stem:[D=8{,}085{,}259] be the deliberately adverse tracked-contamination allowance;
+* stem:[C_{NR}\ge 0] be unresolved frame-incompatible final-return filers.
+
+Define
+
+[stem]
+++++
+B_0=\max\{0,F-(P-M_L)\}
+++++
+
+and the participation lower-bound frontier
+
+[stem]
+++++
+L(C_{NR})=
+\frac{\max\{0,B_0-D-C_{NR}\}}{P}.
+++++
+
+Then
+
+[stem]
+++++
+B_0=19{,}438{,}597,
+\qquad
+B_0-D=11{,}353{,}338,
+++++
+
+so
+
+[stem]
+++++
+L(0)=0.09000149897619902.
+++++
+
+For any prior admissibility threshold stem:[A], the prior is rejected whenever
+
+[stem]
+++++
+C_{NR}<C^*_{NR}(A)
+=
+\max\{0,B_0-D-PA\}.
+++++
+
+For the recovered V6 prior stem:[A=0.022],
+
+[stem]
+++++
+C^*_{NR}(0.022)=8{,}578{,}123.822.
+++++
+
+Therefore the `score_power=2.0` prior is rejected for every
+stem:[C_{NR}<8{,}578{,}123.822].
+
+== Proof
+
+The F71561-compatible mother population contains at least stem:[M_L] persons
+inside a universe containing at most stem:[P] candidate persons.  Hence at
+most stem:[P-M_L] of the stem:[F] final-return persons can be placed outside
+the mother population without invoking an additional frame mismatch.
+
+The Fréchet lower overlap is therefore
+
+[stem]
+++++
+B_0=\max\{0,F-(P-M_L)\}.
+++++
+
+Allocate the entire tracked allowance stem:[D] adversarially against this
+overlap and then allocate unresolved frame-incompatible final-return filers
+stem:[C_{NR}] in the same direction.  The remaining overlap cannot be smaller
+than stem:[\max\{0,B_0-D-C_{NR}\}].
+
+Dividing by the conservative candidate-person upper bound stem:[P] yields
+stem:[L(C_{NR})].
+
+For threshold stem:[A], rejection requires stem:[L(C_{NR})>A].  In the
+positive-overlap region this is algebraically equivalent to
+
+[stem]
+++++
+C_{NR}<B_0-D-PA.
+++++
+
+Truncating the critical value at zero gives the stated formula.  QED.

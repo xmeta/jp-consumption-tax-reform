@@ -78,6 +78,11 @@ resident/Census-compatible frame, especially non-resident filers.  The public
 source audit is recorded in
 link:nonresident_source_audit.adoc[nonresident_source_audit.adoc].
 
+Because the official tables examined do not close that count, the paper-facing
+result is stated analytically as a frontier in stem:[C_{NR}], not as an
+unconditional filing-rate lower bound.  See
+link:proposition_stage1_frontier.adoc[proposition_stage1_frontier.adoc].
+
 Until that bridge is closed, `income_tax = NOT_READY` remains unchanged.
 
 == Survey-frame facts
@@ -114,6 +119,8 @@ students and `20,540,114` included single-person households.
 ----
 python research/stage1_filing_bound/46_income_tax_stage1_population_overlap.py
 python research/stage1_filing_bound/47_income_tax_stage1_contamination_frontier.py
+python research/stage1_filing_bound/48_income_tax_stage1_nonresident_frontier.py
 python research/stage1_filing_bound/test_stage1_population_overlap.py
 python research/stage1_filing_bound/test_stage1_contamination_frontier.py
+python research/stage1_filing_bound/test_stage1_nonresident_frontier.py
 ----

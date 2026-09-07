@@ -74,3 +74,27 @@ current rejection.
 
 This unresolved quantity must remain explicit unless a directly compatible
 official count or a legally valid upper bound is obtained.
+
+
+== Scale diagnostic: treaty information exchange
+
+The NTA's FY2024 treaty-information-exchange report states that Japan provided
+`920,649` statutory-report information records to foreign tax authorities.
+The report describes these as information on payments to non-residents
+identified through statutory reports, including interest, dividends, real
+estate rent, royalties, wages/remuneration and share-purchase consideration.
+
+This count is useful only as a scale diagnostic.  It is NOT an upper bound on
+non-resident final-return persons because:
+
+* one person can generate multiple statutory-report records;
+* not every possible final-return income path is proven to generate an
+  exchangeable record;
+* the exchange universe depends on treaty/information-exchange coverage;
+* the statistic is records, not deduplicated individual final-return filers.
+
+Therefore `920,649` is not subtracted from stem:[C_{NR}] in the identified
+frontier.
+
+Official source:
+https://www.nta.go.jp/information/release/pdf/0026001-016.pdf
