@@ -5,8 +5,9 @@ This script does NOT declare the filing rate point-identified.  It computes a
 conservative overlap bound conditional on two unresolved bridge conditions:
 
 1. NTA 2024 return-filer persons must be mapped to the same domestic-person
-   universe as the F71561 mother population (non-resident / quasi-final-return
-   contamination is not yet bounded here).
+   universe as the F71561 mother population.  Script 47 bounds several timing
+   and quasi-final-return contamination channels, but non-resident filing
+   remains unresolved.
 2. A return filer inside the F71561 mother population must belong to the broad
    F71561-compatible candidate tax-unit universe used by the stage-1 model.
 
@@ -33,11 +34,16 @@ def compute(v):
     general = v["census_general_household_persons_2020"]
     single = v["census_single_households_2020"]
     single_mother = v["f71561_single_mother_households_2024_design"]
-    ishikawa = v["ishikawa_total_population_2020"]
+    okunoto_general = v["okunoto_general_household_persons_2020"]
     filers = v["nta_return_filers_2024"]
 
     two_plus_general = general - single
-    mother_person_lower = two_plus_general - ishikawa + single_mother
+    # The exact Okunoto two-plus person count is not needed for a lower
+    # bound. Subtracting all Okunoto general-household persons is a
+    # conservative upper bound on its two-plus contribution.
+    mother_person_lower = (
+        two_plus_general - okunoto_general + single_mother
+    )
     out_of_mother_domestic_upper = total - mother_person_lower
     overlap_filer_lower_conditional = max(
         0.0, filers - out_of_mother_domestic_upper

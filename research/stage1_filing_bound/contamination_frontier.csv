@@ -1,0 +1,4 @@
+prior,Amax_threshold,tracked_contamination_upper,total_break_even_contamination,residual_unresolved_contamination_to_erase_rejection,residual_share_of_candidate_upper,status
+score_power_0.5,0.8271,8085259.0,0.0,0.0,0.0,ROBUSTNESS_FRONTIER_NOT_IDENTIFIED
+score_power_1.0,0.2668,8085259.0,0.0,0.0,0.0,ROBUSTNESS_FRONTIER_NOT_IDENTIFIED
+score_power_2.0,0.022,8085259.0,16935307.822,8850048.822,0.07015713440333973,ROBUSTNESS_FRONTIER_NOT_IDENTIFIED

@@ -1,52 +1,116 @@
-= F71561 Stage-1 Filing Participation: Population-Overlap Diagnostic
+= F71561 Stage-1 Filing Participation: Partial-Identification Frontier
 :revdate: 2026-09-08
+:stem: latexmath
 
-== Result
+== Status
 
-This module sharpens the previously unresolved first-stage filing-participation problem without promoting it to an identified result.
+This module strengthens the first-stage filing-participation result without
+promoting `income_tax` to READY.
 
-Using only official aggregate population counts, the conditional Fréchet-style overlap construction gives:
+The current result is a *robustness / identification frontier*, not a point
+estimate of the filing rate.
 
-* conservative F71561 mother-population person lower bound: `121,419,541`
-* conservative domestic out-of-mother upper bound: `4,726,558`
-* conditional return-filer overlap lower bound: `18,635,442`
+== Population-overlap bound
+
+Official aggregate counts imply:
+
+* conservative F71561 mother-population person lower bound: `122,494,621`
+* conservative domestic out-of-mother upper bound: `3,651,478`
+* conditional return-filer overlap lower bound: `19,710,522`
 * candidate tax-unit upper bound: `126,146,099`
-* conditional stage-1 filing-rate lower bound: `14.7729%`
+* zero-extra-contamination stage-1 lower bound: `15.6252%`
 
-The recovered V6 threshold for `score_power=2.0` is 2.20%. Under exact population-universe correspondence, the conditional lower bound is therefore above that threshold. Erasing this rejection would require at least `15,860,228` additional NTA filer records that are not represented by the domestic frame assumptions used here.
+The recovered V6 threshold for `score_power=2.0` is `2.20%`.
+With no additional out-of-frame contamination, erasing that rejection requires
+`16,935,308` filer records.
 
-== Why this is still conditional
+== Formal contamination frontier
 
-The result MUST NOT be labelled a formal identified lower bound yet.
+Let (F) be NTA return filers, (P) the conservative candidate-person upper
+bound, (M_L) the F71561 mother-person lower bound, and (C) additional filer
+records not represented by the population bridge.
 
-Two bridge conditions remain open:
+[stem]
+++++
+B_0 = \max\{0, F-(P-M_L)\},
+\qquad
+L(C)=\frac{\max\{0,B_0-C\}}{P}.
+++++
 
-. the 2024 NTA filing-person count must be reconciled with the F71561 domestic mother-population universe, including non-resident returns, quasi-final returns/deaths, and other timing/population mismatches;
-. the broad F71561-compatible candidate-tax-unit definition must be shown to contain every in-frame return filer used in the overlap numerator.
+For a prior threshold (A), the prior is rejected whenever
 
-Until those checks are closed, `income_tax = NOT_READY` remains unchanged.
+[stem]
+++++
+C < C^*(A)=B_0-PA.
+++++
 
-== Construction
+For `score_power=2.0`, (C^*=16,935,307.822).
 
-The 2024 National Survey of Family Income, Consumption and Wealth sample design states that its mother population uses 2020 Census results reorganized to 2024 municipality boundaries, excludes Okunoto from the mother-population estimate, includes ordinary two-or-more-person households, and defines the single-person mother population by removing students from one-person general households.
+== Adversarially tracked contamination
 
-Table 4 reports `21,142,885` one-person general households, `602,771` students, and `20,540,114` included single-person households.
+To avoid optimistic assumptions, script 47 treats all of the following as
+potential contamination even though this massively overcounts actual filers:
 
-For a deliberately conservative geographic adjustment, this diagnostic subtracts the entire 2020 Ishikawa population (`1,132,526`) from the nationwide two-plus general-household person count rather than trying to estimate only the four excluded Okunoto municipalities.
+* every birth in 2020--2024: `3,836,677`;
+* every registered international inflow in 2020--2024: `2,643,204`;
+* every death in 2024 as if it generated one quasi-final return: `1,605,378`.
 
-The denominator is bounded above by the entire 2020 Census population (`126,146,099`), not by a fitted pseudo-filer count.
+The sum is `8,085,259`.  Categories can overlap and full-year 2020 births and
+inflows include events before the 2020-10-01 Census; both features deliberately
+make this an upper bound rather than a fitted estimate.
+
+After allocating this entire amount adversarially, `score_power=2.0` still
+requires a further `8,850,049` unresolved filer records (7.0157% of the
+candidate-person upper bound) to erase the rejection.
+
+This residual is primarily a target for bounding non-resident and other
+population-definition mismatches.
+
+== Why the result is still not READY
+
+Two conditions remain open:
+
+. bound NTA return filers that are outside the resident/census-based bridge,
+  especially non-resident self-assessment filers;
+. prove that the broad F71561-compatible candidate-tax-unit universe contains
+  every in-frame filer used by the overlap numerator.
+
+Until these are closed, `income_tax = NOT_READY` remains unchanged.
+
+== Survey-frame facts
+
+The 2024 National Survey of Family Income, Consumption and Wealth sample design
+uses 2020 Census results rearranged to 2024 municipality boundaries.  It
+explicitly excludes Wajima, Suzu, Anamizu and Noto from the mother-population
+estimate.
+
+The mother population includes ordinary two-plus households and eligible
+single persons.  Foreign-national households are included in the mother
+population, although they are excluded from actual survey targeting because
+their household income and expenditure are difficult to measure consistently.
+
+Table 4 reports `21,142,885` one-person general households, `602,771`
+students and `20,540,114` included single-person households.
 
 == Sources
 
-* Statistics Bureau of Japan, 2024 National Survey of Family Income, Consumption and Wealth, sample-design document, Table 4.
-* Statistics Bureau of Japan, 2020 Population Census / Japan Statistical Yearbook.
-* National Tax Agency, 2024 self-assessment income-tax statistics (`23,362` thousand return filers).
-* Recovered V6 stage-1 threshold diagnostic for `Amax`.
+* Statistics Bureau, 2024 National Survey of Family Income, Consumption and Wealth sample design:
+  https://www.stat.go.jp/data/zenkokukakei/2024/pdf/hyohon2024.pdf
+* Ishikawa Prefecture, 2020 Population Census summary:
+  https://toukei.pref.ishikawa.lg.jp/dl/4461/R2census_jinkou.pdf
+* National Tax Agency, 2024 self-assessment income-tax statistics:
+  https://www.nta.go.jp/publication/statistics/kokuzeicho/shinkoku2024/pdf/02_gaiyo.pdf
+* Statistics Bureau, Basic Resident Register migration report 2024:
+  https://www.stat.go.jp/data/idou/2024np/jissu/pdf/gaiyou.pdf
+* MHLW, final 2024 vital statistics:
+  https://www.mhlw.go.jp/toukei/saikin/hw/jinkou/kakutei24/
 
 == Reproduction
 
 [source,shell]
 ----
 python research/stage1_filing_bound/46_income_tax_stage1_population_overlap.py
+python research/stage1_filing_bound/47_income_tax_stage1_contamination_frontier.py
 python research/stage1_filing_bound/test_stage1_population_overlap.py
+python research/stage1_filing_bound/test_stage1_contamination_frontier.py
 ----

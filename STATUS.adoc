@@ -18,7 +18,7 @@
 |Income-tax behavioral response |NOT_READY |政策最適化の確定入力にしない
 |Income-tax liability / surtax |READY_STATIC_ONLY |静学的税額・帰着の範囲のみ
 |Pseudo-filer statutory MTR |SENSITIVITY_ONLY |ETI等の感度分析入力のみ
-|F71561-compatible return-filing rate |FIRST_STAGE_NOT_READY |次の主要識別課題
+|F71561-compatible return-filing rate |PARTIAL_FRONTIER |score_power=2.0の頑健性フロンティアを識別。非居住者等の残余ブリッジは未解決
 |NTA Table 3-1 external holdout |POINT_VALIDATION_PASSED |5/5主要区分0.1pp以内、最大0.08444pp。統計的CIではない
 |===
 
