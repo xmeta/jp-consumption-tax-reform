@@ -1,0 +1,48 @@
+== Identification framework
+
+Let stem:[M] denote the collection of public aggregate moments and let
+stem:[\pi] denote a latent distribution over tax units, income-source states,
+and tax-law states compatible with those moments.
+
+Define the feasible set
+
+[stem]
+++++
+\Pi(M)=\{\pi\ge0:
+A\pi\in\mathcal C(M),\;
+B\pi=b,\;
+\text{population and tax-law restrictions}\}.
+++++
+
+For a policy-relevant functional stem:[\theta(\pi)], its identified set is
+
+[stem]
+++++
+\Theta(M)=\{\theta(\pi):\pi\in\Pi(M)\}.
+++++
+
+The lower and upper endpoints are obtained by optimization over the feasible
+set, not by selecting one convenient latent distribution.
+
+=== Reference selections are not truth
+
+Maximum-entropy, generalized-cross-entropy, pseudo-filer, or other calibrated
+constructions can be useful reference selections inside or near a feasible
+region.  They are not interpreted as the true joint distribution unless the
+data identify them.
+
+=== Population selection
+
+The F71561-to-NTA bridge is decomposed conceptually into
+
+[stem]
+++++
+\text{candidate person}
+\rightarrow
+\text{final-return filer}
+\rightarrow
+\text{positive self-assessed liability}.
+++++
+
+This paper focuses on making each selection step explicit rather than absorbing
+the entire mismatch into a fitted filer distribution.

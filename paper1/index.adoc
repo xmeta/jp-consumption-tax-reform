@@ -1,0 +1,41 @@
+= Partial Identification of Personal Income-Tax Marginal Incidence from Public Aggregate Data: Evidence from Japan
+:doctype: article
+:lang: en
+:toc: left
+:toclevels: 3
+:stem: latexmath
+:icons: font
+:sectnums:
+
+include::data/stage1_attributes.adoc[]
+
+[abstract]
+--
+We study what can be learned about Japanese personal income-tax marginal
+incidence from public aggregate data when filer microdata are unavailable for
+a reproducible analysis.  Rather than mapping household aggregates directly
+into a synthetic filer distribution, we separate population selection,
+tax-liability information, and marginal-rate assumptions.  For the first-stage
+filing bridge we derive an explicit robustness frontier in the unresolved count
+of frame-incompatible final-return filers.  Under deliberately adverse
+allowances for births, international inflows, and deaths, the recovered
+`score_power=2.0` prior is rejected whenever the unresolved count is below
+{stage1-critical-cnr} persons.  Other marginal-incidence quantities remain sensitivity
+only or not identified.  A machine-readable claim registry prevents recovered
+or calibrated results from being presented as reproduced identified facts.
+--
+
+[IMPORTANT]
+====
+This manuscript distinguishes reproduced identified results from recovered
+prior-run evidence.  The claim-level authority is
+`data/claim_registry.csv`.
+====
+
+include::chapters/00_scope_and_contribution.adoc[]
+include::chapters/01_populations_and_data.adoc[]
+include::chapters/02_identification_framework.adoc[]
+include::chapters/03_stage1_filing_frontier.adoc[]
+include::chapters/04_marginal_incidence_status.adoc[]
+include::chapters/05_validation_and_claims.adoc[]
+include::chapters/06_limitations_and_next_data.adoc[]

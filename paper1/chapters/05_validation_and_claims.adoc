@@ -1,0 +1,38 @@
+== Validation, recovery status, and claim discipline
+
+This project separates validation of a numerical output from identification of
+the economic object represented by that output.
+
+=== Reproduced results
+
+The stage-1 overlap, contamination frontier, and unresolved-nonresident
+frontier are reproduced from source in the Git repository and covered by
+executable tests.
+
+The repository also checks a SHA-256 manifest and a scientific-state validator.
+
+=== Recovered prior-run evidence
+
+The V6 handoff records additional analyses whose post-base source files were
+lost during a runtime reset.  These include restricted-LP endpoints and an
+external NTA Table 3-1 composition holdout.
+
+Those results are useful as recovery targets and as evidence about what had
+previously been computed, but they are not promoted to current reproduced
+results until their source and input chain are restored.
+
+=== Point agreement is not confidence coverage
+
+The V6 record reports that five primary NTA composition categories agreed with
+an external holdout within 0.1 percentage point, with maximum absolute
+difference 0.08444 percentage point.
+
+This is a point-agreement diagnostic.  It is not a confidence interval,
+coverage probability, or causal validation statement.
+
+=== Machine-readable claims
+
+The normative status of each claim is stored in
+`paper1/data/claim_registry.csv`.  The manuscript validator rejects unknown
+statuses and requires `NOT_READY` and sensitivity claims to retain explicit
+forbidden-claim language.

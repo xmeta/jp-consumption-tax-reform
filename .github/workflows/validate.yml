@@ -8,8 +8,36 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
-      - run: python scripts/validate_repo.py
-      - run: python scripts/check_manifest.py
+
+      - name: Reproduce stage-1 frontiers
+        run: |
+          python research/stage1_filing_bound/46_income_tax_stage1_population_overlap.py
+          python research/stage1_filing_bound/47_income_tax_stage1_contamination_frontier.py
+          python research/stage1_filing_bound/48_income_tax_stage1_nonresident_frontier.py
+          python research/stage1_filing_bound/test_stage1_population_overlap.py
+          python research/stage1_filing_bound/test_stage1_contamination_frontier.py
+          python research/stage1_filing_bound/test_stage1_nonresident_frontier.py
+
+      - name: Validate Paper 1 claims
+        run: |
+          python paper1/scripts/generate_stage1_attributes.py --check
+          python paper1/scripts/validate_claim_registry.py
+
+      - name: Validate repository integrity
+        run: |
+          python scripts/validate_repo.py
+          python scripts/check_manifest.py
+          git diff --exit-code
+
+      - uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: "3.3"
+
+      - name: Build Paper 1
+        run: |
+          gem install asciidoctor --no-document
+          asciidoctor -o /tmp/paper1.html paper1/index.adoc

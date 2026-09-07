@@ -1,0 +1,32 @@
+== Marginal-incidence identification status
+
+The stage-1 result does not by itself identify the filer-level statutory
+marginal-tax-rate distribution.
+
+=== Pseudo-filer construction
+
+A recovered pseudo-filer script applies tax-law rules to calibrated household
+income components and matches observed tax-liability moments using nuisance
+scales.  Its own documentation states that F71561 is not filer microdata and
+that the resulting MTR distribution is not the true identified filer
+distribution.
+
+Accordingly, pseudo-filer MTRs are retained as `SENSITIVITY_ONLY`.  They may
+parameterize ETI or stress-test scenarios, but they cannot supply the headline
+identified incidence result.
+
+=== Static liability versus behavioral incidence
+
+Observed F71561 income-tax liability moments can support static,
+first-order liability calculations under explicitly stated accounting
+assumptions.  This is the meaning of `READY_STATIC_ONLY`.
+
+Static liability incidence does not identify:
+
+* filer selection under a policy change;
+* taxable-income elasticities;
+* general-equilibrium earnings responses;
+* dynamic tax revenue;
+* the joint welfare effect of a VAT-income-tax reform.
+
+Those quantities remain `NOT_READY`.

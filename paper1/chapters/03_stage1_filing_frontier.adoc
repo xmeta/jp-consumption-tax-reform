@@ -1,0 +1,95 @@
+== Stage-1 filing-participation frontier
+
+The first selection step asks how many F71561-compatible candidate persons can
+be guaranteed to overlap the NTA final-return population.
+
+We deliberately avoid estimating a filing probability by pseudo-filer fitting.
+Instead, we construct a worst-case overlap bound and expose the remaining
+population mismatch as an explicit nuisance count.
+
+=== Conservative population bridge
+
+Let stem:[F={stage1-final-return-filers}] denote NTA FY2024 final-return persons,
+stem:[P={stage1-candidate-upper}] the total 2020 Census population used as a conservative
+candidate-person upper bound, and stem:[M_L={stage1-mother-lower}] a conservative
+lower bound on persons represented by the F71561 mother population.
+
+The Fréchet lower overlap before additional contamination is
+
+[stem]
+++++
+B_0 = \max\{0,F-(P-M_L)\}={stage1-overlap-lower}.
+++++
+
+The construction uses the exact four-municipality Okunoto exclusion and a
+deliberately loose person denominator.  The denominator therefore weakens,
+rather than strengthens, the inferred filing-participation lower bound.
+
+
+=== Adversarial tracked contamination
+
+To avoid optimistic alignment assumptions, we allocate several observable
+population-timing channels entirely against the overlap:
+
+* all 2020--2024 births: stem:[3{,}836{,}677];
+* all 2020--2024 gross international inflows: stem:[2{,}643{,}204];
+* every 2024 death as one potential quasi-final return:
+  stem:[1{,}605{,}378].
+
+Their sum is
+
+[stem]
+++++
+D={stage1-tracked-upper}.
+++++
+
+This is intentionally conservative.  The categories can overlap, many persons
+are not filers, and the full-year 2020 counts include events before the Census
+reference date.
+
+After allocating stem:[D], the residual overlap at zero additional mismatch is
+
+[stem]
+++++
+B_0-D={stage1-residual-cnr0},
+++++
+
+which corresponds to {stage1-cnr0-pct}% of the candidate-person upper bound.
+
+=== Unresolved frame-incompatible filers
+
+Let stem:[C_{NR}] denote additional final-return filers incompatible with the
+resident/Census bridge, principally unresolved non-resident cases.
+
+The identified robustness frontier is
+
+[stem]
+++++
+L(C_{NR})=
+\frac{\max\{0,{stage1-residual-cnr0}-C_{NR}\}}
+{{stage1-candidate-upper}}.
+++++
+
+For an admissibility threshold stem:[A], rejection occurs whenever
+
+[stem]
+++++
+C_{NR} <
+\max\{0,{stage1-residual-cnr0}-{stage1-candidate-upper}A\}.
+++++
+
+For the recovered V6 `score_power=2.0` threshold ({stage1-score2-threshold-pct}%), the
+critical value is
+
+[stem]
+++++
+C^*_{NR}={stage1-critical-cnr}.
+++++
+
+Thus that prior is rejected for every
+stem:[C_{NR}<{stage1-critical-cnr}].  The `score_power=0.5` and
+`score_power=1.0` thresholds are not rejected even at stem:[C_{NR}=0].
+
+This is the paper's stage-1 identification result.  It does not require a point
+estimate of stem:[C_{NR}], and it does not imply that the unconditional filing
+rate is point identified.

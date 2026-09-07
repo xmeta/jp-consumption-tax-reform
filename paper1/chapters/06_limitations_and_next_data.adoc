@@ -1,0 +1,41 @@
+== Limitations and data improvements
+
+The principal limitation is not numerical optimization.  It is the mismatch
+between public household aggregates and the filer-level population needed for
+marginal income-tax incidence.
+
+=== Remaining non-resident bridge
+
+Public NTA tables examined for this study do not provide a compatible
+resident/non-resident cross-tab of final-return persons.
+
+We therefore leave the count of frame-incompatible final-return filers,
+stem:[C_{NR}], explicit.  The result is a robustness frontier, not a point
+estimate.
+
+The NTA reports 920,649 statutory-report information records concerning
+payments to non-residents supplied to foreign tax authorities in FY2024.
+This quantity is not used as an upper bound: it counts information records,
+not deduplicated final-return persons, and its coverage does not match the
+self-assessment filing population.
+
+=== Data that would materially tighten identification
+
+The highest-value additional data would be:
+
+. a resident/non-resident count of FY2024 final-return persons on a
+  conceptually compatible basis;
+. anonymized filer microdata or sufficiently detailed tabulations linking
+  taxable-income components, deductions, filing status, and tax liability;
+. public cross-tabs that connect household income deciles to tax-unit
+  characteristics without synthetic assignment;
+. repeated-year equivalents permitting validation of stability and transport.
+
+=== Scope of policy conclusions
+
+The identified results in this paper do not establish an optimal consumption
+tax rate, an optimal income-tax schedule, or a structural macroeconomic effect.
+
+A later policy-optimization paper may condition on transparent behavioral
+ranges and macro models, but such results must be labelled model-contingent
+unless those additional parameters are independently identified.
