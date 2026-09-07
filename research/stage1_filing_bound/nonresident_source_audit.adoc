@@ -3,9 +3,8 @@
 
 == Question
 
-Can the published NTA aggregate statistics directly identify or upper-bound the
-number of non-resident persons included in the 2024 final-return count used by
-the F71561 stage-1 bridge?
+Can published NTA aggregate statistics directly identify or upper-bound the
+number of non-resident persons included in the FY2024 final-return count?
 
 == Finding
 
@@ -15,7 +14,7 @@ official published tables examined for this audit.
 This is a source-availability finding, not a claim that NTA has no such
 administrative data internally.
 
-== Exact numerator correction
+== Exact numerator
 
 The FY2024 NTA Annual Statistics Report, table 2-1(1), reports:
 
@@ -23,41 +22,46 @@ The FY2024 NTA Annual Statistics Report, table 2-1(1), reports:
 * final-return persons: `23,090,075`;
 * amended-return persons: `145,620`.
 
-For filing participation, this repository therefore uses the exact
-`23,090,075` final-return row rather than the broader 23,362,184 total.
+The stage-1 benchmark uses the exact `23,090,075` final-return row rather than
+the broader cases-processed total.
 
 == Published table coverage examined
 
 The FY2024 self-assessment income-tax chapter publishes taxation status,
-income-range counts, income-type counts and prefectural tables.  Its notes say
-the chapter is a complete survey of people who filed final returns or whose
-cases were processed for 2024 income.
+income-range counts, income-type counts, and prefectural tables. The published
+taxonomy examined here does not expose a residence-status dimension.
 
-The published self-assessment table taxonomy examined here does not expose a
-residence-status dimension.
+The withholding-income-tax chapter separately publishes statistics on
+non-resident income, but those tables report payment and withholding-tax
+amounts rather than a deduplicated count of non-resident self-assessment
+final-return persons.
 
-The withholding-income-tax chapter separately publishes
-"statistics of taxation on non-residents, etc."  That table reports payment
-amounts and withholding tax amounts by income type.  It is not a count of
-non-resident self-assessment filers and is therefore not used as a person
-bound.
+NTA guidance confirms that non-residents can have Japanese final-return
+obligations for domestic-source income, so the non-resident component cannot be
+set to zero.
 
-The NTA guidance also confirms that non-residents can be required to file a
-Japanese final return for domestic-source income, so setting the non-resident
-filer count to zero would be invalid.
+== Role in the robustness frontier
 
-== Consequence for identification
+Non-resident final-return filers outside the Census/resident bridge are one
+possible component of the total untracked mismatch budget stem:[C_U].
 
-Let `C_NR` denote the unresolved part of filer contamination attributable to
-non-resident and other residence-definition mismatches not already covered by
-the deliberately adverse timing/death bounds.
+They are not equated with stem:[C_U]. Other timing, survey-eligibility,
+household-frame, or population-definition mismatches can also contribute.
 
-The stage-1 result remains a contamination frontier in `C_NR`.
-No point value is imputed.
+No point value is imputed to the non-resident component.
 
-For `score_power=2.0`, after the tracked adverse contamination upper bound is
-allocated, an additional `8,578,124` filer records are required to erase the
-current rejection.
+== Scale diagnostic: treaty information exchange
+
+The NTA FY2024 treaty-information-exchange report states that Japan provided
+`920,649` statutory-report information records to foreign tax authorities
+concerning payments to non-residents.
+
+This is useful only as a scale diagnostic. It is not an upper bound on
+non-resident final-return persons because it counts information records, not
+deduplicated final-return filers, and its coverage differs from the
+self-assessment population.
+
+Therefore `920,649` is not used to set or reduce stem:[C_U].
 
 == Official sources
 
@@ -67,34 +71,9 @@ current rejection.
   https://www.nta.go.jp/publication/statistics/kokuzeicho/shinkokuhyohon/top.htm
 * NTA guidance on non-residents with Japanese domestic-source income:
   https://www.nta.go.jp/taxes/shiraberu/taxanswer/shotoku/1926.htm
+* NTA FY2024 information exchange under tax treaties:
+  https://www.nta.go.jp/information/release/pdf/0026001-016.pdf
 
 == Audit status
 
 `NONRESIDENT_PERSON_COUNT = NOT_PUBLISHED_IN_TABLES_EXAMINED`
-
-This unresolved quantity must remain explicit unless a directly compatible
-official count or a legally valid upper bound is obtained.
-
-
-== Scale diagnostic: treaty information exchange
-
-The NTA's FY2024 treaty-information-exchange report states that Japan provided
-`920,649` statutory-report information records to foreign tax authorities.
-The report describes these as information on payments to non-residents
-identified through statutory reports, including interest, dividends, real
-estate rent, royalties, wages/remuneration and share-purchase consideration.
-
-This count is useful only as a scale diagnostic.  It is NOT an upper bound on
-non-resident final-return persons because:
-
-* one person can generate multiple statutory-report records;
-* not every possible final-return income path is proven to generate an
-  exchangeable record;
-* the exchange universe depends on treaty/information-exchange coverage;
-* the statistic is records, not deduplicated individual final-return filers.
-
-Therefore `920,649` is not subtracted from stem:[C_{NR}] in the identified
-frontier.
-
-Official source:
-https://www.nta.go.jp/information/release/pdf/0026001-016.pdf

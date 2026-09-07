@@ -1,10 +1,11 @@
 = 識別境界
 :revdate: 2026-09-08
+:stem: latexmath
 
 == 原則
 
 集計公表データから識別できる対象と、構造仮定を必要とする対象を分離する。
-点識別できない量は部分識別・感度分析・外部較正として表示する。
+点識別できない量は部分識別・robustness frontier・感度分析・外部較正として表示する。
 
 == 所得税
 
@@ -19,37 +20,56 @@ NTA給与階級データを用いる社会保険料・扶養控除構成も外�
 == 使用規則
 
 * SENSITIVITY_ONLY はETI等の感度帯には使える。
+* ROBUSTNESS_FRONTIER は未知量の実現値を識別せず、結論が反転する境界を示す。
 * NOT_READY は最適政策を一点で決める入力に使わない。
 * READY_STATIC_ONLY は静学的税額・分配効果を越えて行動反応へ外挿しない。
 
-
-== F71561 stage-1 filing participation
+== F71561 stage-1 population bridge
 
 2026-09-08時点で、申告参加率を点識別したとは主張しない。
-代わりに、母集団外申告者数を contamination parameter stem:[C] として残した
-部分識別・頑健性フロンティアを構築した。
 
-2020国勢調査、2024全国家計構造調査の標本設計、2024申告所得税統計を
-保守的に接続すると、追加contaminationをゼロとした下限は15.4096%となる。
-ただしこれは stem:[C=0] の条件付き値である。
+2024年全国家計構造調査の母集団は、2020年国勢調査結果を2024年市町村境界へ組み替えて推計したframe benchmarkである。
+したがって、その公表人数を「2024年に存在する人物集合の下限」とは扱わない。
 
-V6の +score_power=2.0+ 閾値2.20%を棄却不能にするには、
-母集団外申告者が16,663,383件必要である。
-2020--2024年の出生・国外転入を全件、2024年死亡を全件準確定申告とみなす
-極端な上限8,085,259件を差し引いても、さらに8,578,124件の未追跡
-contaminationが必要となる。
+観測NTA確定申告人員 stem:[F]、2020国勢調査全人口 stem:[P]、公表frame benchmark stem:[M_0] から、
+exact set correspondenceを仮定したnominal overlap benchmark
 
-従って、この結果は +score_power=2.0+ に対する強い頑健性診断であるが、
-非居住者申告者等の上限が閉じるまでは正式な識別下限へ昇格しない。
-+income_tax = NOT_READY+ は維持する。
+[stem]
+++++
+B_0=\max\{0,F-(P-M_0)\}
+++++
 
+を計算する。
+
+さらに、出生・国外転入・死亡について意図的に過大なtracked mismatch allowance stem:[D] を差し引き、
+残余benchmark stem:[B_R=\max\{0,B_0-D\}] を作る。
+
+総未追跡overlap loss budgetを stem:[C_U\ge0] とすると、
+
+[stem]
+++++
+R(C_U)=
+\frac{\max\{0,B_R-C_U\}}{P}
+++++
+
+をrobustness functionとする。
+
+任意の外部閾値 stem:[A] に対するbreak-even budgetは
+
+[stem]
+++++
+C_U^*(A)=\max\{0,B_R-PA\}.
+++++
+
+これは stem:[A] に対してどこまでpopulation/frame mismatchに耐えるかを再現可能に示すが、
+実際の stem:[C_U] を識別しない。従って、無条件の申告率下限や閾値棄却とは解釈しない。
+
+V6で回収された +score_power+ 閾値を代入した数値例は、その閾値生成ソースが復元されるまでrecovery-onlyである。
 
 === Candidate-person denominator coverage
 
-stage-1の分母はpseudo-filer数ではなく、2020国勢調査の全人口126,146,099人を
-上限として使う。個人所得税の候補単位は個人であるため、静的Census frame内の
-候補人数は全人口を超えない。この置換は申告参加率の下限を弱める方向にしか働かない。
+stage-1の分母にはpseudo-filer数ではなく2020国勢調査の全人口126,146,099人を使う。
+静的Census frame内の個人所得税候補人数はこの全人口を超えないため、分母は意図的に緩い。
 
-従ってcandidate-person coverage条件はこの保守的定式化では閉じる。
-残る主要未識別量は、非居住者等のCensus/resident frame外確定申告者
-stem:[C_{NR}] である。
+ただしこれは2020→2024のframe correspondenceを解決しない。
+その未解決部分は、非居住者だけでなく時点差・世帯資格・その他定義差を含む stem:[C_U] へまとめて残す。

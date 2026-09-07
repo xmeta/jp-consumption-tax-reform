@@ -1,4 +1,0 @@
-prior,Amax_threshold,lower_bound_at_C_NR_0,critical_C_NR_strict,critical_C_NR_share_of_candidate_upper,rejection_rule,status
-score_power_0.5,0.8271,0.09000149897619902,0.0,0.0,not_rejected_even_at_C_NR_0,PARTIAL_FRONTIER_C_NR_UNRESOLVED
-score_power_1.0,0.2668,0.09000149897619902,0.0,0.0,not_rejected_even_at_C_NR_0,PARTIAL_FRONTIER_C_NR_UNRESOLVED
-score_power_2.0,0.022,0.09000149897619902,8578123.822,0.06800149897619902,reject_if_C_NR_below_critical,PARTIAL_FRONTIER_C_NR_UNRESOLVED
