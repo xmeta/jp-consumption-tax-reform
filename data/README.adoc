@@ -63,7 +63,21 @@ and review every affected claim.
 
 Manual transcription is allowed only when the source locator is explicit and
 the row is labelled `manual_transcription_verified`. Machine extraction is
-preferred for large tables such as e-Stat 7-153-1 and 7-156-1.
+preferred for large tables such as e-Stat 7-153-1, 7-156-1, and 7-191-1.
+
+=== F71911 top-code rule
+
+e-Stat table 7-191-1 reports household-size categories 1, 2, 3, 4, 5, and
+6 persons or more. The exact mean household size is therefore not identified
+from the published size categories alone.
+
+`data/derived/income_tax_bridge_deciles_2024.csv` uses six persons for the
+6+ category only as a backward-compatible lower-side household-size proxy.
+Alternative representatives 7, 8, and 10 are generated as sensitivity values.
+The proxy must not be promoted to a point-identified structural input.
+
+The age-65+ ratio in the same bridge is a published aggregate person ratio and
+does not identify filer-level age composition.
 
 == Validation
 
@@ -73,11 +87,14 @@ The CI provenance gate verifies:
 . every raw SHA-256 and byte size matches the catalog;
 . every file under `data/derived/` is registered exactly once with its
   generator, source IDs, row count, SHA-256, and byte size;
-. e-Stat 7-153-1 and 7-156-1 are re-extracted from the committed raw XLSX;
+. e-Stat 7-153-1, 7-156-1, and 7-191-1 are re-extracted from the committed raw XLSX;
 . all 430 decile/component cells in 7-153-1 exactly equal the corresponding
   `00_総世帯` cells in 7-156-1;
 . the 14 original leaf household types are derived from the official hierarchy,
   not hard-coded as the extraction authority;
+. the F71911 household-size categories reconcile to the all-size decile person
+  total within the published rounding tolerance, and the 6+/7/8/10 top-code
+  sensitivity proxies are monotone;
 . every active stage-1 input is covered exactly once by value provenance;
 . official values point to registered raw official sources;
 . recovery values remain labelled `RECOVERY_ONLY`;

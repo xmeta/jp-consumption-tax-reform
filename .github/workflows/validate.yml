@@ -19,6 +19,8 @@ jobs:
           python scripts/extract_estat_income_tax_tables.py
           python scripts/test_estat_income_tax_extracts.py
           python scripts/build_income_tax_decile_instruments.py
+          python scripts/extract_estat_f71911_bridge.py
+          python scripts/test_estat_f71911_bridge.py
           python scripts/build_derived_catalog.py
           python scripts/build_input_provenance.py
           python scripts/build_stage1_inputs.py

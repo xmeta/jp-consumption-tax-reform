@@ -66,6 +66,22 @@ SPECS = [
         "DERIVED_REPRODUCED",
         "Leaf aggregation versus total-table rounding diagnostic",
     ),
+    (
+        "ESTAT-71911-SIZE-AGE-BRIDGE",
+        "estat_71911_decile_household_size_age_bridge.csv",
+        "scripts/extract_estat_f71911_bridge.py",
+        "ESTAT-7191-1-2024",
+        "DERIVED_REPRODUCED",
+        "F71911 decile household-size top-code sensitivity and age-65+ bridge with source cells",
+    ),
+    (
+        "ESTAT-71911-INCOME-TAX-BRIDGE",
+        "income_tax_bridge_deciles_2024.csv",
+        "scripts/extract_estat_f71911_bridge.py",
+        "ESTAT-7191-1-2024",
+        "DERIVED_REPRODUCED_SENSITIVITY_INPUT",
+        "Backward-compatible pseudo-filer sensitivity bridge; exact mean household size is not identified because 6+ is top-coded",
+    ),
 ]
 
 
