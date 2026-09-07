@@ -1,0 +1,39 @@
+= V6 Recovered Edition — 2026-09-08
+:revdate: 2026-09-08
+
+== Artifact
+
+* filename: `consumption_tax_reform_handoff_2026-09-08_instruments_v6_recovered.zip`
+* bytes: 439885
+* SHA-256: `6878d12710be50b6876a8fdf07b03f86ac7d83a7d9445d42259776d38ba0b1ae`
+* package files: 131
+* package manifest entries: 130
+
+== Fresh-extract verification
+
+* scripts 01--14: all exit code 0
+* `scripts/05_validate_handoff.py`: `handoff validation: OK`
+* recovery-state validator: OK
+* final SHA-256 manifest: 130/130 OK
+
+== Recovery scope
+
+The 2026-09-07 base package is reproduced exactly in the current runtime.
+The post-base V6 delta was lost during the active-runtime reset and is not
+represented as freshly reproduced source code.
+
+`scripts/18_income_tax_pseudofiler_mtr.py` remains recoverable from File Library,
+but it was not inserted into the distributed ZIP as byte-exact source.
+Other lost post-base scripts remain documented-only / not recovered.
+
+== Scientific gates
+
+* `income_tax = NOT_READY`
+* `income_tax_liability_surtax = READY_STATIC_ONLY`
+* structural marginal response: not ready
+* dynamic net revenue: not ready
+* joint non-dominated optimization: not ready
+
+This release record is metadata for the verified recovery artifact. The Git
+repository migration remains PARTIAL until the full recovered package source
+tree is imported and committed.
