@@ -1,0 +1,21 @@
+spec_version,weight_scheme,decile,decile_weight,source_definition,scientific_status
+transport_lp_v1,equal_decile,1,0.1,fixed 0.1 per decile,MODEL_CONTINGENT_TRANSPORT_RELAXATION
+transport_lp_v1,equal_decile,2,0.1,fixed 0.1 per decile,MODEL_CONTINGENT_TRANSPORT_RELAXATION
+transport_lp_v1,equal_decile,3,0.1,fixed 0.1 per decile,MODEL_CONTINGENT_TRANSPORT_RELAXATION
+transport_lp_v1,equal_decile,4,0.1,fixed 0.1 per decile,MODEL_CONTINGENT_TRANSPORT_RELAXATION
+transport_lp_v1,equal_decile,5,0.1,fixed 0.1 per decile,MODEL_CONTINGENT_TRANSPORT_RELAXATION
+transport_lp_v1,equal_decile,6,0.1,fixed 0.1 per decile,MODEL_CONTINGENT_TRANSPORT_RELAXATION
+transport_lp_v1,equal_decile,7,0.1,fixed 0.1 per decile,MODEL_CONTINGENT_TRANSPORT_RELAXATION
+transport_lp_v1,equal_decile,8,0.1,fixed 0.1 per decile,MODEL_CONTINGENT_TRANSPORT_RELAXATION
+transport_lp_v1,equal_decile,9,0.1,fixed 0.1 per decile,MODEL_CONTINGENT_TRANSPORT_RELAXATION
+transport_lp_v1,equal_decile,10,0.1,fixed 0.1 per decile,MODEL_CONTINGENT_TRANSPORT_RELAXATION
+transport_lp_v1,f71561_leaf_count_normalized,1,0.116401402752,normalized sum of F71561 14-leaf approximate household counts,MODEL_CONTINGENT_TRANSPORT_RELAXATION
+transport_lp_v1,f71561_leaf_count_normalized,2,0.117210682493,normalized sum of F71561 14-leaf approximate household counts,MODEL_CONTINGENT_TRANSPORT_RELAXATION
+transport_lp_v1,f71561_leaf_count_normalized,3,0.11262476396,normalized sum of F71561 14-leaf approximate household counts,MODEL_CONTINGENT_TRANSPORT_RELAXATION
+transport_lp_v1,f71561_leaf_count_normalized,4,0.105880766118,normalized sum of F71561 14-leaf approximate household counts,MODEL_CONTINGENT_TRANSPORT_RELAXATION
+transport_lp_v1,f71561_leaf_count_normalized,5,0.103452926895,normalized sum of F71561 14-leaf approximate household counts,MODEL_CONTINGENT_TRANSPORT_RELAXATION
+transport_lp_v1,f71561_leaf_count_normalized,6,0.0940113299164,normalized sum of F71561 14-leaf approximate household counts,MODEL_CONTINGENT_TRANSPORT_RELAXATION
+transport_lp_v1,f71561_leaf_count_normalized,7,0.0919881305638,normalized sum of F71561 14-leaf approximate household counts,MODEL_CONTINGENT_TRANSPORT_RELAXATION
+transport_lp_v1,f71561_leaf_count_normalized,8,0.0903695710817,normalized sum of F71561 14-leaf approximate household counts,MODEL_CONTINGENT_TRANSPORT_RELAXATION
+transport_lp_v1,f71561_leaf_count_normalized,9,0.0891556514702,normalized sum of F71561 14-leaf approximate household counts,MODEL_CONTINGENT_TRANSPORT_RELAXATION
+transport_lp_v1,f71561_leaf_count_normalized,10,0.0789047747505,normalized sum of F71561 14-leaf approximate household counts,MODEL_CONTINGENT_TRANSPORT_RELAXATION

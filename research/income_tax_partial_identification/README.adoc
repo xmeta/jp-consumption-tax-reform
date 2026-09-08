@@ -158,8 +158,25 @@ The specification fixes the 13-scenario set, two decile-weight schemes,
 transport equations, common-relaxation definition, epsilon grid, endpoint
 objectives, solver, exact package versions, and post-solve residual tolerances.
 
-This pre-specification is intentionally committed without numerical LP
-endpoints. The later implementation must be a separate commit.
+The pre-specification was committed separately before numerical endpoint
+computation.
+
+The replacement model is now implemented in
+`run_replacement_transport_lp.py` and checked by
+`test_replacement_transport_lp.py`. Its generated artifacts are:
+
+* `replacement_transport_lp_decile_weights.csv`;
+* `replacement_transport_lp_minimum_relaxation.csv`;
+* `replacement_transport_lp_minimum_decile_diagnostics.csv`;
+* `replacement_transport_lp_feasibility.csv`;
+* `replacement_transport_lp_endpoints.csv`.
+
+All rows are labelled `MODEL_CONTINGENT_TRANSPORT_RELAXATION` and explicitly
+record `historical_v6_restricted_lp_reproduced=False`.
+
+These numerical outputs are not P1-C06 and are not automatically Paper 1
+claims. Promotion to a manuscript claim requires successful CI on the
+implementation commit and a later, separate claim-registry commit.
 
 == Reproduction
 
@@ -168,6 +185,9 @@ endpoints. The later implementation must be a separate commit.
 python scripts/build_source_catalog.py
 python scripts/extract_nta_stage2_holdout.py
 python scripts/test_nta_stage2_holdout.py
+python -m pip install -r requirements-research-lp.txt
+python research/income_tax_partial_identification/run_replacement_transport_lp.py
+python research/income_tax_partial_identification/test_replacement_transport_lp.py
 ----
 
 The generated outputs must remain deterministic under a clean checkout and all
