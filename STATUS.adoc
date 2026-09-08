@@ -22,7 +22,7 @@
 |NTA primary-income-type stage-2 diagnostic |EXTERNAL_STAGE2_DIAGNOSTIC_REPRODUCED |国税庁の5所得区分について正確人員からpositive-liability率を再生成。F71561世帯→申告者selectionの識別とは扱わない
 |Restricted-LP decile MTR endpoints |DOCUMENTED_PRIOR_RUN_NOT_REPRODUCED |旧40–42の制約集合・endpoint生成鎖は未回収。再現済みstage-2をLP endpointの識別へ読み替えない
 |Replacement transport-relaxation LP v1 |MODEL_CONTINGENT_TRANSPORT_RELAXATION_REPRODUCED |旧V6とは別に事前仕様→実装→CI成功の順で再現済み。transport仮定の不整合量と条件付きMTR envelopeのみを扱い、識別集合・CI・旧LP復元とは呼ばない
-|Rank-bridge transport-relaxation LP v2 |PRE_SPECIFIED_RANK_BRIDGE_MODEL_CONTINGENT_NOT_IDENTIFIED |25所得階級の行政統計を順位decileへ集約する仕様のみ固定。endpoint・epsilon-starは未計算、Paper claim未作成
+|Rank-bridge transport-relaxation LP v2 |MODEL_CONTINGENT_RANK_BRIDGE_RELAXATION_IMPLEMENTED |事前仕様後に別commitで実装・ローカル検証。25所得階級を順位decileへ集約し階級境界のpositive配置を自由化。Paper claimは実装commitのCI成功後に別commitでのみ昇格
 |Recovered score_power thresholds |DOCUMENTED_PRIOR_RUN_NOT_REPRODUCED |回復用メタデータのみ。主結果へ使わない
 |NTA Table 3-1 composition point check |CROSS_PUBLICATION_POINT_CHECK_REPRODUCED |5区分の千人丸め値を表示5区分合計5,174千人で再正規化し、年報の正確人員構成との差最大0.08444ppを再現。独立holdout・CIとは扱わない
 |===
@@ -36,4 +36,5 @@
 * NTA所得区分別stage-2率をF71561の十分位別申告参加確率として点識別したとは主張しない。
 * 再現済みstage-2診断からrestricted-LP endpointが再現・識別されたとは主張しない。
 * replacement transport-relaxation LPを旧V6 restricted-LPの復元、統計的sharp identified set、信頼区間、因果boundとは呼ばない。
+* rank-bridge v2の同順位decile対応をF71561とNTAの観測リンク、所得金額の同一性、税務単位の同一性とは呼ばない。
 * モデルシミュレーションを政府公式の実質GDP予測とは呼ばない。

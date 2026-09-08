@@ -198,8 +198,27 @@ positive-liability mass remains free subject to the published class total and
 overlap capacity.  Thus v2 does not impose proportional-within-class
 allocation.
 
-At this pre-specification stage there are deliberately no v2 numerical
-outputs, no v2 epsilon-star result, and no Paper 1 claim.
+The pre-specification was committed separately before any v2 endpoint was
+computed.
+
+v2 is now implemented in `run_rank_bridge_lp_v2.py` and tested by
+`test_rank_bridge_lp_v2.py`.  Its generated artifacts are:
+
+* `rank_bridge_lp_v2_class_inputs.csv`;
+* `rank_bridge_lp_v2_class_rank_overlap.csv`;
+* `rank_bridge_lp_v2_minimum_relaxation.csv`;
+* `rank_bridge_lp_v2_minimum_decile_diagnostics.csv`;
+* `rank_bridge_lp_v2_feasibility.csv`;
+* `rank_bridge_lp_v2_endpoints.csv`.
+
+All generated rows are labelled
+`MODEL_CONTINGENT_RANK_BRIDGE_RELAXATION`,
+`historical_v6_restricted_lp_reproduced=False`, and
+`p1c13_v1_modified=False`.
+
+The implementation commit does not create a Paper 1 claim.  Promotion requires
+successful GitHub Actions on the implementation commit and a later,
+separate claim-registry commit.
 
 == Reproduction
 
@@ -211,6 +230,8 @@ python scripts/test_nta_stage2_holdout.py
 python -m pip install -r requirements-research-lp.txt
 python research/income_tax_partial_identification/run_replacement_transport_lp.py
 python research/income_tax_partial_identification/test_replacement_transport_lp.py
+python research/income_tax_partial_identification/run_rank_bridge_lp_v2.py
+python research/income_tax_partial_identification/test_rank_bridge_lp_v2.py
 ----
 
 The generated outputs must remain deterministic under a clean checkout and all
