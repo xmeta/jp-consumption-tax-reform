@@ -113,8 +113,63 @@ pre-specified transport-relaxation model, but they are not:
 * point-identified filer MTR distributions.
 
 The historical P1-C06 restricted-LP claim consequently remains
-`DOCUMENTED_PRIOR_RUN_NOT_REPRODUCED`.  The new replacement result is tracked
-separately as a model-contingent sensitivity claim.
+`DOCUMENTED_PRIOR_RUN_NOT_REPRODUCED`.  The v1 replacement result is tracked
+separately as P1-C13, a model-contingent sensitivity claim.
+
+=== Pre-specified same-rank v2 frontier
+
+After v1 was completed, the repository reproduced a stronger NTA object from
+Annual Statistics Table 2-2(1): exact administrative counts for 25 ordered
+total-net-income classes by primary income type and filing-status category.
+The 125 positive-liability cells also agree exactly with the independently
+extracted NTA Sample Survey Table 2 cells.
+
+Before computing v2 endpoints, a second model was pre-specified.  It does not
+match NTA and F71561 income amounts in yen.  Instead, it partitions the ordered
+NTA Table 2-2(1) population into ten equal rank bins and assumes only that
+F71561 decile stem:[d] corresponds to NTA rank decile stem:[d].
+
+When an NTA income class crosses a rank-decile boundary, the number of persons
+from that class entering each rank bin is fixed by the grouped population
+counts, but the positive-liability persons inside that class may be allocated
+arbitrarily across the overlapping rank bins subject to the published class
+total.  Thus no proportional-within-class allocation assumption is imposed.
+
+The resulting v2 summary is generated directly from the committed research
+outputs:
+
+.Rank-bridge v2 results at the minimum common relaxation
+[%header,format=csv]
+|===
+include::{docdir}/data/rank_bridge_v2_summary_table.csv[]
+|===
+
+The minimum common relaxation is 14.9016 percentage points.  On the
+pre-specified grid, values through 12.5 percentage points are infeasible and
+15.0 percentage points is feasible.
+
+This required relaxation is numerically smaller than in v1, but the comparison
+is not an identification ranking.  v2 adds the unobserved same-rank
+correspondence between two different population and income concepts:
+
+* F71561 ranks households by equivalized annual household income;
+* NTA Table 2-2(1) ranks its tax-administration population by total net income
+  etc.
+
+The same-rank bridge is therefore a model assumption, not an observed
+crosswalk.  The v2 MTR ranges are conditional envelopes under that assumption,
+not statistically sharp identified sets.
+
+In particular, v2 does not establish:
+
+* equality of F71561 and NTA income concepts or yen thresholds;
+* equality of household and tax-administration units;
+* an observed record linkage between the two systems;
+* a confidence interval or causal bound for filer MTR;
+* restoration of the historical V6 restricted LP.
+
+P1-C13 remains unchanged, P1-C06 remains unreproduced, and v2 is tracked
+separately as P1-C14.
 
 === Static liability versus behavioral incidence
 

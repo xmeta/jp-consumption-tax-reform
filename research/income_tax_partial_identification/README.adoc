@@ -216,9 +216,10 @@ All generated rows are labelled
 `historical_v6_restricted_lp_reproduced=False`, and
 `p1c13_v1_modified=False`.
 
-The implementation commit does not create a Paper 1 claim.  Promotion requires
-successful GitHub Actions on the implementation commit and a later,
-separate claim-registry commit.
+The implementation commit passed GitHub Actions and v2 is promoted separately
+as P1-C14.  P1-C14 remains a model-contingent same-rank-bridge sensitivity
+claim.  The promotion does not alter P1-C13, and neither P1-C13 nor P1-C14
+restores historical P1-C06.
 
 == Reproduction
 

@@ -22,7 +22,7 @@
 |NTA primary-income-type stage-2 diagnostic |EXTERNAL_STAGE2_DIAGNOSTIC_REPRODUCED |国税庁の5所得区分について正確人員からpositive-liability率を再生成。F71561世帯→申告者selectionの識別とは扱わない
 |Restricted-LP decile MTR endpoints |DOCUMENTED_PRIOR_RUN_NOT_REPRODUCED |旧40–42の制約集合・endpoint生成鎖は未回収。再現済みstage-2をLP endpointの識別へ読み替えない
 |Replacement transport-relaxation LP v1 |MODEL_CONTINGENT_TRANSPORT_RELAXATION_REPRODUCED |旧V6とは別に事前仕様→実装→CI成功の順で再現済み。transport仮定の不整合量と条件付きMTR envelopeのみを扱い、識別集合・CI・旧LP復元とは呼ばない
-|Rank-bridge transport-relaxation LP v2 |MODEL_CONTINGENT_RANK_BRIDGE_RELAXATION_IMPLEMENTED |事前仕様後に別commitで実装・ローカル検証。25所得階級を順位decileへ集約し階級境界のpositive配置を自由化。Paper claimは実装commitのCI成功後に別commitでのみ昇格
+|Rank-bridge transport-relaxation LP v2 |MODEL_CONTINGENT_RANK_BRIDGE_RELAXATION_REPRODUCED |事前仕様commit→別実装commit→GitHub Actions成功→別Paper昇格commitの順で再現。25所得階級を順位decileへ集約し階級境界のpositive配置を自由化。同順位対応は観測リンクではない
 |Recovered score_power thresholds |DOCUMENTED_PRIOR_RUN_NOT_REPRODUCED |回復用メタデータのみ。主結果へ使わない
 |NTA Table 3-1 composition point check |CROSS_PUBLICATION_POINT_CHECK_REPRODUCED |5区分の千人丸め値を表示5区分合計5,174千人で再正規化し、年報の正確人員構成との差最大0.08444ppを再現。独立holdout・CIとは扱わない
 |===

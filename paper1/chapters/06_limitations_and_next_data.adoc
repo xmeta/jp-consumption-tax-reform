@@ -39,19 +39,24 @@ The highest-value additional data would be:
   conceptually compatible basis;
 . anonymized filer microdata or sufficiently detailed tabulations linking
   taxable-income components, deductions, filing status, and tax liability;
-. a direct cross-tab of income rank (or a bridgeable taxable-income band) by
-  NTA primary income category and positive-liability/final-return status, so
-  stage-2 rates need not be transported into F71561 deciles through an
-  unobserved category mixture;
+. a direct or statistically linkable crosswalk between F71561-style
+  equivalized household-income rank and NTA total-net-income rank, so the
+  same-rank correspondence used by P1-C14 need not be imposed as an assumption;
 . public cross-tabs connecting household income deciles to tax-unit
   characteristics without synthetic assignment;
 . repeated-year equivalents permitting validation of stability and transport.
 
-The P1-C13 replacement transport model requires more than 22 percentage points
-of common relaxation under both pre-specified decile-weight schemes.  That
-result does not identify the source of the discrepancy, but it raises the
-value of a direct income-rank-by-primary-category tax cross-tab: such a table
-would remove one of the strongest transport assumptions currently needed.
+P1-C13 requires more than 22 percentage points of common relaxation under
+both pre-specified v1 decile-weight schemes.  The subsequently reproduced NTA
+25-income-class filing-status table allows P1-C14 to condition on substantially
+richer NTA-side income-rank information; under the separately pre-specified
+same-rank bridge, its minimum common relaxation is 14.9016 percentage points.
+
+The smaller v2 relaxation does not identify the source of the remaining
+discrepancy and does not validate the same-rank bridge.  The highest-value next
+data would directly connect, or defensibly statistically bridge, the two income
+rank concepts themselves: F71561 equivalized household income and NTA total net
+income etc.
 
 === Scope of policy conclusions
 

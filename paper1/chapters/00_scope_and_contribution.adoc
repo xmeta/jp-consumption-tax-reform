@@ -22,11 +22,13 @@ Third, we derive a reproducible stage-1 filing-participation robustness
 frontier.  The result leaves the unresolved number of frame-incompatible
 final-return filers explicit rather than imputing it.
 
-Fourth, after pre-specifying the model before inspecting endpoints, we report a
-replacement transport-relaxation frontier that quantifies how much discrepancy
-is required to jointly accommodate the pseudo-filer sensitivity system and
-NTA primary-income-type stage-2 composition.  Its MTR envelopes are explicitly
-model-contingent and are not presented as identified sets.
+Fourth, after pre-specifying each model before inspecting its endpoints, we
+report two model-contingent transport diagnostics.  The first uses aggregate
+NTA primary-income-type composition.  The second uses the stronger 25-class
+NTA income-rank information while leaving within-class positive-liability
+allocation unrestricted at rank boundaries.  Both quantify compatibility under
+explicit bridge assumptions rather than presenting the resulting MTR envelopes
+as identified sets.
 
 Fifth, every substantive statement is tied to a machine-readable claim
 registry, making overstatement detectable during revision.
