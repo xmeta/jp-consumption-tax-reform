@@ -16,7 +16,11 @@ Reproducing the first two objects does not identify the third.
 == NTA primary-type stage-2 diagnostic
 
 The official FY2024 NTA Annual Statistics Report, Table 2-2(1), reports exact
-person counts for five primary income-earner categories:
+person counts for five primary income-earner categories.  Its denominator is
+the Table 2-2(1) population: persons who filed for 2024 or whose income-tax
+cases were processed by correction, determination, or related procedures under
+the table's stated cutoff.  It is not identical to the separate stage-1
+final-return benchmark population:
 
 * business;
 * real estate;
@@ -28,12 +32,12 @@ For category stem:[k], the reproduced diagnostic is
 
 [stem]
 ++++
-r_k = N^{+}_k / N^{return}_k ,
+r_k = N^{+}_k / N^{T22}_k ,
 ++++
 
 where stem:[N^{+}_k] is the exact number with positive self-assessed income tax
-and stem:[N^{return}_k] is the exact number of final-return income earners in
-that NTA category.
+and stem:[N^{T22}_k] is the exact Table 2-2(1) denominator count in that NTA
+category.
 
 The resulting rates are stored in
 `data/derived/nta_primary_type_stage2_2024.csv`.

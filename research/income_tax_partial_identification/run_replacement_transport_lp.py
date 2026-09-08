@@ -210,16 +210,16 @@ def load_model_data(cfg: dict[str, str]) -> ModelData:
             f"expected={EXPECTED_CATEGORIES}"
         )
     categories = EXPECTED_CATEGORIES
-    final_counts = np.array(
-        [f(by_cat[k]["final_return_persons_exact"]) for k in categories],
+    table22_counts = np.array(
+        [f(by_cat[k]["table22_population_persons_exact"]) for k in categories],
         dtype=float,
     )
     positive_counts = np.array(
         [f(by_cat[k]["positive_liability_persons_exact"]) for k in categories],
         dtype=float,
     )
-    q = final_counts / final_counts.sum()
-    r = positive_counts / final_counts
+    q = table22_counts / table22_counts.sum()
+    r = positive_counts / table22_counts
     if not math.isclose(float(q.sum()), 1.0, abs_tol=1e-12):
         raise RuntimeError("NTA category shares do not sum to one")
 

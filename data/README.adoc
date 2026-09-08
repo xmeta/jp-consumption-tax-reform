@@ -142,7 +142,7 @@ stronger administrative counterpart from FY2024 NTA Annual Statistics
 Table 2-2(1).  For the same 25 total-net-income classes and five primary
 income-earner categories it reports exact annual-statistics counts for:
 
-* all final-return income earners;
+* all persons in the Table 2-2(1) population (persons who filed or whose cases were processed by correction/determination etc. under the table's stated cutoff);
 * persons with positive self-assessed income tax;
 * refund filers;
 * the residual that is neither positive-liability nor refund.

@@ -30,12 +30,16 @@ assert {r["primary_income_type"] for r in stage2} == CATEGORIES
 assert {r["primary_income_type"] for r in t31} == CATEGORIES
 assert {r["primary_income_type"] for r in valid} == CATEGORIES
 
-assert sum(int(r["final_return_persons_exact"]) for r in stage2) == 23_362_184
+assert sum(int(r["table22_population_persons_exact"]) for r in stage2) == 23_362_184
+assert all(
+    r["final_return_persons_exact"] == r["table22_population_persons_exact"]
+    for r in stage2
+)
 assert sum(int(r["positive_liability_persons_exact"]) for r in stage2) == 5_158_260
 assert sum(int(r["refund_persons_exact"]) for r in stage2) == 13_527_496
 
 for r in stage2:
-    total = int(r["final_return_persons_exact"])
+    total = int(r["table22_population_persons_exact"])
     pos = int(r["positive_liability_persons_exact"])
     refund = int(r["refund_persons_exact"])
     residual = int(r["zero_or_other_persons_exact_residual"])
@@ -45,6 +49,8 @@ for r in stage2:
     assert 0 <= rate <= 1
     assert r["source_id"] == "NTA-R06"
     assert r["source_sha256"]
+    assert "processed" in r["population_definition"]
+    assert "stage-1 final-return numerator" in r["interpretation"]
     assert "not F71561" in r["interpretation"]
 
 displayed_pos = sum(

@@ -63,14 +63,14 @@ for i in range(1, 26):
     q = [r for r in rows if int(r["income_class_index"]) == i]
     assert len(q) == 5
 
-    all_total = int(q[0]["income_class_all_categories_final_return_persons"])
+    all_total = int(q[0]["income_class_all_categories_table22_population_persons"])
     pos_total = int(
         q[0]["income_class_all_categories_positive_liability_persons"]
     )
     refund_total = int(q[0]["income_class_all_categories_refund_persons"])
 
     assert all(
-        int(r["income_class_all_categories_final_return_persons"]) == all_total
+        int(r["income_class_all_categories_table22_population_persons"]) == all_total
         for r in q
     )
     assert all(
@@ -83,7 +83,7 @@ for i in range(1, 26):
         for r in q
     )
 
-    assert sum(int(r["final_return_persons"]) for r in q) == all_total
+    assert sum(int(r["table22_population_persons"]) for r in q) == all_total
     assert sum(int(r["positive_liability_persons"]) for r in q) == pos_total
     assert sum(int(r["refund_persons"]) for r in q) == refund_total
 
@@ -108,7 +108,7 @@ for category, expected in EXPECTED.items():
     q = [r for r in rows if r["primary_income_type"] == category]
     assert len(q) == 25
     got = (
-        sum(int(r["final_return_persons"]) for r in q),
+        sum(int(r["table22_population_persons"]) for r in q),
         sum(int(r["positive_liability_persons"]) for r in q),
         sum(int(r["refund_persons"]) for r in q),
     )
@@ -122,7 +122,7 @@ for r in rows:
     assert int(r["sample_survey_positive_liability_cell"]) == sample[key]
     assert int(r["sample_crosscheck_difference"]) == 0
 
-    all_persons = int(r["final_return_persons"])
+    all_persons = int(r["table22_population_persons"])
     refund = int(r["refund_persons"])
     residual = int(r["neither_positive_nor_refund_residual"])
     assert all_persons == pos + refund + residual
@@ -163,6 +163,8 @@ for r in rows:
     assert r["source_pdf_page_1based"] in {"71", "72"}
     assert r["pypdf_version"] == pypdf.__version__
     assert r["cryptography_version"] == cryptography.__version__
+    assert "processed" in r["population_definition"]
+    assert "not the stage-1 NTA final-return numerator" in r["denominator_note"]
     assert "F71561" in r["identification_warning"]
     assert "bridge assumption" in r["identification_warning"]
 

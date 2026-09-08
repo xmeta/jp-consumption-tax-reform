@@ -33,7 +33,7 @@ OUT_VALID = (
 )
 
 # Exact persons, NTA FY2024 Annual Statistics Report Table 2-2(1).
-# category, total final-return persons, positive-liability persons, refund persons,
+# category, Table 2-2(1) population persons, positive-liability persons, refund persons,
 # source printed page.
 ANNUAL = [
     ("business", 3_785_184, 1_174_065, 962_359, "61"),
@@ -106,6 +106,7 @@ def build():
         stage2.append({
             "primary_income_type": category,
             "primary_income_type_ja": LABELS[category],
+            "table22_population_persons_exact": total,
             "final_return_persons_exact": total,
             "positive_liability_persons_exact": positive,
             "refund_persons_exact": refund,
@@ -113,6 +114,7 @@ def build():
             "positive_liability_rate": f"{positive / total:.12g}",
             "positive_liability_composition_exact":
                 f"{positive / exact_positive:.12g}",
+            "annual_all_category_table22_population_persons_exact": exact_total,
             "annual_all_category_final_return_persons_exact": exact_total,
             "annual_all_category_positive_liability_persons_exact":
                 exact_positive,
@@ -123,8 +125,12 @@ def build():
             "source_file": annual_src["raw_file"],
             "source_sha256": annual_src["sha256"],
             "evidence_status": "RAW_OFFICIAL_TRANSCRIPTION_VERIFIED",
+            "population_definition":
+                "Table 2-2(1): persons who filed for 2024 or whose income-tax cases were processed (correction/determination etc.) by 2025-03-31, classified as of 2025-06-30",
+            "legacy_field_note":
+                "final_return_persons_exact is retained for backward compatibility; canonical denominator is table22_population_persons_exact",
             "interpretation":
-                "external NTA primary-type stage-2 positive-liability diagnostic; not F71561 selection identification",
+                "external NTA primary-type stage-2 positive-liability diagnostic for the Table 2-2(1) population; not F71561 selection identification and not the stage-1 final-return numerator",
         })
 
         _, ptotal, ppositive, prefund, pzero = press_by[category]

@@ -23,18 +23,31 @@ PRE_SPECIFIED_MODEL_CONTINGENT_NOT_IDENTIFIED
 
 until code, tests, and outputs are committed in a later commit.
 
+[NOTE]
+====
+Terminology correction recorded after the pre-specification commit: where this
+v1 specification says "final-return income earners" for NTA Table 2-2(1), the
+canonical denominator is the Table 2-2(1) population defined by the source:
+persons who filed for 2024 or whose income-tax cases were processed by
+correction, determination, or related procedures under the stated cutoff.
+This wording correction changes no input count, equation, constraint, solver
+setting, or reported v1 endpoint.  The separate stage-1 final-return numerator
+remains a different population object.
+====
+
 == Motivation
 
 The repository currently contains two objects with different denominators:
 
 . pseudo-filer scenarios constructed from F71561/F71911 aggregate household
   information; and
-. NTA positive-self-assessed-liability rates among final-return income earners
-  by five primary income categories.
+. NTA positive-self-assessed-liability rates in the Table 2-2(1)
+  population by five primary income categories.
 
 Equating those rates directly would silently assume that pseudo tax units and
-NTA final-return filers share a common denominator and that the NTA primary
-income-category mixture can be transported across F71561 income deciles.
+the NTA Table 2-2(1) population share a common denominator and that the NTA
+primary income-category mixture can be transported across F71561 income
+deciles.
 
 The replacement LP therefore makes that transport assumption explicit and
 introduces a relaxation parameter rather than forcing exact equality.
@@ -71,7 +84,7 @@ The five categories are fixed as:
 
 For category stem:[k]:
 
-* stem:[q_k] is its exact share of FY2024 final-return income earners;
+* stem:[q_k] is its exact share of the FY2024 Table 2-2(1) population;
 * stem:[r_k] is its exact positive-liability rate.
 
 Both are taken from

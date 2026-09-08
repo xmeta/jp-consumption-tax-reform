@@ -96,10 +96,11 @@ weights.  Exact equality at stem:[\varepsilon=0] is infeasible in this model.
 This gap is not a standard error or an estimate of measurement error.  It
 quantifies incompatibility between two aggregate constructions *under the
 stated transport model*: pseudo-filer positive-tax shares are constructed from
-household aggregates, whereas the NTA stage-2 rates are observed among
-final-return income earners in five primary income categories.  The model also
-uses the NTA category *composition* rather than asserting equality between the
-NTA Table 2-2 population total and the separate stage-1 benchmark population.
+household aggregates, whereas the NTA stage-2 rates are observed in the Table 2-2(1) population:
+persons who filed or whose income-tax cases were processed by correction,
+determination, or related procedures under the table's stated cutoff, grouped
+into five primary income categories.  This Table 2-2(1) denominator is not
+identical to the separate stage-1 final-return benchmark population.
 
 The MTR ranges in the table are conditional envelopes at
 stem:[\varepsilon^*].  They are reproducible consequences of the
