@@ -64,6 +64,57 @@ aggregate liability moment exactly with one nuisance scale.  Such cases are
 reported as nearest-achievable sensitivity diagnostics; the tax-law
 discontinuity is not smoothed away to improve fit.
 
+=== Pre-specified replacement transport-relaxation frontier
+
+The historical V6 restricted-LP constraint chain remains unreproduced.  We
+therefore do not reconstruct its endpoints by reverse engineering recovered
+numbers.
+
+Separately, the repository pre-specified a new transport-relaxation LP before
+computing its endpoints.  The model uses all thirteen committed pseudo-filer
+scenarios and the five exact NTA primary-income-type stage-2 rates.  It imposes
+the published NTA primary-type composition while allowing a common absolute
+discrepancy stem:[\varepsilon] between each decile's pseudo-filer
+positive-tax share and its transported NTA stage-2 rate.
+
+Two decile-weight schemes were fixed before endpoint computation: equal decile
+weights and normalized F71561 leaf-household counts.  The minimum feasible
+common relaxation and the conditional overall MTR envelopes are generated
+directly from the research outputs:
+
+.Replacement transport-relaxation results at the minimum common relaxation
+[%header,format=csv]
+|===
+include::{docdir}/data/transport_lp_summary_table.csv[]
+|===
+
+The required minimum common discrepancy is therefore large under both
+pre-specified weight schemes: approximately 24.19 percentage points under
+equal-decile weights and 22.20 percentage points under F71561 leaf-count
+weights.  Exact equality at stem:[\varepsilon=0] is infeasible in this model.
+
+This gap is not a standard error or an estimate of measurement error.  It
+quantifies incompatibility between two aggregate constructions *under the
+stated transport model*: pseudo-filer positive-tax shares are constructed from
+household aggregates, whereas the NTA stage-2 rates are observed among
+final-return income earners in five primary income categories.  The model also
+uses the NTA category *composition* rather than asserting equality between the
+NTA Table 2-2 population total and the separate stage-1 benchmark population.
+
+The MTR ranges in the table are conditional envelopes at
+stem:[\varepsilon^*].  They are reproducible consequences of the
+pre-specified transport-relaxation model, but they are not:
+
+* the historical V6 restricted-LP endpoints;
+* statistically sharp identified sets;
+* confidence intervals;
+* causal bounds;
+* point-identified filer MTR distributions.
+
+The historical P1-C06 restricted-LP claim consequently remains
+`DOCUMENTED_PRIOR_RUN_NOT_REPRODUCED`.  The new replacement result is tracked
+separately as a model-contingent sensitivity claim.
+
 === Static liability versus behavioral incidence
 
 Observed F71561 income-tax liability moments can support static,

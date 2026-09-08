@@ -16,6 +16,7 @@ not.
 ----
 python paper1/scripts/generate_stage1_attributes.py --check
 python paper1/scripts/generate_frontier_table.py --check
+python paper1/scripts/generate_transport_lp_table.py --check
 python paper1/scripts/validate_claim_registry.py
 asciidoctor paper1/index.adoc
 ----
@@ -24,6 +25,7 @@ asciidoctor paper1/index.adoc
 
 . Reproduced Git results and official public-source inputs.
 . Reproduced robustness-frontier propositions with unresolved quantities kept explicit.
+. Reproduced model-contingent transport-relaxation results, with their transport assumptions and relaxation budget explicit.
 . Recovered V6 prior-run results, labelled recovery-only.
 . Sensitivity-only constructions.
 . NOT_READY quantities, which cannot enter headline conclusions.

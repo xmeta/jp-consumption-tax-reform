@@ -39,9 +39,19 @@ The highest-value additional data would be:
   conceptually compatible basis;
 . anonymized filer microdata or sufficiently detailed tabulations linking
   taxable-income components, deductions, filing status, and tax liability;
+. a direct cross-tab of income rank (or a bridgeable taxable-income band) by
+  NTA primary income category and positive-liability/final-return status, so
+  stage-2 rates need not be transported into F71561 deciles through an
+  unobserved category mixture;
 . public cross-tabs connecting household income deciles to tax-unit
   characteristics without synthetic assignment;
 . repeated-year equivalents permitting validation of stability and transport.
+
+The P1-C13 replacement transport model requires more than 22 percentage points
+of common relaxation under both pre-specified decile-weight schemes.  That
+result does not identify the source of the discrepancy, but it raises the
+value of a direct income-rank-by-primary-category tax cross-tab: such a table
+would remove one of the strongest transport assumptions currently needed.
 
 === Scope of policy conclusions
 

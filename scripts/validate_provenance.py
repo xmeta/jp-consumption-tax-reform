@@ -232,6 +232,7 @@ active_required = {
     "SENSITIVITY_ONLY_REPRODUCED",
     "EXTERNAL_STAGE2_DIAGNOSTIC_REPRODUCED",
     "CROSS_PUBLICATION_POINT_CHECK_REPRODUCED",
+    "MODEL_CONTINGENT_TRANSPORT_RELAXATION_REPRODUCED",
 }
 for cid, claim in claims.items():
     ev_statuses = {r["evidence_status"] for r in by_claim.get(cid, [])}
@@ -242,6 +243,7 @@ for cid, claim in claims.items():
             "ACTIVE_REPRODUCED_SENSITIVITY",
             "ACTIVE_REPRODUCED_EXTERNAL_DIAGNOSTIC",
             "ACTIVE_REPRODUCED_POINT_CHECK",
+            "ACTIVE_REPRODUCED_MODEL_CONTINGENT",
             "ACTIVE_STATE",
         }:
             errors.append(f"{cid}: active claim lacks active evidence")

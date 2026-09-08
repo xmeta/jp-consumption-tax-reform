@@ -13,18 +13,20 @@ ALLOWED = {
     "SENSITIVITY_ONLY_REPRODUCED",
     "EXTERNAL_STAGE2_DIAGNOSTIC_REPRODUCED",
     "CROSS_PUBLICATION_POINT_CHECK_REPRODUCED",
+    "MODEL_CONTINGENT_TRANSPORT_RELAXATION_REPRODUCED",
     "DOCUMENTED_PRIOR_RUN_NOT_REPRODUCED",
     "READY_STATIC_ONLY",
     "NOT_READY",
 }
 
-REQUIRED = {f"P1-C{i:02d}" for i in range(1, 13)}
+REQUIRED = {f"P1-C{i:02d}" for i in range(1, 14)}
 LOCAL_SOURCE_STATUSES = {
     "ROBUSTNESS_FRONTIER_REPRODUCED",
     "READY_STATIC_ONLY",
     "SENSITIVITY_ONLY_REPRODUCED",
     "EXTERNAL_STAGE2_DIAGNOSTIC_REPRODUCED",
     "CROSS_PUBLICATION_POINT_CHECK_REPRODUCED",
+    "MODEL_CONTINGENT_TRANSPORT_RELAXATION_REPRODUCED",
     "NOT_READY",
 }
 
@@ -79,6 +81,8 @@ def main():
         errors.append("P1-C09 recovered threshold must remain unreproduced")
     if by_id["P1-C10"]["status"] != "NOT_READY":
         errors.append("P1-C10 untracked frame mismatch must remain NOT_READY")
+    if by_id["P1-C13"]["status"] != "MODEL_CONTINGENT_TRANSPORT_RELAXATION_REPRODUCED":
+        errors.append("P1-C13 must remain model-contingent transport-relaxation")
     for cid in ("P1-C11", "P1-C12"):
         if by_id[cid]["status"] != "NOT_READY":
             errors.append(f"{cid} must remain NOT_READY")
@@ -92,6 +96,9 @@ def main():
         "filing rate is point identified",
         "fully sharp identified set",
         "score_power=2.0 prior is rejected whenever",
+        "replacement transport-relaxation lp identifies the filer mtr",
+        "transport-relaxation envelope is a confidence interval",
+        "replacement transport-relaxation lp reproduces the historical v6 restricted lp",
     ]
     for phrase in prohibited:
         if phrase.lower() in paper.lower():

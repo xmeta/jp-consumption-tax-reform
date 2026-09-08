@@ -24,22 +24,29 @@ This numerical value is not a reproduced main result because one of its inputs,
 the 2.20% threshold, is recovery-only. It is retained here so a future source
 reconstruction can be checked against the V6 record.
 
-=== Restricted-LP endpoints
+=== Historical restricted-LP endpoints
 
 The handoff records restricted-LP marginal-rate endpoints generated under
-additional assumptions. Because the post-base source chain has not been
-restored, these endpoints are not used in the main text, tables, theorem, or
-abstract.
+additional assumptions. Because the historical post-base source chain has not
+been restored, P1-C06 remains recovery-only.
 
-=== External composition holdout
+A different, newly pre-specified transport-relaxation LP is reported in the
+main text as P1-C13.  It must not be interpreted as restoration of the
+historical V6 endpoint chain.
+
+=== Historical external-holdout artifacts
 
 The handoff records a five-category NTA Table 3-1 point-agreement diagnostic:
 all five primary categories were within 0.1 percentage point, with a maximum
 absolute difference of 0.08444 percentage point.
 
-This number is retained solely to verify a future source reconstruction.
-It is not treated as a current reproduced validation result and is not a
-confidence-coverage statement.
+The byte-identical historical files remain recovery gaps.  However, the
+scientific numerical function has now been independently reconstructed from
+official NTA sources: the current cross-publication point check reproduces
+0.084436... percentage point, rounding to 0.08444 percentage point.
+
+That reproduced result is tracked as P1-C07 and is still not a confidence-
+coverage statement or independent-sample holdout.
 
 === Promotion rule
 
