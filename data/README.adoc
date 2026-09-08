@@ -137,6 +137,28 @@ is not the F71561 equivalized annual household-income decile.  Any use of this
 cross-tab to constrain a decile-level transport model therefore requires an
 explicit bridge assumption and must remain model-contingent.
 
+`data/derived/nta_income_class_primary_type_filing_status_2024.csv` is the
+stronger administrative counterpart from FY2024 NTA Annual Statistics
+Table 2-2(1).  For the same 25 total-net-income classes and five primary
+income-earner categories it reports exact annual-statistics counts for:
+
+* all final-return income earners;
+* persons with positive self-assessed income tax;
+* refund filers;
+* the residual that is neither positive-liability nor refund.
+
+The table therefore identifies an administrative positive-liability rate
+*within each NTA income-class × primary-type cell*.  Its 125 positive-liability
+cells match the independently extracted Sample Survey Table 2 cells 125/125.
+This is a useful cross-source consistency check, not evidence that the sample
+survey cells are filer microdata.
+
+The annual-statistics income variable is *total net income etc.* after the
+definitions stated in Table 2-2(1).  It is still not the F71561 equivalized
+household-income decile.  The new table materially tightens the NTA-side
+stage-2 information, but it does not identify the cross-system income-rank
+bridge by itself.
+
 `data/derived/nta_table31_primary_type_rounded_2024.csv` preserves the
 thousand-person values displayed in the NTA final-return press release,
 Table 3-1.  Its five displayed positive-liability category counts sum to 5,174
@@ -173,6 +195,10 @@ The CI provenance gate verifies:
   primary-income categories; all 25 row partitions and all five category
   totals reconcile exactly, while the cells remain labelled survey estimates
   rather than exact filer observations;
+. NTA Annual Statistics Table 2-2(1) is machine-extracted from the committed
+  PDF as 25 income classes × five primary types × filing-status counts; annual
+  category and grand margins reconcile exactly and all 125 positive-liability
+  cells match the Sample Survey Table 2 extraction;
 . every active stage-1 input is covered exactly once by value provenance;
 . official values point to registered raw official sources;
 . recovery values remain labelled `RECOVERY_ONLY`;

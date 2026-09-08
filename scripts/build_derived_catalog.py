@@ -123,6 +123,14 @@ SPECS = [
         "25 total-income classes x five primary income-earner categories among positive-liability taxpayers; survey-estimated cells with exact row/column reconciliation",
     ),
     (
+        "NTA-2024-ANNUAL-INCOME-CLASS-PRIMARY-TYPE-FILING-STATUS",
+        "nta_income_class_primary_type_filing_status_2024.csv",
+        "scripts/extract_nta_annual_income_class_filing_status.py",
+        "NTA-R06;NTA-2024-SHINKOKU-T2-XLSX",
+        "DERIVED_REPRODUCED_ADMINISTRATIVE_CROSSTAB",
+        "Exact annual-statistics final-return, positive-liability, refund, and residual counts for 25 total-net-income classes x five primary income-earner categories; 125 positive cells cross-check exactly to Sample Survey Table 2",
+    ),
+    (
         "NTA-2024-T31-ROUNDED-PRIMARY-TYPES",
         "nta_table31_primary_type_rounded_2024.csv",
         "scripts/extract_nta_stage2_holdout.py",

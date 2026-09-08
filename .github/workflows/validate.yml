@@ -13,9 +13,10 @@ jobs:
         with:
           python-version: "3.12"
 
-      - name: Install pinned replacement-LP dependencies
+      - name: Install pinned research dependencies
         run: |
           python -m pip install -r requirements-research-lp.txt
+          python -m pip install -r requirements-data-extraction.txt
 
       - name: Rebuild official-source catalogs and e-Stat extracts
         run: |
@@ -33,6 +34,8 @@ jobs:
           python scripts/test_nta_stage2_holdout.py
           python scripts/extract_nta_shinkoku_income_class_primary_type.py
           python scripts/test_nta_shinkoku_income_class_primary_type.py
+          python scripts/extract_nta_annual_income_class_filing_status.py
+          python scripts/test_nta_annual_income_class_filing_status.py
           python research/income_tax_pseudofiler/run_pseudofiler_core.py
           python research/income_tax_pseudofiler/test_pseudofiler_core.py
           python research/income_tax_partial_identification/run_replacement_transport_lp.py
