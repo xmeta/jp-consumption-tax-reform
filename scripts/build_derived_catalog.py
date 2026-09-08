@@ -115,6 +115,14 @@ SPECS = [
         "Exact NTA primary-income-type positive-liability rates; external diagnostic only, not F71561 selection identification",
     ),
     (
+        "NTA-2024-POSITIVE-LIABILITY-INCOME-CLASS-PRIMARY-TYPE",
+        "nta_positive_liability_income_class_primary_type_2024.csv",
+        "scripts/extract_nta_shinkoku_income_class_primary_type.py",
+        "NTA-2024-SHINKOKU-T2-XLSX;NTA-2024-SHINKOKU-T2-PDF;NTA-R06",
+        "DERIVED_REPRODUCED_OFFICIAL_SURVEY_ESTIMATE_CROSSTAB",
+        "25 total-income classes x five primary income-earner categories among positive-liability taxpayers; survey-estimated cells with exact row/column reconciliation",
+    ),
+    (
         "NTA-2024-T31-ROUNDED-PRIMARY-TYPES",
         "nta_table31_primary_type_rounded_2024.csv",
         "scripts/extract_nta_stage2_holdout.py",

@@ -120,6 +120,23 @@ reports positive-liability rates within the five NTA primary income-earner
 categories.  These are external administrative diagnostics and do not identify
 the F71561 household-to-filer selection mapping.
 
+`data/derived/nta_positive_liability_income_class_primary_type_2024.csv`
+reproduces the 25 total-income classes by five NTA primary income-earner
+categories from the official 2024 Sample Survey Table 2 XLSX.  The 125 cells
+are survey-based population estimates for persons with positive self-assessed
+income tax.  They are not filer microdata and are not exact administrative
+cell counts.
+
+For every total-income class, the five category cells reconcile exactly to the
+published Table 2 class total.  The five category column totals also reconcile
+to the independently reproduced exact positive-liability totals in
+`nta_primary_type_stage2_2024.csv`, and the grand total is 5,158,260.
+
+The NTA class variable is *total income* as defined by the sample survey.  It
+is not the F71561 equivalized annual household-income decile.  Any use of this
+cross-tab to constrain a decile-level transport model therefore requires an
+explicit bridge assumption and must remain model-contingent.
+
 `data/derived/nta_table31_primary_type_rounded_2024.csv` preserves the
 thousand-person values displayed in the NTA final-return press release,
 Table 3-1.  Its five displayed positive-liability category counts sum to 5,174
@@ -152,6 +169,10 @@ The CI provenance gate verifies:
   thousand-person counts are regenerated and the 0.08444pp composition
   point-check target is reproduced without relabelling it as inferential
   coverage;
+. NTA Sample Survey Table 2 is regenerated as 25 total-income classes by five
+  primary-income categories; all 25 row partitions and all five category
+  totals reconcile exactly, while the cells remain labelled survey estimates
+  rather than exact filer observations;
 . every active stage-1 input is covered exactly once by value provenance;
 . official values point to registered raw official sources;
 . recovery values remain labelled `RECOVERY_ONLY`;
