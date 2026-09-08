@@ -1,0 +1,376 @@
+= Pre-specified rank-bridge transport-relaxation LP v2
+:revdate: 2026-09-09
+:stem: latexmath
+
+== Status and lineage
+
+This document pre-specifies a *new* v2 model before any v2 numerical endpoint
+is computed.
+
+It does not modify or replace the committed v1 result.  The v1 model remains
+P1-C13 and retains its published numerical outputs.
+
+The v2 model has provisional status
+
+----
+PRE_SPECIFIED_RANK_BRIDGE_MODEL_CONTINGENT_NOT_IDENTIFIED
+----
+
+until a later commit contains implementation, tests, generated outputs,
+manifest regeneration, and successful CI.
+
+The historical V6 P1-C06 restricted-LP claim remains
+`DOCUMENTED_PRIOR_RUN_NOT_REPRODUCED`.
+
+== Why v2 exists
+
+v1 transported only five aggregate NTA primary-income categories across
+F71561 deciles.  Its minimum common relaxation exceeded 22 percentage points
+under both pre-specified v1 weight schemes.
+
+Since v1 was completed, the repository has reproduced a stronger official NTA
+object:
+
+----
+data/derived/nta_income_class_primary_type_filing_status_2024.csv
+----
+
+It contains FY2024 Table 2-2(1) administrative counts for 25 ordered total-net-
+income classes x five primary income-earner categories, including:
+
+* Table 2-2(1) population count;
+* positive-liability count;
+* refund count;
+* residual count.
+
+The 125 positive-liability cells cross-check exactly against the independently
+extracted NTA Sample Survey Table 2 cells.
+
+v2 uses the *income-rank information* in this table.  It does not equate NTA
+income amounts to F71561 income amounts.
+
+== Population distinction
+
+The two systems remain different.
+
+F71561:: household aggregates ranked by equivalized annual household income.
+
+NTA Table 2-2(1):: persons who filed for 2024 or whose income-tax cases were
+processed by correction, determination, or related procedures under the
+source's stated cutoff, ranked by total net income etc.
+
+The v2 bridge assumption is therefore not a data identity.
+
+== Bridge assumption fixed ex ante
+
+v2 assumes only *rank correspondence*:
+
+----
+F71561 decile d <-> NTA Table 2-2(1) total-net-income rank decile d
+----
+
+for stem:[d=1,\ldots,10].
+
+This assumption says that a bottom/top rank position in one system is matched
+to the same rank position in the other system.  It does *not* assert:
+
+* equal yen thresholds;
+* equal person/household units;
+* equal income concepts;
+* equal tax-unit definitions;
+* observed record linkage.
+
+The assumption is model-contingent and must be stated whenever v2 results are
+reported.
+
+== NTA grouped-rank construction
+
+Let the 25 NTA total-net-income classes be ordered by income as
+stem:[j=1,\ldots,25].
+
+For class stem:[j]:
+
+* stem:[A_j] = Table 2-2(1) population count;
+* stem:[P_j] = positive-liability count.
+
+Let
+
+[stem]
+++++
+N = \sum_j A_j.
+++++
+
+The NTA rank population is normalized to one:
+
+[stem]
+++++
+a_j = A_j/N, \qquad p_j = P_j/N.
+++++
+
+Define ten equal rank bins
+
+[stem]
+++++
+B_d=[(d-1)/10,d/10], \qquad d=1,\ldots,10.
+++++
+
+Let stem:[C_j=\sum_{h\le j}a_h] and stem:[C_0=0].
+
+The population mass from income class stem:[j] that falls in NTA rank decile
+stem:[d] is fixed by ordered grouped-data overlap:
+
+[stem]
+++++
+h_{jd}
+=
+\max\{0,
+\min(C_j,d/10)-\max(C_{j-1},(d-1)/10)
+\}.
+++++
+
+This operation uses only income-class ordering and published class population
+counts.
+
+It does not assume a uniform income density inside any class.
+
+== Within-class positive-liability uncertainty
+
+The exact identities/ranks of positive-liability persons within an NTA income
+class are not observed.
+
+For every class-decile overlap introduce
+
+[stem]
+++++
+y_{jd}\ge0,
+++++
+
+the positive-liability population mass from class stem:[j] assigned to rank
+decile stem:[d].
+
+The grouped-data constraints are
+
+[stem]
+++++
+0\le y_{jd}\le h_{jd},
+++++
+
+and
+
+[stem]
+++++
+\sum_d y_{jd}=p_j \qquad \forall j.
+++++
+
+Thus a class that crosses a rank-decile boundary may allocate its positive-
+liability mass adversarially across the overlap pieces, subject only to the
+published class total and overlap capacities.
+
+No proportional-within-class allocation assumption is imposed.
+
+The implied NTA positive-liability rate in rank decile stem:[d] is
+
+[stem]
+++++
+r_d^{NTA}
+=
+10\sum_j y_{jd}.
+++++
+
+== Pseudo-filer inputs
+
+All thirteen pseudo-filer scenarios already committed in
+
+----
+research/income_tax_pseudofiler/pseudofiler_mtr_scenarios.csv
+----
+
+are used without post-result selection.
+
+For F71561 decile stem:[d] and scenario stem:[s]:
+
+* stem:[u_{ds}] = pseudo-filer positive-tax share;
+* stem:[m^T_{ds}] = taxable-income-weighted mean MTR;
+* stem:[m^L_{ds}] = liability-weighted mean MTR.
+
+Introduce scenario-mixture weights
+
+[stem]
+++++
+\lambda_{ds}\ge0,
+\qquad
+\sum_s\lambda_{ds}=1.
+++++
+
+The implied pseudo-filer positive-tax rate is
+
+[stem]
+++++
+r_d^{PF}=\sum_s\lambda_{ds}u_{ds}.
+++++
+
+== Cross-system rank-bridge relaxation
+
+The common relaxation stem:[\varepsilon] is defined by
+
+[stem]
+++++
+|r_d^{PF}-r_d^{NTA}|\le\varepsilon
+\qquad \forall d.
+++++
+
+Equivalently,
+
+[stem]
+++++
+-\varepsilon
+\le
+\sum_s\lambda_{ds}u_{ds}
+-
+10\sum_j y_{jd}
+\le
+\varepsilon.
+++++
+
+The relaxation is an incompatibility budget under the rank-correspondence
+model.  It is not:
+
+* a standard error;
+* a confidence radius;
+* a measurement-error estimate;
+* a structural parameter;
+* a causal bound.
+
+== Optimization sequence fixed before v2 endpoint computation
+
+=== A. Minimum common relaxation
+
+First solve
+
+[stem]
+++++
+\varepsilon_2^*
+=
+\min \varepsilon
+++++
+
+subject to all constraints above.
+
+This is the first v2 numerical object.
+
+=== B. Fixed relaxation grid
+
+For comparability with v1, feasibility and conditional endpoints are evaluated
+on the same fixed absolute-rate grid:
+
+----
+0.000
+0.025
+0.050
+0.075
+0.100
+0.125
+0.150
+0.175
+0.200
+0.225
+0.250
+0.275
+0.300
+----
+
+and exactly at stem:[\varepsilon_2^*].
+
+No grid point may be removed after inspecting results.
+
+=== C. Endpoint objectives
+
+At each feasible relaxation value, report minimum and maximum for:
+
+. each decile's taxable-income-weighted MTR
+  stem:[\theta_d^T=\sum_s\lambda_{ds}m^T_{ds}];
+. each decile's liability-weighted MTR
+  stem:[\theta_d^L=\sum_s\lambda_{ds}m^L_{ds}];
+. each decile's pseudo-filer positive-tax rate stem:[r_d^{PF}];
+. each decile's NTA rank-decile positive-liability rate stem:[r_d^{NTA}];
+. equal-decile overall taxable-income-weighted MTR
+  stem:[10^{-1}\sum_d\theta_d^T];
+. equal-decile overall liability-weighted MTR
+  stem:[10^{-1}\sum_d\theta_d^L].
+
+No F71561 approximate leaf-count weighting is used in v2 because the bridge is
+explicitly defined on rank deciles, not on approximate sample-cell counts.
+
+== Comparison with v1
+
+v1 and v2 differ in assumptions and feasible sets.
+
+A lower v2 stem:[\varepsilon^*] would not prove that v2 is "truer".  It would
+show only that the stronger NTA income-rank information is more compatible
+with the pseudo-filer sensitivity system under the additional same-rank bridge
+assumption.
+
+A higher v2 stem:[\varepsilon^*] would likewise be reported without model
+selection or suppression.
+
+No v1 number is changed by v2.
+
+== Solver and reproducibility
+
+The implementation must use the already pinned research solver environment:
+
+* NumPy 2.5.3;
+* SciPy 1.18.1;
+* `scipy.optimize.linprog`;
+* `method="highs-ds"`.
+
+Post-solve checks must verify:
+
+* scenario-mixture sums;
+* per-class positive-liability mass conservation;
+* class-decile overlap capacities;
+* all ten rank-decile population masses equal 0.1;
+* all rank-bridge inequalities;
+* non-negativity;
+* recomputed objective values.
+
+Maximum accepted equality or inequality residual:
+
+----
+1e-8
+----
+
+All generated rows must record the solver and package versions.
+
+== Scientific interpretation boundary
+
+Allowed language after successful implementation/CI:
+
+* rank-bridge transport-relaxation sensitivity;
+* grouped-data-compatible NTA rank-decile stage-2 envelope;
+* minimum common discrepancy under same-rank correspondence;
+* model-contingent conditional MTR envelope.
+
+Prohibited language:
+
+* observed F71561-to-NTA linkage;
+* equality of NTA and F71561 income concepts;
+* recovered historical V6 restricted LP;
+* statistically sharp identified set for filer MTR;
+* confidence interval;
+* causal bound;
+* point-identified filer MTR.
+
+== Promotion rule
+
+v2 numerical results may not enter Paper 1 until a later commit contains:
+
+. implementation;
+. executable tests;
+. deterministic outputs;
+. manifest regeneration;
+. successful GitHub Actions;
+. a separate machine-readable claim with model-contingent rank-bridge status.
+
+The pre-specification commit must contain no v2 endpoint or
+stem:[\varepsilon_2^*] result.

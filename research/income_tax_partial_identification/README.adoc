@@ -182,6 +182,25 @@ These numerical outputs are not P1-C06 and are not automatically Paper 1
 claims. Promotion to a manuscript claim requires successful CI on the
 implementation commit and a later, separate claim-registry commit.
 
+== Pre-specified v2 rank bridge
+
+A second model is now pre-specified in:
+
+* `rank_bridge_lp_v2_spec.adoc`;
+* `rank_bridge_lp_v2_config.csv`.
+
+v2 uses the newly reproduced NTA Table 2-2(1) 25-income-class filing-status
+cross-tab and maps only *rank decile to rank decile*.  It does not equate NTA
+total net income to F71561 equivalized household income in yen.
+
+Within any NTA income class that crosses a rank-decile boundary, the
+positive-liability mass remains free subject to the published class total and
+overlap capacity.  Thus v2 does not impose proportional-within-class
+allocation.
+
+At this pre-specification stage there are deliberately no v2 numerical
+outputs, no v2 epsilon-star result, and no Paper 1 claim.
+
 == Reproduction
 
 [source,shell]

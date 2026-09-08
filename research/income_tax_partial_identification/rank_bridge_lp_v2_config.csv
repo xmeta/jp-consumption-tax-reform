@@ -1,0 +1,19 @@
+key,value,unit,note
+spec_version,rank_bridge_lp_v2,,pre-specified before any v2 endpoint computation
+input_pseudofiler_scenarios,all_13_committed_pseudofiler_scenarios,,no post-result selection
+input_nta_artifact,nta_income_class_primary_type_filing_status_2024.csv,,uses class-level all-category population and positive-liability totals
+nta_income_class_count,25,,ordered ascending by total net income etc.
+bridge_scheme,same_rank_decile,,F71561 decile d mapped to NTA Table2-2 rank decile d
+rank_bin_mass,0.1,population share,ten equal NTA rank bins
+within_class_positive_allocation,free_within_overlap_capacity,,no proportional within-class assumption
+epsilon_grid,0;0.025;0.05;0.075;0.10;0.125;0.15;0.175;0.20;0.225;0.25;0.275;0.30,absolute rate,plus epsilon_star
+endpoint_metrics,taxable_income_weighted_mean_MTR;income_tax_liability_weighted_mean_MTR;pseudo_filer_positive_tax_share;nta_rank_positive_liability_rate,,decile endpoints plus equal-decile overall MTR endpoints
+overall_weight_scheme,equal_decile,,rank-decile bridge implies 0.1 per decile
+solver,scipy.optimize.linprog,,pinned dependency
+solver_method,highs-ds,,dual simplex
+equality_residual_tolerance,1e-8,absolute,post-solve rejection threshold
+inequality_residual_tolerance,1e-8,absolute,post-solve rejection threshold
+numpy_version,2.5.3,,pinned
+scipy_version,1.18.1,,pinned
+historical_v6_restricted_lp_reproduced,false,,must remain false
+paper1_claim_before_ci,false,,promotion prohibited before implementation CI success
