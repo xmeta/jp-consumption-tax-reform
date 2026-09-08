@@ -24,7 +24,7 @@ discontinuities, the nearest achievable moment.
 The nuisance scale is a calibration device.  It is not a behavioral,
 structural, or causal parameter.
 
-The construction evaluates nine explicit scenarios over ten income deciles.
+The construction evaluates thirteen explicit scenarios over ten income deciles, including NTA Table 17 salary-class and F71551 pension-age external sensitivities.
 The generated outputs and executable tests are regenerated in CI.  Its
 reproducibility status is therefore
 `SENSITIVITY_ONLY_REPRODUCED`.

@@ -91,6 +91,27 @@ transcribed from official PDFs are explicitly labelled
 parameters are not allowed to remain as anonymous constants inside the research
 calculation.
 
+=== External salary-class and pension-age sensitivities
+
+`data/derived/nta_salary_class_social_deduction_schedule_2024.csv` and
+`data/derived/nta_salary_class_family_deduction_validation_2024.csv` are
+derived from NTA 2024 Private Salary Survey Table 17.
+
+They describe year-end-adjusted full-year salary earners, not F71561
+equivalized-income household cells. Mapping a reconstructed pseudo-filer wage
+to these salary classes is therefore an *external sensitivity assumption*, not
+an identified household-decile linkage.
+
+The family schedule reapplies 2026 statutory dependent-deduction amounts to
+the dependent composition observed in 2024. It does not forecast persons who
+become newly eligible under the 2026 income criteria.
+
+`data/derived/income_tax_age_income_source_shares_2024.csv` is constructed
+from F71551 age-recap cells. The 18--64 and 65+ recap household counts overlap
+relative to the all-age count, so the resulting public-pension amount share is
+explicitly a `SENSITIVITY_PROXY_NOT_IDENTIFIED`. It must not be described as
+an observed filer-level or person-level age share.
+
 == Validation
 
 The CI provenance gate verifies:

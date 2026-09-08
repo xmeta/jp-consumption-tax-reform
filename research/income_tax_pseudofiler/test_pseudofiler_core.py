@@ -11,8 +11,10 @@ ROOT = HERE.parents[1]
 SCENARIOS = {
     "central", "f71911_topcode10", "size_lower", "size_upper",
     "business_proportional", "other_wage_split2",
-    "no_social_deduction_proxy", "pension_head_merge",
-    "pension_member_split",
+    "no_social_deduction_proxy", "nta_salary_social",
+    "nta_salary_dependents", "pension_head_merge",
+    "pension_age_split_separate", "pension_member_split",
+    "pension_member_split_f71551",
 }
 MTR_FIELDS = [
     "pseudo_filer_share_MTR_0p0",
@@ -36,15 +38,15 @@ scen = read("pseudofiler_mtr_scenarios.csv")
 summ = read("pseudofiler_mtr_summary.csv")
 groups = read("household_worker_groups.csv")
 
-assert len(cal) == 90
-assert len(scen) == 90
+assert len(cal) == 130
+assert len(scen) == 130
 assert len(summ) == 10
 assert len(groups) == 40
 assert {int(r["decile"]) for r in summ} == set(range(1, 11))
 assert {r["scenario"] for r in scen} == SCENARIOS
 
 for d in range(1, 11):
-    assert len([r for r in scen if int(r["decile"]) == d]) == 9
+    assert len([r for r in scen if int(r["decile"]) == d]) == 13
 
 for r in cal:
     assert r["model_status"] == "SENSITIVITY_ONLY_NOT_IDENTIFIED"
@@ -77,7 +79,7 @@ for r in scen:
 for r in summ:
     assert r["structural_MTR_identified"] == "False"
     assert r["model_status"] == "SENSITIVITY_ONLY_NOT_IDENTIFIED"
-    assert int(r["scenario_count"]) == 9
+    assert int(r["scenario_count"]) == 13
     assert "not point input" in r["recommended_use"]
 
 # Deterministic generator check.
@@ -89,5 +91,5 @@ subprocess.run(
 
 print(
     "pseudo-filer core tests: OK "
-    "(9 scenarios x 10 deciles; central moments matched; MTR shares coherent)"
+    "(13 scenarios x 10 deciles; central moments matched; external sensitivities coherent)"
 )

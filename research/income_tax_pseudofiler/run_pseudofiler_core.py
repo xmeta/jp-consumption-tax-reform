@@ -37,6 +37,9 @@ from statutory_2026 import (  # noqa: E402
 LEAF = ROOT / "data/derived/income_tax_household_type_leaf_deciles_2024.csv"
 BRIDGE = ROOT / "data/derived/income_tax_bridge_deciles_2024.csv"
 INST = ROOT / "data/derived/income_tax_decile_tax_social_instruments_2024.csv"
+NTA_SOCIAL = ROOT / "data/derived/nta_salary_class_social_deduction_schedule_2024.csv"
+NTA_FAMILY = ROOT / "data/derived/nta_salary_class_family_deduction_validation_2024.csv"
+F71551_AGE = ROOT / "data/derived/income_tax_age_income_source_shares_2024.csv"
 
 OUT_CAL = HERE / "pseudofiler_calibration.csv"
 OUT_SCEN = HERE / "pseudofiler_mtr_scenarios.csv"
@@ -48,7 +51,9 @@ INPUT_SOURCE_IDS = (
     "ESTAT-7156-1-2024;ESTAT-7191-1-2024;ESTAT-7153-1-2024;"
     "NTA-2026-TAX-REFORM;NTA-2026-INCOME-TAX;"
     "NTA-SALARY-DEDUCTION-1410;NTA-INCOME-TAX-RATE-2260;"
-    "NTA-2026-PENSION-TAX;NTA-2026-PENSION-DETAIL"
+    "NTA-2026-PENSION-TAX;NTA-2026-PENSION-DETAIL;"
+    "NTA-MINKAN-2024-T17;NTA-2026-DEPENDENT-DEDUCTION;"
+    "ESTAT-7155-1-2024"
 )
 STATUTORY_ARTIFACT = "data/derived/income_tax_2026_statutory_parameters.csv"
 
@@ -91,13 +96,29 @@ SCENARIOS = {
         "calibrated", "household_size_proxy", "head", 1,
         "none", "absorbed_in_nuisance",
     ),
+    "nta_salary_social": (
+        "calibrated", "household_size_proxy", "head", 1,
+        "nta_salary_class", "absorbed_in_nuisance",
+    ),
+    "nta_salary_dependents": (
+        "calibrated", "household_size_proxy", "head", 1,
+        "proportional", "absorbed_in_nuisance",
+    ),
     "pension_head_merge": (
         "calibrated", "household_size_proxy", "head", 1,
         "proportional", "merge_to_head_by_household_head_age",
     ),
+    "pension_age_split_separate": (
+        "calibrated", "household_size_proxy", "head", 1,
+        "proportional", "separate_by_F71551_age_share",
+    ),
     "pension_member_split": (
         "calibrated", "household_size_proxy", "head", 1,
         "proportional", "member_split_by_F71911_age_share",
+    ),
+    "pension_member_split_f71551": (
+        "calibrated", "household_size_proxy", "head", 1,
+        "proportional", "member_split_by_F71551_age_share",
     ),
 }
 
@@ -107,6 +128,51 @@ MTR_GRID = [0.0, 0.05, 0.10, 0.20, 0.23, 0.33, 0.40, 0.45]
 def read_csv(path):
     with path.open(encoding="utf-8", newline="") as f:
         return list(csv.DictReader(f))
+
+
+_NTA_SOCIAL_ROWS = None
+_NTA_FAMILY_ROWS = None
+
+
+def salary_class_lookup(gross_wage_yen, path, value_col):
+    global _NTA_SOCIAL_ROWS, _NTA_FAMILY_ROWS
+    if path == NTA_SOCIAL:
+        if _NTA_SOCIAL_ROWS is None:
+            _NTA_SOCIAL_ROWS = read_csv(path)
+        rows = _NTA_SOCIAL_ROWS
+    elif path == NTA_FAMILY:
+        if _NTA_FAMILY_ROWS is None:
+            _NTA_FAMILY_ROWS = read_csv(path)
+        rows = _NTA_FAMILY_ROWS
+    else:
+        raise ValueError(path)
+
+    g = max(float(gross_wage_yen), 0.0)
+    if g <= 0:
+        return 0.0
+    rows = sorted(rows, key=lambda r: float(r["upper_salary_yen_inclusive"]))
+    chosen = rows[-1]
+    for r in rows:
+        if g <= float(r["upper_salary_yen_inclusive"]):
+            chosen = r
+            break
+    return num(chosen[value_col])
+
+
+def nta_salary_social_proxy(gross_wage_yen):
+    return salary_class_lookup(
+        gross_wage_yen,
+        NTA_SOCIAL,
+        "average_social_insurance_deduction_per_employee_yen",
+    )
+
+
+def nta_salary_dependent_proxy(gross_wage_yen):
+    return salary_class_lookup(
+        gross_wage_yen,
+        NTA_FAMILY,
+        "dependent_deduction_2026_amounts_on_2024_composition_per_employee_yen",
+    )
 
 
 def num(x):
@@ -237,7 +303,26 @@ def build_units(row, size, scenario, contrib_eq_yen, senior_share):
             units[0]["pre_basic"] += public_pension_misc_income_2026(
                 pension_total, head65, units[0]["pre_basic"]
             )
-    elif pension_mode == "member_split_by_F71911_age_share":
+    elif pension_mode == "separate_by_F71551_age_share":
+        if pension_total > 0:
+            p65 = pension_total * senior_share
+            pu65 = pension_total - p65
+            if pu65 > 0:
+                units.append(new_unit(
+                    "pension_separate_u65",
+                    0.0,
+                    public_pension_misc_income_2026(pu65, False, 0.0),
+                ))
+            if p65 > 0:
+                units.append(new_unit(
+                    "pension_separate_65p",
+                    0.0,
+                    public_pension_misc_income_2026(p65, True, 0.0),
+                ))
+    elif pension_mode in {
+        "member_split_by_F71911_age_share",
+        "member_split_by_F71551_age_share",
+    }:
         if pension_total > 0:
             head_p = num(row["head_public_pension_kY"]) * 1000.0 * scale
             spouse_p = num(row["spouse_public_pension_kY"]) * 1000.0 * scale
@@ -285,6 +370,9 @@ def build_units(row, size, scenario, contrib_eq_yen, senior_share):
             if denom > 0:
                 for u in units:
                     u["social"] = household_social * u["pre_basic"] / denom
+    elif social_mode == "nta_salary_class":
+        for u in units:
+            u["social"] = nta_salary_social_proxy(u["gross_wage"])
     elif social_mode != "none":
         raise ValueError(social_mode)
 
@@ -301,7 +389,12 @@ def household_tax(row, size, nuisance_scale, scenario, contrib_eq_yen,
     for u in units:
         calibrated_income = u["pre_basic"] * nuisance_scale
         basic = basic_deduction_2026(calibrated_income)
-        taxable = max(calibrated_income - basic - u["social"], 0.0)
+        family = (
+            nta_salary_dependent_proxy(u["gross_wage"])
+            if scenario == "nta_salary_dependents"
+            else 0.0
+        )
+        taxable = max(calibrated_income - basic - u["social"] - family, 0.0)
         calibration_tax = ordinary_national_income_tax_continuous_proxy_2026(taxable)
         tax = ordinary_national_income_tax_2026(taxable)
         rounded_taxable = math.floor(taxable / 1000.0) * 1000.0
@@ -312,6 +405,7 @@ def household_tax(row, size, nuisance_scale, scenario, contrib_eq_yen,
             v.update({
                 "calibrated_income": calibrated_income,
                 "basic_deduction": basic,
+                "dependent_deduction_external_proxy": family,
                 "taxable_income": taxable,
                 "rounded_taxable_income": rounded_taxable,
                 "calibration_income_tax": calibration_tax,
@@ -427,6 +521,7 @@ def build_outputs():
     leaf = read_csv(LEAF)
     bridge = {int(r["decile"]): r for r in read_csv(BRIDGE)}
     inst = {int(r["decile"]): r for r in read_csv(INST)}
+    f71551_age = {int(r["decile"]): r for r in read_csv(F71551_AGE)}
 
     calibration = []
     scenarios_out = []
@@ -470,9 +565,25 @@ def build_outputs():
             + num(inst[d]["health_insurance_contribution_yen"])
             + num(inst[d]["long_term_care_contribution_yen"])
         )
-        senior = num(bridge[d]["senior_share_65p"])
+        senior_f71911 = num(bridge[d]["senior_share_65p"])
+        senior_f71551 = num(
+            f71551_age[d]["age65p_share_of_public_pension_amount_proxy"]
+        )
 
         for scenario in SCENARIOS:
+            size_mode, _, business_mode, other_split, social_mode, pension_mode = (
+                SCENARIOS[scenario]
+            )
+            senior = (
+                senior_f71551
+                if "F71551" in pension_mode
+                else senior_f71911
+            )
+            senior_source = (
+                "F71551 public-pension amount proxy"
+                if "F71551" in pension_mode
+                else "F71911 aggregate age65+ person share"
+            )
             size_map, size_meta = scenario_size_map(
                 rows, bridge[d], scenario
             )
@@ -481,9 +592,6 @@ def build_outputs():
             )
             exact_fit = predicted_decile_exact_tax(
                 rows, size_map, nuisance, scenario, contrib, senior
-            )
-            size_mode, _, business_mode, other_split, social_mode, pension_mode = (
-                SCENARIOS[scenario]
             )
             calibration.append({
                 "decile": d,
@@ -501,8 +609,14 @@ def build_outputs():
                 "business_allocation": business_mode,
                 "other_member_wage_split": other_split,
                 "social_deduction_proxy": social_mode,
+                "family_deduction_proxy": (
+                    "NTA2024 dependent composition x 2026 statutory amounts"
+                    if scenario == "nta_salary_dependents"
+                    else "none/absorbed in nuisance"
+                ),
                 "pension_mode": pension_mode,
                 "senior_share_65p": senior,
+                "senior_share_source": senior_source,
                 "nuisance_parameter_interpretation":
                     "moment-matching scale; not behavioral or causal",
                 "model_status": STATUS,
@@ -646,7 +760,7 @@ def main():
         if stale:
             print("ERROR: stale pseudo-filer outputs: " + ", ".join(stale))
             raise SystemExit(1)
-        print("pseudo-filer core: current (9 scenarios x 10 deciles)")
+        print("pseudo-filer core: current (13 scenarios x 10 deciles)")
         return
     for path, rows in outputs:
         path.write_text(render(rows), encoding="utf-8")

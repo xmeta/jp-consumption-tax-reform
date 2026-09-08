@@ -30,7 +30,16 @@ The core uses only repository-tracked inputs:
   -- F71531 income-tax and social-insurance moments;
 * `data/derived/income_tax_2026_statutory_parameters.csv`
   -- versioned NTA 2026 statutory parameters with official source IDs,
-  locators, and raw-source SHA-256 values.
+  locators, and raw-source SHA-256 values;
+* `data/derived/nta_salary_class_social_deduction_schedule_2024.csv`
+  -- NTA Table 17 salary-class social-insurance averages, used only as an
+  external wage-earner sensitivity;
+* `data/derived/nta_salary_class_family_deduction_validation_2024.csv`
+  -- 2024 NTA dependent composition revalued at 2026 statutory dependent
+  deduction amounts, without forecasting 2026 eligibility changes;
+* `data/derived/income_tax_age_income_source_shares_2024.csv`
+  -- F71551 age-recap public-pension amount proxy, explicitly not an identified
+  filer/person age allocation.
 
 The underlying official XLSX, PDF, and HTML snapshots are stored under
 `data/raw/` and registered in `data/source_catalog.csv`.
@@ -75,7 +84,7 @@ away.
 
 == Scenarios
 
-The reproducible core currently evaluates nine scenarios:
+The reproducible core currently evaluates thirteen scenarios:
 
 * `central`;
 * `f71911_topcode10`;
@@ -84,19 +93,26 @@ The reproducible core currently evaluates nine scenarios:
 * `business_proportional`;
 * `other_wage_split2`;
 * `no_social_deduction_proxy`;
+* `nta_salary_social`;
+* `nta_salary_dependents`;
 * `pension_head_merge`;
-* `pension_member_split`.
+* `pension_age_split_separate`;
+* `pension_member_split`;
+* `pension_member_split_f71551`.
 
-The F71911 household-size bridge is itself sensitivity-only because the
-published `6 persons or more` class is top-coded.
+The F71911 household-size bridge is sensitivity-only because the published
+`6 persons or more` class is top-coded.  The NTA Table 17 schedules are
+external wage-earner moments rather than household-decile mappings.  The
+F71551 age-pension share is a proxy constructed from overlapping aggregate
+age-recap cells and is not a filer-level or person-level identified share.
 
 == Outputs
 
-`pseudofiler_calibration.csv`:: 90 decile-scenario calibration diagnostics.
+`pseudofiler_calibration.csv`:: 130 decile-scenario calibration diagnostics.
 
-`pseudofiler_mtr_scenarios.csv`:: 90 decile-scenario statutory-MTR diagnostics.
+`pseudofiler_mtr_scenarios.csv`:: 130 decile-scenario statutory-MTR diagnostics.
 
-`pseudofiler_mtr_summary.csv`:: 10-decile central values and nine-scenario
+`pseudofiler_mtr_summary.csv`:: 10-decile central values and thirteen-scenario
 envelopes.
 
 `household_worker_groups.csv`:: F71561 leaf-household worker-label aggregates.
@@ -143,6 +159,7 @@ python scripts/extract_estat_income_tax_tables.py
 python scripts/build_income_tax_decile_instruments.py
 python scripts/extract_estat_f71911_bridge.py
 python scripts/build_income_tax_2026_statutory_parameters.py
+python scripts/extract_nta_table17_and_f71551.py
 python research/income_tax_pseudofiler/run_pseudofiler_core.py
 python research/income_tax_pseudofiler/test_pseudofiler_core.py
 ----

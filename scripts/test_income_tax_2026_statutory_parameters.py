@@ -24,7 +24,7 @@ def read(path):
 
 rows = read(PARAMS)
 cat = {r["source_id"]: r for r in read(CATALOG)}
-assert len(rows) == 37
+assert len(rows) == 41
 
 for r in rows:
     assert r["source_id"] in cat
@@ -137,7 +137,18 @@ assert mod.public_pension_misc_income_2026(
     2_000_000, True, 20_000_001
 ) == 1_100_000
 
+deps = {
+    r["rule_id"]: int(float(r["constant_yen"]))
+    for r in rows if r["parameter_group"] == "dependent_deduction"
+}
+assert deps == {
+    "D_GENERAL": 380000,
+    "D_SPECIFIED": 630000,
+    "D_ELDERLY_OTHER": 480000,
+    "D_ELDERLY_CORESIDENT": 580000,
+}
+
 print(
     "2026 statutory parameter tests: OK "
-    "(37 rules; official snapshot anchors; salary boundary correction)"
+    "(41 rules; official snapshot anchors; salary boundary correction; dependent deductions)"
 )

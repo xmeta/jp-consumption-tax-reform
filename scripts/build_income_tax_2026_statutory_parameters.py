@@ -76,6 +76,13 @@ ROWS = [
 
     R("pension_other_income_adjustment","PA1",10000001,20000001,"add_to_pension_income",const=100000,source="NTA-2026-PENSION-DETAIL",locator="公的年金等控除表 / 公的年金等以外の所得1000万円超2000万円以下",status="VERIFIED_TRANSCRIPTION_PDF"),
     R("pension_other_income_adjustment","PA2",20000001,"","add_to_pension_income",const=200000,source="NTA-2026-PENSION-DETAIL",locator="公的年金等控除表 / 公的年金等以外の所得2000万円超",status="VERIFIED_TRANSCRIPTION_PDF"),
+
+    # 2026 dependent deductions. These are deduction amounts, not eligibility
+    # predictions for the 2024 Table-17 population.
+    R("dependent_deduction","D_GENERAL","","","constant",const=380000,source="NTA-2026-DEPENDENT-DEDUCTION",locator="扶養控除額 / 一般の控除対象扶養親族 1人につき38万円",status="VERIFIED_TRANSCRIPTION_PDF"),
+    R("dependent_deduction","D_SPECIFIED","","","constant",const=630000,source="NTA-2026-DEPENDENT-DEDUCTION",locator="扶養控除額 / 特定扶養親族 1人につき63万円",status="VERIFIED_TRANSCRIPTION_PDF"),
+    R("dependent_deduction","D_ELDERLY_OTHER","","","constant",const=480000,source="NTA-2026-DEPENDENT-DEDUCTION",locator="扶養控除額 / 同居老親等以外の老人扶養親族 1人につき48万円",status="VERIFIED_TRANSCRIPTION_PDF"),
+    R("dependent_deduction","D_ELDERLY_CORESIDENT","","","constant",const=580000,source="NTA-2026-DEPENDENT-DEDUCTION",locator="扶養控除額 / 同居老親等 1人につき58万円",status="VERIFIED_TRANSCRIPTION_PDF"),
 ]
 
 
