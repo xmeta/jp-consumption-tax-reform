@@ -145,6 +145,22 @@ written down before inspecting its endpoint results. The currently reproduced
 stage-2 diagnostic is an input candidate for such a model, not sufficient
 identification by itself.
 
+== Pre-specified replacement model
+
+A separate replacement transport-relaxation LP has now been specified *before*
+endpoint computation in:
+
+* `replacement_transport_lp_spec.adoc`;
+* `replacement_transport_lp_config.csv`;
+* repository root `requirements-research-lp.txt`.
+
+The specification fixes the 13-scenario set, two decile-weight schemes,
+transport equations, common-relaxation definition, epsilon grid, endpoint
+objectives, solver, exact package versions, and post-solve residual tolerances.
+
+This pre-specification is intentionally committed without numerical LP
+endpoints. The later implementation must be a separate commit.
+
 == Reproduction
 
 [source,shell]

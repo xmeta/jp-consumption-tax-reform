@@ -1,0 +1,313 @@
+= Pre-specified replacement transport-relaxation LP v1
+:revdate: 2026-09-09
+:stem: latexmath
+
+== Status
+
+This document pre-specifies a *new* replacement LP before its numerical
+endpoints are computed.
+
+It is not a restoration of the historical V6 files
+`40_income_tax_partial_identification_lp.py`,
+`41_income_tax_partial_identification_checks.py`, or
+`42_income_tax_partial_identification_outputs.py`.
+
+The historical P1-C06 restricted-LP claim remains
+`DOCUMENTED_PRIOR_RUN_NOT_REPRODUCED`.
+
+The replacement model has the provisional scientific status
+
+----
+PRE_SPECIFIED_MODEL_CONTINGENT_NOT_IDENTIFIED
+----
+
+until code, tests, and outputs are committed in a later commit.
+
+== Motivation
+
+The repository currently contains two objects with different denominators:
+
+. pseudo-filer scenarios constructed from F71561/F71911 aggregate household
+  information; and
+. NTA positive-self-assessed-liability rates among final-return income earners
+  by five primary income categories.
+
+Equating those rates directly would silently assume that pseudo tax units and
+NTA final-return filers share a common denominator and that the NTA primary
+income-category mixture can be transported across F71561 income deciles.
+
+The replacement LP therefore makes that transport assumption explicit and
+introduces a relaxation parameter rather than forcing exact equality.
+
+== Inputs fixed before endpoint computation
+
+=== Deciles
+
+stem:[d=1,\ldots,10].
+
+=== Pseudo-filer scenarios
+
+All thirteen scenarios already committed in
+`research/income_tax_pseudofiler/pseudofiler_mtr_scenarios.csv` are used.
+No scenario is added or removed after endpoint inspection.
+
+For decile stem:[d] and scenario stem:[s], define:
+
+* stem:[p_{ds}] = `pseudo_filer_positive_tax_share`;
+* stem:[m^T_{ds}] = `taxable_income_weighted_mean_MTR`;
+* stem:[m^L_{ds}] = `income_tax_liability_weighted_mean_MTR`.
+
+These remain sensitivity-model outputs, not observed filer quantities.
+
+=== NTA primary-income categories
+
+The five categories are fixed as:
+
+* business;
+* real estate;
+* salary;
+* miscellaneous;
+* other.
+
+For category stem:[k]:
+
+* stem:[q_k] is its exact share of FY2024 final-return income earners;
+* stem:[r_k] is its exact positive-liability rate.
+
+Both are taken from
+`data/derived/nta_primary_type_stage2_2024.csv`.
+
+=== Decile transport weights
+
+Two weight schemes are pre-specified and reported separately:
+
+`equal_decile`:: stem:[w_d=0.1].
+
+`f71561_leaf_count_normalized`:: the sum of F71561 14-leaf approximate
+household counts in decile stem:[d], divided by the sum over all ten deciles.
+
+Neither scheme is asserted to be the true distribution of NTA filers across
+F71561 deciles.
+
+== Variables
+
+For every decile stem:[d] and pseudo-filer scenario stem:[s]:
+
+[stem]
+++++
+\lambda_{ds}\ge 0,
+++++
+
+where stem:[\lambda_{ds}] is a convex scenario-mixture weight.
+
+For every decile stem:[d] and NTA category stem:[k]:
+
+[stem]
+++++
+x_{dk}\ge 0,
+++++
+
+where stem:[x_{dk}] is a transported mass.
+
+For the minimum-relaxation problem:
+
+[stem]
+++++
+\varepsilon\ge 0.
+++++
+
+== Equality restrictions
+
+Scenario mixtures:
+
+[stem]
+++++
+\sum_s \lambda_{ds}=1
+\qquad \forall d.
+++++
+
+Decile transported mass:
+
+[stem]
+++++
+\sum_k x_{dk}=w_d
+\qquad \forall d.
+++++
+
+NTA primary-category composition:
+
+[stem]
+++++
+\sum_d x_{dk}=q_k
+\qquad \forall k.
+++++
+
+One redundant mass equality may be dropped numerically by the solver, but all
+residuals must be checked afterward.
+
+== Transport-relaxation restriction
+
+Define the pseudo-filer positive-tax rate implied by the scenario mixture:
+
+[stem]
+++++
+\tilde p_d
+=
+\sum_s\lambda_{ds}p_{ds}.
+++++
+
+Define the NTA-stage-2 rate transported into decile stem:[d]:
+
+[stem]
+++++
+\tilde r_d
+=
+\frac{1}{w_d}\sum_k r_k x_{dk}.
+++++
+
+The common-denominator transport restriction is relaxed by
+
+[stem]
+++++
+|\tilde p_d-\tilde r_d|\le\varepsilon
+\qquad \forall d.
+++++
+
+Equivalently, in linear form,
+
+[stem]
+++++
+-\varepsilon w_d
+\le
+w_d\sum_s\lambda_{ds}p_{ds}
+-
+\sum_k r_kx_{dk}
+\le
+\varepsilon w_d.
+++++
+
+The relaxation stem:[\varepsilon] is a diagnostic incompatibility budget.
+It is not a sampling standard error, measurement-error estimate, or structural
+parameter.
+
+== Optimization sequence fixed ex ante
+
+=== A. Minimum common relaxation
+
+For each of the two decile-weight schemes:
+
+[stem]
+++++
+\varepsilon^*
+=
+\min \varepsilon
+++++
+
+subject to all restrictions above.
+
+This is the first reported object.
+
+=== B. Fixed relaxation grid
+
+Feasibility and condition endpoints are evaluated on the following fixed
+absolute-rate grid, specified before endpoint computation:
+
+----
+0.000
+0.025
+0.050
+0.075
+0.100
+0.125
+0.150
+0.175
+0.200
+0.225
+0.250
+0.275
+0.300
+----
+
+In addition, endpoints are evaluated exactly at stem:[\varepsilon^*].
+
+No grid point is removed because its result looks inconvenient.
+
+=== C. Endpoint objectives
+
+At every feasible weight-scheme / relaxation pair, optimize separately:
+
+. for each decile stem:[d],
+  stem:[\theta^T_d=\sum_s\lambda_{ds}m^T_{ds}];
+. for each decile stem:[d],
+  stem:[\theta^L_d=\sum_s\lambda{ds}m^L_{ds}];
+. overall weighted taxable-income MTR,
+  stem:[\sum_dw_d\theta^T_d];
+. overall weighted liability MTR,
+  stem:[\sum_dw_d\theta^L_d];
+. each decile's transported/mixture positive-tax rate
+  stem:[\tilde p_d].
+
+For each object, both minimum and maximum are reported.
+
+== Solver and reproducibility
+
+The implementation will use
+
+* NumPy 2.5.3;
+* SciPy 1.18.1;
+* `scipy.optimize.linprog`;
+* `method="highs-ds`.
+
+Exact package versions are pinned in
+`requirements-research-lp.txt`.
+
+Every output records the NumPy and SciPy versions used.
+
+Post-solve checks must verify:
+
+* scenario-mixture sums;
+* decile transport-mass sums;
+* NTA category-mass sums;
+* transport-relaxation inequalities;
+* non-negativity;
+* recomputed objective values.
+
+A solution is rejected if an equality residual exceeds stem:[10^{-8}] or a
+transport inequality exceeds the requested tolerance by more than
+stem:[10^{-8}].
+
+== Interpretation boundary
+
+If this model is later reproduced successfully, allowed language is:
+
+* transport-relaxation sensitivity frontier;
+* minimum common discrepancy needed to jointly accommodate the two aggregate
+  systems under the stated transport model;
+* model-contingent conditional MTR envelope.
+
+Prohibited language is:
+
+* recovered historical V6 restricted LP;
+* statistically sharp identified set;
+* point-identified filer MTR;
+* confidence interval;
+* causal bound;
+* evidence that NTA primary-income categories are observed within F71561
+  deciles;
+* evidence that the selected decile-weight scheme equals the filer
+  distribution.
+
+== Promotion rule
+
+Numerical outputs may not be cited in Paper 1 until a later commit contains:
+
+. the implementation;
+. executable tests;
+. solver/version metadata;
+. manifest regeneration;
+. CI success;
+. a separate machine-readable claim whose status explicitly says
+  model-contingent / transport-relaxation.
+
+P1-C06 itself remains unreproduced unless the historical V6 constraint chain is
+actually restored.
