@@ -1,5 +1,5 @@
 = Research Status
-:revdate: 2026-09-08
+:revdate: 2026-09-09
 
 == Migration
 
@@ -19,8 +19,10 @@
 |Income-tax liability / surtax |READY_STATIC_ONLY |静学的税額・帰着の範囲のみ
 |Pseudo-filer statutory MTR |SENSITIVITY_ONLY_REPRODUCED |公式raw/derived dataから再生成可能な感度分析モデル。ETI等の感度分析入力のみに用い、真の申告者MTR分布や点識別された政策入力とは扱わない
 |F71561 stage-1 population bridge |ROBUSTNESS_FRONTIER |任意の外部閾値 stem:[A] に対するbreak-even総未追跡mismatch budget stem:[C_U^*(A)] を再現可能に計算する。実際の stem:[C_U] や申告率は未識別
+|NTA primary-income-type stage-2 diagnostic |EXTERNAL_STAGE2_DIAGNOSTIC_REPRODUCED |国税庁の5所得区分について正確人員からpositive-liability率を再生成。F71561世帯→申告者selectionの識別とは扱わない
+|Restricted-LP decile MTR endpoints |DOCUMENTED_PRIOR_RUN_NOT_REPRODUCED |旧40–42の制約集合・endpoint生成鎖は未回収。再現済みstage-2をLP endpointの識別へ読み替えない
 |Recovered score_power thresholds |DOCUMENTED_PRIOR_RUN_NOT_REPRODUCED |回復用メタデータのみ。主結果へ使わない
-|NTA Table 3-1 external holdout |DOCUMENTED_PRIOR_RUN_NOT_REPRODUCED |回復用メタデータのみ。統計的CI・現行再現結果として扱わない
+|NTA Table 3-1 composition point check |CROSS_PUBLICATION_POINT_CHECK_REPRODUCED |5区分の千人丸め値を表示5区分合計5,174千人で再正規化し、年報の正確人員構成との差最大0.08444ppを再現。独立holdout・CIとは扱わない
 |===
 
 == Non-claims
@@ -28,5 +30,7 @@
 * 2024 F71561母集団推計を2024年実在人物集合の厳密な下限とは主張しない。
 * robustness frontierから実際の stem:[C_U] や申告参加率が識別されたとは主張しない。
 * pseudo-filer構成から真の申告者MTR分布を識別したとは主張しない。
-* 回収済みholdout一致を現行の再現済み検証や統計的信頼区間へ読み替えない。
+* Table 3-1の0.08444pp一致を独立標本holdout・統計的信頼区間・因果検証へ読み替えない。
+* NTA所得区分別stage-2率をF71561の十分位別申告参加確率として点識別したとは主張しない。
+* 再現済みstage-2診断からrestricted-LP endpointが再現・識別されたとは主張しない。
 * モデルシミュレーションを政府公式の実質GDP予測とは呼ばない。

@@ -11,6 +11,8 @@ ALLOWED = {
     "ROBUSTNESS_FRONTIER_REPRODUCED",
     "SENSITIVITY_ONLY_RECOVERABLE",
     "SENSITIVITY_ONLY_REPRODUCED",
+    "EXTERNAL_STAGE2_DIAGNOSTIC_REPRODUCED",
+    "CROSS_PUBLICATION_POINT_CHECK_REPRODUCED",
     "DOCUMENTED_PRIOR_RUN_NOT_REPRODUCED",
     "READY_STATIC_ONLY",
     "NOT_READY",
@@ -21,6 +23,8 @@ LOCAL_SOURCE_STATUSES = {
     "ROBUSTNESS_FRONTIER_REPRODUCED",
     "READY_STATIC_ONLY",
     "SENSITIVITY_ONLY_REPRODUCED",
+    "EXTERNAL_STAGE2_DIAGNOSTIC_REPRODUCED",
+    "CROSS_PUBLICATION_POINT_CHECK_REPRODUCED",
     "NOT_READY",
 }
 
@@ -63,6 +67,12 @@ def main():
     by_id = {r["claim_id"]: r for r in rows}
     if by_id["P1-C03"]["status"] != "SENSITIVITY_ONLY_REPRODUCED":
         errors.append("P1-C03 pseudo-filer must remain reproduced sensitivity-only")
+    if by_id["P1-C05"]["status"] != "EXTERNAL_STAGE2_DIAGNOSTIC_REPRODUCED":
+        errors.append("P1-C05 must remain an external reproduced diagnostic")
+    if by_id["P1-C06"]["status"] != "DOCUMENTED_PRIOR_RUN_NOT_REPRODUCED":
+        errors.append("P1-C06 restricted LP must remain unreproduced")
+    if by_id["P1-C07"]["status"] != "CROSS_PUBLICATION_POINT_CHECK_REPRODUCED":
+        errors.append("P1-C07 must remain a non-inferential reproduced point check")
     if by_id["P1-C08"]["status"] != "ROBUSTNESS_FRONTIER_REPRODUCED":
         errors.append("P1-C08 must remain a reproduced robustness frontier")
     if by_id["P1-C09"]["status"] != "DOCUMENTED_PRIOR_RUN_NOT_REPRODUCED":

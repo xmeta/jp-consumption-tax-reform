@@ -107,6 +107,22 @@ SPECS = [
         "F71551 age65+ public-pension amount proxy from overlapping age-recap aggregate cells; not a filer/person identified share",
     ),
     (
+        "NTA-2024-PRIMARY-TYPE-STAGE2",
+        "nta_primary_type_stage2_2024.csv",
+        "scripts/extract_nta_stage2_holdout.py",
+        "NTA-R06;NTA-2024-SHINKOKU-SAMPLE",
+        "DERIVED_REPRODUCED_EXTERNAL_DIAGNOSTIC",
+        "Exact NTA primary-income-type positive-liability rates; external diagnostic only, not F71561 selection identification",
+    ),
+    (
+        "NTA-2024-T31-ROUNDED-PRIMARY-TYPES",
+        "nta_table31_primary_type_rounded_2024.csv",
+        "scripts/extract_nta_stage2_holdout.py",
+        "NTA-2024-RETURN-PRESS-T31",
+        "DERIVED_REPRODUCED_POINT_CHECK_INPUT",
+        "Displayed thousand-person Table 3-1 counts with explicit five-category versus grand-total rounding mismatch",
+    ),
+    (
         "NTA-2026-STATUTORY-PARAMETERS",
         "income_tax_2026_statutory_parameters.csv",
         "scripts/build_income_tax_2026_statutory_parameters.py",

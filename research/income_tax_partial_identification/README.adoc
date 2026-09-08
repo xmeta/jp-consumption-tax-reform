@@ -1,0 +1,158 @@
+= Income-tax selection and partial-identification evidence
+:revdate: 2026-09-08
+
+== Scope
+
+This directory separates three distinct objects:
+
+. an external National Tax Agency primary-income-type positive-liability
+  diagnostic;
+. a cross-publication point check of primary-type composition;
+. restricted-LP marginal-rate bounds, whose historical V6 implementation is
+  still not reproduced.
+
+Reproducing the first two objects does not identify the third.
+
+== NTA primary-type stage-2 diagnostic
+
+The official FY2024 NTA Annual Statistics Report, Table 2-2(1), reports exact
+person counts for five primary income-earner categories:
+
+* business;
+* real estate;
+* salary;
+* miscellaneous;
+* other / not otherwise classified.
+
+For category stem:[k], the reproduced diagnostic is
+
+[stem]
+++++
+r_k = N^{+}_k / N^{return}_k ,
+++++
+
+where stem:[N^{+}_k] is the exact number with positive self-assessed income tax
+and stem:[N^{return}_k] is the exact number of final-return income earners in
+that NTA category.
+
+The resulting rates are stored in
+`data/derived/nta_primary_type_stage2_2024.csv`.
+
+These are observed NTA administrative category rates. They are *not* an
+identified mapping from F71561 household deciles to filers. Applying them to
+F71561 or to pseudo-filer units requires an additional transport/selection
+assumption.
+
+Scientific status:
+
+----
+EXTERNAL_STAGE2_DIAGNOSTIC_REPRODUCED
+----
+
+== Table 3-1 cross-publication point check
+
+The NTA final-return press release reports Table 3-1 in thousand persons.
+Its five displayed positive-liability category counts sum to 5,174 thousand,
+while the separately displayed positive-liability grand total is 5,175
+thousand. The table itself warns that totals and components can disagree due
+to rounding.
+
+For a category-composition comparison, the five displayed categories are
+therefore normalized by their own displayed sum:
+
+[stem]
+++++
+q^{T31}_k =
+  N^{T31,+}_k /
+  sum_j N^{T31,+}_j .
+++++
+
+The exact annual-statistics composition is
+
+[stem]
+++++
+q^{annual}_k =
+  N^{annual,+}_k /
+  sum_j N^{annual,+}_j .
+++++
+
+The check reports
+
+[stem]
+++++
+d_k = 100 (q^{T31}_k - q^{annual}_k)
+++++
+
+in percentage points.
+
+The maximum absolute difference is
+
+----
+0.0844360351759 percentage point
+----
+
+which rounds to the historical V6 recovery target of
+
+----
+0.08444 percentage point.
+----
+
+The largest difference is for the miscellaneous-income category.
+
+This exact recovery of the historical numerical target establishes that the
+rounding/composition calculation has been reconstructed. It does not convert
+the comparison into an independent holdout sample: both publications are NTA
+administrative outputs concerning the same tax-year population.
+
+Scientific status:
+
+----
+CROSS_PUBLICATION_POINT_CHECK_REPRODUCED
+----
+
+It is prohibited to describe this result as:
+
+* confidence-interval coverage;
+* independent-sample external validation;
+* causal validation;
+* validation of a filer-level MTR distribution;
+* evidence that F71561 household-to-filer selection is identified.
+
+== Sample Survey for Self-Assessment Income Tax
+
+The official 2024 sample-survey report is retained as an additional raw source
+because it documents the positive-self-assessed-tax target population and the
+same five primary income categories.
+
+It is not used to manufacture an independent validation claim. A calibration
+or weighting design that anchors to administrative category totals would not
+constitute an independent holdout merely because it appears in a different
+publication.
+
+== Restricted LP
+
+The historical V6 artifacts
+
+* `40_income_tax_partial_identification_lp.py`;
+* `41_income_tax_partial_identification_checks.py`;
+* `42_income_tax_partial_identification_outputs.py`
+
+remain byte-identical recovery gaps.
+
+No new restricted-LP endpoints will be promoted until the original constraint
+set can be recovered or an independently specified replacement model is
+written down before inspecting its endpoint results. The currently reproduced
+stage-2 diagnostic is an input candidate for such a model, not sufficient
+identification by itself.
+
+== Reproduction
+
+[source,shell]
+----
+python scripts/build_source_catalog.py
+python scripts/extract_nta_stage2_holdout.py
+python scripts/test_nta_stage2_holdout.py
+----
+
+The generated outputs must remain deterministic under a clean checkout and all
+source SHA-256 values must match `data/source_catalog.csv`.

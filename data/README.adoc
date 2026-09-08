@@ -112,6 +112,26 @@ relative to the all-age count, so the resulting public-pension amount share is
 explicitly a `SENSITIVITY_PROXY_NOT_IDENTIFIED`. It must not be described as
 an observed filer-level or person-level age share.
 
+=== NTA primary-type stage-2 and Table 3-1 point check
+
+`data/derived/nta_primary_type_stage2_2024.csv` is transcribed from the exact
+person counts in the FY2024 NTA Annual Statistics Report, Table 2-2(1).  It
+reports positive-liability rates within the five NTA primary income-earner
+categories.  These are external administrative diagnostics and do not identify
+the F71561 household-to-filer selection mapping.
+
+`data/derived/nta_table31_primary_type_rounded_2024.csv` preserves the
+thousand-person values displayed in the NTA final-return press release,
+Table 3-1.  Its five displayed positive-liability category counts sum to 5,174
+thousand while the displayed grand total is 5,175 thousand.  The source notes
+that totals and components can differ due to rounding.
+
+The cross-publication composition check therefore normalizes the five
+displayed categories by their own displayed sum.  The resulting maximum
+difference from the exact annual-statistics composition is 0.084436...pp,
+which rounds to 0.08444pp.  This is a point check only, not an independent
+holdout, confidence interval, or filer-MTR validation.
+
 == Validation
 
 The CI provenance gate verifies:
@@ -128,6 +148,10 @@ The CI provenance gate verifies:
 . the F71911 household-size categories reconcile to the all-size decile person
   total within the published rounding tolerance, and the 6+/7/8/10 top-code
   sensitivity proxies are monotone;
+. NTA Table 2-2(1) exact five-category stage-2 rates and Table 3-1 displayed
+  thousand-person counts are regenerated and the 0.08444pp composition
+  point-check target is reproduced without relabelling it as inferential
+  coverage;
 . every active stage-1 input is covered exactly once by value provenance;
 . official values point to registered raw official sources;
 . recovery values remain labelled `RECOVERY_ONLY`;

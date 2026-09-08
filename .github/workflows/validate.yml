@@ -25,6 +25,8 @@ jobs:
           python scripts/test_income_tax_2026_statutory_parameters.py
           python scripts/extract_nta_table17_and_f71551.py
           python scripts/test_nta_table17_and_f71551.py
+          python scripts/extract_nta_stage2_holdout.py
+          python scripts/test_nta_stage2_holdout.py
           python research/income_tax_pseudofiler/run_pseudofiler_core.py
           python research/income_tax_pseudofiler/test_pseudofiler_core.py
           python scripts/build_derived_catalog.py
