@@ -128,15 +128,15 @@ SPECS = [
         "scripts/extract_nta_stage2_holdout.py",
         "NTA-R06;NTA-2024-SHINKOKU-SAMPLE",
         "DERIVED_REPRODUCED_EXTERNAL_DIAGNOSTIC",
-        "Exact NTA primary-income-type positive-liability rates; external diagnostic only, not F71561 selection identification",
+        "Exact NTA primary-income-type positive-self-assessed-balance rates; external diagnostic only, not F71561 selection identification",
     ),
     (
-        "NTA-2024-POSITIVE-LIABILITY-INCOME-CLASS-PRIMARY-TYPE",
-        "nta_positive_liability_income_class_primary_type_2024.csv",
+        "NTA-2024-POSITIVE-SELF-ASSESSED-BALANCE-INCOME-CLASS-PRIMARY-TYPE",
+        "nta_positive_self_assessed_balance_income_class_primary_type_2024.csv",
         "scripts/extract_nta_shinkoku_income_class_primary_type.py",
         "NTA-2024-SHINKOKU-T2-XLSX;NTA-2024-SHINKOKU-T2-PDF;NTA-R06",
         "DERIVED_REPRODUCED_OFFICIAL_SURVEY_ESTIMATE_CROSSTAB",
-        "25 total-income classes x five primary income-earner categories among positive-liability taxpayers; survey-estimated cells with exact row/column reconciliation",
+        "25 total-income classes x five primary income-earner categories among positive-self-assessed-balance taxpayers; survey-estimated cells with exact row/column reconciliation",
     ),
     (
         "NTA-2024-ANNUAL-INCOME-CLASS-PRIMARY-TYPE-FILING-STATUS",
@@ -144,7 +144,7 @@ SPECS = [
         "scripts/extract_nta_annual_income_class_filing_status.py",
         "NTA-R06;NTA-2024-SHINKOKU-T2-XLSX",
         "DERIVED_REPRODUCED_ADMINISTRATIVE_CROSSTAB",
-        "Exact annual-statistics final-return, positive-liability, refund, and residual counts for 25 total-net-income classes x five primary income-earner categories; 125 positive cells cross-check exactly to Sample Survey Table 2",
+        "Exact annual-statistics final-return, positive-self-assessed-balance, refund, and residual counts for 25 total-net-income classes x five primary income-earner categories; 125 positive cells cross-check exactly to Sample Survey Table 2",
     ),
     (
         "NTA-2024-T31-ROUNDED-PRIMARY-TYPES",

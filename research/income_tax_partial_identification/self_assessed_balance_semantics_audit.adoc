@@ -13,7 +13,7 @@ are not changed by this audit commit.
 Current migration status:
 
 ----
-SEMANTIC_MISMATCH_CONFIRMED_SCHEMA_MIGRATION_PENDING
+SEMANTIC_MISMATCH_CORRECTED_NUMERIC_INVARIANCE_VERIFIED
 ----
 
 == Official NTA definition
@@ -163,26 +163,27 @@ cross_concept_rate_gap budget epsilon
 
 in prose.  The mathematical symbol stem:[\varepsilon] remains unchanged.
 
-== Planned schema migration
+== Completed schema migration
 
-The next commit will mechanically update active code, generated data, research
-outputs, and Paper 1 terminology.
+The active schema now uses the canonical event names throughout code,
+generated data, research outputs, catalogs, and Paper 1:
 
-At minimum:
-
-. rename NTA `positive_liability*` fields to
+. NTA `positive_liability*` fields were renamed to
   `positive_self_assessed_balance*`;
-. rename the sample-survey derived artifact path from
-  `nta_positive_liability_income_class_primary_type_2024.csv` to
+. the sample-survey derived artifact was renamed to
   `nta_positive_self_assessed_balance_income_class_primary_type_2024.csv`;
-. rename downstream v2-v4 NTA rate/transport fields;
-. rename the pseudo positive-share field to make the modeled annual-tax event
-  explicit;
-. update source/derived catalogs;
-. update v1-v4 specifications and README interpretation text;
-. update Paper 1 P1-C05, P1-C07, and P1-C13-P1-C16 terminology and forbidden
-  claims;
-. retain all historical V6 recovery statuses unchanged.
+. downstream v2-v4 NTA rate/transport fields use the same terminology;
+. the pseudo positive-share field is now
+  `pseudo_positive_modeled_annual_income_tax_share`;
+. v1-v4 specifications contain explicit post-specification semantic
+  clarifications while their original pre-specification commits remain in Git
+  history;
+. Paper 1 P1-C05, P1-C07, and P1-C13-P1-C16 distinguish the two tax events;
+. all historical V6 recovery statuses remain unchanged.
+
+The migration changes names and interpretation only.  It changes no model
+number, grid, LP equation, solver setting, feasibility classification, or MTR
+endpoint.
 
 == Numerical invariance requirement
 
@@ -197,8 +198,9 @@ self_assessed_balance_numeric_anchors.csv
 For each listed artifact, the fingerprint hashes every numeric CSV cell in
 row/column order while ignoring header names and nonnumeric strings.
 
-After schema migration, an executable test must verify all 16 fingerprints
-against the canonical post-migration paths.
+The executable
+`test_self_assessed_balance_schema_migration.py` verifies all 16 fingerprints
+against the canonical post-migration paths and is a required CI gate.
 
 The migration must additionally reassert these anchors:
 
@@ -213,7 +215,7 @@ Any failure of a numeric fingerprint blocks the migration.
 
 == Paper interpretation boundary
 
-After migration, Paper 1 may state that v1-v4 quantify compatibility between
+After the completed migration, Paper 1 may state that v1-v4 quantify compatibility between
 a pseudo modeled-annual-tax-positive share and an NTA
 positive-self-assessed-balance share under explicit bridge assumptions.
 

@@ -116,11 +116,11 @@ an observed filer-level or person-level age share.
 
 `data/derived/nta_primary_type_stage2_2024.csv` is transcribed from the exact
 person counts in the FY2024 NTA Annual Statistics Report, Table 2-2(1).  It
-reports positive-liability rates within the five NTA primary income-earner
+reports positive-self-assessed-balance rates within the five NTA primary income-earner
 categories.  These are external administrative diagnostics and do not identify
 the F71561 household-to-filer selection mapping.
 
-`data/derived/nta_positive_liability_income_class_primary_type_2024.csv`
+`data/derived/nta_positive_self_assessed_balance_income_class_primary_type_2024.csv`
 reproduces the 25 total-income classes by five NTA primary income-earner
 categories from the official 2024 Sample Survey Table 2 XLSX.  The 125 cells
 are survey-based population estimates for persons with positive self-assessed
@@ -129,7 +129,7 @@ cell counts.
 
 For every total-income class, the five category cells reconcile exactly to the
 published Table 2 class total.  The five category column totals also reconcile
-to the independently reproduced exact positive-liability totals in
+to the independently reproduced exact positive-self-assessed-balance totals in
 `nta_primary_type_stage2_2024.csv`, and the grand total is 5,158,260.
 
 The NTA class variable is *total income* as defined by the sample survey.  It
@@ -145,10 +145,10 @@ income-earner categories it reports exact annual-statistics counts for:
 * all persons in the Table 2-2(1) population (persons who filed or whose cases were processed by correction/determination etc. under the table's stated cutoff);
 * persons with positive self-assessed income tax;
 * refund filers;
-* the residual that is neither positive-liability nor refund.
+* the residual that is neither positive-self-assessed-balance nor refund.
 
-The table therefore identifies an administrative positive-liability rate
-*within each NTA income-class × primary-type cell*.  Its 125 positive-liability
+The table therefore identifies an administrative positive-self-assessed-balance rate
+*within each NTA income-class × primary-type cell*.  Its 125 positive-self-assessed-balance
 cells match the independently extracted Sample Survey Table 2 cells 125/125.
 This is a useful cross-source consistency check, not evidence that the sample
 survey cells are filer microdata.
@@ -161,7 +161,7 @@ bridge by itself.
 
 `data/derived/nta_table31_primary_type_rounded_2024.csv` preserves the
 thousand-person values displayed in the NTA final-return press release,
-Table 3-1.  Its five displayed positive-liability category counts sum to 5,174
+Table 3-1.  Its five displayed positive-self-assessed-balance category counts sum to 5,174
 thousand while the displayed grand total is 5,175 thousand.  The source notes
 that totals and components can differ due to rounding.
 
@@ -197,7 +197,7 @@ The CI provenance gate verifies:
   rather than exact filer observations;
 . NTA Annual Statistics Table 2-2(1) is machine-extracted from the committed
   PDF as 25 income classes × five primary types × filing-status counts; annual
-  category and grand margins reconcile exactly and all 125 positive-liability
+  category and grand margins reconcile exactly and all 125 positive-self-assessed-balance
   cells match the Sample Survey Table 2 extraction;
 . every active stage-1 input is covered exactly once by value provenance;
 . official values point to registered raw official sources;

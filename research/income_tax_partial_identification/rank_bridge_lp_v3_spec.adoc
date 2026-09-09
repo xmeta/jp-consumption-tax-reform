@@ -19,6 +19,17 @@ PRE_SPECIFIED_RANK_TRANSPORT_BUDGET_MODEL_CONTINGENT_NOT_IDENTIFIED
 
 No v3 result may enter Paper 1 before a later, separate promotion commit.
 
+[NOTE]
+====
+Post-specification semantic clarification: NTA `申告納税額>0` is a positive
+self-assessed return balance after tax credits and source withholding, whereas
+the pseudo event is modeled annual income tax greater than zero.  The v3
+minimum discrepancy is therefore a cross-concept compatibility frontier, not a
+measurement-error or pure-rank-mismatch frontier.  No equation, Delta grid,
+solver setting, or v3 number changes; the original pre-specification remains in
+Git history.
+====
+
 == Inputs fixed before outcomes
 
 v3 uses exactly the same core numerical inputs as v2:
@@ -28,7 +39,7 @@ v3 uses exactly the same core numerical inputs as v2:
 * the 25 ordered NTA Table 2-2(1) total-net-income classes in
   `data/derived/nta_income_class_primary_type_filing_status_2024.csv`;
 * the v2 grouped-data construction of NTA rank-decile overlap and free
-  within-class positive-liability allocation.
+  within-class positive-self-assessed-balance allocation.
 
 The public NSFCW diagnostics in
 `rank_bridge_public_diagnostics.adoc` are *interpretive diagnostics only*.
@@ -53,7 +64,7 @@ stem:[d=1,\ldots,10], and NTA rank deciles be stem:[q=1,\ldots,10].
 
 As in v2, let stem:[h_{jq}] be the population mass from NTA income class
 stem:[j] overlapping NTA rank decile stem:[q], normalized by total Table 2-2(1)
-population.  Let stem:[p_j] be the normalized positive-liability mass in class
+population.  Let stem:[p_j] be the normalized positive-self-assessed-balance mass in class
 stem:[j].
 
 Introduce
@@ -67,7 +78,7 @@ Introduce
 
 No proportional allocation inside a grouped NTA income class is imposed.
 
-The NTA positive-liability mass in rank decile stem:[q] is
+The NTA positive-self-assessed-balance mass in rank decile stem:[q] is
 
 [stem]
 ++++
@@ -99,10 +110,10 @@ Thus stem:[T] is a scaled doubly-stochastic transport plan.
 The transport plan is not estimated from record linkage.  It ranges over all
 couplings satisfying the pre-specified rank-displacement budget below.
 
-== Positive-liability transport
+== Positive self-assessed balance transport
 
 To avoid any bilinear product between a transport probability and an unknown
-NTA rank-decile positive rate, introduce positive-liability transport mass
+NTA rank-decile positive rate, introduce positive-self-assessed-balance transport mass
 
 [stem]
 ++++
@@ -116,7 +127,7 @@ It must satisfy
 0\le z_{dq}\le T_{dq}
 ++++
 
-and preserve each NTA rank-decile positive-liability margin:
+and preserve each NTA rank-decile positive-self-assessed-balance margin:
 
 [stem]
 ++++
@@ -124,14 +135,14 @@ and preserve each NTA rank-decile positive-liability margin:
 \qquad \forall q.
 ++++
 
-The NTA positive-liability rate transported to F71561 decile stem:[d] is then
+The NTA positive-self-assessed-balance rate transported to F71561 decile stem:[d] is then
 
 [stem]
 ++++
 r_d^{NTA\to F}=10\sum_q z_{dq}.
 ++++
 
-This formulation deliberately leaves the identities of positive-liability
+This formulation deliberately leaves the identities of positive-self-assessed-balance
 persons within an admissible population coupling unspecified.
 
 == Pseudo-filer side
@@ -145,7 +156,7 @@ For pseudo-filer scenario stem:[s], retain v2 variables
 \sum_s\lambda_{ds}=1.
 ++++
 
-Let stem:[u_{ds}] denote the committed pseudo-filer positive-tax share.  Then
+Let stem:[u_{ds}] denote the committed pseudo modeled-annual-income-tax-positive share.  Then
 
 [stem]
 ++++
@@ -295,8 +306,8 @@ for the same endpoint set as v2:
 
 . each decile's taxable-income-weighted MTR;
 . each decile's liability-weighted MTR;
-. each decile's pseudo-filer positive-tax rate;
-. each decile's transported NTA positive-liability rate;
+. each decile's pseudo modeled-annual-income-tax-positive rate;
+. each decile's transported NTA positive-self-assessed-balance rate;
 . equal-decile overall taxable-income-weighted MTR;
 . equal-decile overall liability-weighted MTR.
 

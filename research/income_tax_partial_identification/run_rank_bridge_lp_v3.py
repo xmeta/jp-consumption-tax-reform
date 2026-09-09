@@ -3,7 +3,7 @@
 
 Implements rank_bridge_lp_v3_spec.adoc.  v3 replaces exact same-rank
 correspondence by a population coupling T[d,q] with a pre-specified average
-absolute decile-rank displacement budget.  Positive-liability transport z[d,q]
+absolute decile-rank displacement budget.  Positive self-assessed balance transport z[d,q]
 is represented separately so the model remains linear.
 """
 from __future__ import annotations
@@ -42,8 +42,8 @@ P1C14_V2_MODIFIED = False
 DECILE_METRICS = (
     "taxable_income_weighted_mean_MTR",
     "income_tax_liability_weighted_mean_MTR",
-    "pseudo_filer_positive_tax_share",
-    "transported_nta_positive_liability_rate",
+    "pseudo_positive_modeled_annual_income_tax_share",
+    "transported_nta_positive_self_assessed_balance_rate",
 )
 OVERALL_METRICS = (
     "taxable_income_weighted_mean_MTR",
@@ -217,7 +217,7 @@ def make_model(data: v2.Data, include_epsilon: bool) -> Model:
         eq_rows.append(a)
         eq_rhs.append(1.0)
 
-    # Positive-liability mass within each NTA grouped income class.
+    # Positive self-assessed balance mass within each NTA grouped income class.
     for ji in range(J):
         a = np.zeros(n)
         for qi in range(D):
@@ -301,7 +301,7 @@ def inequalities(
     rows = []
     rhs = []
 
-    # Positive-liability transport cannot exceed population transport.
+    # Positive self-assessed balance transport cannot exceed population transport.
     for di in range(D):
         for qi in range(D):
             a = np.zeros(model.nvars)
@@ -431,7 +431,7 @@ def diagnostics(
         "max_overlap_capacity_excess": overlap_excess,
         "max_transport_row_margin_residual": t_row_res,
         "max_transport_column_margin_residual": t_col_res,
-        "max_positive_transport_capacity_excess": z_capacity_excess,
+        "max_positive_self_assessed_balance_transport_capacity_excess": z_capacity_excess,
         "max_nta_rank_positive_margin_residual": z_col_res,
         "transport_cost": transport_cost,
         "rank_displacement_budget_excess": displacement_excess,
@@ -453,7 +453,7 @@ def assert_solution(diag, eq_tol: float, ineq_tol: float) -> None:
             raise RuntimeError(f"{key} exceeds tolerance: {diag[key]}")
     for key in (
         "max_overlap_capacity_excess",
-        "max_positive_transport_capacity_excess",
+        "max_positive_self_assessed_balance_transport_capacity_excess",
         "rank_displacement_budget_excess",
         "max_rank_bridge_inequality_excess",
     ):
@@ -477,7 +477,7 @@ def analytical_rate_floor(data: v2.Data) -> dict:
 
     If rank transport is unrestricted, transported NTA row rates are
     nonnegative and their equal-decile average is fixed at the NTA aggregate
-    positive-liability rate.  For pseudo lower envelope l_d, feasibility at
+    positive-self-assessed-balance rate.  For pseudo lower envelope l_d, feasibility at
     epsilon e requires sum max(0,l_d-e) <= 10*r_NTA.  Solve the scalar
     water-filling condition independently of the full transport LP.
     """
@@ -501,14 +501,14 @@ def analytical_rate_floor(data: v2.Data) -> dict:
     )
     return {
         "spec_version": SPEC_VERSION,
-        "nta_aggregate_positive_liability_rate": nta_rate,
-        "pseudo_filer_lower_envelope_equal_decile_average":
+        "nta_aggregate_positive_self_assessed_balance_rate": nta_rate,
+        "pseudo_modeled_annual_income_tax_positive_lower_envelope_equal_decile_average":
             pseudo_lower_average,
         "simple_average_gap_floor": simple_floor,
         "unrestricted_nonnegative_rate_floor": floor,
-        "pseudo_lower_envelope_deciles_below_floor": binding_zero,
+        "pseudo_modeled_annual_income_tax_positive_lower_envelope_deciles_below_floor": binding_zero,
         "derivation":
-            "min e such that sum_d max(0,min_s(u_ds)-e) <= 10*NTA aggregate positive-liability rate",
+            "min e such that sum_d max(0,min_s(u_ds)-e) <= 10*NTA aggregate positive-self-assessed-balance rate",
         "interpretation":
             "analytical lower bound under unrestricted rank coupling and nonnegative transported row rates; not a confidence bound",
         **flags(),
@@ -568,9 +568,9 @@ def objective_vector(
         values = data.m_taxable
     elif metric == "income_tax_liability_weighted_mean_MTR":
         values = data.m_liability
-    elif metric == "pseudo_filer_positive_tax_share":
+    elif metric == "pseudo_positive_modeled_annual_income_tax_share":
         values = data.u
-    elif metric == "transported_nta_positive_liability_rate":
+    elif metric == "transported_nta_positive_self_assessed_balance_rate":
         if overall:
             raise ValueError("overall transported NTA rate not pre-specified")
         assert decile_index is not None
@@ -729,8 +729,8 @@ def frontier_rows_and_plans(
                 "delta": delta,
                 "epsilon_star": eps,
                 "decile": d,
-                "pseudo_positive_tax_share_at_one_optimum": pseudo[di],
-                "transported_nta_positive_liability_rate_at_one_optimum":
+                "pseudo_positive_modeled_annual_income_tax_share_at_one_optimum": pseudo[di],
+                "transported_nta_positive_self_assessed_balance_rate_at_one_optimum":
                     transported[di],
                 "signed_gap_pseudo_minus_transported_nta": gap,
                 "absolute_gap": abs(gap),
@@ -757,10 +757,10 @@ def frontier_rows_and_plans(
                     "nta_rank_decile": q,
                     "absolute_decile_distance": abs(d - q),
                     "population_transport_mass": t[di, qi],
-                    "positive_liability_transport_mass": z[di, qi],
+                    "positive_self_assessed_balance_transport_mass": z[di, qi],
                     "cost_contribution": abs(d - q) * t[di, qi],
                     "population_transport_positive": t[di, qi] > 1e-12,
-                    "positive_transport_positive": z[di, qi] > 1e-12,
+                    "positive_self_assessed_balance_transport_positive": z[di, qi] > 1e-12,
                     **flags(),
                 })
         solutions.append((delta, eps, model, res, diag))
@@ -819,10 +819,10 @@ def zero_row_and_plan(
                 "nta_rank_decile": q,
                 "absolute_decile_distance": abs(d - q),
                 "population_transport_mass": t[di, qi],
-                "positive_liability_transport_mass": z[di, qi],
+                "positive_self_assessed_balance_transport_mass": z[di, qi],
                 "cost_contribution": abs(d - q) * t[di, qi],
                 "population_transport_positive": t[di, qi] > 1e-12,
-                "positive_transport_positive": z[di, qi] > 1e-12,
+                "positive_self_assessed_balance_transport_positive": z[di, qi] > 1e-12,
                 **flags(),
             })
     return row, plans, (model, res, delta_star, diag)

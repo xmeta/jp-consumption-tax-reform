@@ -44,9 +44,10 @@ The highest-value additional data would be:
   model-contingent rank assumptions used by P1-C14 through P1-C16 can be
   replaced by evidence;
 . directly comparable person/tax-unit tabulations linking rank, filing or
-  processing status, and positive income-tax liability, so the remaining
-  cross-system positive-rate gap can be decomposed rather than absorbed by a
-  common relaxation parameter;
+  processing status, calculated annual tax, tax credits, source withholding,
+  and positive self-assessed return balance, so the remaining cross-concept
+  rate gap can be decomposed rather than absorbed by a common relaxation
+  parameter;
 . public cross-tabs connecting household income deciles to tax-unit
   characteristics without synthetic assignment;
 . repeated-year equivalents permitting validation of stability and transport.
@@ -60,10 +61,12 @@ same-rank bridge, its minimum common relaxation is 14.9016 percentage points.
 P1-C15 then weakens exact same-rank matching with a separately pre-specified
 rank-displacement budget.  At the first positive grid point,
 stem:[Delta=0.25], the minimum discrepancy falls to 8.6825 percentage points
-and remains there through unrestricted stem:[Delta=5].  The same 8.6825-point
-floor is reproduced independently from the NTA aggregate positive-liability
-rate and the lower envelope of the fixed pseudo-filer scenario set, with
-nonnegative transported decile rates imposed.  Zero discrepancy remains
+and remains there through unrestricted stem:[Delta=5].  The same 8.6825-point floor is reproduced independently from the NTA
+aggregate positive-self-assessed-balance rate and the lower envelope of the
+fixed pseudo modeled-annual-tax-positive scenario set, with nonnegative
+transported decile rates imposed.  This is a cross-concept floor: it cannot be
+interpreted as pure rank mismatch or pure measurement error because the two
+positive events differ.  Zero discrepancy remains
 infeasible even with unrestricted rank coupling.
 
 P1-C16 holds the discrepancy budget fixed instead of minimizing it and
@@ -82,10 +85,12 @@ rank linkage alone cannot remove the residual discrepancy in the v3/v4
 specification, and finer rank freedom beyond the first positive pre-specified
 grid point does not tighten the conditional MTR envelopes.  Higher-value
 evidence therefore also includes directly comparable person/tax-unit
-denominators and positive-liability selection by income rank, plus microdata or
-sufficiently detailed tabulations that can validate or replace the
-pseudo-filer positive-tax-share calibration and reduce the need for an
-externally imposed stem:[epsilon] budget.  Neither stem:[Delta] nor
+denominators and positive-self-assessed-balance selection by income rank,
+plus source-withholding and tax-credit information that connects calculated
+annual tax to the return balance.  Microdata or sufficiently detailed
+tabulations could then validate or replace the pseudo modeled-annual-tax-
+positive calibration and reduce the need for an externally imposed
+stem:[epsilon] budget.  Neither stem:[Delta] nor
 stem:[epsilon] is estimated by P1-C16.
 
 === Scope of policy conclusions

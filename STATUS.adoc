@@ -19,7 +19,7 @@
 |Income-tax liability / surtax |READY_STATIC_ONLY |静学的税額・帰着の範囲のみ
 |Pseudo-filer statutory MTR |SENSITIVITY_ONLY_REPRODUCED |公式raw/derived dataから再生成可能な感度分析モデル。ETI等の感度分析入力のみに用い、真の申告者MTR分布や点識別された政策入力とは扱わない
 |F71561 stage-1 population bridge |ROBUSTNESS_FRONTIER |任意の外部閾値 stem:[A] に対するbreak-even総未追跡mismatch budget stem:[C_U^*(A)] を再現可能に計算する。実際の stem:[C_U] や申告率は未識別
-|NTA primary-income-type stage-2 diagnostic |EXTERNAL_STAGE2_DIAGNOSTIC_REPRODUCED |国税庁の5所得区分について正確人員からpositive-liability率を再生成。F71561世帯→申告者selectionの識別とは扱わない
+|NTA primary-income-type stage-2 diagnostic |EXTERNAL_STAGE2_DIAGNOSTIC_REPRODUCED |国税庁の5所得区分について正確人員からpositive-self-assessed-balance率を再生成。F71561世帯→申告者selectionの識別とは扱わない
 |Restricted-LP decile MTR endpoints |DOCUMENTED_PRIOR_RUN_NOT_REPRODUCED |旧40–42の制約集合・endpoint生成鎖は未回収。再現済みstage-2をLP endpointの識別へ読み替えない
 |Replacement transport-relaxation LP v1 |MODEL_CONTINGENT_TRANSPORT_RELAXATION_REPRODUCED |旧V6とは別に事前仕様→実装→CI成功の順で再現済み。transport仮定の不整合量と条件付きMTR envelopeのみを扱い、識別集合・CI・旧LP復元とは呼ばない
 |Rank-bridge transport-relaxation LP v2 |MODEL_CONTINGENT_RANK_BRIDGE_RELAXATION_REPRODUCED |事前仕様commit→別実装commit→GitHub Actions成功→別Paper昇格commitの順で再現。25所得階級を順位decileへ集約し階級境界のpositive配置を自由化。同順位対応は観測リンクではない
@@ -40,5 +40,7 @@
 * replacement transport-relaxation LPを旧V6 restricted-LPの復元、統計的sharp identified set、信頼区間、因果boundとは呼ばない。
 * rank-bridge v2の同順位decile対応をF71561とNTAの観測リンク、所得金額の同一性、税務単位の同一性とは呼ばない。
 * rank-transport v3のDeltaを観測・推定された真の順位誤差とは扱わない。
+* NTAの「申告納税額あり」は算出税額から税額控除・源泉徴収済税額を差し引いた申告上の追加納付残高であり、pseudo側の modeled annual income tax > 0 と同一事象とは扱わない。
+* v1-v4のepsilonは cross-concept compatibility budget であり、同一tax eventのmeasurement error、源泉徴収率、rank mismatchの推定値とは扱わない。
 * rank-epsilon v4の固定budget surfaceを信頼領域・統計的identified set・点識別MTRとは扱わない。Delta>=0.25でMTR endpointが飽和しても、全transported-NTA rate endpointが不変とは主張しない。
 * モデルシミュレーションを政府公式の実質GDP予測とは呼ばない。

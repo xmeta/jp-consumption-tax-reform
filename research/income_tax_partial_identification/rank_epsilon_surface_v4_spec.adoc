@@ -6,8 +6,8 @@
 
 This document pre-specifies v4 *before any v4 numerical result is computed*.
 
-v3 minimizes the common positive-rate discrepancy stem:[\varepsilon] at each
-rank-displacement budget stem:[\Delta].  That optimization can force the
+v3 minimizes the common cross-concept rate discrepancy stem:[\varepsilon] at
+each rank-displacement budget stem:[\Delta].  That optimization can force the
 pseudo-filer mixture to a scenario boundary and can therefore collapse an MTR
 endpoint interval at the minimum-discrepancy frontier without implying point
 identification.
@@ -25,6 +25,17 @@ PRE_SPECIFIED_RANK_EPSILON_SURFACE_MODEL_CONTINGENT_NOT_IDENTIFIED
 ----
 
 No v4 result may enter Paper 1 before a later, separate promotion commit.
+
+[NOTE]
+====
+Post-specification semantic clarification: NTA `申告納税額>0` is a positive
+self-assessed return balance after tax credits and source withholding, whereas
+the pseudo event is modeled annual income tax greater than zero.  The fixed
+`epsilon` grid is therefore a cross-concept compatibility grid, not a grid of
+measurement-error or withholding-rate estimates.  No v4 grid, equation,
+solver setting, feasibility classification, endpoint, or Paper result changes;
+the original pre-specification remains in Git history.
+====
 
 == No new post-result grid selection
 
@@ -44,7 +55,7 @@ From v2:
 epsilon = 0;0.025;0.05;0.075;0.10;0.125;0.15;0.175;0.20;0.225;0.25;0.275;0.30
 ----
 
-where stem:[\varepsilon] is an absolute positive-rate discrepancy budget.
+where stem:[\varepsilon] is an absolute cross-concept rate-discrepancy budget.
 
 Their Cartesian product contains exactly stem:[8\times13=104] pre-specified
 points.  Every point must appear in the v4 feasibility output.  No point may be
@@ -59,11 +70,11 @@ v4 uses the committed v3 model without changing its scientific constraints:
 
 * all 13 committed pseudo-filer scenarios;
 * the same 25 ordered NTA Table 2-2(1) total-net-income classes;
-* free within-class positive-liability allocation subject to NTA grouped-rank
+* free within-class positive-self-assessed-balance allocation subject to NTA grouped-rank
   overlap capacities;
 * scaled doubly-stochastic population rank transport stem:[T_{dq}];
-* positive-liability transport stem:[z_{dq}\le T_{dq}];
-* preservation of NTA rank positive-liability margins;
+* positive-self-assessed-balance transport stem:[z_{dq}\le T_{dq}];
+* preservation of NTA rank positive-self-assessed-balance margins;
 * the v3 rank-displacement cost
   stem:[W(T)=\sum_{d,q}|d-q|T_{dq}].
 
@@ -116,8 +127,8 @@ For each of ten deciles, minimum and maximum of:
 
 . taxable-income-weighted mean statutory MTR;
 . income-tax-liability-weighted mean statutory MTR;
-. pseudo-filer positive-tax share;
-. transported NTA positive-liability rate.
+. pseudo modeled-annual-income-tax-positive share;
+. transported NTA positive-self-assessed-balance rate.
 
 This gives stem:[10\times4\times2=80] decile endpoints.
 

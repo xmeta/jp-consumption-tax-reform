@@ -33,6 +33,13 @@ correction, determination, or related procedures under the stated cutoff.
 This wording correction changes no input count, equation, constraint, solver
 setting, or reported v1 endpoint.  The separate stage-1 final-return numerator
 remains a different population object.
+
+A second post-specification semantic clarification is also now canonical.  The
+NTA positive event is `申告納税額>0`, a positive self-assessed return balance
+after tax credits and source withholding.  The pseudo event is modeled annual
+income tax greater than zero.  They are different tax events; `epsilon` is a
+cross-concept compatibility budget, not measurement error between observations
+of one event.  This clarification changes no v1 number or constraint.
 ====
 
 == Motivation
@@ -41,7 +48,7 @@ The repository currently contains two objects with different denominators:
 
 . pseudo-filer scenarios constructed from F71561/F71911 aggregate household
   information; and
-. NTA positive-self-assessed-liability rates in the Table 2-2(1)
+. NTA positive-self-assessed-balance rates in the Table 2-2(1)
   population by five primary income categories.
 
 Equating those rates directly would silently assume that pseudo tax units and
@@ -66,7 +73,7 @@ No scenario is added or removed after endpoint inspection.
 
 For decile stem:[d] and scenario stem:[s], define:
 
-* stem:[p_{ds}] = `pseudo_filer_positive_tax_share`;
+* stem:[p_{ds}] = `pseudo_positive_modeled_annual_income_tax_share`;
 * stem:[m^T_{ds}] = `taxable_income_weighted_mean_MTR`;
 * stem:[m^L_{ds}] = `income_tax_liability_weighted_mean_MTR`.
 
@@ -85,7 +92,7 @@ The five categories are fixed as:
 For category stem:[k]:
 
 * stem:[q_k] is its exact share of the FY2024 Table 2-2(1) population;
-* stem:[r_k] is its exact positive-liability rate.
+* stem:[r_k] is its exact positive-self-assessed-balance rate.
 
 Both are taken from
 `data/derived/nta_primary_type_stage2_2024.csv`.
@@ -160,7 +167,7 @@ residuals must be checked afterward.
 
 == Transport-relaxation restriction
 
-Define the pseudo-filer positive-tax rate implied by the scenario mixture:
+Define the pseudo modeled-annual-income-tax-positive rate implied by the scenario mixture:
 
 [stem]
 ++++
@@ -252,12 +259,12 @@ At every feasible weight-scheme / relaxation pair, optimize separately:
 . for each decile stem:[d],
   stem:[\theta^T_d=\sum_s\lambda_{ds}m^T_{ds}];
 . for each decile stem:[d],
-  stem:[\theta^L_d=\sum_s\lambda{ds}m^L_{ds}];
+  stem:[\theta^L_d=\sum_s\lambda_{ds}m^L_{ds}];
 . overall weighted taxable-income MTR,
   stem:[\sum_dw_d\theta^T_d];
 . overall weighted liability MTR,
   stem:[\sum_dw_d\theta^L_d];
-. each decile's transported/mixture positive-tax rate
+. each decile's pseudo modeled-annual-tax-positive rate and transported NTA positive-self-assessed-balance rate
   stem:[\tilde p_d].
 
 For each object, both minimum and maximum are reported.
@@ -294,7 +301,7 @@ stem:[10^{-8}].
 If this model is later reproduced successfully, allowed language is:
 
 * transport-relaxation sensitivity frontier;
-* minimum common discrepancy needed to jointly accommodate the two aggregate
+* minimum common cross-concept discrepancy needed to jointly accommodate the two aggregate
   systems under the stated transport model;
 * model-contingent conditional MTR envelope.
 

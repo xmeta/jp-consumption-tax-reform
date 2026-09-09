@@ -5,7 +5,7 @@
 
 This directory separates three distinct objects:
 
-. an external National Tax Agency primary-income-type positive-liability
+. an external National Tax Agency primary-income-type positive-self-assessed-balance
   diagnostic;
 . a cross-publication point check of primary-type composition;
 . restricted-LP marginal-rate bounds, whose historical V6 implementation is
@@ -56,8 +56,8 @@ EXTERNAL_STAGE2_DIAGNOSTIC_REPRODUCED
 == Table 3-1 cross-publication point check
 
 The NTA final-return press release reports Table 3-1 in thousand persons.
-Its five displayed positive-liability category counts sum to 5,174 thousand,
-while the separately displayed positive-liability grand total is 5,175
+Its five displayed positive-self-assessed-balance category counts sum to 5,174 thousand,
+while the separately displayed positive-self-assessed-balance grand total is 5,175
 thousand. The table itself warns that totals and components can disagree due
 to rounding.
 
@@ -194,7 +194,7 @@ cross-tab and maps only *rank decile to rank decile*.  It does not equate NTA
 total net income to F71561 equivalized disposable income in yen.
 
 Within any NTA income class that crosses a rank-decile boundary, the
-positive-liability mass remains free subject to the published class total and
+positive-self-assessed-balance mass remains free subject to the published class total and
 overlap capacity.  Thus v2 does not impose proportional-within-class
 allocation.
 
@@ -245,7 +245,7 @@ The next model is pre-specified in:
 v3 replaces exact same-rank correspondence with a scaled doubly-stochastic
 decile-rank coupling subject to a fixed average absolute rank-displacement
 budget.  The budget grid is fixed before outcomes at
-`0;0.25;0.5;1;2;3;4;5` decile-index units.  Positive-liability transport is
+`0;0.25;0.5;1;2;3;4;5` decile-index units.  Positive self-assessed balance transport is
 represented separately so that the program remains linear.
 
 At displacement budget zero, the v3 feasible set must reproduce v2 exactly.
@@ -325,14 +325,19 @@ with positive `申告納税額`: a positive self-assessed amount remaining after
 credits and source withholding.  It is not the same event as the pseudo-filer
 condition `income_tax > 0`, which is a modeled annual income-tax calculation.
 
-The committed v1-v4 numerical results remain unchanged at this audit stage.
-A subsequent schema-migration commit will rename the NTA and pseudo-event
-fields and will be required to reproduce all pre-migration numeric payload
-fingerprints in `self_assessed_balance_numeric_anchors.csv`.
+The semantic schema migration is complete.  Active NTA fields now use
+`positive_self_assessed_balance*`, the pseudo event is explicitly named
+`pseudo_positive_modeled_annual_income_tax_share`, and the sample-survey
+25x5 artifact uses the corresponding canonical path.
 
-Until that migration is complete, `epsilon` must be interpreted as a
-cross-concept compatibility budget rather than measurement error between two
-observations of the same positive-tax event.
+All 16 pre-migration numeric payload fingerprints in
+`self_assessed_balance_numeric_anchors.csv` are reproduced exactly by
+`test_self_assessed_balance_schema_migration.py`.  Thus v1-v4 numerical results
+are unchanged.
+
+`epsilon` is now explicitly interpreted as a cross-concept compatibility
+budget rather than measurement error between two observations of the same
+positive-tax event.
 
 == Reproduction
 
@@ -352,6 +357,7 @@ python research/income_tax_partial_identification/run_rank_bridge_lp_v3.py
 python research/income_tax_partial_identification/test_rank_bridge_lp_v3.py
 python research/income_tax_partial_identification/run_rank_epsilon_surface_v4.py
 python research/income_tax_partial_identification/test_rank_epsilon_surface_v4.py
+python research/income_tax_partial_identification/test_self_assessed_balance_schema_migration.py
 ----
 
 The generated outputs must remain deterministic under a clean checkout and all

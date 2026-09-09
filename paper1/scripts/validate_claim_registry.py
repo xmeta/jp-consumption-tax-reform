@@ -95,6 +95,23 @@ def main():
         errors.append("P1-C15 must remain model-contingent rank-transport-budget frontier")
     if by_id["P1-C16"]["status"] != "MODEL_CONTINGENT_RANK_EPSILON_SURFACE_REPRODUCED":
         errors.append("P1-C16 must remain model-contingent fixed-budget rank-epsilon surface")
+
+    # Semantic boundary introduced by the post-v4 NTA terminology audit.
+    # NTA 申告納税額>0 is a positive self-assessed return balance after
+    # credits/withholding; it is not the same event as pseudo modeled annual
+    # income tax >0.  Keep this distinction machine-enforced in the claims.
+    c05_forbidden = by_id["P1-C05"]["forbidden_claim"].lower()
+    if "positive annual income-tax liability" not in c05_forbidden:
+        errors.append("P1-C05 must forbid equating self-assessed balance with positive annual liability")
+    for cid in ("P1-C13", "P1-C14", "P1-C15", "P1-C16"):
+        forbidden = by_id[cid]["forbidden_claim"].lower()
+        if "measurement error" not in forbidden:
+            errors.append(f"{cid} must forbid one-event measurement-error interpretation of epsilon")
+        if "申告納税額" not in by_id[cid]["forbidden_claim"]:
+            errors.append(f"{cid} must explicitly distinguish the NTA self-assessed-balance event")
+    if "pure rank mismatch" not in by_id["P1-C15"]["forbidden_claim"].lower():
+        errors.append("P1-C15 must forbid interpreting the 8.6825pp floor as pure rank mismatch")
+
     for cid in ("P1-C11", "P1-C12"):
         if by_id[cid]["status"] != "NOT_READY":
             errors.append(f"{cid} must remain NOT_READY")

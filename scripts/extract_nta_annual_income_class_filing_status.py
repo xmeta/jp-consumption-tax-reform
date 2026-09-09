@@ -33,7 +33,7 @@ CATALOG = ROOT / "data/source_catalog.csv"
 SAMPLE = (
     ROOT
     / "data/derived"
-    / "nta_positive_liability_income_class_primary_type_2024.csv"
+    / "nta_positive_self_assessed_balance_income_class_primary_type_2024.csv"
 )
 OUT = (
     ROOT
@@ -131,7 +131,7 @@ def build():
 
     sample = {
         (int(r["income_class_index"]), r["primary_income_type"]):
-            int(r["positive_liability_persons_estimated"])
+            int(r["positive_self_assessed_balance_persons_estimated"])
         for r in read_csv(SAMPLE)
     }
 
@@ -181,7 +181,7 @@ def build():
                 )
 
             # Independent cross-publication validation against the sample
-            # survey Table 2 positive-liability population estimate.
+            # survey Table 2 positive-self-assessed-balance population estimate.
             sample_positive = sample[(i + 1, category)]
             if positive != sample_positive:
                 raise RuntimeError(
@@ -199,10 +199,10 @@ def build():
                 "primary_income_type": category,
                 "primary_income_type_ja": ja,
                 "table22_population_persons": all_persons,
-                "positive_liability_persons": positive,
+                "positive_self_assessed_balance_persons": positive,
                 "refund_persons": refund,
                 "neither_positive_nor_refund_residual": residual,
-                "positive_liability_rate":
+                "positive_self_assessed_balance_rate":
                     f"{positive / all_persons:.12g}" if all_persons else "",
                 "refund_rate":
                     f"{refund / all_persons:.12g}" if all_persons else "",
@@ -210,11 +210,11 @@ def build():
                     f"{residual / all_persons:.12g}" if all_persons else "",
                 "income_class_all_categories_table22_population_persons":
                     overall["all"],
-                "income_class_all_categories_positive_liability_persons":
+                "income_class_all_categories_positive_self_assessed_balance_persons":
                     overall["positive"],
                 "income_class_all_categories_refund_persons":
                     overall["refund"],
-                "sample_survey_positive_liability_cell":
+                "sample_survey_positive_self_assessed_balance_cell":
                     sample_positive,
                 "sample_crosscheck_difference":
                     positive - sample_positive,

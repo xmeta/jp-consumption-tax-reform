@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Extract the 2024 NTA positive-liability income-class x primary-type cross-tab.
+"""Extract the 2024 NTA positive-self-assessed-balance income-class x primary-type cross-tab.
 
 Source of record
 ----------------
@@ -29,7 +29,7 @@ STAGE2 = ROOT / "data/derived/nta_primary_type_stage2_2024.csv"
 OUT = (
     ROOT
     / "data/derived"
-    / "nta_positive_liability_income_class_primary_type_2024.csv"
+    / "nta_positive_self_assessed_balance_income_class_primary_type_2024.csv"
 )
 
 M = "{http://schemas.openxmlformats.org/spreadsheetml/2006/main}"
@@ -168,7 +168,7 @@ def build():
         x.close()
 
     stage2 = {
-        r["primary_income_type"]: int(r["positive_liability_persons_exact"])
+        r["primary_income_type"]: int(r["positive_self_assessed_balance_persons_exact"])
         for r in read_csv(STAGE2)
     }
 
@@ -182,7 +182,7 @@ def build():
         if category_totals[category] != stage2[category]:
             raise RuntimeError(
                 f"{category}: Table2 total {category_totals[category]} "
-                f"!= annual exact positive-liability count {stage2[category]}"
+                f"!= annual exact positive-self-assessed-balance count {stage2[category]}"
             )
 
     out = []
@@ -210,13 +210,13 @@ def build():
                 "is_topcoded": "True" if upper is None else "False",
                 "primary_income_type": category,
                 "primary_income_type_ja": ja,
-                "positive_liability_persons_estimated": persons,
+                "positive_self_assessed_balance_persons_estimated": persons,
                 "source_cell": f"D{source_row}",
                 "source_income_class_label_cell": f"C{source_row}",
                 "source_income_class_label": normalize_label(label),
-                "income_class_positive_liability_total_estimated": income_total,
+                "income_class_positive_self_assessed_balance_total_estimated": income_total,
                 "income_class_total_source_cell": f"D{total_row}",
-                "category_positive_liability_total": category_totals[category],
+                "category_positive_self_assessed_balance_total": category_totals[category],
                 "category_total_source_cell": f"D{total_cat_row}",
                 "share_within_income_class":
                     f"{persons / income_total:.12g}",
@@ -268,11 +268,11 @@ def main():
         actual = OUT.read_text(encoding="utf-8") if OUT.exists() else ""
         if actual != expected:
             print(
-                "ERROR: stale NTA positive-liability income-class cross-tab"
+                "ERROR: stale NTA positive-self-assessed-balance income-class cross-tab"
             )
             sys.exit(1)
         print(
-            "NTA positive-liability income-class x primary-type cross-tab: "
+            "NTA positive-self-assessed-balance income-class x primary-type cross-tab: "
             "current (25 classes x 5 types = 125 rows)"
         )
         return

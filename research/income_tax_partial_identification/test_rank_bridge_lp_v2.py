@@ -35,8 +35,8 @@ GRID = [
     0.000, 0.025, 0.050, 0.075, 0.100, 0.125, 0.150,
     0.175, 0.200, 0.225, 0.250, 0.275, 0.300,
 ]
-V1_MIN_SHA256 = "a286043230617ddda8fb57fe62cbb6eb3df4953140dcb29282af539c4e5658de"
-V1_END_SHA256 = "90c88fd27c23cf851d983ff46d4b3dba7169d7b0be2f0856d984391f5fec0dd6"
+V1_MIN_SHA256 = "5158f4ccf0e82d2f8968b9d68003069f8e69fe5370887a103fddeaadc6271e4e"
+V1_END_SHA256 = "497804702dc66474df7db41d5587f2d2fde36f4c663db4f4bafa1f37b32271a8"
 
 
 def read(path):
@@ -75,7 +75,9 @@ assert len(min_decile) == 10
 assert len(feas) == 14
 assert len(endpoints) == 672
 
-# v2 must never mutate the committed v1 evidence.
+# v2 must never mutate the committed post-semantic-migration v1 evidence.
+# Numeric equality to the pre-migration evidence is checked separately by
+# test_self_assessed_balance_schema_migration.py.
 assert sha(V1_MIN) == V1_MIN_SHA256
 assert sha(V1_END) == V1_END_SHA256
 
@@ -91,7 +93,7 @@ for collection in [minimum, min_decile, feas, endpoints]:
 # Input totals.
 assert {int(r["income_class_index"]) for r in inputs} == set(range(1, 26))
 N = sum(int(r["table22_population_persons"]) for r in inputs)
-P = sum(int(r["positive_liability_persons"]) for r in inputs)
+P = sum(int(r["positive_self_assessed_balance_persons"]) for r in inputs)
 assert N == 23_362_184
 assert P == 5_158_260
 assert math.isclose(
@@ -100,7 +102,7 @@ assert math.isclose(
     abs_tol=5e-10,
 )
 assert math.isclose(
-    sum(float(r["positive_liability_mass"]) for r in inputs),
+    sum(float(r["positive_self_assessed_balance_mass"]) for r in inputs),
     P / N,
     abs_tol=5e-10,
 )
@@ -155,8 +157,8 @@ assert math.isclose(
 assert {int(r["decile"]) for r in min_decile} == set(range(1, 11))
 assert any(as_bool(r["binding_within_1e8"]) for r in min_decile)
 for r in min_decile:
-    p = float(r["pseudo_positive_tax_share_at_one_optimum"])
-    n = float(r["nta_rank_positive_liability_rate_at_one_optimum"])
+    p = float(r["pseudo_positive_modeled_annual_income_tax_share_at_one_optimum"])
+    n = float(r["nta_rank_positive_self_assessed_balance_rate_at_one_optimum"])
     gap = float(r["signed_gap_pseudo_minus_nta"])
     assert 0 <= p <= 1
     assert 0 <= n <= 1
@@ -259,7 +261,7 @@ pseudo = read(PSEUDO)
 p_by_d = {}
 for r in pseudo:
     p_by_d.setdefault(int(r["decile"]), []).append(
-        float(r["pseudo_filer_positive_tax_share"])
+        float(r["pseudo_positive_modeled_annual_income_tax_share"])
     )
 
 analytic_lbs = []
@@ -269,7 +271,7 @@ for d in range(1, 11):
     for j in range(1, 26):
         inp = input_by_class[j]
         a = float(inp["population_mass"])
-        p = float(inp["positive_liability_mass"])
+        p = float(inp["positive_self_assessed_balance_mass"])
         hrow = next(
             r for r in by_class[j] if int(r["nta_rank_decile"]) == d
         )

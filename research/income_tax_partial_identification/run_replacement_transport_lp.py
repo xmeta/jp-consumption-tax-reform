@@ -72,7 +72,7 @@ EXPECTED_CATEGORIES = (
 METRICS = (
     "taxable_income_weighted_mean_MTR",
     "income_tax_liability_weighted_mean_MTR",
-    "pseudo_filer_positive_tax_share",
+    "pseudo_positive_modeled_annual_income_tax_share",
 )
 OVERALL_METRICS = (
     "taxable_income_weighted_mean_MTR",
@@ -198,7 +198,7 @@ def load_model_data(cfg: dict[str, str]) -> ModelData:
     for di, d in enumerate(deciles):
         for si, s in enumerate(scenarios):
             row = by_decile[d][s]
-            p[di, si] = f(row["pseudo_filer_positive_tax_share"])
+            p[di, si] = f(row["pseudo_positive_modeled_annual_income_tax_share"])
             mt[di, si] = f(row["taxable_income_weighted_mean_MTR"])
             ml[di, si] = f(row["income_tax_liability_weighted_mean_MTR"])
 
@@ -215,7 +215,7 @@ def load_model_data(cfg: dict[str, str]) -> ModelData:
         dtype=float,
     )
     positive_counts = np.array(
-        [f(by_cat[k]["positive_liability_persons_exact"]) for k in categories],
+        [f(by_cat[k]["positive_self_assessed_balance_persons_exact"]) for k in categories],
         dtype=float,
     )
     q = table22_counts / table22_counts.sum()
@@ -474,13 +474,13 @@ def objective_vector(
         values = data.m_taxable
     elif metric == "income_tax_liability_weighted_mean_MTR":
         values = data.m_liability
-    elif metric == "pseudo_filer_positive_tax_share":
+    elif metric == "pseudo_positive_modeled_annual_income_tax_share":
         values = data.p
     else:
         raise ValueError(metric)
 
     if overall:
-        if metric == "pseudo_filer_positive_tax_share":
+        if metric == "pseudo_positive_modeled_annual_income_tax_share":
             raise ValueError("overall positive-share endpoint not pre-specified")
         for di in range(len(data.deciles)):
             for si in range(len(data.scenarios)):
@@ -552,9 +552,9 @@ def minimum_relaxation(
         "weight_scheme": scheme,
         "epsilon_star": eps,
         "aggregate_discrepancy_lower_bound": aggregate_lower_bound,
-        "weighted_raw_min_pseudo_positive_share": weighted_min_p,
-        "weighted_raw_max_pseudo_positive_share": weighted_max_p,
-        "nta_overall_positive_liability_rate": nta_overall,
+        "weighted_raw_min_pseudo_positive_modeled_annual_income_tax_share": weighted_min_p,
+        "weighted_raw_max_pseudo_positive_modeled_annual_income_tax_share": weighted_max_p,
+        "nta_overall_positive_self_assessed_balance_rate": nta_overall,
         "solver_success": bool(res.success),
         "solver_status_code": int(res.status),
         "solver_message": str(res.message),
@@ -589,7 +589,7 @@ def minimum_relaxation(
             "decile": d,
             "decile_weight": model.weights[di],
             "epsilon_star": eps,
-            "pseudo_positive_tax_share_at_one_optimum": pseudo[di],
+            "pseudo_positive_modeled_annual_income_tax_share_at_one_optimum": pseudo[di],
             "transported_nta_stage2_rate_at_one_optimum": transported[di],
             "signed_gap_pseudo_minus_transport": gap,
             "absolute_gap": abs(gap),
