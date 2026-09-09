@@ -315,6 +315,25 @@ conditional MTR envelope is not point identification.  Paper 1 promotion
 remains prohibited until the implementation commit passes CI and a later,
 separate claim-registry/manuscript commit is made.
 
+== NTA self-assessed-balance semantic audit
+
+A post-v4 terminology audit is recorded in
+`self_assessed_balance_semantics_audit.adoc`.
+
+The NTA count previously labelled `positive_liability` is the count of persons
+with positive `申告納税額`: a positive self-assessed amount remaining after tax
+credits and source withholding.  It is not the same event as the pseudo-filer
+condition `income_tax > 0`, which is a modeled annual income-tax calculation.
+
+The committed v1-v4 numerical results remain unchanged at this audit stage.
+A subsequent schema-migration commit will rename the NTA and pseudo-event
+fields and will be required to reproduce all pre-migration numeric payload
+fingerprints in `self_assessed_balance_numeric_anchors.csv`.
+
+Until that migration is complete, `epsilon` must be interpreted as a
+cross-concept compatibility budget rather than measurement error between two
+observations of the same positive-tax event.
+
 == Reproduction
 
 [source,shell]
