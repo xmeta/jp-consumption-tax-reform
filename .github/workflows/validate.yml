@@ -52,6 +52,8 @@ jobs:
           python scripts/test_nta_salary_source_system_coverage.py
           python scripts/extract_public_sector_person_coverage.py
           python scripts/test_public_sector_person_coverage.py
+          python scripts/extract_nta_withholding_person_series.py
+          python scripts/test_nta_withholding_person_series.py
           python research/income_tax_pseudofiler/run_pseudofiler_core.py
           python research/income_tax_pseudofiler/test_pseudofiler_core.py
           python research/income_tax_partial_identification/run_replacement_transport_lp.py

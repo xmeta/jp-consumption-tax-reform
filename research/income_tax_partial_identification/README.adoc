@@ -568,6 +568,32 @@ is explicitly prohibited.
 Current public-sector benchmark status:
 `EXTERNAL_PUBLIC_WORKFORCE_BENCHMARK_NOT_NTA_DENOMINATOR`.
 
+== NTA withholding person-series discontinuity audit
+
+`withholding_person_series_discontinuity_audit.adoc` traces the NTA
+Public Offices/Others salary person series through the long-term withholding
+statistics.
+
+The official long-term note classifies person fields from 1991 onward as
+sample-survey estimates.  Those person estimates remain published through
+2006, when Public Offices are 9,170 thousand and Others are 66,936 thousand,
+for 76,106 thousand combined.
+
+From 2007 onward the person fields are no longer published while the payment
+amount series continues.  The long-term workbook shows the person cells as
+unavailable for every year from 2007 through 2024, an 18-year gap.
+
+The historical 2006 Public Offices person share is therefore not a current
+person-share estimator.  In addition, the observable Public Offices payment
+share changed from 13.136268% in 2006 to 7.991880% in 2024.
+
+Current historical-series status:
+`PUBLISHED_PERSON_SERIES_DISCONTINUED_AFTER_2006`.
+
+Applying the 2006 person share to 2024 is explicitly prohibited, and the
+2024 NTA Public Offices person count remains:
+`NTA_PUBLIC_OFFICES_PERSON_COUNT_NOT_IDENTIFIED`.
+
 == Reproduction
 
 [source,shell]
@@ -595,6 +621,8 @@ python scripts/extract_nta_salary_source_system_coverage.py
 python scripts/test_nta_salary_source_system_coverage.py
 python scripts/extract_public_sector_person_coverage.py
 python scripts/test_public_sector_person_coverage.py
+python scripts/extract_nta_withholding_person_series.py
+python scripts/test_nta_withholding_person_series.py
 python -m pip install -r requirements-research-lp.txt
 python research/income_tax_partial_identification/run_replacement_transport_lp.py
 python research/income_tax_partial_identification/test_replacement_transport_lp.py

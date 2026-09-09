@@ -1,0 +1,223 @@
+= NTA withholding salary person-series discontinuity audit
+:toc:
+:stem: latexmath
+
+== Status
+
+----
+PUBLISHED_PERSON_SERIES_DISCONTINUED_AFTER_2006
+----
+
+This audit determines whether historical NTA withholding statistics can recover
+the current Public Offices/Others salary-recipient person denominator.
+
+They cannot.
+
+The long-term NTA withholding workbook preserves a person series for salary
+payments, but the person fields are published only through 2006.  From 2007
+through 2024 the person cells are shown as unavailable while payment amounts
+continue.
+
+No v1-v5 endpoint or Paper 1 claim is changed.
+
+== Official long-term note
+
+For the salary-income long-term table, the NTA note states that the person
+fields from 1991 onward are estimates based on a sample survey.
+
+Accordingly this audit treats 1991-2006 person values as:
+
+----
+SAMPLE_SURVEY_ESTIMATE_PUBLISHED
+----
+
+not as exact administrative counts.
+
+The audit deliberately begins in 1991, where the official note provides an
+unambiguous common classification for the person fields.
+== 2006: last published person estimate
+
+The 2006 Table (7) publishes Public Offices, Others and Total columns with
+person estimates, payment amounts and withholding amounts.
+
+For salary, wages and bonus:
+
+[cols="3,1,1",options="header"]
+|===
+| Classification | Persons, thousand | Payment, million yen
+| Public Offices | *9,170* | 31,894,770
+| Others | *66,936* | 210,904,546
+| Public + Others | *76,106* | 242,799,316
+|===
+
+The person identity is exact at the published thousand-person precision:
+
+[stem]
+++++
+9{,}170 + 66{,}936 = 76{,}106.
+++++
+
+The 2006 table note also states that the person count includes short-term and
+temporary employment, including part-time workers.
+
+The long-term-series note classifies the 2006 person fields as sample-survey
+estimates.  Therefore 76,106 thousand is not treated as an exact administrative
+count or as a verified annual-unique-person count.
+== 2007: person columns disappear
+
+The 2007 Table (7) continues to publish salary payment and withholding amounts
+for Public Offices, Others and Total, but the person columns no longer appear.
+
+The long-term workbook confirms the structural break:
+
+----
+1991-2006  person fields = published sample-survey estimates
+2007-2024  person fields = not published
+----
+
+This produces:
+
+----
+person_series_last_published_year = 2006
+person_series_first_missing_year  = 2007
+missing years through 2024        = 18
+----
+
+Machine-readable status:
+
+----
+PUBLISHED_PERSON_SERIES_DISCONTINUED
+----
+
+The payment-amount series itself remains continuous, so this is specifically a
+loss of the person dimension rather than a disappearance of the salary-source
+statistics.
+
+== Historical ratio is not a current estimator
+
+The 2006 historical Public Offices person share is:
+
+[stem]
+++++
+9{,}170 / 76{,}106
+=
+0.120489843114.
+++++
+
+This is only a historical ratio of published sample-survey estimates.
+
+It must not be used as a 2024 Public Offices person share.
+== Amount composition changed materially
+
+The Public Offices share of salary/wages/bonus payment amount was:
+
+[stem]
+++++
+31{,}894{,}770 /
+(31{,}894{,}770 + 210{,}904{,}546)
+=
+0.131362684728
+++++
+
+in 2006.
+
+For 2024 the corresponding amount share is:
+
+[stem]
+++++
+28{,}282{,}710 /
+(28{,}282{,}710 + 325{,}610{,}351)
+=
+0.079918803494.
+++++
+
+The change is:
+
+[stem]
+++++
+-5.144388123434
+++++
+
+percentage points.
+
+Thus even the observable payment composition changed substantially between the
+last person-estimate year and the current year.
+
+This does not prove how the person share changed, but it is direct evidence
+against silently carrying the 2006 person composition forward unchanged.
+
+== Identification consequence
+
+The prohibited operation is:
+
+----
+2024 Public Offices persons
+  := 2024 salary persons x 2006 Public Offices person share
+----
+
+Its status is:
+
+----
+DO_NOT_EXTRAPOLATE_DISCONTINUED_SAMPLE_PERSON_SERIES
+----
+
+The current result remains:
+
+----
+nta_public_offices_person_count_2024 = NOT_IDENTIFIED
+----
+
+Historical person estimates do not close the current payroll-to-return bridge.
+== Relation to the external public-workforce audit
+
+The separate public-sector person coverage audit supplies current external
+benchmarks:
+
+----
+National Personnel Authority covered employees = 250,434
+Local Public Employee Salary Survey total       = 2,813,939
+External arithmetic subtotal                    = 3,064,373
+----
+
+Those counts cannot substitute for the NTA Public Offices denominator because
+their population definitions differ.
+
+The present audit independently shows that the NTA's own salary-source person
+series cannot supply a current denominator either, because the published series
+stops after 2006.
+
+The two audits therefore converge on the same identification conclusion through
+different evidence paths.
+
+== Reproduction
+
+[source,shell]
+----
+python scripts/build_source_catalog.py
+python scripts/extract_nta_withholding_person_series.py
+python scripts/test_nta_withholding_person_series.py
+python scripts/build_derived_catalog.py
+----
+
+Current anchors:
+
+----
+1991-2006 published person fields = sample-survey estimates
+2007-2024 published person fields = missing
+last published person year        = 2006
+first missing person year         = 2007
+missing years through 2024        = 18
+
+2006:
+  Public Offices persons = 9,170 thousand estimated
+  Others persons         = 66,936 thousand estimated
+  combined               = 76,106 thousand estimated
+  Public Offices person share = 12.0489843114%
+
+2006 Public Offices payment share = 13.1362684728%
+2024 Public Offices payment share = 7.9918803494%
+change                            = -5.1443881234 pp
+
+2024 NTA Public Offices person count = NOT_IDENTIFIED
+2006 -> 2024 person-share extrapolation = PROHIBITED
+----

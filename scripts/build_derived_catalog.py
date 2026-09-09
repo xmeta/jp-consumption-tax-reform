@@ -219,6 +219,22 @@ SPECS = [
         "2024 national covered public employees and local public employees as external person benchmarks; arithmetic subtotal 3,064,373 is explicitly not an NTA Public Offices denominator and cross-frame average/high-salary adjustments are prohibited",
     ),
     (
+        "NTA-WITHHOLDING-SALARY-PERSON-SERIES-1991-2024",
+        "nta_withholding_salary_person_series_1991_2024.csv",
+        "scripts/extract_nta_withholding_person_series.py",
+        "NTA-WITHHOLDING-LONG-TERM;NTA-WITHHOLDING-2006-STATUS;NTA-WITHHOLDING-2007-STATUS;NTA-FY2024-WITHHOLDING-STATUS",
+        "DERIVED_REPRODUCED_HISTORICAL_PERSON_SERIES_WITH_DISCONTINUITY",
+        "1991-2024 salary-source Public Offices/Others series: person fields are sample-survey estimates through 2006 and not published from 2007 onward while payment amounts continue",
+    ),
+    (
+        "NTA-WITHHOLDING-PERSON-SERIES-DISCONTINUITY-AUDIT",
+        "nta_withholding_person_series_discontinuity_audit.csv",
+        "scripts/extract_nta_withholding_person_series.py",
+        "NTA-WITHHOLDING-LONG-TERM;NTA-WITHHOLDING-2006-STATUS;NTA-WITHHOLDING-2007-STATUS;NTA-FY2024-WITHHOLDING-STATUS",
+        "DERIVED_REPRODUCED_HISTORICAL_IDENTIFICATION_AUDIT",
+        "Documents 2006 as the last published Public Offices/Others person-estimate year, 2007 as the first missing year, 18 missing years through 2024, and prohibits 2006 person-share extrapolation",
+    ),
+    (
         "NTA-2024-ANNUAL-INCOME-CLASS-PRIMARY-TYPE-FILING-STATUS",
         "nta_income_class_primary_type_filing_status_2024.csv",
         "scripts/extract_nta_annual_income_class_filing_status.py",
