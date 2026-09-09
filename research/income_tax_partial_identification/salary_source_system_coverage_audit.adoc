@@ -1,0 +1,307 @@
+= Salary source-system coverage audit
+:toc:
+:stem: latexmath
+
+== Status
+
+----
+MONETARY_COVERAGE_DIAGNOSTIC_NO_PERSON_INFERENCE
+----
+
+This audit compares two official 2024 NTA salary-side statistical systems:
+
+* the FY2024 withholding-income-tax administrative table for employment income;
+* the 2024 Private Salary Survey.
+
+Its purpose is not to merge the two systems.  It quantifies their monetary
+coverage differences and fixes the resulting identification boundary for the
+private-salary to final-return bridge.
+
+No v1-v5 endpoint or Paper 1 claim is changed.
+
+== Source systems
+
+=== Withholding-income-tax statistics
+
+The FY2024 withholding-income-tax Table (7) reports salary, wages and bonus
+payment amounts and withholding-tax amounts under:
+
+* +Public Offices+;
+* +Others+; and
+* +Total+.
+
+The same table reports wages of day laborers as a separate row.
+
+The official note states that +Public Offices+ includes government
+organizations, local authorities and specified related organizations.  The
+table is compiled from information-return total tables and withholding
+collection statements.
+
+No salary-recipient person count is published in this table.
+
+=== Private Salary Survey
+
+The official methodology states that the Private Salary Survey target is
+salary earners working, as of December 31, for withholding agents that are
+private establishments.
+
+The survey uses two-stage sampling of establishments and salary earners.  For
+sample establishments, salary earners with annual salary above 20 million yen
+are all selected at the second sampling stage.
+
+Therefore the Private Salary Survey and the withholding administrative table
+are not interchangeable statistical frames.
+== Administrative amount totals
+
+For salary, wages and bonus, the withholding-income-tax table reports:
+
+[cols="3,1,1",options="header"]
+|===
+| Classification | Payment, million yen | Withholding tax, million yen
+| Public Offices | 28,282,710 | 917,029
+| Others | 325,610,351 | 11,021,742
+| Total | *353,893,061* | *11,938,771*
+|===
+
+The identities
+
+[stem]
+++++
+28{,}282{,}710 + 325{,}610{,}351 = 353{,}893{,}061
+++++
+
+and
+
+[stem]
+++++
+917{,}029 + 11{,}021{,}742 = 11{,}938{,}771
+++++
+
+are exact in the published table.
+
+Day-labor wages are separately reported at:
+
+* 1,232,032 million yen of payments;
+* 20,909 million yen of withholding tax.
+
+The displayed Public Offices plus Others day-labor payment components differ
+from their printed total by one million yen because of publication rounding;
+the executable audit permits only that observed amount residual.
+
+== Private Salary Survey Table 1
+
+Private Salary Survey Table 1 reports for 2024:
+
+[cols="3,1",options="header"]
+|===
+| Item | Published estimate
+| average-monthly salary earners | 60,184,788 persons
+| salary amount | 241,438,813 million yen
+| tax amount | 11,183,370 million yen
+|===
+
+The 60,184,788 figure is an average-monthly survey estimate.  It is not
+classified as an annual unique-person count and is not added to or directly
+compared as a person union with final-return populations.
+== Public-office amount shares
+
+Within the withholding administrative salary/wages/bonus amounts:
+
+[stem]
+++++
+s^{pay}_{public}
+=
+28{,}282{,}710 / 353{,}893{,}061
+=
+0.079918803494
+++++
+
+and
+
+[stem]
+++++
+s^{tax}_{public}
+=
+917{,}029 / 11{,}938{,}771
+=
+0.076811005086.
+++++
+
+These are *amount shares*, not person shares.
+
+The source table publishes no salary-recipient count by Public Offices versus
+Others.  Consequently:
+
+----
+public_offices_salary_person_share = NOT_IDENTIFIED
+----
+
+The 7.99% payment share must not be applied to the Table 7 positive-balance
+salary-receipt person estimate.
+
+In particular, the operation
+
+----
+235,287 x (1 - public-office payment share)
+----
+
+is prohibited as a private-sector person-count adjustment.
+
+Machine-readable status:
+
+----
+DO_NOT_APPLY_AMOUNT_SHARE_TO_PERSON_COUNT
+----
+== Why Others is not the Private Salary Survey universe
+
+A tempting interpretation would be to treat +Others+ in the withholding table
+as the same universe as the Private Salary Survey.  The published aggregates
+do not support that interpretation.
+
+The salary-amount comparison is:
+
+[stem]
+++++
+241{,}438{,}813 / 325{,}610{,}351
+=
+0.741496123383.
+++++
+
+This is only a descriptive cross-statistic amount ratio.  It is not a 74.15%
+coverage probability.
+
+More decisively, the tax-amount comparison is:
+
+[stem]
+++++
+11{,}183{,}370 / 11{,}021{,}742
+=
+1.014664469555.
+++++
+
+The Private Salary Survey published tax estimate is larger than the
+withholding table's +Others+ tax aggregate.
+
+Equivalently:
+
+[stem]
+++++
+11{,}021{,}742 - 11{,}183{,}370
+=
+-161{,}628
+++++
+
+million yen.
+
+If the two published aggregates were a simple nested-subset pair under a
+common measurement system, this sign would be impossible.
+
+The audit therefore classifies the ratio as:
+
+----
+CROSS_STATISTIC_RATIO_NOT_SUBSET_RATE
+----
+
+This is evidence of statistical-frame / timing / aggregation non-equivalence,
+not evidence that either official table is erroneous.
+== Payment differences are not missing-person residuals
+
+The published payment differences are:
+
+[stem]
+++++
+325{,}610{,}351 - 241{,}438{,}813
+=
+84{,}171{,}538
+++++
+
+million yen between source-system +Others+ and the Private Salary Survey, and
+
+[stem]
+++++
+353{,}893{,}061 - 241{,}438{,}813
+=
+112{,}454{,}248
+++++
+
+million yen between the source-system total and the Private Salary Survey.
+
+Neither amount is classified as:
+
+* missing private payroll;
+* missing private salary earners;
+* a public-sector person count;
+* a payroll/final-return overlap residual; or
+* a denominator for a filing probability.
+
+Their status is:
+
+----
+DIFFERENCE_NOT_MISSING_PRIVATE_PAYROLL
+----
+
+The source systems differ in frame and aggregation design, so amount
+differences cannot be inverted into person counts without additional
+identifying information.
+== Consequence for the >20m salary-receipt bridge
+
+The previous bridge established:
+
+* Private Salary Survey Table 19: 320,983 full-year private-sector salary
+  earners with salary receipts above 20 million yen;
+* Sample Survey Table 7: 235,287 positive-self-assessed-balance taxpayers with
+  salary receipts above 20 million yen.
+
+The new withholding-income-tax source confirms that public-office salary
+payments form a nonzero part of the broader salary-source system.  However, it
+does not publish the corresponding number or high-salary distribution of
+public-office salary recipients.
+
+Therefore the new source strengthens the reason why the two >20m counts cannot
+be directly interpreted as an overlap rate, while it does not provide the
+missing person-level correction.
+
+The remaining missing quantity is still a person-level or sufficiently
+cross-tabulated bridge such as:
+
+----
+private/public employer class
+x salary-receipt threshold
+x final-return status
+x person
+----
+
+No such joint public table has been identified in the sources registered by
+this audit.
+
+== Reproduction
+
+[source,shell]
+----
+python scripts/build_source_catalog.py
+python scripts/extract_nta_salary_source_system_coverage.py
+python scripts/test_nta_salary_source_system_coverage.py
+python scripts/build_derived_catalog.py
+----
+
+Current anchors:
+
+----
+source salary payment:
+  Public Offices = 28,282,710 million yen
+  Others         = 325,610,351 million yen
+  Total          = 353,893,061 million yen
+
+source salary withholding:
+  Public Offices = 917,029 million yen
+  Others         = 11,021,742 million yen
+  Total          = 11,938,771 million yen
+
+Private Salary Survey:
+  average-monthly salary earners = 60,184,788 estimated
+  salary amount = 241,438,813 million yen estimated
+  tax amount    = 11,183,370 million yen estimated
+
+public-office person share = NOT_IDENTIFIED
+Table 7 public/private person adjustment = PROHIBITED
+----

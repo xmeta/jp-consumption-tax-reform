@@ -203,6 +203,14 @@ SPECS = [
         "Same-threshold >20m payroll/positive-balance salary-receipt diagnostic plus complete-survey Table 2-3 employment-income main/secondary semantics; exact cross-source person overlap remains NOT_IDENTIFIED",
     ),
     (
+        "NTA-2024-SALARY-SOURCE-SYSTEM-COVERAGE",
+        "nta_salary_source_system_coverage_2024.csv",
+        "scripts/extract_nta_salary_source_system_coverage.py",
+        "NTA-FY2024-WITHHOLDING-STATUS;NTA-MINKAN-2024-T1;NTA-MINKAN-METHODOLOGY;NTA-2024-SHINKOKU-T7-XLSX",
+        "DERIVED_REPRODUCED_OFFICIAL_MONETARY_COVERAGE_DIAGNOSTIC",
+        "FY2024 source-withholding salary payment/tax amounts split into Public Offices/Others/Total compared with Private Salary Survey Table 1; public-office person share remains NOT_IDENTIFIED and applying amount shares to Table 7 person counts is prohibited",
+    ),
+    (
         "NTA-2024-ANNUAL-INCOME-CLASS-PRIMARY-TYPE-FILING-STATUS",
         "nta_income_class_primary_type_filing_status_2024.csv",
         "scripts/extract_nta_annual_income_class_filing_status.py",

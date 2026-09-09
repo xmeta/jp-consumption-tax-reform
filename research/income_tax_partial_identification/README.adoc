@@ -516,6 +516,32 @@ reconciliation failures.
 Current bridge status:
 `SAME_SALARY_RECEIPT_THRESHOLD_BRIDGE_REPRODUCED_PERSON_LINK_NOT_IDENTIFIED`.
 
+== Salary source-system coverage audit
+
+`salary_source_system_coverage_audit.adoc` compares the FY2024
+withholding-income-tax administrative salary table with Private Salary Survey
+Table 1.
+
+The administrative table separates salary/wages/bonus amounts into Public
+Offices and Others.  Published payment amounts are 28,282,710 million yen for
+Public Offices, 325,610,351 million yen for Others, and 353,893,061 million yen
+in total.  The corresponding withholding-tax amounts are 917,029,
+11,021,742, and 11,938,771 million yen.
+
+The Public Offices payment share is therefore 7.991880%, but this is an amount
+share, not a salary-recipient person share.  No public/private salary-recipient
+person count is published in this source table, so the amount share must not be
+used to adjust the Table 7 >20m person estimate.
+
+Private Salary Survey Table 1 reports 241,438,813 million yen of salary and
+11,183,370 million yen of tax under its own survey frame.  The tax estimate is
+slightly larger than the source-system Others tax aggregate, demonstrating
+that the two published systems cannot be treated as a simple nested-subset
+pair.
+
+Current source-system coverage status:
+`MONETARY_COVERAGE_DIAGNOSTIC_NO_PERSON_INFERENCE`.
+
 == Reproduction
 
 [source,shell]
@@ -539,6 +565,8 @@ python scripts/extract_nta_salary_return_overlap.py
 python scripts/test_nta_salary_return_overlap.py
 python scripts/extract_nta_salary_receipt_return_bridge.py
 python scripts/test_nta_salary_receipt_return_bridge.py
+python scripts/extract_nta_salary_source_system_coverage.py
+python scripts/test_nta_salary_source_system_coverage.py
 python -m pip install -r requirements-research-lp.txt
 python research/income_tax_partial_identification/run_replacement_transport_lp.py
 python research/income_tax_partial_identification/test_replacement_transport_lp.py
