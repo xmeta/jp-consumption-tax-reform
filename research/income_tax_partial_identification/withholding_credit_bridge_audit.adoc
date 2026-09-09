@@ -1,0 +1,243 @@
+= NTA withholding / tax-credit bridge audit
+:toc:
+:stem: latexmath
+
+== Status
+
+----
+OFFICIAL_TAX_FLOW_DIAGNOSTIC_REPRODUCED_V5_NOT_PRESPECIFIED
+----
+
+This audit is a data and semantics step only.  It does not compute a v5 LP
+result and does not alter any v1-v4 endpoint.
+
+== Question
+
+After the self-assessed-balance semantic correction, the main unresolved issue
+is whether public NTA data can connect:
+
+. calculated income tax;
+. tax credits;
+. source withholding; and
+. positive self-assessed balance (`申告納税額>0`).
+
+The purpose of this audit is to determine which parts of that bridge are
+actually observed before specifying any new cross-system model.
+
+== Official sources
+
+The 2024 Sample Survey for Self-Assessment Income Tax publishes the required
+components in three official workbooks:
+
+* `NTA-2024-SHINKOKU-T1-XLSX`: Table 1, Summary Table;
+* `NTA-2024-SHINKOKU-T4-XLSX`: Table 4, Tax Credits Table;
+* `NTA-2024-SHINKOKU-T5-XLSX`: Table 5, Withholding Tax Table.
+
+All three use the same 25 total-income classes and the same five primary
+income-earner categories within the survey target population.
+
+The target is already restricted to persons with positive self-assessed income
+tax.  Therefore these tables do *not* reveal the number of calculated-tax-
+positive persons outside that target.
+
+== Reproduced 125-cell tax-flow artifact
+
+The executable extractor
+
+----
+scripts/extract_nta_positive_balance_tax_flow.py
+----
+
+writes
+
+----
+data/derived/nta_positive_self_assessed_balance_tax_flow_income_class_primary_type_2024.csv
+----
+
+with 25 income classes x five primary-income categories = 125 cells.
+
+For every cell:
+
+* Table 1 positive-balance persons equal the already reproduced Table 2 cell;
+* Table 1 tax-credit amount equals Table 4 total tax-credit amount exactly;
+* Table 1 withholding persons equal Table 5 total withholding persons exactly;
+* Table 1 withholding amount equals Table 5 total withholding amount exactly.
+
+Thus the Table 1 / Table 4 / Table 5 join is observed within the NTA survey and
+does not require a statistical matching assumption.
+
+== Aggregate anchors
+
+The printed Table 1 grand-total cells report:
+
+[cols="2,1",options="header"]
+|===
+| Quantity | 2024 value
+| positive-self-assessed-balance persons | 5,158,260
+| calculated income tax | 8,044,571 million yen
+| tax credits | 352,866 million yen
+| source-withholding persons | 3,302,359
+| source-withholding tax | 3,446,992 million yen
+| self-assessed balance | 4,406,942 million yen
+|===
+
+Table 4 reports 4,685,449 distinct persons with at least one tax-credit entry
+in this positive-balance target.
+
+Therefore the descriptive conditional exposure rates are:
+
+[stem]
+++++
+Pr(W>0mid B>0)
+=
+rac{3{,}302{,}359}{5{,}158{,}260}
+=
+0.64020794,
+++++
+
+and
+
+[stem]
+++++
+Pr(C>0mid B>0)
+=
+rac{4{,}685{,}449}{5{,}158{,}260}
+=
+0.90833905.
+++++
+
+These are *within-positive-balance-target* diagnostics.  They are not filing
+probabilities and do not identify the corresponding rates among all persons
+with positive calculated tax.
+
+== Tax-flow identity diagnostic
+
+Let:
+
+* stem:[T^{calc}] be Table 1 calculated income tax;
+* stem:[C] be Table 1 / Table 4 tax credits;
+* stem:[W] be Table 1 / Table 5 withholding tax;
+* stem:[B] be Table 1 self-assessed balance.
+
+The public table does not separately print Reconstruction Special Income Tax in
+this flow.  Define its aggregate implied component mechanically as
+
+[stem]
+++++
+R^{imp}=W+B-(T^{calc}-C).
+++++
+
+Using the printed grand totals gives
+
+[stem]
+++++
+R^{imp}=162{,}229	ext{ million yen}
+++++
+
+and
+
+[stem]
+++++
+rac{R^{imp}}{T^{calc}-C}=0.02109142.
+++++
+
+This is close to the statutory 2.1% Reconstruction Special Income Tax rate.
+The 125 published cells are rounded independently to million yen, so the
+executable test does not demand an exact 2.1% identity cell by cell.  Instead
+it requires exact Table 1/4/5 joins and checks the aggregate implied rate in a
+narrow range around 2.1%.
+
+== Consequence for event semantics
+
+For one person in one tax year, a positive final self-assessed balance requires
+a positive pre-withholding tax amount.  Conceptually,
+
+[stem]
+++++
+B>0
+Longrightarrow
+T^{post-credit,,pre-withholding}>0
+Longrightarrow
+T^{calc}>0.
+++++
+
+This is directionally different from the symmetric v1-v4 compatibility
+constraint.  The NTA positive-balance event is a downstream subset-type event,
+not another measurement of the same positive-tax event.
+
+The public survey nevertheless cannot identify
+
+[stem]
+++++
+Pr(B>0mid T^{calc}>0)
+++++
+
+because persons with stem:[Ble0] are outside the sample-survey target.
+
+== Why this does not yet identify a v5 cross-system inequality
+
+The pseudo-filer variable currently called modeled annual income tax is an
+ordinary 2026 national-income-tax calculation after modeled income deductions,
+but before tax credits, source withholding, and Reconstruction Special Income
+Tax.
+
+The NTA tax-flow source is 2024 and concerns individual return units.  F71561 is
+a 2024 household/equivalized-disposable-income source, while the pseudo-filer
+mapping from household aggregates to tax units is modeled.
+
+Therefore the logical same-person same-year implication above does *not* by
+itself justify imposing
+
+----
+NTA positive-balance rate <= pseudo modeled-tax-positive rate
+----
+
+as a data identity in every transported decile.
+
+Any v5 use of the direction must explicitly retain uncertainty for:
+
+* household-to-tax-unit construction;
+* NTA-to-F71561 population mismatch;
+* income-rank transport;
+* 2024 observed tax flow versus 2026 statutory pseudo calculation;
+* omitted tax credits and Reconstruction Special Income Tax in the pseudo
+  event.
+
+== Implication for the next pre-specification
+
+The next model should test a *one-sided compatibility bridge* rather than
+minimizing a symmetric absolute rate gap.
+
+A candidate pre-specification may distinguish:
+
+* a one-sided violation budget for cases in which transported NTA
+  positive-balance mass exceeds pseudo calculated-tax-positive mass; and
+* rank-displacement / cross-population budgets already separated in v3-v4.
+
+No numerical v5 result may be computed before the exact variables, budgets,
+grid, objective, tolerances, nesting regressions, and Paper claim status are
+committed in a separate pre-specification commit.
+
+== Reproduction
+
+[source,shell]
+----
+python scripts/build_source_catalog.py
+python scripts/extract_nta_shinkoku_income_class_primary_type.py
+python scripts/test_nta_shinkoku_income_class_primary_type.py
+python scripts/extract_nta_positive_balance_tax_flow.py
+python scripts/test_nta_positive_balance_tax_flow.py
+python scripts/build_derived_catalog.py
+----
+
+Current reproduced audit status:
+
+----
+125 tax-flow cells
+Table 1 / Table 4 tax-credit amount: 125/125 exact
+Table 1 / Table 5 withholding persons: 125/125 exact
+Table 1 / Table 5 withholding amount: 125/125 exact
+positive-balance target persons: 5,158,260
+aggregate implied Reconstruction Special Income Tax rate: 2.109090% from summed rounded cells
+V5_RESULT_NOT_COMPUTED
+----

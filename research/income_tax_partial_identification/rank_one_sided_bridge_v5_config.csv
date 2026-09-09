@@ -1,0 +1,41 @@
+key,value,unit,note
+spec_version,rank_one_sided_bridge_v5,,pre-specified before any v5 numerical result
+input_pseudofiler_scenarios,all_13_committed_pseudofiler_scenarios,,no post-result selection
+input_nta_artifact,nta_income_class_primary_type_filing_status_2024.csv,,same 25-class NTA population/positive-balance input as v3
+tax_flow_diagnostic_artifact,nta_positive_self_assessed_balance_tax_flow_income_class_primary_type_2024.csv,,semantic-direction diagnostic only; no numerical calibration of eta
+nta_income_class_count,25,,ordered ascending by total net income etc.
+bridge_scheme,rank_transport_one_sided_subset_compatibility,,same rank transport as v3; directional event constraint
+directional_constraint,transported_nta_positive_balance_minus_pseudo_calculated_tax_positive_le_eta,,no lower-side absolute-gap constraint
+eta_lower_bound,0,rate difference,pre-specified
+eta_upper_bound,1,rate difference,pre-specified
+rank_bin_mass,0.1,population share,ten equal bins on each margin
+within_class_positive_allocation,free_within_overlap_capacity,,unchanged from v3
+transport_positive_allocation,free_within_transport_capacity,,unchanged from v3
+rank_cost,absolute_decile_index_distance,,cost |d-q|
+delta_grid,0;0.25;0.5;1;2;3;4;5,average decile-index displacement,same pre-specified grid as v3
+delta_unrestricted,5,average decile-index displacement,maximum possible cost with equal 0.1 margins
+zero_violation_threshold,solve_minimum_delta_at_eta_0,,record threshold if feasible; otherwise infeasible
+frontier_endpoint_rule,eta_star_at_each_delta,,evaluate all endpoint objectives at each minimum-eta frontier point
+endpoint_metrics,taxable_income_weighted_mean_MTR;income_tax_liability_weighted_mean_MTR;pseudo_positive_modeled_annual_income_tax_share;transported_nta_positive_self_assessed_balance_rate,,decile endpoints plus equal-decile overall MTR endpoints
+overall_weight_scheme,equal_decile,,0.1 per F rank decile
+tax_flow_diagnostic_role,semantic_direction_only_no_rate_calibration,,64% withholding / 91% credit exposure must not be used to fit eta
+cross_year_status,2024_observed_tax_flow_vs_2026_pseudo_tax_model,,one-sided relation remains model-contingent across systems/years
+v3_outer_set_regression,eta_star_le_v3_epsilon_star_same_delta,,symmetric v3 feasible set is nested inside the one-sided v5 set
+delta_monotonicity,eta_star_nonincreasing,,relaxing rank displacement cannot worsen minimum directional violation
+solver,scipy.optimize.linprog,,pinned dependency
+solver_method,highs-ds,,primary solver
+solver_crosscheck_method,highs-ipm,,frontier minima and zero-violation threshold
+equality_residual_tolerance,1e-8,absolute,post-solve rejection threshold
+inequality_residual_tolerance,1e-8,absolute,post-solve rejection threshold
+v3_outer_set_tolerance,1e-8,absolute,eta_star must not exceed v3 epsilon_star at same delta
+frontier_monotonicity_tolerance,1e-8,absolute,eta_star cannot increase materially with delta
+zero_violation_tolerance,1e-8,absolute,eta=0 feasibility check
+numpy_version,2.5.3,,pinned
+scipy_version,1.18.1,,pinned
+historical_v6_restricted_lp_reproduced,false,,must remain false
+p1c13_v1_modified,false,,must remain false
+p1c14_v2_modified,false,,must remain false
+p1c15_v3_modified,false,,must remain false
+p1c16_v4_modified,false,,must remain false
+paper1_claim_before_ci,false,,promotion prohibited before implementation CI success
+paper1_claim_before_separate_promotion,false,,implementation must not modify Paper 1 claim registry
