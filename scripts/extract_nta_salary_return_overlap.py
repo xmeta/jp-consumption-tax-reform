@@ -15,6 +15,7 @@ CATALOG = ROOT / "data/source_catalog.csv"
 T16_SUMMARY = ROOT / "data/derived/nta_private_salary_taxpayer_status_summary_2024.csv"
 FINAL_RETURN = ROOT / "data/derived/nta_income_class_primary_type_filing_status_2024.csv"
 TAX_FLOW = ROOT / "data/derived/nta_positive_self_assessed_balance_tax_flow_income_class_primary_type_2024.csv"
+PROCESSING_AUDIT = ROOT / "data/derived/nta_salary_processing_status_audit_2024.csv"
 OUT_CLASS = ROOT / "data/derived/nta_private_salary_not_year_end_adjusted_by_salary_class_2024.csv"
 OUT_SUMMARY = ROOT / "data/derived/nta_salary_return_overlap_audit_2024.csv"
 
@@ -175,6 +176,13 @@ def build():
     fr_residual = sum(int(r["neither_positive_nor_refund_residual"]) for r in salary_return)
     assert fr_total == fr_positive + fr_refund + fr_residual
 
+    processing = {r["metric_id"]: r for r in read_csv(PROCESSING_AUDIT)}
+    processed_total = int(processing["salary_table22_filed_or_processed_population"]["value"])
+    pure_final_return = int(processing["salary_final_return_row_population"]["value"])
+    assert processed_total == fr_total == 11_423_587
+    assert pure_final_return == 11_293_442
+    assert processed_total != pure_final_return
+
     salary_flow = [r for r in read_csv(TAX_FLOW) if r["primary_income_type"] == "salary"]
     flow_positive = sum(int(r["positive_self_assessed_balance_persons_estimated"]) for r in salary_flow)
     any_withholding = sum(int(r["source_withholding_persons_estimated"]) for r in salary_flow)
@@ -196,22 +204,36 @@ def build():
                "NTA-MINKAN-2024-T19;NTA-2024-SALARY-FILING-REQUIREMENT",
                "その3!D12;2024 filing guidance", "LEGAL_FILING_CANDIDATE_NOT_OBSERVED_MATCH",
                "Salary receipts above 20m create a statutory filing bridge, but public tables do not observe the cross-source person match."),
+        metric("salary_primary_table22_filed_or_processed_population", fr_total, "persons",
+               "Table 2-2(1) primary income category salary, filed or processed cases",
+               "NTA-R06;NTA-2024-PROCESSING-STATUS",
+               "Table 2-2(1) salary category; 2-1(1) Part 4 Total Actual",
+               "OBSERVED_FILED_OR_PROCESSED_POPULATION",
+               "Canonical meaning of 11,423,587; includes final returns and subsequent processing categories."),
+        metric("salary_primary_final_return_row_population", pure_final_return, "persons",
+               "Pure Final return row, primary income category salary",
+               "NTA-2024-PROCESSING-STATUS",
+               "2-1(1) Part 4 Final return",
+               "OBSERVED_FINAL_RETURN_ROW",
+               "Pure Final return row before adding amended returns and correction/determination categories."),
         metric("salary_primary_final_return_population", fr_total, "persons",
-               "Final returns, primary income category salary", "NTA-R06",
-               "Table 2-2(1), salary category summed over 25 income classes",
-               "OBSERVED_FINAL_RETURN_POPULATION", "All filing statuses, not only positive self-assessed balance."),
+               "Deprecated alias for Table 2-2(1) filed-or-processed salary population",
+               "NTA-R06;NTA-2024-PROCESSING-STATUS",
+               "Table 2-2(1) salary category; 2-1(1) Part 4 Total Actual",
+               "DEPRECATED_ALIAS_NOT_PURE_FINAL_RETURN_ROW",
+               "Backward-compatible metric name only; use salary_primary_table22_filed_or_processed_population."),
         metric("salary_primary_positive_self_assessed_balance", fr_positive, "persons",
-               "Final returns, primary income category salary", "NTA-R06",
-               "Table 2-2(1), salary category", "OBSERVED_FINAL_RETURN_SUBSET",
-               "Positive self-assessed balance subset."),
+               "Table 2-2(1) filed-or-processed salary-primary cases", "NTA-R06",
+               "Table 2-2(1), salary category", "OBSERVED_FILED_OR_PROCESSED_SUBSET",
+               "Positive self-assessed balance subset of the filed-or-processed population."),
         metric("salary_primary_refund", fr_refund, "persons",
-               "Final returns, primary income category salary", "NTA-R06",
-               "Table 2-2(1), salary category", "OBSERVED_FINAL_RETURN_SUBSET",
-               "Refund subset."),
+               "Table 2-2(1) filed-or-processed salary-primary cases", "NTA-R06",
+               "Table 2-2(1), salary category", "OBSERVED_FILED_OR_PROCESSED_SUBSET",
+               "Refund subset of the filed-or-processed population."),
         metric("salary_primary_neither_positive_nor_refund", fr_residual, "persons",
-               "Final returns, primary income category salary", "NTA-R06",
-               "Table 2-2(1), salary category", "OBSERVED_FINAL_RETURN_RESIDUAL",
-               "Residual filing status."),
+               "Table 2-2(1) filed-or-processed salary-primary cases", "NTA-R06",
+               "Table 2-2(1), salary category", "OBSERVED_FILED_OR_PROCESSED_RESIDUAL",
+               "Residual status within the filed-or-processed population."),
         metric("salary_primary_positive_balance_any_withholding", any_withholding, "persons",
                "Positive-self-assessed-balance salary-primary returns",
                "NTA-2024-SHINKOKU-T1-XLSX;NTA-2024-SHINKOKU-T5-XLSX",
@@ -245,7 +267,8 @@ def main():
             raise SystemExit("stale generated artifacts: " + ", ".join(stale))
         print(
             "NTA salary-return overlap audit: current "
-            "(84 class rows; >20m=320,983; salary-primary returns=11,423,587; exact overlap not identified)"
+            "(84 class rows; >20m=320,983; salary-primary filed/processed=11,423,587; "
+            "pure final-return row=11,293,442; exact overlap not identified)"
         )
         return
     for path, expected in outputs:

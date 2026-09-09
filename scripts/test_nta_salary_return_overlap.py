@@ -20,7 +20,7 @@ summary = {r["metric_id"]: r for r in read(SUMMARY)}
 catalog = {r["source_id"]: r for r in read(CATALOG)}
 
 assert len(classes) == 84
-assert len(summary) == 10
+assert len(summary) == 12
 assert {
     (r["employment_duration_group"], r["tax_status"]) for r in classes
 } == {
@@ -56,6 +56,8 @@ anchors = {
     "private_salary_full_year_no_year_end_adjustment_taxpayers": "3729740",
     "private_salary_full_year_no_year_end_adjustment_secondary_payroll": "1700196",
     "private_salary_full_year_salary_receipts_gt20m": "320983",
+    "salary_primary_table22_filed_or_processed_population": "11423587",
+    "salary_primary_final_return_row_population": "11293442",
     "salary_primary_final_return_population": "11423587",
     "salary_primary_positive_self_assessed_balance": "2385726",
     "salary_primary_refund": "7697018",
@@ -73,6 +75,18 @@ assert summary["private_salary_full_year_salary_receipts_gt20m"]["identification
 assert summary["private_salary_to_final_return_person_overlap"]["identification_status"] == (
     "DO_NOT_SUM_OR_INFER_EXACT_OVERLAP"
 )
+assert summary["salary_primary_table22_filed_or_processed_population"]["identification_status"] == (
+    "OBSERVED_FILED_OR_PROCESSED_POPULATION"
+)
+assert summary["salary_primary_final_return_row_population"]["identification_status"] == (
+    "OBSERVED_FINAL_RETURN_ROW"
+)
+assert summary["salary_primary_final_return_population"]["identification_status"] == (
+    "DEPRECATED_ALIAS_NOT_PURE_FINAL_RETURN_ROW"
+)
+assert summary["salary_primary_final_return_population"]["value"] != summary[
+    "salary_primary_final_return_row_population"
+]["value"]
 assert "11,423,587" not in summary["private_salary_to_final_return_person_overlap"]["value"]
 
 assert catalog["NTA-MINKAN-2024-T19"]["sha256"] == (
@@ -81,11 +95,12 @@ assert catalog["NTA-MINKAN-2024-T19"]["sha256"] == (
 assert catalog["NTA-2024-SALARY-FILING-REQUIREMENT"]["sha256"] == (
     "a759d06efa32cf73164dc8d6f6a3d74faf4409cf2988bdadeda9825b5f8a7c3a"
 )
-# Guard against reintroducing a naive additive payroll + final-return union.
+# Guard against reintroducing naive additive payroll + return-side unions.
 payroll_adjusted_positive = 35_556_416
-salary_primary_returns = int(summary["salary_primary_final_return_population"]["value"])
-naive_sum = payroll_adjusted_positive + salary_primary_returns
-assert naive_sum == 46_980_003
+salary_primary_processed = int(summary["salary_primary_table22_filed_or_processed_population"]["value"])
+salary_primary_final_row = int(summary["salary_primary_final_return_row_population"]["value"])
+assert payroll_adjusted_positive + salary_primary_processed == 46_980_003
+assert payroll_adjusted_positive + salary_primary_final_row == 46_849_858
 assert summary["private_salary_to_final_return_person_overlap"]["value"] == "NOT_IDENTIFIED"
 
 subprocess.run(
@@ -97,5 +112,6 @@ subprocess.run(
 print(
     "NTA salary-return overlap tests: OK "
     "(84 Table 19 class rows; >20m candidate=320,983; "
-    "salary-primary final returns=11,423,587; exact cross-source overlap not identified)"
+    "salary-primary filed/processed=11,423,587; pure final-return row=11,293,442; "
+    "exact cross-source overlap not identified)"
 )

@@ -44,6 +44,8 @@ jobs:
           python scripts/test_nta_private_salary_taxpayer_status.py
           python scripts/extract_nta_annual_income_class_filing_status.py
           python scripts/test_nta_annual_income_class_filing_status.py
+          python scripts/extract_nta_salary_processing_status.py
+          python scripts/test_nta_salary_processing_status.py
           python scripts/extract_nta_salary_return_overlap.py
           python scripts/test_nta_salary_return_overlap.py
           python scripts/extract_nta_salary_receipt_return_bridge.py

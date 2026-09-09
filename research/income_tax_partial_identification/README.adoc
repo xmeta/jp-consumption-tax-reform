@@ -461,7 +461,7 @@ Current payroll-diagnostic status:
 
 `salary_return_overlap_audit.adoc` extends the wage-side diagnostic with
 Private Salary Survey Table 19 and the full Table 2-2(1) salary-primary
-final-return population.
+filed-or-processed population.
 
 Table 19 exactly decomposes the published no-year-end-adjustment payroll
 population by secondary-payroll (`乙欄`), previous-employer-salary-unknown,
@@ -476,10 +476,12 @@ statutory filing-relevant group, but the public aggregate tables do not observe
 the corresponding person-level final-return match.
 
 On the return side, the 25 salary-primary Table 2-2(1) classes sum to
-11,423,587 cases: 2,385,726 positive self-assessed balance, 7,697,018 refund,
-and 1,340,843 residual.  Within the positive-balance salary-primary target,
-2,161,129 have some source withholding and 2,114,353 have salary-source
-withholding.
+11,423,587 filed-or-processed cases: 2,385,726 positive self-assessed balance,
+7,697,018 refund, and 1,340,843 residual.  The separate processing-status
+table shows that the pure Final return row is 11,293,442; the remaining
+130,145 cases are amended returns, determinations/corrections or requests for
+correction.  Within the positive-balance salary-primary target, 2,161,129 have
+some source withholding and 2,114,353 have salary-source withholding.
 
 The audit therefore sharpens the administrative transition map without
 identifying the cross-source person overlap.  Neither
@@ -487,6 +489,29 @@ identifying the cross-source person overlap.  Neither
 
 Current overlap-audit status:
 `OFFICIAL_OVERLAP_AUDIT_EXACT_PERSON_MATCH_NOT_IDENTIFIED`.
+
+== Salary-primary processing-status audit
+
+`salary_processing_status_audit.adoc` fixes the terminology of the
+11,423,587-person Table 2-2(1) salary-primary population.
+
+NTA Table 2-1(1) Part 4 reports 11,293,442 persons on the pure +Final return+
+row.  Amended returns and subsequent determination/correction/request
+categories contribute another 130,145 persons, giving the 11,423,587
+filed-or-processed total used by Table 2-2(1).
+
+Therefore the canonical names are:
+
+----
+salary_table22_filed_or_processed_population = 11,423,587
+salary_final_return_row_population           = 11,293,442
+----
+
+The older shorthand that called 11,423,587 a final-return population remains
+only as a deprecated backward-compatible alias.
+
+Current processing-status audit:
+`TABLE22_POPULATION_IS_FILED_OR_PROCESSED_NOT_PURE_FINAL_RETURN_ROW`.
 
 == Salary-receipt to final-return bridge audit
 
@@ -613,6 +638,8 @@ python scripts/extract_nta_private_salary_taxpayer_status.py
 python scripts/test_nta_private_salary_taxpayer_status.py
 python scripts/extract_nta_annual_income_class_filing_status.py
 python scripts/test_nta_annual_income_class_filing_status.py
+python scripts/extract_nta_salary_processing_status.py
+python scripts/test_nta_salary_processing_status.py
 python scripts/extract_nta_salary_return_overlap.py
 python scripts/test_nta_salary_return_overlap.py
 python scripts/extract_nta_salary_receipt_return_bridge.py

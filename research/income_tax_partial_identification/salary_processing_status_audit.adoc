@@ -1,0 +1,172 @@
+= Salary-primary filing and processing status audit
+:toc:
+:stem: latexmath
+
+== Status
+
+----
+TABLE22_POPULATION_IS_FILED_OR_PROCESSED_NOT_PURE_FINAL_RETURN_ROW
+----
+
+This audit clarifies the meaning of the 2024 NTA salary-primary population used
+by Table 2-2(1).
+
+The 11,423,587-person salary-primary total is not the pure +Final return+ row.
+It is the current-year filed-or-processed total after including amended returns,
+determinations/corrections and requests for correction.
+
+No v1-v5 endpoint or Paper 1 claim changes.
+
+== Official processing table
+
+NTA Table 2-1(1), Part 4, Employment income earners reports:
+
+[cols="3,1,1,1",options="header"]
+|===
+| Processing status | Persons | Positive self-assessed balance | Refund
+| Final return | *11,293,442* | 2,352,779 | 7,612,961
+| Amended return | 81,481 | 21,221 | 50,210
+| Determination/correction for increase | 8,591 | 2,275 | 4,868
+| Correction for reduction | 10,703 | 2,103 | 7,736
+| Request for correction | 29,370 | 7,348 | 21,243
+| Total actual | *11,423,587* | *2,385,726* | *7,697,018*
+|===
+
+The person columns reconcile exactly across processing categories.
+
+The total also reproduces the salary-primary margins from Table 2-2(1).
+== Pure final-return row versus processed total
+
+The subsequent-processing person component is:
+
+[stem]
+++++
+11{,}423{,}587 - 11{,}293{,}442
+=
+130{,}145.
+++++
+
+Its descriptive share of the processed total is:
+
+[stem]
+++++
+130{,}145 / 11{,}423{,}587
+=
+0.011392656265.
+++++
+
+Thus 98.860734% of the processed total is in the pure Final return row and
+1.139266% is represented by the later processing categories.
+
+This share is a processing composition, not an error rate, noncompliance rate,
+or probability that a return is amended.
+
+== Filing-status decomposition
+
+For the processed total:
+
+[cols="3,1",options="header"]
+|===
+| Status | Persons
+| positive self-assessed balance | 2,385,726
+| refund | 7,697,018
+| neither positive nor refund | 1,340,843
+| total | 11,423,587
+|===
+
+For the pure Final return row:
+
+[cols="3,1",options="header"]
+|===
+| Status | Persons
+| positive self-assessed balance | 2,352,779
+| refund | 7,612,961
+| neither positive nor refund | 1,327,702
+| total | 11,293,442
+|===
+
+The later-processing contribution is therefore:
+
+* positive balance: 32,947;
+* refund: 84,057;
+* residual: 13,141;
+* total: 130,145.
+
+These person identities are exact in the published table.
+== Canonical terminology
+
+The repository now uses:
+
+----
+salary_table22_filed_or_processed_population = 11,423,587
+salary_final_return_row_population           = 11,293,442
+----
+
+The older shorthand:
+
+----
+salary_primary_final_return_population = 11,423,587
+----
+
+is retained only as a backward-compatible alias and is classified:
+
+----
+DEPRECATED_ALIAS_NOT_PURE_FINAL_RETURN_ROW
+----
+
+It must not be interpreted as the pure Final return row.
+
+This terminology is consistent with the NTA table note: the annual statistics
+show current-year cases filed or processed by the stated cutoff, including
+correction and determination activity.
+
+== Consequence for the payroll-to-return bridge
+
+The distinction improves terminology but does not identify the person-level
+overlap with the Private Salary Survey.
+
+Both of the following naive unions remain prohibited:
+
+[stem]
+++++
+35{,}556{,}416 + 11{,}423{,}587 = 46{,}980{,}003
+++++
+
+and
+
+[stem]
+++++
+35{,}556{,}416 + 11{,}293{,}442 = 46{,}849{,}858.
+++++
+
+Neither payroll-side records nor the final-return row can be added to the
+private-salary count without a person-level overlap bridge.
+
+== Reproduction
+
+[source,shell]
+----
+python scripts/build_source_catalog.py
+python scripts/extract_nta_annual_income_class_filing_status.py
+python scripts/test_nta_annual_income_class_filing_status.py
+python scripts/extract_nta_salary_processing_status.py
+python scripts/test_nta_salary_processing_status.py
+python scripts/extract_nta_salary_return_overlap.py
+python scripts/test_nta_salary_return_overlap.py
+----
+
+Current anchors:
+
+----
+pure Final return row       = 11,293,442
+later processing categories =    130,145
+filed-or-processed total    = 11,423,587
+
+positive balance:
+  final row = 2,352,779
+  total     = 2,385,726
+
+refund:
+  final row = 7,612,961
+  total     = 7,697,018
+----

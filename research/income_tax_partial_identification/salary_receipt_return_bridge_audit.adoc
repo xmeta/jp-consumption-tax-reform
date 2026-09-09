@@ -252,7 +252,7 @@ positive-self-assessed-balance returns with salary receipts >20m
 A second complete-survey map is now also observed:
 
 ----
-filed/processed final-return population
+filed-or-processed administrative population
   -> has employment income
        -> Main
        -> Secondary
