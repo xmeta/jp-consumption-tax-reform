@@ -1,0 +1,14 @@
+epsilon,Delta=0 status,Delta=0 taxable-weighted MTR envelope,Delta=0 liability-weighted MTR envelope,"Delta=0.25,...,5 status","Delta=0.25,...,5 taxable-weighted MTR envelope","Delta=0.25,...,5 liability-weighted MTR envelope"
+0,infeasible,,,"infeasible at all Delta=0.25,...,5",,
+0.025,infeasible,,,"infeasible at all Delta=0.25,...,5",,
+0.05,infeasible,,,"infeasible at all Delta=0.25,...,5",,
+0.075,infeasible,,,"infeasible at all Delta=0.25,...,5",,
+0.1,infeasible,,,"feasible; identical across Delta=0.25,...,5",10.5552–11.7415%,11.4432–12.6219%
+0.125,infeasible,,,"feasible; identical across Delta=0.25,...,5",10.2692–12.4416%,11.1166–13.3885%
+0.15,feasible,10.3275–12.0030%,11.1856–12.9793%,"feasible; identical across Delta=0.25,...,5",10.1926–12.6900%,11.0134–13.5840%
+0.175,feasible,10.2123–12.5381%,11.0476–13.5078%,"feasible; identical across Delta=0.25,...,5",10.1591–12.8029%,10.9683–13.7070%
+0.2,feasible,10.1812–12.6428%,11.0044–13.5962%,"feasible; identical across Delta=0.25,...,5",10.1306–12.8434%,10.9311–13.7566%
+0.225,feasible,10.1517–12.7337%,10.9685–13.6705%,"feasible; identical across Delta=0.25,...,5",10.1049–12.8674%,10.9051–13.7776%
+0.25,feasible,10.1291–12.8246%,10.9392–13.7448%,"feasible; identical across Delta=0.25,...,5",10.0907–12.8680%,10.8848–13.7776%
+0.275,feasible,10.1157–12.8605%,10.9175–13.7741%,"feasible; identical across Delta=0.25,...,5",10.0891–12.8680%,10.8820–13.7776%
+0.3,feasible,10.1045–12.8656%,10.9019–13.7769%,"feasible; identical across Delta=0.25,...,5",10.0884–12.8680%,10.8806–13.7776%

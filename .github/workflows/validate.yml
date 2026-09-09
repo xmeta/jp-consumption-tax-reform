@@ -46,6 +46,8 @@ jobs:
           python research/income_tax_partial_identification/test_rank_bridge_lp_v2.py
           python research/income_tax_partial_identification/run_rank_bridge_lp_v3.py
           python research/income_tax_partial_identification/test_rank_bridge_lp_v3.py
+          python research/income_tax_partial_identification/run_rank_epsilon_surface_v4.py
+          python research/income_tax_partial_identification/test_rank_epsilon_surface_v4.py
           python scripts/build_derived_catalog.py
           python scripts/build_input_provenance.py
           python scripts/build_stage1_inputs.py
@@ -72,6 +74,7 @@ jobs:
           python paper1/scripts/generate_transport_lp_table.py --check
           python paper1/scripts/generate_rank_bridge_v2_table.py --check
           python paper1/scripts/generate_rank_bridge_v3_table.py --check
+          python paper1/scripts/generate_rank_epsilon_v4_table.py --check
           python paper1/scripts/validate_claim_registry.py
 
       - name: Validate repository integrity

@@ -1,0 +1,37 @@
+key,value,unit,note
+spec_version,rank_epsilon_surface_v4,,pre-specified before any v4 numerical result
+base_model,rank_bridge_lp_v3,,reuse v3 scientific constraints without modification
+input_pseudofiler_scenarios,all_13_committed_pseudofiler_scenarios,,no post-result selection
+input_nta_artifact,nta_income_class_primary_type_filing_status_2024.csv,,same 25-class NTA input as v2/v3
+nta_income_class_count,25,,ordered ascending by total net income etc.
+bridge_scheme,rank_transport_budget_fixed_epsilon_surface,,fixed delta and epsilon rather than minimizing epsilon
+rank_bin_mass,0.1,population share,ten equal bins on each margin
+within_class_positive_allocation,free_within_overlap_capacity,,same grouped-data uncertainty as v2/v3
+transport_positive_allocation,free_within_transport_capacity,,same z_dq bounded by T_dq as v3
+rank_cost,absolute_decile_index_distance,,cost |d-q|
+delta_grid,0;0.25;0.5;1;2;3;4;5,average decile-index displacement,reused unchanged from committed v3 grid
+epsilon_grid,0;0.025;0.05;0.075;0.10;0.125;0.15;0.175;0.20;0.225;0.25;0.275;0.30,absolute rate,reused unchanged from committed v2 fixed grid
+surface_point_count,104,,8 delta values x 13 epsilon values
+feasibility_rule,report_all_surface_points,,no post-result omission
+endpoint_rule,all_84_objectives_for_each_feasible_point,,80 decile plus 4 overall endpoints
+endpoint_metrics,taxable_income_weighted_mean_MTR;income_tax_liability_weighted_mean_MTR;pseudo_filer_positive_tax_share;transported_nta_positive_liability_rate,,same metric family as v3
+summary_metrics,overall_taxable_MTR_min_max_width;overall_liability_MTR_min_max_width,,all 104 points with blanks if infeasible
+overall_weight_scheme,equal_decile,,0.1 per F rank decile
+v2_delta_zero_regression,required,,fixed-epsilon feasibility and all applicable endpoints
+v3_frontier_boundary_regression,required,,strict below/above epsilon_star checks
+set_nesting_checks,feasibility;min_endpoint;max_endpoint;width,,along both epsilon and delta axes
+public_diagnostics_role,interpretation_only_no_hard_crosswalk,,tables 7-141-1 and 7-171 remain nonbinding
+solver,scipy.optimize.linprog,,pinned dependency
+solver_method,highs-ds,,primary solver
+solver_crosscheck_method,highs-ipm,,all 104 feasibility classifications
+equality_residual_tolerance,1e-8,absolute,post-solve rejection threshold
+inequality_residual_tolerance,1e-8,absolute,post-solve rejection threshold
+endpoint_comparison_tolerance,1e-8,absolute,nesting and v2 regression
+objective_recompute_tolerance,1e-9,absolute,recompute objective from decision vector
+numpy_version,2.5.3,,pinned
+scipy_version,1.18.1,,pinned
+historical_v6_restricted_lp_reproduced,false,,must remain false
+p1c13_v1_modified,false,,must remain false
+p1c14_v2_modified,false,,must remain false
+p1c15_v3_modified,false,,must remain false
+paper1_claim_before_ci,false,,promotion prohibited before implementation CI success

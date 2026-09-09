@@ -27,9 +27,15 @@ pre-specified specifications.  In particular, the v3 rank-transport tests
 verify exact nesting of v2 at stem:[Delta=0], all transport and grouped-data
 mass constraints, the independent unrestricted analytical discrepancy floor,
 infeasibility of the zero-discrepancy problem under two HiGHS algorithms, and
-deterministic regeneration of the full fixed-grid frontier.  These are
-computational validation checks; they do not convert the bridge assumptions
-into observed identification.
+deterministic regeneration of the full fixed-grid frontier.
+
+The separately pre-specified v4 tests then evaluate all 104 inherited
+stem:[(Delta,epsilon)] grid points, require HiGHS-DS and HiGHS-IPM to agree on
+every feasibility classification, reproduce the committed v2 fixed-epsilon
+surface exactly at stem:[Delta=0], check the committed v3 minimum-discrepancy
+boundary, and verify feasible-set and endpoint nesting when either budget is
+relaxed.  These are computational validation checks; they do not convert the
+bridge or budget assumptions into observed identification.
 
 The repository also checks a SHA-256 manifest and a scientific-state validator.
 
