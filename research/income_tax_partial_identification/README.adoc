@@ -457,6 +457,37 @@ positive rate, v5 `eta`, or a cross-source union count.
 Current payroll-diagnostic status:
 `EXTERNAL_PAYROLL_TAX_DIAGNOSTIC_NO_CROSS_SOURCE_UNION`.
 
+== Private-salary to final-return overlap audit
+
+`salary_return_overlap_audit.adoc` extends the wage-side diagnostic with
+Private Salary Survey Table 19 and the full Table 2-2(1) salary-primary
+final-return population.
+
+Table 19 exactly decomposes the published no-year-end-adjustment payroll
+population by secondary-payroll (`乙欄`), previous-employer-salary-unknown,
+and other reasons, subject only to the documented publication-rounding
+residuals.  For full-year taxpayers it reports 3,729,740 no-year-end-adjustment
+records: 1,700,196 secondary-payroll, zero previous-employer-unknown, and
+2,029,544 other-reason records.
+
+Its high-salary panel reports 320,983 full-year salary earners with salary
+receipts above 20 million yen.  The 2024 NTA filing guidance makes that a
+statutory filing-relevant group, but the public aggregate tables do not observe
+the corresponding person-level final-return match.
+
+On the return side, the 25 salary-primary Table 2-2(1) classes sum to
+11,423,587 cases: 2,385,726 positive self-assessed balance, 7,697,018 refund,
+and 1,340,843 residual.  Within the positive-balance salary-primary target,
+2,161,129 have some source withholding and 2,114,353 have salary-source
+withholding.
+
+The audit therefore sharpens the administrative transition map without
+identifying the cross-source person overlap.  Neither
+35,556,416 + 5,158,260 nor 35,556,416 + 11,423,587 is a valid union.
+
+Current overlap-audit status:
+`OFFICIAL_OVERLAP_AUDIT_EXACT_PERSON_MATCH_NOT_IDENTIFIED`.
+
 == Reproduction
 
 [source,shell]

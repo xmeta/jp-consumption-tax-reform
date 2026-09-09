@@ -1,0 +1,243 @@
+= Private-salary to final-return overlap audit
+:toc:
+:stem: latexmath
+
+== Status
+
+----
+OFFICIAL_OVERLAP_AUDIT_EXACT_PERSON_MATCH_NOT_IDENTIFIED
+----
+
+This audit follows the Table 16 private-salary taxpayer-status diagnostic and
+asks how far public 2024 NTA tables can connect private-sector payroll records
+to final income-tax returns.
+
+The result is stronger than an unqualified "overlap unknown": Table 19
+decomposes the no-year-end-adjustment payroll population and isolates a
+statutory filing-relevant high-salary group. It still does not observe a
+person-level cross-source match.
+
+No v1-v5 endpoint or Paper 1 claim is changed.
+
+== Official sources
+
+The repository retains and SHA-256 registers:
+
+* +NTA-MINKAN-2024-T16+: Private Salary Survey Table 16;
+* +NTA-MINKAN-2024-T19+: Private Salary Survey Table 19;
+* +NTA-2024-SALARY-FILING-REQUIREMENT+: 2024 salary-earner final-return guidance;
+* +NTA-R06+: FY2024 NTA Annual Statistics Report, including Table 2-2(1);
+* +NTA-2024-SHINKOKU-T1-XLSX+ and +NTA-2024-SHINKOKU-T5-XLSX+:
+  positive-self-assessed-balance tax-flow tables.
+Table 19 is headed as the table for salary earners for whom year-end
+adjustment was not performed. For full-year and less-than-year employees it
+splits persons, salary and tax into:
+
+* secondary payroll / +乙欄適用+;
+* previous-employer salary unknown;
+* other reasons;
+* total.
+
+Its third panel separately reports full-year salary earners with salary
+receipts above 20 million yen.
+
+== Table 16 to Table 19 reconciliation
+
+Table 19 reproduces the Table 16 no-year-end-adjustment population rather than
+introducing a different payroll denominator.
+
+For full-year taxpayers, the published Table 19 total is:
+
+[cols="3,1",options="header"]
+|===
+| Reason | Persons
+| secondary payroll (+乙欄+) | 1,700,196
+| previous-employer salary unknown | 0
+| other | 2,029,544
+| total | 3,729,740
+|===
+
+For less-than-year taxpayers:
+
+[cols="3,1",options="header"]
+|===
+| Reason | Persons
+| secondary payroll (+乙欄+) | 2,033,896
+| previous-employer salary unknown | 102,891
+| other | 717,393
+| total | 2,854,180
+|===
+The total taxpayer and non-taxpayer rows reconcile to the corresponding
+Table 16 all-payroll panels. Removing the +乙欄+ component reproduces the
+Table 16 +乙欄+-excluded person totals.
+
+The only cross-table amount difference encountered in that reconciliation is
+one million yen for the less-than-year +乙欄+-excluded tax amount:
+Table 19 component arithmetic gives 85,888 million yen while Table 16 prints
+85,887 million yen. This is retained as an observed publication-rounding
+residual, not silently forced to equality.
+
+At salary-class level, displayed integer estimates can also differ from their
+printed totals by one person. The largest observed salary-amount class-sum
+residual is three million yen. The executable audit fixes these observed
+limits and fails beyond them.
+
+== Salary receipts above 20 million yen
+
+Table 19 panel 3 gives, for full-year salary earners:
+
+[cols="2,1,1,1",options="header"]
+|===
+| Salary-receipt class | Persons | Salary, million yen | Tax, million yen
+| over 20m through 25m yen | 146,596 | 3,262,446 | 675,228
+| over 25m yen | 174,387 | 7,140,878 | 2,183,156
+| total over 20m yen | 320,983 | 10,403,325 | 2,858,384
+|===
+
+All 320,983 records appear in the Table 19 +other+ reason rather than the
++乙欄+ or previous-employer-unknown columns.
+
+The 2024 NTA salary-earner filing guidance states that annual salary receipts
+above 20 million yen are, in principle, a final-return filing condition. The
+same guidance retains exceptions/caveats including cases in which filing is
+for a refund.
+Therefore the 320,983 count is classified as:
+
+----
+LEGAL_FILING_CANDIDATE_NOT_OBSERVED_MATCH
+----
+
+It is not classified as an observed final-return count or as a strict lower
+bound on positive final tax. Public aggregate tables do not establish which
+of these payroll-survey records actually appear in the final-return table,
+whether a particular return is refund or payment, or whether all filing
+requirements were complied with.
+
+== Final-return salary-primary population
+
+The relevant return-side population is broader than the 2,385,726
+salary-primary persons with positive self-assessed balance.
+
+Summing the 25 Table 2-2(1) income classes for primary income type +salary+
+gives:
+
+[cols="3,1",options="header"]
+|===
+| Filing status | Persons
+| all salary-primary Table 2-2(1) cases | 11,423,587
+| positive self-assessed balance | 2,385,726
+| refund | 7,697,018
+| neither positive balance nor refund residual | 1,340,843
+|===
+
+The three filing-status components sum exactly to 11,423,587.
+
+Within the positive-self-assessed-balance salary-primary subset, the NTA
+sample-survey tax-flow tables report:
+
+* 2,161,129 persons with some source withholding;
+* 2,114,353 persons with salary-source withholding.
+These are observed within the positive-balance return target. They establish
+a large payroll/return interface but do not reveal whether the withholding
+came from a private-sector payroll unit represented in the Private Salary
+Survey.
+
+== Why the exact overlap remains unidentified
+
+The public sources do not provide a common person identifier or a published
+cross-tab between the Private Salary Survey and final-return statistics.
+
+In particular:
+
+* the Private Salary Survey is private-sector payroll-side evidence;
+* Table 2-2(1) does not preserve a private-versus-public employer identity;
+* +乙欄+ records can represent additional payroll records for one person;
+* Table 19 salary classes use salary receipts, whereas Table 2-2(1) income
+  classes use total net income, so matching brackets numerically would be a
+  category error;
+* filing status can be positive balance, refund, or the residual status;
+* the >20m statutory condition is a legal bridge, not an observed
+  administrative linkage.
+
+Consequently:
+
+----
+private_salary_to_final_return_person_overlap = NOT_IDENTIFIED
+----
+
+and the identification status is:
+
+----
+DO_NOT_SUM_OR_INFER_EXACT_OVERLAP
+----
+The earlier invalid addition
+
+[stem]
+++++
+35{,}556{,}416 + 5{,}158{,}260 = 40{,}714{,}676
+++++
+
+remains prohibited. The broader but equally invalid addition
+
+[stem]
+++++
+35{,}556{,}416 + 11{,}423{,}587 = 46{,}980{,}003
+++++
+
+is now also guarded by machine tests.
+
+Neither number is a cross-source union.
+
+== Identification consequence
+
+Table 19 materially improves the administrative transition map:
+
+----
+private payroll
+  -> year-end adjusted / not year-end adjusted
+  -> reason for no year-end adjustment
+  -> high-salary statutory filing candidate
+----
+
+and Table 2-2(1) separately improves the return-side map:
+
+----
+salary-primary final-return population
+  -> positive balance / refund / residual
+  -> withholding exposure within positive-balance cases
+----
+
+What remains missing is the edge connecting those two maps at person level.
+
+Accordingly this audit does not calibrate the pseudo calculated-tax-positive
+rate, v5 +eta+, or any payroll-plus-return union.
+== Reproduction
+
+[source,shell]
+----
+python scripts/build_source_catalog.py
+python scripts/extract_nta_private_salary_taxpayer_status.py
+python scripts/test_nta_private_salary_taxpayer_status.py
+python scripts/extract_nta_annual_income_class_filing_status.py
+python scripts/test_nta_annual_income_class_filing_status.py
+python scripts/extract_nta_positive_balance_tax_flow.py
+python scripts/test_nta_positive_balance_tax_flow.py
+python scripts/extract_nta_salary_return_overlap.py
+python scripts/test_nta_salary_return_overlap.py
+python scripts/build_derived_catalog.py
+----
+
+Current reproduced anchors:
+
+----
+Table 19 class rows = 84
+full-year no-year-end-adjustment taxpayers = 3,729,740
+full-year secondary-payroll taxpayers = 1,700,196
+full-year salary receipts >20m = 320,983
+salary-primary final-return population = 11,423,587
+salary-primary positive self-assessed balance = 2,385,726
+salary-primary refunds = 7,697,018
+positive-balance salary-primary with any withholding = 2,161,129
+positive-balance salary-primary with salary withholding = 2,114,353
+exact private-salary/final-return person overlap = NOT_IDENTIFIED
+----
