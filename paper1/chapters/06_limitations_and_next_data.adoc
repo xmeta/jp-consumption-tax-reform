@@ -40,8 +40,13 @@ The highest-value additional data would be:
 . anonymized filer microdata or sufficiently detailed tabulations linking
   taxable-income components, deductions, filing status, and tax liability;
 . a direct or statistically linkable crosswalk between F71561-style
-  equivalized household-income rank and NTA total-net-income rank, so the
-  same-rank correspondence used by P1-C14 need not be imposed as an assumption;
+  equivalized disposable-income rank and NTA total-net-income rank, so the
+  model-contingent rank assumptions used by P1-C14 and P1-C15 can be replaced
+  by evidence;
+. directly comparable person/tax-unit tabulations linking rank, filing or
+  processing status, and positive income-tax liability, so the remaining
+  cross-system positive-rate gap can be decomposed rather than absorbed by a
+  common relaxation parameter;
 . public cross-tabs connecting household income deciles to tax-unit
   characteristics without synthetic assignment;
 . repeated-year equivalents permitting validation of stability and transport.
@@ -52,11 +57,23 @@ both pre-specified v1 decile-weight schemes.  The subsequently reproduced NTA
 richer NTA-side income-rank information; under the separately pre-specified
 same-rank bridge, its minimum common relaxation is 14.9016 percentage points.
 
-The smaller v2 relaxation does not identify the source of the remaining
-discrepancy and does not validate the same-rank bridge.  The highest-value next
-data would directly connect, or defensibly statistically bridge, the two income
-rank concepts themselves: F71561 equivalized disposable income and NTA total net
-income etc.
+P1-C15 then weakens exact same-rank matching with a separately pre-specified
+rank-displacement budget.  At the first positive grid point,
+stem:[Delta=0.25], the minimum discrepancy falls to 8.6825 percentage points
+and remains there through unrestricted stem:[Delta=5].  The same 8.6825-point
+floor is reproduced independently from the NTA aggregate positive-liability
+rate and the lower envelope of the fixed pseudo-filer scenario set, with
+nonnegative transported decile rates imposed.  Zero discrepancy remains
+infeasible even with unrestricted rank coupling.
+
+This changes the data priority.  Better rank linkage is still valuable, but
+rank linkage alone cannot remove the residual discrepancy in the v3
+specification.  Higher-value evidence now also includes directly comparable
+person/tax-unit denominators and positive-liability selection by income rank,
+plus microdata or sufficiently detailed tabulations that can validate or
+replace the pseudo-filer positive-tax-share calibration.  The v3 residual is a
+model-contingent incompatibility diagnostic, not evidence that either
+statistical source is incorrect.
 
 === Scope of policy conclusions
 

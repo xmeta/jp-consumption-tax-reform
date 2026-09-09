@@ -1,0 +1,9 @@
+Rank-displacement budget Delta (decile units),Equivalent average percentile-rank displacement cap,Minimum common discrepancy epsilon3*(Delta),Reduction from Delta=0,Minimum discrepancy equals unrestricted nonnegative-rate floor
+0,0.0 pp,14.9016 pp,0.0000 pp,No
+0.25,2.5 pp,8.6825 pp,6.2191 pp,Yes
+0.5,5.0 pp,8.6825 pp,6.2191 pp,Yes
+1,10.0 pp,8.6825 pp,6.2191 pp,Yes
+2,20.0 pp,8.6825 pp,6.2191 pp,Yes
+3,30.0 pp,8.6825 pp,6.2191 pp,Yes
+4,40.0 pp,8.6825 pp,6.2191 pp,Yes
+5,50.0 pp,8.6825 pp,6.2191 pp,Yes

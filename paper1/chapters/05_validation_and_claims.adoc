@@ -22,6 +22,15 @@ The latter has a maximum absolute category-composition difference of
 
 These two diagnostics do not identify the missing F71561-to-filer mapping.
 
+The model-contingent transport analyses are also reproduced from their
+pre-specified specifications.  In particular, the v3 rank-transport tests
+verify exact nesting of v2 at stem:[Delta=0], all transport and grouped-data
+mass constraints, the independent unrestricted analytical discrepancy floor,
+infeasibility of the zero-discrepancy problem under two HiGHS algorithms, and
+deterministic regeneration of the full fixed-grid frontier.  These are
+computational validation checks; they do not convert the bridge assumptions
+into observed identification.
+
 The repository also checks a SHA-256 manifest and a scientific-state validator.
 
 === Restricted-LP recovery status

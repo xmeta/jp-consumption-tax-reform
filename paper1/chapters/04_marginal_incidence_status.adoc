@@ -171,6 +171,80 @@ In particular, v2 does not establish:
 P1-C13 remains unchanged, P1-C06 remains unreproduced, and v2 is tracked
 separately as P1-C14.
 
+=== Pre-specified rank-transport-budget v3 frontier
+
+P1-C14 still imposes exact correspondence between the two *rank bins*, even
+though the underlying populations and income concepts differ.  We therefore
+pre-specified a third model before computing its numerical results.  v3
+preserves the v2 NTA grouped-income uncertainty but replaces exact same-rank
+matching by a population coupling stem:[T_{dq}] between F71561 decile
+stem:[d] and NTA rank decile stem:[q].
+
+Both margins of stem:[T] equal 0.1.  Positive-liability transport is represented
+by a separate mass stem:[z_{dq}le T_{dq}], so the model remains a linear
+program while preserving each NTA rank bin's positive-liability margin.  The
+average absolute decile-index displacement is constrained by
+
+[stem]
+++++
+W(T)=sum_{d=1}^{10}sum_{q=1}^{10}|d-q|T_{dq}leDelta.
+++++
+
+The complete stem:[Delta] grid was fixed before results at
+stem:[0,0.25,0.5,1,2,3,4,5].  Because one decile-index unit corresponds to ten
+percentile-rank points in this discretization, stem:[Delta=0.25] permits at
+most 2.5 percentile-rank points of *average absolute displacement*.  It is a
+sensitivity budget, not an estimate of the true cross-system rank error.
+stem:[Delta=5] is the unrestricted-coupling endpoint for two equal ten-bin
+margins.
+
+The resulting discrepancy frontier is generated directly from the committed
+research output:
+
+.Rank-transport v3 minimum-discrepancy frontier
+[%header,format=csv]
+|===
+include::{docdir}/data/rank_bridge_v3_frontier_table.csv[]
+|===
+
+At stem:[Delta=0], v3 reproduces v2 exactly:
+stem:[arepsilon_3^*=14.9016] percentage points, including all 84
+minimum-relaxation endpoint objectives in the executable regression test.  At
+the first positive pre-specified budget, stem:[Delta=0.25], the minimum common
+discrepancy falls to 8.6825 percentage points, a 6.2191-percentage-point
+reduction relative to exact same-rank matching.  It remains 8.6825 percentage
+points for every larger pre-specified budget through the unrestricted
+stem:[Delta=5] endpoint.
+
+This plateau can be reproduced without solving the full rank-transport LP.
+Across the fixed thirteen pseudo-filer scenarios, the equal-decile average of
+the decile-specific *minimum* pseudo-filer positive-tax shares is 30.7486%.
+The NTA Table 2-2(1) aggregate positive-liability rate is 22.0795%.  Their
+simple average-rate gap is 8.6691 percentage points.  Requiring transported
+NTA decile rates to remain nonnegative raises the unrestricted common
+discrepancy floor slightly to 8.6825 percentage points; the independent
+water-filling calculation in
+`rank_bridge_lp_v3_analytical_rate_floor.csv` exactly matches the LP
+frontier.  The separately pre-specified stem:[arepsilon=0] problem remains
+infeasible even when rank coupling is unrestricted.
+
+These results narrow the interpretation of the v2 discrepancy.  Allowing a
+small amount of rank transport removes much of the additional incompatibility
+created by exact same-rank matching, but arbitrary rank transport cannot remove
+the residual aggregate-rate incompatibility *within the fixed v3 model and
+pseudo-filer scenario set*.  This does not establish that either public source
+is erroneous, nor does it identify a true cross-system rank map.
+
+The raw v3 research artifacts also contain MTR endpoints evaluated exactly on
+the minimum-discrepancy frontier.  For positive stem:[Delta] those endpoints
+can numerically collapse because minimizing stem:[arepsilon] forces the
+pseudo-filer mixture to an extreme lower-positive-tax boundary.  Such collapse
+is an optimization-boundary property, not point identification.  P1-C15
+therefore promotes the discrepancy frontier and its analytical floor, not a
+point-valued filer MTR.
+
+P1-C13 and P1-C14 remain unchanged, and P1-C06 remains unreproduced.
+
 === Static liability versus behavioral incidence
 
 Observed F71561 income-tax liability moments can support static,
