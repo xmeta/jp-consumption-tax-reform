@@ -14,7 +14,7 @@ epsilon_grid,0;0.025;0.05;0.075;0.10;0.125;0.15;0.175;0.20;0.225;0.25;0.275;0.30
 surface_point_count,104,,8 delta values x 13 epsilon values
 feasibility_rule,report_all_surface_points,,no post-result omission
 endpoint_rule,all_84_objectives_for_each_feasible_point,,80 decile plus 4 overall endpoints
-endpoint_metrics,taxable_income_weighted_mean_MTR;income_tax_liability_weighted_mean_MTR;pseudo_filer_positive_tax_share;transported_nta_positive_liability_rate,,same metric family as v3
+endpoint_metrics,taxable_income_weighted_mean_MTR;income_tax_liability_weighted_mean_MTR;pseudo_positive_modeled_annual_income_tax_share;transported_nta_positive_self_assessed_balance_rate,,same metric family as v3
 summary_metrics,overall_taxable_MTR_min_max_width;overall_liability_MTR_min_max_width,,all 104 points with blanks if infeasible
 overall_weight_scheme,equal_decile,,0.1 per F rank decile
 v2_delta_zero_regression,required,,fixed-epsilon feasibility and all applicable endpoints

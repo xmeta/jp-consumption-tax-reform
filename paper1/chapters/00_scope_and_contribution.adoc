@@ -27,7 +27,7 @@ report three model-contingent transport diagnostics and a fourth fixed-budget
 sensitivity surface.  The first uses aggregate NTA primary-income-type
 composition.  The second uses the stronger 25-class NTA income-rank
 information with an exact same-rank bridge while leaving within-class
-positive-liability allocation unrestricted at rank boundaries.  The third
+positive-self-assessed-balance allocation unrestricted at rank boundaries.  The third
 weakens exact same-rank correspondence to a pre-specified rank-displacement
 budget and reports the resulting minimum-discrepancy frontier.  The fourth
 reuses the already committed rank-displacement and discrepancy grids and

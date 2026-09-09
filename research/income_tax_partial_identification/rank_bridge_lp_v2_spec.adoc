@@ -22,6 +22,17 @@ manifest regeneration, and successful CI.
 The historical V6 P1-C06 restricted-LP claim remains
 `DOCUMENTED_PRIOR_RUN_NOT_REPRODUCED`.
 
+[NOTE]
+====
+Post-specification semantic clarification: the NTA positive event in this model
+is `申告納税額>0`, a positive self-assessed return balance after tax credits and
+source withholding.  The pseudo event is modeled annual income tax greater than
+zero.  `epsilon` therefore bridges different tax events and populations; it is
+not measurement error for one common positive-tax event.  This clarification
+changes no v2 equation, grid, solver setting, or numerical result.  The original
+pre-specification remains preserved in Git history.
+====
+
 == Why v2 exists
 
 v1 transported only five aggregate NTA primary-income categories across
@@ -39,11 +50,11 @@ It contains FY2024 Table 2-2(1) administrative counts for 25 ordered total-net-
 income classes x five primary income-earner categories, including:
 
 * Table 2-2(1) population count;
-* positive-liability count;
+* positive-self-assessed-balance count;
 * refund count;
 * residual count.
 
-The 125 positive-liability cells cross-check exactly against the independently
+The 125 positive-self-assessed-balance cells cross-check exactly against the independently
 extracted NTA Sample Survey Table 2 cells.
 
 v2 uses the *income-rank information* in this table.  It does not equate NTA
@@ -91,7 +102,7 @@ stem:[j=1,\ldots,25].
 For class stem:[j]:
 
 * stem:[A_j] = Table 2-2(1) population count;
-* stem:[P_j] = positive-liability count.
+* stem:[P_j] = positive-self-assessed-balance count.
 
 Let
 
@@ -133,9 +144,9 @@ counts.
 
 It does not assume a uniform income density inside any class.
 
-== Within-class positive-liability uncertainty
+== Within-class positive-self-assessed-balance uncertainty
 
-The exact identities/ranks of positive-liability persons within an NTA income
+The exact identities/ranks of positive-self-assessed-balance persons within an NTA income
 class are not observed.
 
 For every class-decile overlap introduce
@@ -145,7 +156,7 @@ For every class-decile overlap introduce
 y_{jd}\ge0,
 ++++
 
-the positive-liability population mass from class stem:[j] assigned to rank
+the positive-self-assessed-balance population mass from class stem:[j] assigned to rank
 decile stem:[d].
 
 The grouped-data constraints are
@@ -168,7 +179,7 @@ published class total and overlap capacities.
 
 No proportional-within-class allocation assumption is imposed.
 
-The implied NTA positive-liability rate in rank decile stem:[d] is
+The implied NTA positive-self-assessed-balance rate in rank decile stem:[d] is
 
 [stem]
 ++++
@@ -189,7 +200,7 @@ are used without post-result selection.
 
 For F71561 decile stem:[d] and scenario stem:[s]:
 
-* stem:[u_{ds}] = pseudo-filer positive-tax share;
+* stem:[u_{ds}] = pseudo modeled-annual-income-tax-positive share;
 * stem:[m^T_{ds}] = taxable-income-weighted mean MTR;
 * stem:[m^L_{ds}] = liability-weighted mean MTR.
 
@@ -202,7 +213,7 @@ Introduce scenario-mixture weights
 \sum_s\lambda_{ds}=1.
 ++++
 
-The implied pseudo-filer positive-tax rate is
+The implied pseudo modeled-annual-income-tax-positive rate is
 
 [stem]
 ++++
@@ -291,8 +302,8 @@ At each feasible relaxation value, report minimum and maximum for:
   stem:[\theta_d^T=\sum_s\lambda_{ds}m^T_{ds}];
 . each decile's liability-weighted MTR
   stem:[\theta_d^L=\sum_s\lambda_{ds}m^L_{ds}];
-. each decile's pseudo-filer positive-tax rate stem:[r_d^{PF}];
-. each decile's NTA rank-decile positive-liability rate stem:[r_d^{NTA}];
+. each decile's pseudo modeled-annual-income-tax-positive rate stem:[r_d^{PF}];
+. each decile's NTA rank-decile positive-self-assessed-balance rate stem:[r_d^{NTA}];
 . equal-decile overall taxable-income-weighted MTR
   stem:[10^{-1}\sum_d\theta_d^T];
 . equal-decile overall liability-weighted MTR
@@ -327,7 +338,7 @@ The implementation must use the already pinned research solver environment:
 Post-solve checks must verify:
 
 * scenario-mixture sums;
-* per-class positive-liability mass conservation;
+* per-class positive-self-assessed-balance mass conservation;
 * class-decile overlap capacities;
 * all ten rank-decile population masses equal 0.1;
 * all rank-bridge inequalities;
@@ -348,7 +359,7 @@ Allowed language after successful implementation/CI:
 
 * rank-bridge transport-relaxation sensitivity;
 * grouped-data-compatible NTA rank-decile stage-2 envelope;
-* minimum common discrepancy under same-rank correspondence;
+* minimum common cross-concept discrepancy under same-rank correspondence;
 * model-contingent conditional MTR envelope.
 
 Prohibited language:

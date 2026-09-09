@@ -74,8 +74,9 @@ Separately, the repository pre-specified a new transport-relaxation LP before
 computing its endpoints.  The model uses all thirteen committed pseudo-filer
 scenarios and the five exact NTA primary-income-type stage-2 rates.  It imposes
 the published NTA primary-type composition while allowing a common absolute
-discrepancy `epsilon` between each decile's pseudo-filer
-positive-tax share and its transported NTA stage-2 rate.
+cross-concept discrepancy `epsilon` between each decile's pseudo share with
+modeled annual income tax greater than zero and its transported NTA share with
+positive self-assessed balance (`申告納税額>0`).
 
 Two decile-weight schemes were fixed before endpoint computation: equal decile
 weights and normalized F71561 leaf-household counts.  The minimum feasible
@@ -88,19 +89,21 @@ directly from the research outputs:
 include::{docdir}/data/transport_lp_summary_table.csv[]
 |===
 
-The required minimum common discrepancy is therefore large under both
-pre-specified weight schemes: approximately 24.19 percentage points under
+The required minimum common cross-concept discrepancy is therefore large under
+both pre-specified weight schemes: approximately 24.19 percentage points under
 equal-decile weights and 22.20 percentage points under F71561 leaf-count
 weights.  Exact equality at stem:[\varepsilon=0] is infeasible in this model.
 
 This gap is not a standard error or an estimate of measurement error.  It
-quantifies incompatibility between two aggregate constructions *under the
-stated transport model*: pseudo-filer positive-tax shares are constructed from
-household aggregates, whereas the NTA stage-2 rates are observed in the Table 2-2(1) population:
-persons who filed or whose income-tax cases were processed by correction,
-determination, or related procedures under the table's stated cutoff, grouped
-into five primary income categories.  This Table 2-2(1) denominator is not
-identical to the separate stage-1 final-return benchmark population.
+quantifies compatibility between *different tax events* under the stated
+transport model.  On the pseudo side, the event is modeled annual income tax
+greater than zero.  On the NTA side, `申告納税額>0` means that a positive
+self-assessed balance remains after tax credits and tax already paid through
+source withholding.  The available aggregate data do not identify the
+withholding/credit bridge between these events.  The Table 2-2(1) population
+also differs from the household source and the separate stage-1 final-return
+benchmark.  `epsilon` therefore absorbs cross-concept, cross-population, and
+model differences together.
 
 The MTR ranges in the table are conditional envelopes at
 stem:[\varepsilon^*].  They are reproducible consequences of the
@@ -121,7 +124,7 @@ separately as P1-C13, a model-contingent sensitivity claim.
 After v1 was completed, the repository reproduced a stronger NTA object from
 Annual Statistics Table 2-2(1): exact administrative counts for 25 ordered
 total-net-income classes by primary income type and filing-status category.
-The 125 positive-liability cells also agree exactly with the independently
+The 125 positive-self-assessed-balance cells also agree exactly with the independently
 extracted NTA Sample Survey Table 2 cells.
 
 Before computing v2 endpoints, a second model was pre-specified.  It does not
@@ -131,7 +134,7 @@ F71561 decile stem:[d] corresponds to NTA rank decile stem:[d].
 
 When an NTA income class crosses a rank-decile boundary, the number of persons
 from that class entering each rank bin is fixed by the grouped population
-counts, but the positive-liability persons inside that class may be allocated
+counts, but the positive-self-assessed-balance persons inside that class may be allocated
 arbitrarily across the overlapping rank bins subject to the published class
 total.  Thus no proportional-within-class allocation assumption is imposed.
 
@@ -180,14 +183,14 @@ preserves the v2 NTA grouped-income uncertainty but replaces exact same-rank
 matching by a population coupling stem:[T_{dq}] between F71561 decile
 stem:[d] and NTA rank decile stem:[q].
 
-Both margins of stem:[T] equal 0.1.  Positive-liability transport is represented
+Both margins of stem:[T] equal 0.1.  Positive self-assessed balance transport is represented
 by a separate mass stem:[z_{dq}le T_{dq}], so the model remains a linear
-program while preserving each NTA rank bin's positive-liability margin.  The
+program while preserving each NTA rank bin's positive-self-assessed-balance margin.  The
 average absolute decile-index displacement is constrained by
 
 [stem]
 ++++
-W(T)=sum_{d=1}^{10}sum_{q=1}^{10}|d-q|T_{dq}leDelta.
+W(T)=\sum_{d=1}^{10}\sum_{q=1}^{10}|d-q|T_{dq}\le\Delta.
 ++++
 
 The complete stem:[Delta] grid was fixed before results at
@@ -218,8 +221,9 @@ stem:[Delta=5] endpoint.
 
 This plateau can be reproduced without solving the full rank-transport LP.
 Across the fixed thirteen pseudo-filer scenarios, the equal-decile average of
-the decile-specific *minimum* pseudo-filer positive-tax shares is 30.7486%.
-The NTA Table 2-2(1) aggregate positive-liability rate is 22.0795%.  Their
+the decile-specific *minimum* pseudo shares with modeled annual income tax
+greater than zero is 30.7486%.  The NTA Table 2-2(1) aggregate
+positive-self-assessed-balance rate is 22.0795%.  Their
 simple average-rate gap is 8.6691 percentage points.  Requiring transported
 NTA decile rates to remain nonnegative raises the unrestricted common
 discrepancy floor slightly to 8.6825 percentage points; the independent
@@ -231,14 +235,14 @@ infeasible even when rank coupling is unrestricted.
 These results narrow the interpretation of the v2 discrepancy.  Allowing a
 small amount of rank transport removes much of the additional incompatibility
 created by exact same-rank matching, but arbitrary rank transport cannot remove
-the residual aggregate-rate incompatibility *within the fixed v3 model and
-pseudo-filer scenario set*.  This does not establish that either public source
+the residual cross-concept aggregate-rate incompatibility *within the fixed v3
+model and pseudo-filer scenario set*.  This does not establish that either public source
 is erroneous, nor does it identify a true cross-system rank map.
 
 The raw v3 research artifacts also contain MTR endpoints evaluated exactly on
 the minimum-discrepancy frontier.  For positive stem:[Delta] those endpoints
 can numerically collapse because minimizing `epsilon` forces the
-pseudo-filer mixture to an extreme lower-positive-tax boundary.  Such collapse
+pseudo-filer mixture to an extreme lower-modeled-annual-tax-positive boundary.  Such collapse
 is an optimization-boundary property, not point identification.  P1-C15
 therefore promotes the discrepancy frontier and its analytical floor, not a
 point-valued filer MTR.
@@ -247,8 +251,8 @@ P1-C13 and P1-C14 remain unchanged, and P1-C06 remains unreproduced.
 
 === Fixed-budget rank-displacement x discrepancy surface v4
 
-The v3 minimum-discrepancy frontier answers how small the common positive-rate
-discrepancy can be for a given rank-displacement budget.  It does not by itself
+The v3 minimum-discrepancy frontier answers how small the common cross-concept
+rate discrepancy can be for a given rank-displacement budget.  It does not by itself
 show how the MTR envelope behaves at externally fixed discrepancy budgets.
 Because the v3 minimum `epsilon` objective can force the pseudo-filer
 mixture to an extreme scenario boundary, a numerically collapsed endpoint at
@@ -299,7 +303,7 @@ statement, not an estimate that `Delta=0.25` is the true rank mismatch or
 that `epsilon` is a measured error parameter.
 
 The saturation statement is also deliberately limited to the MTR objectives.
-Some decile-specific transported-NTA positive-liability-rate endpoints continue
+Some decile-specific transported-NTA positive-self-assessed-balance-rate endpoints continue
 to widen as stem:[Delta] increases.  v4 therefore does not imply that the
 entire transport solution is invariant once `Delta>=0.25`.
 

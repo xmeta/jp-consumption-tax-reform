@@ -7,7 +7,7 @@ The rounded thousand-person counts are transcribed from the official 2024
 final-return press release, Table 3-1, printed p.14 (PDF p.15).
 
 The press table explicitly notes that totals and components can disagree due to
-rounding.  Therefore the five displayed positive-liability category counts are
+rounding.  Therefore the five displayed positive-self-assessed-balance category counts are
 renormalized by their own displayed sum (5,174 thousand), not silently forced
 to the separately displayed grand total (5,175 thousand), when comparing
 composition across publications.
@@ -33,7 +33,7 @@ OUT_VALID = (
 )
 
 # Exact persons, NTA FY2024 Annual Statistics Report Table 2-2(1).
-# category, Table 2-2(1) population persons, positive-liability persons, refund persons,
+# category, Table 2-2(1) population persons, positive-self-assessed-balance persons, refund persons,
 # source printed page.
 ANNUAL = [
     ("business", 3_785_184, 1_174_065, 962_359, "61"),
@@ -44,7 +44,7 @@ ANNUAL = [
 ]
 
 # Displayed thousand-person values, NTA final-return press release Table 3-1.
-# category, final-return total, positive-liability, refund, zero/no-liability.
+# category, final-return total, positive-self-assessed-balance, refund, zero/no-liability.
 PRESS = [
     ("business", 3_789, 1_180, 963, 1_645),
     ("real_estate", 1_497, 806, 174, 516),
@@ -54,7 +54,7 @@ PRESS = [
 ]
 PRESS_GRAND = {
     "final_return_thousand": 23_389,
-    "positive_liability_thousand": 5_175,
+    "positive_self_assessed_balance_thousand": 5_175,
     "refund_thousand": 13_533,
     "zero_thousand": 4_681,
 }
@@ -108,15 +108,15 @@ def build():
             "primary_income_type_ja": LABELS[category],
             "table22_population_persons_exact": total,
             "final_return_persons_exact": total,
-            "positive_liability_persons_exact": positive,
+            "positive_self_assessed_balance_persons_exact": positive,
             "refund_persons_exact": refund,
             "zero_or_other_persons_exact_residual": residual,
-            "positive_liability_rate": f"{positive / total:.12g}",
-            "positive_liability_composition_exact":
+            "positive_self_assessed_balance_rate": f"{positive / total:.12g}",
+            "positive_self_assessed_balance_composition_exact":
                 f"{positive / exact_positive:.12g}",
             "annual_all_category_table22_population_persons_exact": exact_total,
             "annual_all_category_final_return_persons_exact": exact_total,
-            "annual_all_category_positive_liability_persons_exact":
+            "annual_all_category_positive_self_assessed_balance_persons_exact":
                 exact_positive,
             "annual_all_category_refund_persons_exact": exact_refund,
             "source_id": "NTA-R06",
@@ -130,7 +130,7 @@ def build():
             "legacy_field_note":
                 "final_return_persons_exact is retained for backward compatibility; canonical denominator is table22_population_persons_exact",
             "interpretation":
-                "external NTA primary-type stage-2 positive-liability diagnostic for the Table 2-2(1) population; not F71561 selection identification and not the stage-1 final-return numerator",
+                "external NTA primary-type stage-2 positive-self-assessed-balance diagnostic for the Table 2-2(1) population; not F71561 selection identification and not the stage-1 final-return numerator",
         })
 
         _, ptotal, ppositive, prefund, pzero = press_by[category]
@@ -138,20 +138,20 @@ def build():
             "primary_income_type": category,
             "primary_income_type_ja": LABELS[category],
             "final_return_thousand_displayed": ptotal,
-            "positive_liability_thousand_displayed": ppositive,
+            "positive_self_assessed_balance_thousand_displayed": ppositive,
             "refund_thousand_displayed": prefund,
             "zero_thousand_displayed": pzero,
-            "positive_composition_displayed_category_normalized":
+            "positive_self_assessed_balance_composition_displayed_category_normalized":
                 f"{ppositive / displayed_category_positive:.12g}",
-            "positive_composition_using_displayed_grand_total":
-                f"{ppositive / PRESS_GRAND['positive_liability_thousand']:.12g}",
-            "displayed_five_category_positive_sum_thousand":
+            "positive_self_assessed_balance_composition_using_displayed_grand_total":
+                f"{ppositive / PRESS_GRAND['positive_self_assessed_balance_thousand']:.12g}",
+            "displayed_five_category_positive_self_assessed_balance_sum_thousand":
                 displayed_category_positive,
-            "displayed_positive_grand_total_thousand":
-                PRESS_GRAND["positive_liability_thousand"],
+            "displayed_positive_self_assessed_balance_grand_total_thousand":
+                PRESS_GRAND["positive_self_assessed_balance_thousand"],
             "five_category_minus_grand_total_thousand":
                 displayed_category_positive
-                - PRESS_GRAND["positive_liability_thousand"],
+                - PRESS_GRAND["positive_self_assessed_balance_thousand"],
             "source_id": "NTA-2024-RETURN-PRESS-T31",
             "source_locator": "Table 3-1, printed p.14 / PDF p.15",
             "source_file": press_src["raw_file"],
@@ -166,10 +166,10 @@ def build():
         valid.append({
             "primary_income_type": category,
             "primary_income_type_ja": LABELS[category],
-            "annual_positive_persons_exact": positive,
-            "annual_positive_composition_exact": f"{exact_share:.12g}",
-            "table31_positive_thousand_displayed": ppositive,
-            "table31_positive_composition_five_category_normalized":
+            "annual_positive_self_assessed_balance_persons_exact": positive,
+            "annual_positive_self_assessed_balance_composition_exact": f"{exact_share:.12g}",
+            "table31_positive_self_assessed_balance_thousand_displayed": ppositive,
+            "table31_positive_self_assessed_balance_composition_five_category_normalized":
                 f"{displayed_share:.12g}",
             "difference_percentage_point_table31_minus_annual":
                 f"{diff_pp:.12g}",

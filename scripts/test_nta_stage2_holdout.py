@@ -35,16 +35,16 @@ assert all(
     r["final_return_persons_exact"] == r["table22_population_persons_exact"]
     for r in stage2
 )
-assert sum(int(r["positive_liability_persons_exact"]) for r in stage2) == 5_158_260
+assert sum(int(r["positive_self_assessed_balance_persons_exact"]) for r in stage2) == 5_158_260
 assert sum(int(r["refund_persons_exact"]) for r in stage2) == 13_527_496
 
 for r in stage2:
     total = int(r["table22_population_persons_exact"])
-    pos = int(r["positive_liability_persons_exact"])
+    pos = int(r["positive_self_assessed_balance_persons_exact"])
     refund = int(r["refund_persons_exact"])
     residual = int(r["zero_or_other_persons_exact_residual"])
     assert total == pos + refund + residual
-    rate = float(r["positive_liability_rate"])
+    rate = float(r["positive_self_assessed_balance_rate"])
     assert math.isclose(rate, pos / total, rel_tol=1e-11)
     assert 0 <= rate <= 1
     assert r["source_id"] == "NTA-R06"
@@ -54,7 +54,7 @@ for r in stage2:
     assert "not F71561" in r["interpretation"]
 
 displayed_pos = sum(
-    int(r["positive_liability_thousand_displayed"]) for r in t31
+    int(r["positive_self_assessed_balance_thousand_displayed"]) for r in t31
 )
 displayed_total = sum(
     int(r["final_return_thousand_displayed"]) for r in t31
@@ -67,13 +67,13 @@ assert displayed_refund == 13_534
 assert displayed_zero == 4_681
 
 for r in t31:
-    assert int(r["displayed_positive_grand_total_thousand"]) == 5_175
+    assert int(r["displayed_positive_self_assessed_balance_grand_total_thousand"]) == 5_175
     assert int(r["five_category_minus_grand_total_thousand"]) == -1
     assert "renormalizes displayed five categories" in r["rounding_note"]
 
-shares_exact = sum(float(r["annual_positive_composition_exact"]) for r in valid)
+shares_exact = sum(float(r["annual_positive_self_assessed_balance_composition_exact"]) for r in valid)
 shares_t31 = sum(
-    float(r["table31_positive_composition_five_category_normalized"])
+    float(r["table31_positive_self_assessed_balance_composition_five_category_normalized"])
     for r in valid
 )
 assert math.isclose(shares_exact, 1.0, abs_tol=1e-10)

@@ -64,8 +64,8 @@ EXPECTED_SCENARIOS = (
 DECILE_METRICS = (
     "taxable_income_weighted_mean_MTR",
     "income_tax_liability_weighted_mean_MTR",
-    "pseudo_filer_positive_tax_share",
-    "nta_rank_positive_liability_rate",
+    "pseudo_positive_modeled_annual_income_tax_share",
+    "nta_rank_positive_self_assessed_balance_rate",
 )
 OVERALL_METRICS = (
     "taxable_income_weighted_mean_MTR",
@@ -209,7 +209,7 @@ def load_pseudo() -> tuple[
             raise RuntimeError(f"decile {d}: incomplete scenario set")
         for si, s in enumerate(EXPECTED_SCENARIOS):
             r = by[d][s]
-            u[di, si] = f(r["pseudo_filer_positive_tax_share"])
+            u[di, si] = f(r["pseudo_positive_modeled_annual_income_tax_share"])
             mt[di, si] = f(r["taxable_income_weighted_mean_MTR"])
             ml[di, si] = f(r["income_tax_liability_weighted_mean_MTR"])
 
@@ -243,14 +243,14 @@ def load_nta_classes() -> tuple[
         labels.append(next(iter(labels_set)))
 
         pop = sum(int(r["table22_population_persons"]) for r in q)
-        pos = sum(int(r["positive_liability_persons"]) for r in q)
+        pos = sum(int(r["positive_self_assessed_balance_persons"]) for r in q)
 
         repeated_pop = {
             int(r["income_class_all_categories_table22_population_persons"])
             for r in q
         }
         repeated_pos = {
-            int(r["income_class_all_categories_positive_liability_persons"])
+            int(r["income_class_all_categories_positive_self_assessed_balance_persons"])
             for r in q
         }
         if repeated_pop != {pop}:
@@ -369,7 +369,7 @@ def make_model(data: Data, include_epsilon: bool) -> Model:
         eq_rows.append(a)
         eq_rhs.append(1.0)
 
-    # Positive-liability mass conservation within each NTA income class.
+    # Positive self-assessed balance mass conservation within each NTA income class.
     for ji in range(J):
         a = np.zeros(n)
         for di in range(D):
@@ -544,9 +544,9 @@ def objective_vector(
         values = data.m_taxable
     elif metric == "income_tax_liability_weighted_mean_MTR":
         values = data.m_liability
-    elif metric == "pseudo_filer_positive_tax_share":
+    elif metric == "pseudo_positive_modeled_annual_income_tax_share":
         values = data.u
-    elif metric == "nta_rank_positive_liability_rate":
+    elif metric == "nta_rank_positive_self_assessed_balance_rate":
         if overall:
             raise ValueError("overall NTA-rank rate endpoint not pre-specified")
         assert decile_index is not None
@@ -627,8 +627,8 @@ def solve_minimum(data: Data, eq_tol: float, ineq_tol: float):
             "spec_version": SPEC_VERSION,
             "decile": d,
             "epsilon_star": eps,
-            "pseudo_positive_tax_share_at_one_optimum": pseudo[di],
-            "nta_rank_positive_liability_rate_at_one_optimum": nta[di],
+            "pseudo_positive_modeled_annual_income_tax_share_at_one_optimum": pseudo[di],
+            "nta_rank_positive_self_assessed_balance_rate_at_one_optimum": nta[di],
             "signed_gap_pseudo_minus_nta": gap,
             "absolute_gap": abs(gap),
             "binding_within_1e8": abs(abs(gap) - eps) <= 1e-8,
@@ -739,10 +739,10 @@ def build_static_rows(data: Data):
             "income_class_index": j,
             "income_class_label": data.class_label[ji],
             "table22_population_persons": int(data.class_population[ji]),
-            "positive_liability_persons": int(data.class_positive[ji]),
+            "positive_self_assessed_balance_persons": int(data.class_positive[ji]),
             "population_mass": data.class_mass[ji],
-            "positive_liability_mass": data.class_positive_mass[ji],
-            "within_class_positive_liability_rate":
+            "positive_self_assessed_balance_mass": data.class_positive_mass[ji],
+            "within_class_positive_self_assessed_balance_rate":
                 data.class_positive[ji] / data.class_population[ji],
             "source_artifact":
                 "data/derived/nta_income_class_primary_type_filing_status_2024.csv",

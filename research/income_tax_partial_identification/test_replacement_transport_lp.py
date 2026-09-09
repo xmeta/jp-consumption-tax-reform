@@ -81,10 +81,10 @@ for scheme, expected in EXPECTED_EPS.items():
         scheme, eps, expected
     )
     assert float(r["aggregate_discrepancy_lower_bound"]) <= eps + 1e-12
-    assert float(r["weighted_raw_min_pseudo_positive_share"]) <= (
-        float(r["weighted_raw_max_pseudo_positive_share"])
+    assert float(r["weighted_raw_min_pseudo_positive_modeled_annual_income_tax_share"]) <= (
+        float(r["weighted_raw_max_pseudo_positive_modeled_annual_income_tax_share"])
     )
-    assert 0 < float(r["nta_overall_positive_liability_rate"]) < 1
+    assert 0 < float(r["nta_overall_positive_self_assessed_balance_rate"]) < 1
     assert as_bool(r["solver_success"])
     assert int(r["solver_status_code"]) == 0
     assert float(r["max_scenario_sum_residual"]) <= EQ_TOL
@@ -105,7 +105,7 @@ for scheme in SCHEMES:
     assert max(float(r["absolute_gap"]) for r in q) <= eps + INEQ_TOL
     assert any(as_bool(r["binding_within_1e8"]) for r in q)
     for r in q:
-        p = float(r["pseudo_positive_tax_share_at_one_optimum"])
+        p = float(r["pseudo_positive_modeled_annual_income_tax_share_at_one_optimum"])
         t = float(r["transported_nta_stage2_rate_at_one_optimum"])
         gap = float(r["signed_gap_pseudo_minus_transport"])
         assert 0 <= p <= 1
@@ -173,7 +173,7 @@ for r in endpoints:
     assert r["scope"] in {"decile", "overall"}
     if "MTR" in metric:
         assert -1e-12 <= val <= 0.45 + 1e-12
-    elif metric == "pseudo_filer_positive_tax_share":
+    elif metric == "pseudo_positive_modeled_annual_income_tax_share":
         assert 0 <= val <= 1
     else:
         raise AssertionError(metric)

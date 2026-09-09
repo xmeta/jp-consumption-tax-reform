@@ -26,11 +26,13 @@ stem:[A]. The actual value of stem:[C_U] is not identified, so the analysis
 does not claim an unconditional filing-rate lower bound.
 
 A separately pre-specified rank-transport sensitivity nests the exact
-same-rank bridge and lowers its minimum cross-system positive-rate discrepancy
-from 14.9016 to 8.6825 percentage points at a rank-displacement budget of
+same-rank bridge and lowers its minimum cross-system, cross-concept rate
+discrepancy from 14.9016 to 8.6825 percentage points at a rank-displacement budget of
 stem:[Delta=0.25].  Further rank freedom through the unrestricted
 stem:[Delta=5] endpoint does not lower the discrepancy, and zero discrepancy
-remains infeasible.
+remains infeasible.  The bridge compares a pseudo modeled-annual-tax-positive
+event with the NTA positive self-assessed return balance after credits and
+withholding; it is not measurement error between observations of one tax event.
 
 A fourth pre-specified fixed-budget surface evaluates the previously committed
 stem:[Delta] and `epsilon` grids without minimizing

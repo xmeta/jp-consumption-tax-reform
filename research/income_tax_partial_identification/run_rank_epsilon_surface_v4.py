@@ -232,8 +232,8 @@ def feasibility_rows(
                     None if diag is None else diag["max_transport_row_margin_residual"],
                 "max_transport_column_margin_residual":
                     None if diag is None else diag["max_transport_column_margin_residual"],
-                "max_positive_transport_capacity_excess":
-                    None if diag is None else diag["max_positive_transport_capacity_excess"],
+                "max_positive_self_assessed_balance_transport_capacity_excess":
+                    None if diag is None else diag["max_positive_self_assessed_balance_transport_capacity_excess"],
                 "max_nta_rank_positive_margin_residual":
                     None if diag is None else diag["max_nta_rank_positive_margin_residual"],
                 "transport_cost_at_one_feasible_solution":

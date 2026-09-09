@@ -104,7 +104,7 @@ for r in frontier:
         assert float(r[key]) <= EQ_TOL, (r["delta"], key, r[key])
     for key in (
         "max_overlap_capacity_excess",
-        "max_positive_transport_capacity_excess",
+        "max_positive_self_assessed_balance_transport_capacity_excess",
         "rank_displacement_budget_excess",
         "max_rank_bridge_inequality_excess",
     ):
@@ -129,8 +129,8 @@ for delta, rows in by_delta_decile.items():
     e = next(float(x["epsilon_star"]) for x in frontier if float(x["delta"]) == delta)
     assert any(as_bool(r["binding_within_1e8"]) for r in rows)
     for r in rows:
-        p = float(r["pseudo_positive_tax_share_at_one_optimum"])
-        n = float(r["transported_nta_positive_liability_rate_at_one_optimum"])
+        p = float(r["pseudo_positive_modeled_annual_income_tax_share_at_one_optimum"])
+        n = float(r["transported_nta_positive_self_assessed_balance_rate_at_one_optimum"])
         gap = float(r["signed_gap_pseudo_minus_transported_nta"])
         assert 0 <= p <= 1
         assert 0 <= n <= 1
@@ -165,7 +165,7 @@ for delta, rows in by_plan.items():
     assert math.isclose(cost, float(frow["transport_cost"]), abs_tol=5e-9)
     for r in rows:
         t = float(r["population_transport_mass"])
-        z = float(r["positive_liability_transport_mass"])
+        z = float(r["positive_self_assessed_balance_transport_mass"])
         assert -1e-12 <= z <= t + 1e-10
 
 # At delta=0 only the diagonal population coupling can be positive.
@@ -189,20 +189,20 @@ assert "infeasible" in z0["solver_message"].lower()
 # Analytical unrestricted common-epsilon floor.
 # Let l_d be the minimum pseudo-positive rate in each decile. With unrestricted
 # transport, the transported NTA row rates remain nonnegative and have fixed
-# mean equal to the NTA aggregate positive-liability rate. Feasibility at
+# mean equal to the NTA aggregate positive-self-assessed-balance rate. Feasibility at
 # common epsilon e requires sum_d max(0,l_d-e) <= 10*r_NTA. The smallest e is
 # therefore a one-dimensional water-filling lower bound.
 pseudo = read(PSEUDO)
 by_d = {}
 for r in pseudo:
     by_d.setdefault(int(r["decile"]), []).append(
-        float(r["pseudo_filer_positive_tax_share"])
+        float(r["pseudo_positive_modeled_annual_income_tax_share"])
     )
 lower = np.array([min(by_d[d]) for d in range(1, 11)])
 
 nta = read(NTA)
 N = sum(int(r["table22_population_persons"]) for r in nta)
-P = sum(int(r["positive_liability_persons"]) for r in nta)
+P = sum(int(r["positive_self_assessed_balance_persons"]) for r in nta)
 nta_rate = P / N
 
 lo, hi = 0.0, 1.0
@@ -223,12 +223,12 @@ assert lower[0] < analytic_floor  # explains the non-negativity correction
 
 arow = analytic[0]
 assert math.isclose(
-    float(arow["nta_aggregate_positive_liability_rate"]),
+    float(arow["nta_aggregate_positive_self_assessed_balance_rate"]),
     nta_rate,
     abs_tol=5e-12,
 )
 assert math.isclose(
-    float(arow["pseudo_filer_lower_envelope_equal_decile_average"]),
+    float(arow["pseudo_modeled_annual_income_tax_positive_lower_envelope_equal_decile_average"]),
     float(lower.mean()),
     abs_tol=5e-12,
 )
@@ -242,7 +242,7 @@ assert math.isclose(
     analytic_floor,
     abs_tol=5e-12,
 )
-assert arow["pseudo_lower_envelope_deciles_below_floor"] == "1"
+assert arow["pseudo_modeled_annual_income_tax_positive_lower_envelope_deciles_below_floor"] == "1"
 assert "not a confidence bound" in arow["interpretation"]
 
 # The equal-margin transport polytope has maximum average absolute decile
@@ -297,7 +297,7 @@ for delta, rows in groups.items():
             assert float(r[key]) <= EQ_TOL
         for key in (
             "max_overlap_capacity_excess",
-            "max_positive_transport_capacity_excess",
+            "max_positive_self_assessed_balance_transport_capacity_excess",
             "rank_displacement_budget_excess",
             "max_rank_bridge_inequality_excess",
         ):
@@ -318,8 +318,8 @@ assert len(v2_star) == 84
 v2_map = {}
 for r in v2_star:
     metric = r["metric"]
-    if metric == "nta_rank_positive_liability_rate":
-        metric = "transported_nta_positive_liability_rate"
+    if metric == "nta_rank_positive_self_assessed_balance_rate":
+        metric = "transported_nta_positive_self_assessed_balance_rate"
     v2_map[(r["scope"], r["decile"], metric, r["bound"])] = float(r["endpoint_value"])
 
 v3_zero = groups[0.0]

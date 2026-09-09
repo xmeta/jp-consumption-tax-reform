@@ -17,7 +17,7 @@ OUT = (
 SAMPLE = (
     ROOT
     / "data/derived"
-    / "nta_positive_liability_income_class_primary_type_2024.csv"
+    / "nta_positive_self_assessed_balance_income_class_primary_type_2024.csv"
 )
 
 CATEGORIES = {
@@ -45,7 +45,7 @@ def read(path):
 rows = read(OUT)
 sample = {
     (int(r["income_class_index"]), r["primary_income_type"]):
-        int(r["positive_liability_persons_estimated"])
+        int(r["positive_self_assessed_balance_persons_estimated"])
     for r in read(SAMPLE)
 }
 
@@ -65,7 +65,7 @@ for i in range(1, 26):
 
     all_total = int(q[0]["income_class_all_categories_table22_population_persons"])
     pos_total = int(
-        q[0]["income_class_all_categories_positive_liability_persons"]
+        q[0]["income_class_all_categories_positive_self_assessed_balance_persons"]
     )
     refund_total = int(q[0]["income_class_all_categories_refund_persons"])
 
@@ -74,7 +74,7 @@ for i in range(1, 26):
         for r in q
     )
     assert all(
-        int(r["income_class_all_categories_positive_liability_persons"])
+        int(r["income_class_all_categories_positive_self_assessed_balance_persons"])
         == pos_total
         for r in q
     )
@@ -84,7 +84,7 @@ for i in range(1, 26):
     )
 
     assert sum(int(r["table22_population_persons"]) for r in q) == all_total
-    assert sum(int(r["positive_liability_persons"]) for r in q) == pos_total
+    assert sum(int(r["positive_self_assessed_balance_persons"]) for r in q) == pos_total
     assert sum(int(r["refund_persons"]) for r in q) == refund_total
 
     residual = sum(
@@ -109,17 +109,17 @@ for category, expected in EXPECTED.items():
     assert len(q) == 25
     got = (
         sum(int(r["table22_population_persons"]) for r in q),
-        sum(int(r["positive_liability_persons"]) for r in q),
+        sum(int(r["positive_self_assessed_balance_persons"]) for r in q),
         sum(int(r["refund_persons"]) for r in q),
     )
     assert got == expected, (category, got, expected)
 
-# All 125 positive-liability cells independently equal Sample Survey Table 2.
+# All 125 positive-self-assessed-balance cells independently equal Sample Survey Table 2.
 for r in rows:
     key = (int(r["income_class_index"]), r["primary_income_type"])
-    pos = int(r["positive_liability_persons"])
+    pos = int(r["positive_self_assessed_balance_persons"])
     assert pos == sample[key]
-    assert int(r["sample_survey_positive_liability_cell"]) == sample[key]
+    assert int(r["sample_survey_positive_self_assessed_balance_cell"]) == sample[key]
     assert int(r["sample_crosscheck_difference"]) == 0
 
     all_persons = int(r["table22_population_persons"])
@@ -129,7 +129,7 @@ for r in rows:
 
     if all_persons:
         assert math.isclose(
-            float(r["positive_liability_rate"]),
+            float(r["positive_self_assessed_balance_rate"]),
             pos / all_persons,
             rel_tol=1e-10,
         )
@@ -144,14 +144,14 @@ for r in rows:
             rel_tol=1e-10,
         )
         assert math.isclose(
-            float(r["positive_liability_rate"])
+            float(r["positive_self_assessed_balance_rate"])
             + float(r["refund_rate"])
             + float(r["residual_rate"]),
             1.0,
             abs_tol=5e-10,
         )
     else:
-        assert r["positive_liability_rate"] == ""
+        assert r["positive_self_assessed_balance_rate"] == ""
         assert r["refund_rate"] == ""
         assert r["residual_rate"] == ""
 
@@ -174,17 +174,17 @@ by_key = {
     for r in rows
 }
 assert math.isclose(
-    float(by_key[(1, "salary")]["positive_liability_rate"]),
+    float(by_key[(1, "salary")]["positive_self_assessed_balance_rate"]),
     2218 / 942026,
     rel_tol=1e-10,
 )
 assert math.isclose(
-    float(by_key[(12, "real_estate")]["positive_liability_rate"]),
+    float(by_key[(12, "real_estate")]["positive_self_assessed_balance_rate"]),
     62030 / 62901,
     rel_tol=1e-10,
 )
 assert math.isclose(
-    float(by_key[(25, "other")]["positive_liability_rate"]),
+    float(by_key[(25, "other")]["positive_self_assessed_balance_rate"]),
     66 / 67,
     rel_tol=1e-10,
 )

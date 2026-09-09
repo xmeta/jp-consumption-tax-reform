@@ -12,7 +12,7 @@ delta_grid,0;0.25;0.5;1;2;3;4;5,average decile-index displacement,fixed before r
 delta_unrestricted,5,average decile-index displacement,maximum possible cost with equal 0.1 margins
 zero_discrepancy_threshold,solve_minimum_delta_at_epsilon_0,,record infeasible if no solution
 frontier_endpoint_rule,epsilon_star_at_each_delta,,same endpoint metrics as v2 on minimum-discrepancy frontier
-endpoint_metrics,taxable_income_weighted_mean_MTR;income_tax_liability_weighted_mean_MTR;pseudo_filer_positive_tax_share;transported_nta_positive_liability_rate,,decile endpoints plus equal-decile overall MTR endpoints
+endpoint_metrics,taxable_income_weighted_mean_MTR;income_tax_liability_weighted_mean_MTR;pseudo_positive_modeled_annual_income_tax_share;transported_nta_positive_self_assessed_balance_rate,,decile endpoints plus equal-decile overall MTR endpoints
 overall_weight_scheme,equal_decile,,0.1 per F rank decile
 public_diagnostics_role,interpretation_only_no_hard_crosswalk,,tables 7-141-1 and 7-171 do not identify NTA category mapping
 solver,scipy.optimize.linprog,,pinned dependency

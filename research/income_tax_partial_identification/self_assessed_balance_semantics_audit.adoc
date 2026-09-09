@@ -1,0 +1,243 @@
+= NTA self-assessed-balance semantics audit
+:revdate: 2026-09-09
+:stem: latexmath
+
+== Status
+
+This audit records a terminology and comparability correction discovered after
+Paper 1 P1-C16 was merged.
+
+The correction is semantic first.  The committed v1-v4 numerical LP results
+are not changed by this audit commit.
+
+Current migration status:
+
+----
+SEMANTIC_MISMATCH_CORRECTED_NUMERIC_INVARIANCE_VERIFIED
+----
+
+== Official NTA definition
+
+The repository contains two independent official NTA sources relevant to the
+meaning of the count currently labelled `positive_liability`.
+
+=== Annual Statistics Table 2-2(1)
+
+Source ID:: `NTA-R06`
+Raw file:: `data/raw/nta/nta_fy2024_annual_statistics.pdf`
+Locator:: PDF pages 71-72 / printed pages 61-62
+
+The table header is
+
+----
+申告納税額のある者
+----
+
+alongside
+
+----
+還付申告をした者
+----
+
+Therefore the 5,158,260-person count used by the rank-bridge models is the
+number of persons with a positive *self-assessed amount due on the return*,
+not the number of persons whose annual income-tax liability is positive.
+
+=== Sample Survey for Self-Assessment Income Tax
+
+Source ID:: `NTA-2024-SHINKOKU-SAMPLE`
+Raw file:: `data/raw/nta/nta_2024_shinkoku_sample_survey.pdf`
+
+PDF page 5 / printed page 1 defines the survey population as persons who, as
+of the stated cutoff, have positive `申告納税額`; persons without such an
+amount, including refund filers, are excluded.
+
+PDF page 6 / printed page 2 defines
+
+[stem]
+++++
+B^{NTA}
+=
+T^{calc}
+-
+C^{tax}
+-
+W^{withheld},
+++++
+
+where stem:[B^{NTA}] is `申告納税額`, stem:[T^{calc}] is calculated tax,
+stem:[C^{tax}] is tax credits, and stem:[W^{withheld}] is tax already paid
+through withholding.
+
+The same source separately defines its explanatory `税額` as self-assessed
+amount plus tax paid through withholding.
+
+Thus
+
+----
+申告納税額 > 0
+----
+
+is not equivalent to
+
+----
+annual income tax > 0
+----
+
+for persons with withholding or tax credits.
+
+== Pseudo-filer event used in v1-v4
+
+The reproducible pseudo-filer core currently defines
+
+----
+pseudo_filer_positive_tax_share
+----
+
+as the weighted share of retained pseudo tax units for which
+
+----
+income_tax > 0
+----
+
+in `run_pseudofiler_core.py`.
+
+That modeled `income_tax` is a statutory annual-income-tax calculation used
+for the pseudo-filer MTR sensitivity model.  The current positive-share event
+does not subtract person-specific source withholding and does not reconstruct
+the NTA return-balance concept.
+
+Therefore the two rates coupled in v1-v4 are *different economic events*.
+
+== Consequence for epsilon
+
+The v1-v4 relaxation parameter stem:[\varepsilon] must not be described as
+measurement error between two observations of the same positive-tax event.
+
+It is a cross-concept compatibility budget that can absorb, among other
+differences:
+
+* annual modeled tax liability versus positive self-assessed return balance;
+* source withholding;
+* tax credits not represented in the pseudo event;
+* population/frame differences;
+* filing and administrative-processing selection;
+* household-to-tax-unit construction;
+* income-concept and rank-bridge differences;
+* pseudo-filer calibration error.
+
+The v1-v4 LPs remain reproducible conditional sensitivity models, but their
+economic interpretation must explicitly retain this cross-concept distinction.
+
+== Canonical terminology after migration
+
+The schema migration will use the following terminology.
+
+NTA event::
+
+----
+positive_self_assessed_balance
+----
+
+for `申告納税額のある者`.
+
+NTA rate::
+
+----
+positive_self_assessed_balance_rate
+----
+
+Pseudo event::
+
+----
+pseudo_positive_modeled_annual_income_tax_share
+----
+
+for the pseudo-unit event `income_tax > 0`.
+
+Bridge relaxation::
+
+----
+cross_concept_rate_gap budget epsilon
+----
+
+in prose.  The mathematical symbol stem:[\varepsilon] remains unchanged.
+
+== Completed schema migration
+
+The active schema now uses the canonical event names throughout code,
+generated data, research outputs, catalogs, and Paper 1:
+
+. NTA `positive_liability*` fields were renamed to
+  `positive_self_assessed_balance*`;
+. the sample-survey derived artifact was renamed to
+  `nta_positive_self_assessed_balance_income_class_primary_type_2024.csv`;
+. downstream v2-v4 NTA rate/transport fields use the same terminology;
+. the pseudo positive-share field is now
+  `pseudo_positive_modeled_annual_income_tax_share`;
+. v1-v4 specifications contain explicit post-specification semantic
+  clarifications while their original pre-specification commits remain in Git
+  history;
+. Paper 1 P1-C05, P1-C07, and P1-C13-P1-C16 distinguish the two tax events;
+. all historical V6 recovery statuses remain unchanged.
+
+The migration changes names and interpretation only.  It changes no model
+number, grid, LP equation, solver setting, feasibility classification, or MTR
+endpoint.
+
+== Numerical invariance requirement
+
+This correction is not allowed to change any model number.
+
+The pre-migration numeric payload fingerprints are committed in
+
+----
+self_assessed_balance_numeric_anchors.csv
+----
+
+For each listed artifact, the fingerprint hashes every numeric CSV cell in
+row/column order while ignoring header names and nonnumeric strings.
+
+The executable
+`test_self_assessed_balance_schema_migration.py` verifies all 16 fingerprints
+against the canonical post-migration paths and is a required CI gate.
+
+The migration must additionally reassert these anchors:
+
+* Table 2-2(1) population: 23,362,184 persons;
+* positive self-assessed balance: 5,158,260 persons;
+* refund: 13,527,496 persons;
+* v2 minimum cross-concept rate gap: 14.9015979543 percentage points;
+* v3 unrestricted nonnegative-rate floor: 8.68252768522 percentage points;
+* v4 surface: 104 points, 70 feasible, 5,880 endpoint rows.
+
+Any failure of a numeric fingerprint blocks the migration.
+
+== Paper interpretation boundary
+
+After the completed migration, Paper 1 may state that v1-v4 quantify compatibility between
+a pseudo modeled-annual-tax-positive share and an NTA
+positive-self-assessed-balance share under explicit bridge assumptions.
+
+Paper 1 must not state or imply that:
+
+* the two rates observe the same tax event;
+* stem:[\varepsilon] is an estimated measurement-error rate;
+* the 8.6825-percentage-point v3 floor is pure rank mismatch;
+* the v4 surface estimates withholding error;
+* positive self-assessed balance is equivalent to positive annual tax
+  liability;
+* the historical V6 restricted LP has been recovered.
+
+== Scientific consequence
+
+This audit strengthens the earlier conclusion that v3/v4 residual discrepancy
+cannot be attributed to rank mismatch alone.
+
+More importantly, it shows that the residual cannot presently be decomposed
+into model error versus withholding/credit/filing-process differences from the
+available cross-system aggregate data.
+
+A future identification improvement should seek an NTA observable closer to
+total annual tax liability, or explicitly model source withholding and tax
+credits before interpreting a positive-rate bridge economically.

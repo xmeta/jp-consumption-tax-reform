@@ -11,7 +11,7 @@ executable tests.
 
 The repository also reproduces two additional *external diagnostics*:
 
-* exact FY2024 NTA positive-liability rates for the five published primary
+* exact FY2024 NTA positive-self-assessed-balance rates for the five published primary
   income-earner categories; and
 * the cross-publication composition comparison between the exact annual
   statistics and the rounded Table 3-1 press-release counts.
@@ -21,6 +21,9 @@ The latter has a maximum absolute category-composition difference of
 0.08444 percentage point.
 
 These two diagnostics do not identify the missing F71561-to-filer mapping.
+They also do not identify total annual tax liability: the NTA positive event is
+a positive self-assessed return balance after tax credits and source
+withholding.
 
 The model-contingent transport analyses are also reproduced from their
 pre-specified specifications.  In particular, the v3 rank-transport tests
@@ -51,7 +54,7 @@ claim at `DOCUMENTED_PRIOR_RUN_NOT_REPRODUCED`.
 
 === Table 3-1 point check is not an independent holdout
 
-Table 3-1 reports its five positive-liability category counts in thousand
+Table 3-1 reports its five positive-self-assessed-balance category counts in thousand
 persons.  Those displayed components sum to 5,174 thousand while the
 separately displayed grand total is 5,175 thousand; the source explicitly
 notes that totals and components may differ because of rounding.

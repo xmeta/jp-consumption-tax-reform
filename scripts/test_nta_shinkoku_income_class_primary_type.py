@@ -9,7 +9,7 @@ ROOT = Path(__file__).resolve().parents[1]
 OUT = (
     ROOT
     / "data/derived"
-    / "nta_positive_liability_income_class_primary_type_2024.csv"
+    / "nta_positive_self_assessed_balance_income_class_primary_type_2024.csv"
 )
 STAGE2 = ROOT / "data/derived/nta_primary_type_stage2_2024.csv"
 
@@ -36,7 +36,7 @@ def read(path):
 
 rows = read(OUT)
 stage2 = {
-    r["primary_income_type"]: int(r["positive_liability_persons_exact"])
+    r["primary_income_type"]: int(r["positive_self_assessed_balance_persons_exact"])
     for r in read(STAGE2)
 }
 
@@ -45,19 +45,19 @@ assert {r["primary_income_type"] for r in rows} == CATEGORIES
 assert {int(r["income_class_index"]) for r in rows} == set(range(1, 26))
 
 # Each income class is a full five-category partition of the survey-estimated
-# positive-liability population.
+# positive-self-assessed-balance population.
 grand = 0
 for i in range(1, 26):
     q = [r for r in rows if int(r["income_class_index"]) == i]
     assert len(q) == 5
     assert {r["primary_income_type"] for r in q} == CATEGORIES
-    total = int(q[0]["income_class_positive_liability_total_estimated"])
+    total = int(q[0]["income_class_positive_self_assessed_balance_total_estimated"])
     assert total > 0
     assert all(
-        int(r["income_class_positive_liability_total_estimated"]) == total
+        int(r["income_class_positive_self_assessed_balance_total_estimated"]) == total
         for r in q
     )
-    assert sum(int(r["positive_liability_persons_estimated"]) for r in q) == total
+    assert sum(int(r["positive_self_assessed_balance_persons_estimated"]) for r in q) == total
     assert math.isclose(
         sum(float(r["share_within_income_class"]) for r in q),
         1.0,
@@ -68,15 +68,15 @@ for i in range(1, 26):
 assert grand == 5_158_260
 
 # Category totals reconcile exactly to the independently reproduced annual
-# administrative positive-liability category totals.
+# administrative positive-self-assessed-balance category totals.
 for category in CATEGORIES:
     q = [r for r in rows if r["primary_income_type"] == category]
     assert len(q) == 25
-    observed = sum(int(r["positive_liability_persons_estimated"]) for r in q)
+    observed = sum(int(r["positive_self_assessed_balance_persons_estimated"]) for r in q)
     assert observed == EXPECTED_TOTALS[category]
     assert observed == stage2[category]
     assert all(
-        int(r["category_positive_liability_total"]) == observed
+        int(r["category_positive_self_assessed_balance_total"]) == observed
         for r in q
     )
     assert math.isclose(
@@ -146,7 +146,7 @@ by_key = {
     for r in rows
 }
 for key, expected in anchors.items():
-    assert int(by_key[key]["positive_liability_persons_estimated"]) == expected
+    assert int(by_key[key]["positive_self_assessed_balance_persons_estimated"]) == expected
 
 subprocess.run(
     [

@@ -75,7 +75,7 @@ for r in feas:
             assert float(r[key]) <= TOL, (r["delta"], r["epsilon"], key, r[key])
         for key in (
             "max_overlap_capacity_excess",
-            "max_positive_transport_capacity_excess",
+            "max_positive_self_assessed_balance_transport_capacity_excess",
             "rank_displacement_budget_excess",
             "max_rank_bridge_inequality_excess",
         ):
@@ -145,7 +145,7 @@ for r in end:
         assert float(r[residual]) <= TOL
     for residual in (
         "max_overlap_capacity_excess",
-        "max_positive_transport_capacity_excess",
+        "max_positive_self_assessed_balance_transport_capacity_excess",
         "rank_displacement_budget_excess",
         "max_rank_bridge_inequality_excess",
     ):
@@ -182,8 +182,8 @@ assert v4_delta0 == v2_grid_feas
 # Delta=0 endpoint values must reproduce all committed v2 fixed-grid
 # endpoints, mapping only the v2 NTA metric label to the v3/v4 transport label.
 def normalized_metric(metric):
-    if metric == "nta_rank_positive_liability_rate":
-        return "transported_nta_positive_liability_rate"
+    if metric == "nta_rank_positive_self_assessed_balance_rate":
+        return "transported_nta_positive_self_assessed_balance_rate"
     return metric
 
 v2_grid_end = {}

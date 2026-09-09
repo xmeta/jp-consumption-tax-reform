@@ -673,7 +673,7 @@ def build_outputs():
                 "pseudo_filer_weighted_mean_MTR": filer_mtr,
                 "taxable_income_weighted_mean_MTR": taxable_mtr,
                 "income_tax_liability_weighted_mean_MTR": liability_mtr,
-                "pseudo_filer_positive_tax_share": positive_share,
+                "pseudo_positive_modeled_annual_income_tax_share": positive_share,
                 "continuous_proxy_fit_error_kY": abs(fit - target_tax),
                 "exact_statutory_rounding_gap_kY": exact_fit - target_tax,
                 "MTR_status":
@@ -707,8 +707,8 @@ def build_outputs():
                 min(r["income_tax_liability_weighted_mean_MTR"] for r in rows),
             "max_liability_weighted_MTR_across_scenarios":
                 max(r["income_tax_liability_weighted_mean_MTR"] for r in rows),
-            "central_positive_tax_pseudofiler_share":
-                central["pseudo_filer_positive_tax_share"],
+            "central_pseudo_positive_modeled_annual_income_tax_share":
+                central["pseudo_positive_modeled_annual_income_tax_share"],
             "central_nuisance_income_scale": central["nuisance_income_scale"],
             "max_continuous_proxy_fit_error_kY":
                 max(r["continuous_proxy_fit_error_kY"] for r in rows),
