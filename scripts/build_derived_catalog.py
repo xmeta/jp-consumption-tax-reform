@@ -155,6 +155,22 @@ SPECS = [
         "Long-term Sample Survey taxpayer-count semantics audit: 2024 taxpayer count equals the 5,158,260 positive-self-assessed-balance survey target, not a public calculated-tax-positive person count; Table 2-2(1)-scope bound retained with explicit scope warning",
     ),
     (
+        "NTA-2024-PRIVATE-SALARY-TAXPAYER-STATUS-BY-SALARY-CLASS",
+        "nta_private_salary_taxpayer_status_by_salary_class_2024.csv",
+        "scripts/extract_nta_private_salary_taxpayer_status.py",
+        "NTA-MINKAN-2024-T16;NTA-MINKAN-METHODOLOGY",
+        "DERIVED_REPRODUCED_OFFICIAL_PRIVATE_SALARY_TAXPAYER_STATUS_DIAGNOSTIC",
+        "Four Table 16 panels x 14 salary classes; taxpayer/non-taxpayer counts and tax amounts split by year-end adjustment and 乙欄 exclusion; external wage-side diagnostic only, no additive join to self-assessed returns",
+    ),
+    (
+        "NTA-2024-PRIVATE-SALARY-TAXPAYER-STATUS-SUMMARY",
+        "nta_private_salary_taxpayer_status_summary_2024.csv",
+        "scripts/extract_nta_private_salary_taxpayer_status.py",
+        "NTA-MINKAN-2024-T16;NTA-MINKAN-METHODOLOGY",
+        "DERIVED_REPRODUCED_OFFICIAL_PRIVATE_SALARY_TAXPAYER_STATUS_DIAGNOSTIC",
+        "Five Table 16 summaries including 35,556,416 year-end-adjusted taxpayers among 52,797,680 private salary earners after 乙欄 exclusion; not a strict final calculated-tax-positive subset and not additive to positive self-assessed returns",
+    ),
+    (
         "NTA-2024-ANNUAL-INCOME-CLASS-PRIMARY-TYPE-FILING-STATUS",
         "nta_income_class_primary_type_filing_status_2024.csv",
         "scripts/extract_nta_annual_income_class_filing_status.py",

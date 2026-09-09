@@ -40,6 +40,8 @@ jobs:
           python scripts/test_nta_positive_balance_tax_flow.py
           python scripts/extract_nta_calculated_tax_denominator_audit.py
           python scripts/test_nta_calculated_tax_denominator_audit.py
+          python scripts/extract_nta_private_salary_taxpayer_status.py
+          python scripts/test_nta_private_salary_taxpayer_status.py
           python scripts/extract_nta_annual_income_class_filing_status.py
           python scripts/test_nta_annual_income_class_filing_status.py
           python research/income_tax_pseudofiler/run_pseudofiler_core.py

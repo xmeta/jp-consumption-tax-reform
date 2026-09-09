@@ -431,6 +431,32 @@ be used to calibrate the pseudo calculated-tax-positive rate or `eta`.
 Current audit status:
 `CALCULATED_TAX_POSITIVE_PERSON_COUNT_NOT_IDENTIFIED`.
 
+== Private-salary taxpayer-status external diagnostic
+
+`private_salary_taxpayer_status_diagnostic.adoc` adds the 2024 NTA Private
+Salary Survey Table 16 as an external wage-side scale diagnostic.  The official
+methodology includes private-sector salary earners regardless of tax status and
+defines `納税者` as salary earners with positive source-withheld income tax.
+The four Table 16 panels are reproduced across all fourteen salary classes,
+including the versions that exclude secondary-payroll (`乙欄`) records.
+
+After `乙欄` exclusion, the year-end-adjusted panels contain 35,556,416
+taxpayers among 52,797,680 salary earners, or 67.3447%, with 7,280,879 million
+yen of tax.  This is materially informative about the scale of positive payroll
+income tax outside the positive-self-assessed-balance sample.  It is not,
+however, asserted to be a strict lower bound for final calculated-tax-positive
+persons: a later final return can change tax through deductions, credits, or
+loss offsets.
+
+The payroll count is also not added to the 5,158,260 positive-self-assessed-
+balance persons because the public sources do not identify person overlap.
+The invalid naive sum 40,714,676 is explicitly guarded against by the test.
+The diagnostic is therefore not used to calibrate the pseudo calculated-tax-
+positive rate, v5 `eta`, or a cross-source union count.
+
+Current payroll-diagnostic status:
+`EXTERNAL_PAYROLL_TAX_DIAGNOSTIC_NO_CROSS_SOURCE_UNION`.
+
 == Reproduction
 
 [source,shell]
@@ -446,6 +472,8 @@ python scripts/extract_nta_positive_balance_tax_flow.py
 python scripts/test_nta_positive_balance_tax_flow.py
 python scripts/extract_nta_calculated_tax_denominator_audit.py
 python scripts/test_nta_calculated_tax_denominator_audit.py
+python scripts/extract_nta_private_salary_taxpayer_status.py
+python scripts/test_nta_private_salary_taxpayer_status.py
 python -m pip install -r requirements-research-lp.txt
 python research/income_tax_partial_identification/run_replacement_transport_lp.py
 python research/income_tax_partial_identification/test_replacement_transport_lp.py
