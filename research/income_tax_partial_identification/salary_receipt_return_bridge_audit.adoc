@@ -1,0 +1,314 @@
+= Salary-receipt to final-return bridge audit
+:toc:
+:stem: latexmath
+
+== Status
+
+----
+SAME_SALARY_RECEIPT_THRESHOLD_BRIDGE_REPRODUCED_PERSON_LINK_NOT_IDENTIFIED
+----
+
+This audit extends the private-salary / final-return overlap work by adding two
+official 2024 NTA evidence families:
+
+* Sample Survey for Self-Assessment Income Tax Table 7, which reports salary
+  receipt classes inside the positive-self-assessed-balance target; and
+* Annual Statistics Table 2-3, which reports complete-survey employment-income
+  persons as Main or Secondary among filed/processed income-tax cases.
+
+The new evidence materially narrows a previous semantic gap.  Private Salary
+Survey Table 19 and Sample Survey Table 7 both classify by *salary receipts*,
+so the 20 million yen threshold can now be compared on the same monetary
+concept.
+
+This still does not create a person-level match between the two surveys.
+
+No v1-v5 endpoint or Paper 1 claim is changed.
+
+== Official sources
+
+The repository retains and SHA-256 registers:
+
+* +NTA-MINKAN-2024-T19+: private-sector salary earners without year-end
+  adjustment, including the over-20-million-yen panel;
+* +NTA-2024-SHINKOKU-T7-XLSX+: Sample Survey Table 7 salary-receipt classes;
+* +NTA-2024-SHINKOKU-T7-PDF+: visual cross-check of Table 7;
+* +NTA-2024-ANNUAL-T23-INCOME-TYPE+: complete-survey Table 2-3;
+* +NTA-2024-ANNUAL-TABLE-NOTES+: official aggregation definitions for
+  Tables 2-1/2-2 versus Table 2-3.
+== Table 7: salary receipts inside the positive-balance target
+
+Table 7 is part of the Sample Survey for Self-Assessment Income Tax.  Its
+population is already conditioned on positive self-assessed income tax.
+
+The table cross-classifies twelve salary-receipt classes with:
+
+* all income-earner categories;
+* business;
+* real estate;
+* salary;
+* miscellaneous; and
+* other / not otherwise classified.
+
+For every displayed class the table reports:
+
+* persons with salary receipts;
+* salary receipt amount;
+* persons with salary-source withholding;
+* salary-source withholding amount; and
+* persons without salary-source withholding.
+
+The executable artifact
+
+----
+data/derived/nta_positive_balance_salary_receipt_class_2024.csv
+----
+
+contains 6 x 12 = 72 rows.
+
+For every row the published person identity is exact:
+
+[stem]
+++++
+N^{salary-receipt}
+=
+N^{salary-WH}
++
+N^{no-salary-WH}.
+++++
+
+All class-level person sums reproduce the printed block totals exactly.
+Published million-yen amounts show independent rounding residuals of at most
+2 million yen; only those amount fields receive that bounded tolerance.
+== Same-threshold 20-million-yen bridge
+
+Private Salary Survey Table 19 reports 320,983 full-year private-sector salary
+earners with annual salary receipts above 20 million yen.
+
+Table 7 now supplies a return-side observation using the same salary-receipt
+threshold.  Within the positive-self-assessed-balance sample, the over-20m
+classes are the printed classes:
+
+* over 20m through 30m yen;
+* over 30m through 50m yen; and
+* over 50m yen.
+
+Their all-category person estimates are:
+
+[cols="3,1,1,1",options="header"]
+|===
+| Salary-receipt class | Persons | With salary withholding | Without salary withholding
+| >20m through 30m | 144,607 | 143,457 | 1,150
+| >30m through 50m | 62,400 | 59,663 | 2,737
+| >50m | 28,280 | 24,486 | 3,794
+| total >20m | *235,287* | *227,606* | *7,681*
+|===
+
+Thus:
+
+[stem]
+++++
+235{,}287 = 227{,}606 + 7{,}681.
+++++
+
+These are Sample Survey estimates, not exact administrative person counts.
+
+Within the Table 7 income-earner category +salary+, the corresponding over-20m
+estimate is 225,050 persons.  The remaining 10,237 estimated persons have
+salary receipts above 20 million yen but are classified under one of the other
+primary income-earner categories.
+
+This directly demonstrates that an over-20m salary receipt does not imply that
+the NTA primary-income category must be +salary+.
+== What the same threshold does and does not identify
+
+The comparison
+
+----
+Private Salary Survey Table 19 >20m: 320,983
+Sample Survey Table 7 >20m and positive balance: 235,287
+----
+
+is now conceptually stronger than comparing Table 19 salary-receipt classes
+with Table 2-2 total-net-income classes.
+
+However, the ratio
+
+[stem]
+++++
+235{,}287 / 320{,}983
+++++
+
+is *not* an identified overlap probability, filing rate, compliance rate, or
+conditional probability.
+
+The two sources still differ in ways that prevent that interpretation:
+
+* Table 19 concerns private-sector salary survey records;
+* Table 7 concerns the positive-self-assessed-balance return target;
+* Table 7 cells are sample-survey population estimates;
+* private/public employer identity is not retained on the return side;
+* a common person identifier is not published;
+* payroll-record multiplicity and return-unit identity are not jointly
+  observed.
+
+The machine-readable status is therefore:
+
+----
+SAME_THRESHOLD_BUT_NO_PERSON_LINK
+----
+
+and
+
+----
+private_salary_to_positive_balance_gt20m_person_overlap = NOT_IDENTIFIED
+----
+== Annual Table 2-3: persons with employment income
+
+The annual NTA Table 2-3 provides a second improvement.  Unlike Table 7, it is
+part of the complete-survey annual administrative statistics for persons who
+filed final returns or whose cases were processed under the official cutoff.
+
+For the +employment income+ row, Table 2-3 reports:
+
+[cols="3,1,1,1",options="header"]
+|===
+| Filing status | Main + Secondary | Main | Secondary
+| all filed/processed cases | *13,184,714* | 11,425,783 | 1,758,931
+| positive self-assessed balance | *3,143,364* | 2,384,138 | 759,226
+| refund | *8,532,771* | 7,700,263 | 832,508
+|===
+
+This identifies a substantially broader return-side employment-income
+population than the earlier Table 2-2 +salary income-earner+ category, because
+Table 2-3 explicitly counts employment income as either Main or Secondary.
+
+The 13,184,714 count is nevertheless still restricted to the annual
+filed/processed income-tax population.  Salary earners settled entirely by
+withholding and not requiring a final return are outside that annual
+self-assessment table.
+== Table 2-2 and Table 2-3 use different definitions
+
+A small numerical discrepancy between the two official tables is expected and
+must not be "corrected" away.
+
+The previously reproduced Table 2-2 salary-income-earner counts are:
+
+[cols="3,1",options="header"]
+|===
+| Filing status | Table 2-2 salary category
+| all | 11,423,587
+| positive self-assessed balance | 2,385,726
+| refund | 7,697,018
+|===
+
+Table 2-3 Main employment-income minus Table 2-2 salary category is:
+
+[cols="3,1",options="header"]
+|===
+| Filing status | Difference, persons
+| all | +2,196
+| positive self-assessed balance | -1,588
+| refund | +3,245
+|===
+
+These are classified as:
+
+----
+DEFINITION_DIFFERENCE_NOT_RECONCILIATION_ERROR
+----
+
+The official notes define the tables differently.
+
+For Tables 2-1 and 2-2, the primary-income-earner taxonomy first separates
+business income earners using a comparison against the combined amount of
+other incomes and then subdivides the remaining group.
+
+For Table 2-3, +Main+ is the single income type with the largest amount, while
+other present income types are recorded as +Secondary+.
+
+The official notes provide a worked example and explicitly state that the
+person totals in Tables 2-1/2-2 and Table 2-3 therefore differ.
+
+Accordingly, neither Table 2-3 Main employment income nor Table 2-2 salary
+income earners is treated as an error-prone version of the other.
+== Identification consequence
+
+The administrative map can now be refined to:
+
+----
+private-sector payroll
+  -> year-end adjustment status
+  -> no-adjustment reason
+  -> salary receipts >20m
+       |
+       | same salary-receipt threshold, no person link
+       v
+positive-self-assessed-balance returns with salary receipts >20m
+  -> salary withholding / no salary withholding
+  -> primary-income category
+----
+
+A second complete-survey map is now also observed:
+
+----
+filed/processed final-return population
+  -> has employment income
+       -> Main
+       -> Secondary
+  -> positive balance / refund / other status
+----
+
+The new sources therefore reduce semantic uncertainty but do not close the
+cross-source person-linkage gap.
+
+They are not used to calibrate:
+
+* the pseudo calculated-tax-positive rate;
+* v5 +eta+;
+* a payroll-to-return filing probability;
+* a compliance rate; or
+* an additive payroll-plus-return union.
+
+Current status:
+
+----
+SAME_SALARY_RECEIPT_THRESHOLD_BRIDGE_REPRODUCED_PERSON_LINK_NOT_IDENTIFIED
+----
+== Reproduction
+
+[source,shell]
+----
+python scripts/build_source_catalog.py
+python scripts/extract_nta_salary_return_overlap.py
+python scripts/test_nta_salary_return_overlap.py
+python scripts/extract_nta_salary_receipt_return_bridge.py
+python scripts/test_nta_salary_receipt_return_bridge.py
+python scripts/build_derived_catalog.py
+----
+
+Current reproduced anchors:
+
+----
+Table 7 cells = 72
+Table 7 salary-receipt persons = 3,368,241 estimated
+positive-balance salary receipts >20m = 235,287 estimated
+  salary-primary category = 225,050 estimated
+  non-salary-primary categories = 10,237 estimated
+  with salary-source withholding = 227,606 estimated
+  without salary-source withholding = 7,681 estimated
+
+annual Table 2-3 employment-income persons = 13,184,714 exact
+  Main = 11,425,783
+  Secondary = 1,758,931
+
+annual positive-balance employment-income persons = 3,143,364 exact
+  Main = 2,384,138
+  Secondary = 759,226
+
+annual refund employment-income persons = 8,532,771 exact
+  Main = 7,700,263
+  Secondary = 832,508
+
+exact private-salary / >20m positive-balance person overlap = NOT_IDENTIFIED
+----

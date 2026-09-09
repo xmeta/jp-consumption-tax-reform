@@ -187,6 +187,22 @@ SPECS = [
         "Payroll-side no-year-end-adjustment decomposition, >20m statutory filing candidate, all salary-primary return statuses and withholding exposure; exact cross-source person overlap remains NOT_IDENTIFIED and additive unions are prohibited",
     ),
     (
+        "NTA-2024-POSITIVE-BALANCE-SALARY-RECEIPT-CLASS",
+        "nta_positive_balance_salary_receipt_class_2024.csv",
+        "scripts/extract_nta_salary_receipt_return_bridge.py",
+        "NTA-2024-SHINKOKU-T7-XLSX;NTA-2024-SHINKOKU-T7-PDF",
+        "DERIVED_REPRODUCED_OFFICIAL_SURVEY_SALARY_RECEIPT_BRIDGE",
+        "Six Table 7 income-earner blocks x 12 salary-receipt classes within the positive-self-assessed-balance sample; salary-receipt persons/amount and salary-source-withholding exposure with source-cell provenance",
+    ),
+    (
+        "NTA-2024-SALARY-RECEIPT-RETURN-BRIDGE",
+        "nta_salary_receipt_return_bridge_2024.csv",
+        "scripts/extract_nta_salary_receipt_return_bridge.py",
+        "NTA-MINKAN-2024-T19;NTA-2024-SHINKOKU-T7-XLSX;NTA-2024-SHINKOKU-T7-PDF;NTA-2024-ANNUAL-T23-INCOME-TYPE;NTA-2024-ANNUAL-TABLE-NOTES;NTA-R06",
+        "DERIVED_REPRODUCED_OFFICIAL_SALARY_RECEIPT_RETURN_BRIDGE_AUDIT",
+        "Same-threshold >20m payroll/positive-balance salary-receipt diagnostic plus complete-survey Table 2-3 employment-income main/secondary semantics; exact cross-source person overlap remains NOT_IDENTIFIED",
+    ),
+    (
         "NTA-2024-ANNUAL-INCOME-CLASS-PRIMARY-TYPE-FILING-STATUS",
         "nta_income_class_primary_type_filing_status_2024.csv",
         "scripts/extract_nta_annual_income_class_filing_status.py",

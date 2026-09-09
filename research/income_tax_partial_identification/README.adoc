@@ -488,6 +488,34 @@ identifying the cross-source person overlap.  Neither
 Current overlap-audit status:
 `OFFICIAL_OVERLAP_AUDIT_EXACT_PERSON_MATCH_NOT_IDENTIFIED`.
 
+== Salary-receipt to final-return bridge audit
+
+`salary_receipt_return_bridge_audit.adoc` adds Sample Survey Table 7 and
+annual complete-survey Table 2-3.
+
+Table 7 is especially useful because it uses the same salary-receipt concept as
+Private Salary Survey Table 19.  Within the positive-self-assessed-balance
+sample, salary receipts above 20 million yen are estimated at 235,287 persons:
+225,050 in the salary income-earner category and 10,237 in other income-earner
+categories.  Of the 235,287, 227,606 have salary-source withholding and 7,681
+do not.
+
+This does not turn 235,287 / 320,983 into an identified filing or overlap
+probability.  Table 19 is a private-sector payroll survey, Table 7 is a
+positive-balance return-side sample survey, and no common person identifier or
+private/public employer cross-tab is published.
+
+Annual Table 2-3 separately provides complete-survey counts for people with
+employment income in the filed/processed population: 13,184,714 total,
+including 11,425,783 Main and 1,758,931 Secondary.  The official notes also
+show that Table 2-3 Main employment income and the Table 2-2 salary
+income-earner category use different aggregation rules.  Their small count
+differences are therefore recorded as definition differences rather than
+reconciliation failures.
+
+Current bridge status:
+`SAME_SALARY_RECEIPT_THRESHOLD_BRIDGE_REPRODUCED_PERSON_LINK_NOT_IDENTIFIED`.
+
 == Reproduction
 
 [source,shell]
@@ -505,6 +533,12 @@ python scripts/extract_nta_calculated_tax_denominator_audit.py
 python scripts/test_nta_calculated_tax_denominator_audit.py
 python scripts/extract_nta_private_salary_taxpayer_status.py
 python scripts/test_nta_private_salary_taxpayer_status.py
+python scripts/extract_nta_annual_income_class_filing_status.py
+python scripts/test_nta_annual_income_class_filing_status.py
+python scripts/extract_nta_salary_return_overlap.py
+python scripts/test_nta_salary_return_overlap.py
+python scripts/extract_nta_salary_receipt_return_bridge.py
+python scripts/test_nta_salary_receipt_return_bridge.py
 python -m pip install -r requirements-research-lp.txt
 python research/income_tax_partial_identification/run_replacement_transport_lp.py
 python research/income_tax_partial_identification/test_replacement_transport_lp.py
