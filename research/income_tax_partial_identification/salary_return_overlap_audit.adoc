@@ -1,4 +1,4 @@
-= Private-salary to final-return overlap audit
+= Private-salary to income-tax filing/processing overlap audit
 :toc:
 :stem: latexmath
 
@@ -153,7 +153,7 @@ Survey.
 == Why the exact overlap remains unidentified
 
 The public sources do not provide a common person identifier or a published
-cross-tab between the Private Salary Survey and final-return statistics.
+cross-tab between the Private Salary Survey and filed-or-processed income-tax statistics.
 
 In particular:
 

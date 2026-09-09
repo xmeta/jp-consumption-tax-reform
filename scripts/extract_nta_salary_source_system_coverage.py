@@ -219,7 +219,7 @@ def build():
             "NTA-MINKAN-2024-T1;NTA-MINKAN-METHODOLOGY",
             "Table 1!J24; methodology target",
             "SURVEY_STOCK_AVERAGE_NOT_ANNUAL_UNIQUE_PERSON_COUNT",
-            "Average-monthly survey estimate; do not compare as a distinct-person union with final-return persons.",
+            "Average-monthly survey estimate; do not compare as a distinct-person union with filed-or-processed income-tax persons.",
         ),
         metric(
             "private_salary_survey_salary_amount",

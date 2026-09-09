@@ -52,6 +52,7 @@ jobs:
           python scripts/test_nta_salary_receipt_return_bridge.py
           python scripts/extract_nta_salary_source_system_coverage.py
           python scripts/test_nta_salary_source_system_coverage.py
+          python scripts/test_filed_processed_terminology.py
           python scripts/extract_public_sector_person_coverage.py
           python scripts/test_public_sector_person_coverage.py
           python scripts/extract_nta_withholding_person_series.py
