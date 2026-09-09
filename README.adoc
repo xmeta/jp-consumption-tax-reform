@@ -1,6 +1,6 @@
 = 日本の消費税改革研究
 :lang: ja
-:revdate: 2026-09-08
+:revdate: 2026-09-10
 
 本リポジトリは、日本の消費税改革を「税率ありき」ではなく、明示した社会目的の下で評価する研究の正本である。
 
@@ -23,3 +23,4 @@
 * `docs/identification.adoc` — 識別境界と許可される主張
 * `docs/reproducibility.adoc` — 再現性・完全性契約
 * `scripts/validate_repo.py` — 状態矛盾の検査
+* `research/vat_compliance_productivity/` — VAT税率0%と制度完全廃止を分離したコンプライアンス生産性感度分析

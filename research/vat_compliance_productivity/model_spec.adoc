@@ -1,0 +1,276 @@
+= VAT abolition compliance-productivity channel
+:toc:
+:stem: latexmath
+:revdate: 2026-09-10
+
+== Purpose
+
+This module separates the institutional productivity effect of removing
+VAT-specific administration from the ordinary demand effect of changing the
+statutory VAT rate.
+
+It is deliberately narrower than the repository's eventual macro-distribution
+model.
+
+The Phase-1 question is:
+
+----
+Can 0% VAT with the administrative system retained be represented as a
+different policy state from complete VAT abolition, without pretending that
+the resulting productivity dividend is empirically point-identified?
+----
+
+Yes.
+
+== Policy-state separation
+
+The regime file contains four mutually exclusive states:
+
+[cols="3,1,2,2",options="header"]
+|===
+| Regime | Stylized VAT rate | VAT administration | Invoice system
+| Current 8/10 | 10% / 8% | retained | retained
+| Reduced 5 | 5% | retained | retained
+| Zero rate | 0% | retained | retained
+| Full abolition | 0% | abolished | abolished
+|===
+
+The rate vector is therefore insufficient to define the policy.
+
+Let stem:[s_{VAT}] be the VAT administrative state and let
+stem:[a(s_{VAT})] be the fraction of VAT-specific administrative obligations
+removed.
+
+For the current Phase-1 scenarios:
+
+[stem]
+++++
+a(s_{VAT}) =
+\begin{cases}
+0,& \text{administration retained},\\
+1,& \text{institutional abolition}.
+\end{cases}
+++++
+
+This implies mechanically that:
+
+----
+0% VAT + administration retained != full institutional abolition
+----
+
+== Observed evidence and non-identified parameters
+
+Observed evidence is stored separately from model assumptions.
+
+The evidence registry establishes, among other things:
+
+* high reported incidence of invoice-related administrative burden;
+* persistent reported non-tax cost increases;
+* concentration of bookkeeping responsibility in very small firms;
+* a broader all-tax compliance-cost burden that is relatively larger for SMEs;
+* empirical VAT-threshold bunching and evidence that compliance costs matter
+  for small-enterprise responses; and
+* current institutional filing, input-credit, invoice-retention, and exemption
+  threshold mechanisms.
+
+None of the current sources identifies a Japan-wide VAT-only real-resource
+cost share of baseline output.
+
+Therefore:
+
+----
+c_VAT  = NOT_IDENTIFIED
+rho    = NOT_IDENTIFIED
+a_alloc= NOT_IDENTIFIED
+----
+
+where:
+
+* stem:[c_{VAT}] is the counterfactual real-resource share tied specifically to
+  VAT administration;
+* stem:[\rho] is the productive redeployment fraction; and
+* stem:[a_{alloc}] is the abolition-only allocative-efficiency level effect.
+
+The numerical grids are stress tests, not confidence intervals, identified
+sets, estimates, or empirical bounds.
+== Compliance-productivity channel
+
+For a regime with administrative-removal fraction stem:[m], define released
+VAT administrative resources as:
+
+[stem]
+++++
+R_{VAT}=m c_{VAT}.
+++++
+
+Only a fraction stem:[\rho] is assumed to become measured productive output:
+
+[stem]
+++++
+\Delta y_{compliance}=\rho R_{VAT}
+=m\rho c_{VAT}.
+++++
+
+This explicitly prevents the forbidden one-for-one rule:
+
+[stem]
+++++
+\Delta y_{compliance}=c_{VAT}
+++++
+
+unless a stress-test point *separately* sets both stem:[m=1] and
+stem:[\rho=1].
+
+The allocative channel is kept separate:
+
+[stem]
+++++
+\Delta y_{allocation}=m a_{alloc}.
+++++
+
+The institutional output-level sensitivity is therefore:
+
+[stem]
+++++
+\Delta y_{institution}
+=m(\rho c_{VAT}+a_{alloc}).
+++++
+
+The module does not use the VAT rate in this equation.
+
+That is intentional: rate effects belong to the demand/tax wedge channel, not
+to the abolition-of-administration channel.
+
+== Transition-growth reporting
+
+If a level effect is mechanically spread over stem:[T] years, the module
+reports the annualized transition contribution:
+
+[stem]
+++++
+g_{institution,T}
+=
+(1+\Delta y_{institution})^{1/T}-1.
+++++
+
+This is *not* a forecast of annual real GDP growth.
+
+It is only the annualized contribution of the model-contingent level effect.
+The repository objective stem:[g_t>0] still requires the full macro model.
+
+== Stress-test grid
+
+The current grid is fixed in +sensitivity_axes.csv+.
+
+[cols="3,3",options="header"]
+|===
+| Parameter | Stress values
+| stem:[c_{VAT}] | 0; 0.0005; 0.001; 0.0025; 0.005
+| stem:[\rho] | 0; 0.25; 0.5; 0.75; 1
+| stem:[a_{alloc}] | 0; 0.00025; 0.0005; 0.001
+| stem:[T] | 1; 3; 5 years
+|===
+
+Every axis is labelled:
+
+----
+STRESS_TEST_NOT_EMPIRICAL_BOUND
+----
+
+The four regimes times 300 parameter combinations produce 1,200 rows.
+== End-to-end Phase-1 result
+
+All three administration-retained regimes satisfy, for every stress point:
+
+[stem]
+++++
+\Delta y_{institution}=0.
+++++
+
+This includes the 0% VAT regime.
+
+The full-abolition regime spans:
+
+----
+minimum institutional level effect = 0
+maximum institutional level effect = 0.006
+----
+
+The 0.006 value is the maximum of the chosen stress grid:
+
+[stem]
+++++
+1\times(1\times0.005+0.001)=0.006.
+++++
+
+It is not an empirical upper bound.
+
+The result is useful because it proves the architecture:
+
+----
+rate reduction channel     : separate
+administration abolition   : separate
+compliance resource release: separate
+allocative efficiency      : separate
+financing                  : separate
+distribution / FGT2        : not yet linked
+----
+
+== Explicitly excluded Phase-1 outcomes
+
+Every sensitivity row records:
+
+----
+ordinary_vat_demand_effect_status = EXCLUDED_FROM_COMPLIANCE_MODULE
+income_gini_effect_status         = NOT_MODELED_PHASE1
+wealth_gini_effect_status         = NOT_MODELED_PHASE1
+fgt2_effect_status                = NOT_MODELED_PHASE1
+fiscal_balance_effect_status      = FINANCING_CHANNEL_SEPARATE
+debt_gdp_effect_status            = FINANCING_CHANNEL_SEPARATE
+----
+
+This prevents a firm-side administrative-resource model from silently becoming
+a full welfare model.
+
+== Phase-2 requirements
+
+Issue #26 remains open after this Phase-1 implementation.
+
+Before policy optimization, additional work is required to identify or bound:
+
+* VAT-specific hours and monetary resource costs by firm size;
+* the fraction of saved owner/worker time that becomes productive activity;
+* persistent versus transitional software/adviser costs;
+* allocative effects from exemption-threshold and invoice-network distortions;
+* household incidence by income/wealth/age group;
+* demand and pass-through effects;
+* revenue and financing effects under JGB, income-tax, asset-tax and mixed
+  packages; and
+* inflation, debt/GDP, interest-rate and JGB-market feedbacks.
+
+Only after those links exist can the repository jointly report GDP, growth,
+Gini, FGT2, fiscal and debt outcomes for Issue #26.
+
+== Reproduction
+
+[source,shell]
+----
+python scripts/build_source_catalog.py
+python scripts/extract_vat_compliance_evidence.py
+python scripts/test_vat_compliance_evidence.py
+python research/vat_compliance_productivity/run_vat_compliance_productivity.py
+python research/vat_compliance_productivity/test_vat_compliance_productivity.py
+----
+
+Generated artifacts:
+
+* +data/derived/vat_compliance_observed_evidence.csv+
+* +data/derived/vat_compliance_identification_status.csv+
+* +data/derived/vat_compliance_productivity_sensitivity.csv+
+* +data/derived/vat_compliance_productivity_regime_summary.csv+
+
+Current status:
+
+----
+MODEL_CONTINGENT_COMPLIANCE_PRODUCTIVITY_SENSITIVITY_PHASE1_COMPLETE
+----

@@ -1,5 +1,5 @@
 = Research Status
-:revdate: 2026-09-09
+:revdate: 2026-09-10
 
 == Migration
 
@@ -30,6 +30,7 @@
 |Private-salary payroll-tax-positive scale |EXTERNAL_PAYROLL_TAX_DIAGNOSTIC_NO_CROSS_SOURCE_UNION |民間給与実態統計Table 16を全56給与階級セルで再現。乙欄除外後の年末調整済み納税者35,556,416人/給与所得者52,797,680人（67.3447%）は給与側の規模診断。ただし確定申告後のfinal calculated-tax-positive厳密下限とはせず、申告納税額あり5,158,260人との重複不明のため加算しない
 |Recovered score_power thresholds |DOCUMENTED_PRIOR_RUN_NOT_REPRODUCED |回復用メタデータのみ。主結果へ使わない
 |NTA Table 3-1 composition point check |CROSS_PUBLICATION_POINT_CHECK_REPRODUCED |5区分の千人丸め値を表示5区分合計5,174千人で再正規化し、年報の正確人員構成との差最大0.08444ppを再現。独立holdout・CIとは扱わない
+|VAT abolition compliance-productivity channel |MODEL_CONTINGENT_COMPLIANCE_PRODUCTIVITY_SENSITIVITY |0%税率とVAT制度完全廃止を制度状態として分離し、4制度×300 stress pointsを再現。VAT固有実資源費用率、再配分率、配分効率利得は未識別で、0.6%最大値は選択したstress gridの端点にすぎない。需要・Gini・FGT2・財政・債務はこのPhase-1モジュールでは計算しない
 |===
 
 == Non-claims
@@ -50,4 +51,8 @@
 * one-sided v5のMTR envelopeを信頼区間・causal bound・sharp identified set・point-identified filer MTRとは扱わない。
 * NTA長期時系列の「所得階級別納税者数」5,158,260人を算出税額>0の人数とは扱わない。これはpositive self-assessed balance標本母集団であり、23,362,184人という上限もTable 2-2(1)処理対象内だけの自明な上限である。
 * 民間給与実態統計Table 16の年末調整済み納税者35,556,416人を、確定申告後のfinal calculated-tax-positive人数の厳密下限とは扱わない。また5,158,260人との単純和40,714,676人をcross-source unionとして扱わない。person overlapは未識別である。
+* VAT税率0%をVAT制度完全廃止と同一視しない。インボイス・仕入税額控除・申告等の行政制度を維持する0%シナリオでは、制度廃止によるコンプライアンス資源解放を仮定しない。
+* JCCIの事務負担増回答割合やRIETIの全税目コンプライアンス費用率を、日本全体のVAT固有実資源費用率やGDP利得へ直接変換しない。
+* VAT制度廃止のstress grid最大0.6%を推定上限、信頼区間、識別bound、予測とは呼ばない。
+* コンプライアンス資源の節約を1対1でGDPへ変換せず、productive redeployment fractionと配分効率項を別の未識別感度パラメータとして扱う。
 * モデルシミュレーションを政府公式の実質GDP予測とは呼ばない。

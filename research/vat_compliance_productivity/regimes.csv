@@ -1,0 +1,5 @@
+regime_id,vat_standard_rate,vat_reduced_rate,vat_admin_state,invoice_system_state,vat_admin_removal_fraction,demand_channel_status,financing_channel_status,description
+current_8_10_admin_retained,0.10,0.08,retained,retained,0,EXCLUDED_FROM_COMPLIANCE_MODULE,SEPARATE_NOT_MODELED,Current stylized 10% standard / 8% reduced VAT with current administration retained
+reduced_5_admin_retained,0.05,0.05,retained,retained,0,EXCLUDED_FROM_COMPLIANCE_MODULE,SEPARATE_NOT_MODELED,Stylized 5% VAT with VAT and invoice administration retained
+zero_rate_admin_retained,0,0,retained,retained,0,EXCLUDED_FROM_COMPLIANCE_MODULE,SEPARATE_NOT_MODELED,0% statutory VAT rate while VAT/invoice administration remains in force
+full_vat_abolition,0,0,abolished,abolished,1,EXCLUDED_FROM_COMPLIANCE_MODULE,SEPARATE_NOT_MODELED,Institutional abolition of VAT-specific calculation input-credit invoice and filing administration
