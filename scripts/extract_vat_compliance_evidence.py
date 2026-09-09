@@ -2,8 +2,10 @@
 """Extract observed Japan VAT-compliance evidence without turning it into GDP gains."""
 from pathlib import Path
 import argparse, csv, io, re
+from decimal import Decimal
 from pypdf import PdfReader
 from extract_meti_vat_internal_hours import build as build_meti_hours
+from build_bsws_2019_industry_hourly_wage_bridge import build as build_bsws_wages
 
 ROOT = Path(__file__).resolve().parents[1]
 CATALOG = ROOT / "data/source_catalog.csv"
@@ -43,6 +45,8 @@ def build():
     cat={r["source_id"]:r for r in read_csv(CATALOG)}
     required=[
       "METI-2021-SME-TAX-SURVEY",
+      "ESTAT-BSWS-2019-INDUSTRY-WAGE-T1",
+      "ESTAT-BSWS-2019-INDUSTRY-WAGE-DB-SNAPSHOT",
       "JCCI-2024-INVOICE-BACKOFFICE-SURVEY",
       "JCCI-2025-INVOICE-SURVEY",
       "RIETI-2019-VAT-COMPLIANCE-FIRM-GROWTH",
@@ -96,6 +100,12 @@ def build():
     meti = PdfReader(ROOT/cat["METI-2021-SME-TAX-SURVEY"]["raw_file"])
     meti_p5 = meti.pages[4].extract_text() or ""
     require_tokens(meti_p5,["対象エリア：全国","調査対象数：20,000件","回収数：4,412件","有効回答数：4,410件","株式会社帝国データバンク"],"METI2021 p5")
+    wage_rows=build_bsws_wages()
+    wage_total=next(r for r in wage_rows if r["industry_code"]=="01")
+    major_wages=[r for r in wage_rows if r["industry_code"]!="01"]
+    h_lb=Decimal(meti_bound["no_top_code_cap"]["mean_hours_lower_bound"])
+    w_sched=Decimal(wage_total["scheduled_hour_rate_yen"])
+    w_eff=Decimal(wage_total["regular_cash_effective_hour_rate_yen"])
 
     rows=[]
     # METI directly measures VAT-specific internal tax-procedure hours for a
@@ -121,22 +131,50 @@ def build():
         "METI-2021-SME-TAX-SURVEY","PDF p.67 / printed p.67",
         "OBSERVED_CONDITIONAL_SURVEY_SUBSET","DIRECT_VAT_HOURS_DISTRIBUTION_NOT_NATIONAL_MEAN",
         "Published share in the open-ended 100 hours or more category."),
-      evidence("meti2021_vat_internal_hours_mean_lower_bound",meti_bound["no_top_code_cap"]["mean_hours_lower_bound"],"hours_per_responding_corporation_year",
+      evidence("meti2021_vat_internal_hours_mean_lower_bound",meti_bound["no_top_code_cap"]["mean_hours_lower_bound"],"hours_per_responding_corporation_reported_period",
         "DERIVED_PARTIAL_IDENTIFICATION_BOUND","corporations responding to the published consumption-tax internal-hours item","1514",
         "METI-2021-SME-TAX-SURVEY","PDF p.67 / printed p.67; derived with one-decimal rounding and integer-count constraints",
         "CONDITIONAL_RESPONDENT_SUBSET_LOWER_BOUND","HOURS_BOUND_ONLY_NOT_C_VAT",
-        "Conservative mean lower bound using bin lower endpoints over all 28 integer count vectors compatible with n=1,514 and published rounded shares; not a national-firm mean."),
+        "Conservative mean lower bound using bin lower endpoints over all 28 integer count vectors compatible with n=1,514 and published rounded shares. Q8-3 does not explicitly label the tax-item hours as annual; not a national-firm mean."),
       evidence("meti2021_hours_selection_label_internal_inconsistency","1","boolean",
         "SOURCE_INTERNAL_CONSISTENCY_CHECK","published section 7 tax-procedure survey results","",
         "METI-2021-SME-TAX-SURVEY","PDF pp.65-67 / printed pp.65-67",
-        "SOURCE_REPORTED_SELECTION_LABEL_INCONSISTENT_WITH_COUNTS","SAMPLE_SCOPE_CAUTION",
-        "Printed p.66 says the hours question targets Q(1)=yes, but p.65 n=3,965 at 17.0% implies only 673-676 yes responses under one-decimal rounding, fewer than the VAT item n=1,514; do not silently repair the source label."),
+        "RESULTS_SELECTOR_CONFLICTS_WITH_QUESTIONNAIRE_AND_COUNTS","SAMPLE_SCOPE_CAUTION",
+        "Results p.66 says the hours question targets Q8-1=yes, but the questionnaire Q8-3 targets Q8-1=No. Independently, p.65 n=3,965 at 17.0% implies only 673-676 yes responses under one-decimal rounding, fewer than VAT-item n=1,514. Treat results-page selector as conflicting source metadata, not as the sample definition."),
       evidence("meti2021_all_tax_external_outsourcing_scope","1","boolean",
         "OFFICIAL_SURVEY_SCOPE_DEFINITION","respondents to annual tax-procedure outsourcing-cost item","3755",
         "METI-2021-SME-TAX-SURVEY","PDF p.70 / printed p.70",
         "OBSERVED_ALL_TAX_EXTERNAL_OUTSOURCING","DO_NOT_ATTRIBUTE_TO_VAT",
         "Published external outsourcing expenditure is for tax-procedure work generally and is not disaggregated to consumption tax."),
     ]
+    rows += [
+      evidence("rieti2021_bsws_industry_hourly_wage_method","1","boolean",
+        "STUDY_METHOD_DEFINITION","firms in RIETI tax-compliance-cost study","",
+        "RIETI-2021-QUANT-TAX-COMPLIANCE-COST","PDF p.4 / printed p.2",
+        "OBSERVED_STUDY_METHOD","METHOD_BRIDGE_ONLY",
+        "RIETI states that tax-procedure hours were valued using industry-specific hourly wages from the MHLW Basic Survey on Wage Structure, but the paper does not identify the exact table/formula used to construct hourly wages."),
+      evidence("bsws2019_industry_total_scheduled_hour_rate_yen",wage_total["scheduled_hour_rate_yen"],"yen_per_hour",
+        "DERIVED_OFFICIAL_WAGE_COMPONENT_RATIO","2019 general workers, private establishments, enterprise-size 10+ total, industry total","",
+        "ESTAT-BSWS-2019-INDUSTRY-WAGE-DB-SNAPSHOT","DB sid=0003084009 / statInfId=000031919751",
+        "DERIVED_TRANSPARENT_WAGE_CANDIDATE","WAGE_CONVERSION_SENSITIVITY_ONLY",
+        "Scheduled cash earnings divided by scheduled actual hours; transparent candidate, not asserted to be RIETI's exact unpublished formula."),
+      evidence("bsws2019_industry_total_regular_cash_effective_hour_rate_yen",wage_total["regular_cash_effective_hour_rate_yen"],"yen_per_hour",
+        "DERIVED_OFFICIAL_WAGE_COMPONENT_RATIO","2019 general workers, private establishments, enterprise-size 10+ total, industry total","",
+        "ESTAT-BSWS-2019-INDUSTRY-WAGE-DB-SNAPSHOT","DB sid=0003084009 / statInfId=000031919751",
+        "DERIVED_TRANSPARENT_WAGE_CANDIDATE","WAGE_CONVERSION_SENSITIVITY_ONLY",
+        "Regular cash earnings divided by scheduled plus overtime actual hours; transparent candidate, not asserted to be RIETI's exact unpublished formula."),
+      evidence("meti2021_vat_internal_labor_cost_industry_total_scheduled_bridge",str(h_lb*w_sched),"yen_per_responding_corporation_reported_period",
+        "MECHANICAL_CROSS_SOURCE_WAGE_CONVERSION","METI VAT-hours respondent subset valued at 2019 BSWS industry-total scheduled-hour rate","1514",
+        "METI-2021-SME-TAX-SURVEY","METI p.67 hours lower bound x e-Stat 2019 industry-total scheduled-hour wage candidate",
+        "MECHANICAL_WAGE_CONVERSION_NOT_ANNUAL_NOT_POPULATION_ESTIMATE","DO_NOT_USE_AS_NATIONAL_C_VAT",
+        "Mechanical conversion only; Q8-3 period is not explicitly annual, respondent industry composition is unknown, wage year differs, and VAT-specific external outsourcing is missing."),
+      evidence("meti2021_vat_internal_labor_cost_industry_total_effective_bridge",str(h_lb*w_eff),"yen_per_responding_corporation_reported_period",
+        "MECHANICAL_CROSS_SOURCE_WAGE_CONVERSION","METI VAT-hours respondent subset valued at 2019 BSWS industry-total regular-cash effective hourly rate","1514",
+        "METI-2021-SME-TAX-SURVEY","METI p.67 hours lower bound x e-Stat 2019 industry-total effective hourly wage candidate",
+        "MECHANICAL_WAGE_CONVERSION_NOT_ANNUAL_NOT_POPULATION_ESTIMATE","DO_NOT_USE_AS_NATIONAL_C_VAT",
+        "Mechanical conversion only; Q8-3 period is not explicitly annual, respondent industry composition is unknown, wage year differs, and VAT-specific external outsourcing is missing."),
+    ]
+    assert len(major_wages)==16
     assert meti_bin["ge100"]["published_percent"] == "6.7"
     # JCCI invoice burden incidence. These are response shares, not resource shares.
     rows += [
@@ -254,8 +292,10 @@ def build():
       {"quantity":"invoice_burden_incidence","status":"OBSERVED_SURVEY_RESPONSE","point_identified":"NO_POPULATION_CAUSAL_POINT","model_use":"DESCRIPTIVE_EVIDENCE","note":"JCCI respondent shares establish widespread reported burden, not national resource-cost shares."},
       {"quantity":"firm_size_backoffice_vulnerability","status":"OBSERVED_SURVEY_RESPONSE","point_identified":"NO_NATIONAL_CAUSAL_POINT","model_use":"HETEROGENEITY_MOTIVATION","note":"Small firms are much more likely to have one-person/no-dedicated accounting; not VAT-specific hours."},
       {"quantity":"all_tax_compliance_cost_sales_ratio","status":"OBSERVED_STUDY_ESTIMATE_ALL_TAX_TYPES","point_identified":"NO_VAT_COMPONENT","model_use":"SCALE_CONTEXT_ONLY","note":"0.06% large and 0.17% SME averages include multiple tax types and use study-specific imputation."},
-      {"quantity":"vat_specific_internal_hours_respondent_subset","status":"PARTIALLY_IDENTIFIED_CONDITIONAL_ON_RESPONDENT_SUBSET","point_identified":"LOWER_BOUND_ONLY_TOP_CODED","model_use":"HOURS_EVIDENCE_NOT_NATIONAL_C_VAT","note":"METI n=1,514 directly measures VAT-specific internal hours. Published one-decimal shares plus integer counts imply a 15.126155878468 h/respondent-year lower bound; 100+ top coding leaves the uncapped upper bound open, and source-reported selection scope is internally inconsistent."},
-      {"quantity":"vat_specific_real_resource_cost_share_of_output","status":"NOT_IDENTIFIED","point_identified":"NO","model_use":"STRESS_TEST_PARAMETER_ONLY","note":"METI now partially identifies VAT-specific internal hours within a respondent subset, but national population reweighting/selection, wage or opportunity-cost conversion, and VAT-specific external expenditure remain unavailable; therefore Japan-wide c_VAT is not identified."},
+      {"quantity":"vat_specific_internal_hours_respondent_subset","status":"PARTIALLY_IDENTIFIED_CONDITIONAL_ON_RESPONDENT_SUBSET","point_identified":"LOWER_BOUND_ONLY_TOP_CODED","model_use":"HOURS_EVIDENCE_NOT_NATIONAL_C_VAT","note":"METI n=1,514 directly measures VAT-specific internal hours for the reported Q8-3 response period. Published one-decimal shares plus integer counts imply a 15.126155878468 h/respondent lower bound; Q8-3 does not explicitly label tax-item hours as annual, 100+ top coding leaves the uncapped upper bound open, and results-page selector conflicts with the questionnaire and counts."},
+      {"quantity":"rieti_exact_bsws_hourly_wage_formula","status":"NOT_IDENTIFIED_FROM_PAPER","point_identified":"NO","model_use":"TRANSPARENT_ALTERNATIVE_FORMULAS_ONLY","note":"RIETI 21-P-018 identifies the MHLW Basic Survey on Wage Structure as the industry-hourly-wage source but does not identify the exact table/formula. The repository therefore carries two transparent official-component ratios rather than claiming exact replication."},
+      {"quantity":"vat_specific_internal_labor_cost_respondent_reported_period","status":"MECHANICAL_WAGE_CONVERSION_ONLY","point_identified":"NO_ANNUAL_OR_POPULATION_POINT","model_use":"SENSITIVITY_ONLY_NOT_C_VAT","note":"The METI conditional hours lower bound can be multiplied by official BSWS wage candidates, giving about 29.1-29.6k yen/respondent at the industry-total candidates for the reported Q8-3 period. The period is not explicitly annual and respondent industry composition, selection, temporal alignment, and VAT-specific outsourcing remain unresolved."},
+      {"quantity":"vat_specific_real_resource_cost_share_of_output","status":"NOT_IDENTIFIED","point_identified":"NO","model_use":"STRESS_TEST_PARAMETER_ONLY","note":"METI partially identifies VAT-specific internal hours and the repository now supplies transparent official wage-conversion candidates, but Q8-3 period is not explicitly annual; national population reweighting/selection, respondent industry mix, temporal alignment, and VAT-specific external expenditure remain unavailable. Therefore Japan-wide c_VAT is not identified."},
       {"quantity":"productive_redeployment_fraction_rho","status":"NOT_IDENTIFIED","point_identified":"NO","model_use":"STRESS_TEST_PARAMETER_ONLY","note":"Saved compliance resources need not convert one-for-one into measured output."},
       {"quantity":"allocative_efficiency_dividend","status":"NOT_IDENTIFIED","point_identified":"NO","model_use":"STRESS_TEST_PARAMETER_ONLY","note":"Bunching evidence motivates a separate allocation channel but does not identify a macro output percentage."},
       {"quantity":"zero_rate_equals_full_abolition","status":"FALSE_BY_POLICY_DEFINITION","point_identified":"NOT_APPLICABLE","model_use":"PROHIBITED_EQUIVALENCE","note":"Policy state must separately encode VAT administrative/invoice obligations."},

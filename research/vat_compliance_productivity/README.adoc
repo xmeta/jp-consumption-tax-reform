@@ -11,15 +11,26 @@ Issue #26 Phase 1 separates VAT institutional abolition from a 0% statutory rate
 * +test_vat_compliance_productivity.py+ — architecture and numeric regression tests.
 
 Observed Japan evidence is generated separately by
-+scripts/extract_meti_vat_internal_hours.py+ and
++scripts/extract_meti_vat_internal_hours.py+,
++scripts/build_bsws_2019_industry_hourly_wage_bridge.py+,
++scripts/build_meti_vat_internal_labor_cost_bridge.py+, and
 +scripts/extract_vat_compliance_evidence.py+.
 
 Phase 2 now has a directly observed METI VAT-specific internal-hours
 distribution for n=1,514 respondents, nested within a nationwide corporation
 survey with 20,000 targets and 4,410 valid responses.  Rounding-consistent partial
-identification gives a 15.126155878468 hours/respondent-year lower bound, while
-the 100+ top code leaves the uncapped upper bound open.  This is not a national
-firm mean and does not identify +c_VAT+.
+identification gives a 15.126155878468 hours/respondent lower bound for the reported Q8-3 period, while
+the 100+ top code leaves the uncapped upper bound open.  Q8-3 does not explicitly
+label the tax-item hours as annual.  This is not a national firm mean and does
+not identify +c_VAT+.
+
+The wage bridge adds 2019 MHLW Basic Survey on Wage Structure components for
+17 industry-total/major-industry rows. Two transparent hourly-wage formulas are
+kept because RIETI 21-P-018 names the survey and industry-hourly-wage concept
+but does not identify the exact table/formula it used. At the industry-total
+benchmarks, mechanically valuing the METI lower-bound hours gives about
+29.1--29.6 thousand yen per respondent for the reported Q8-3 period. This is
+not an annual, population, GDP-share, or national +c_VAT+ estimate.
 
 == Scientific status
 

@@ -67,8 +67,9 @@ The evidence registry establishes, among other things:
 * high reported incidence of invoice-related administrative burden;
 * persistent reported non-tax cost increases;
 * concentration of bookkeeping responsibility in very small firms;
-* METI's FY2021 survey directly reports annual internal tax-procedure hours for
-  consumption tax in a respondent subset (n=1,514);
+* METI's FY2021 survey directly reports internal tax-procedure hours for
+  consumption tax in a respondent subset (n=1,514), while Q8-3 does not
+  explicitly label the tax-item time measure as annual;
 * a broader all-tax compliance-cost burden that is relatively larger for SMEs;
 * empirical VAT-threshold bunching and evidence that compliance costs matter
   for small-enterprise responses; and
@@ -89,7 +90,7 @@ jointly feasible integer count vectors.  Using only each bin's lower endpoint
 gives the conditional respondent-subset mean bound:
 
 ----
-mean VAT-specific internal hours >= 15.126155878468 hours/respondent-year
+mean VAT-specific internal hours >= 15.126155878468 hours/respondent (reported Q8-3 period)
 ----
 
 The 100+ category prevents any finite empirical upper bound.  If an additional
@@ -98,22 +99,67 @@ suprema are 24.0350 hours at a 100-hour cap, 27.4036 at 150 hours, 34.1407 at
 250 hours, 50.9835 at 500 hours, and 84.6691 at 1,000 hours.  These are not
 confidence limits or population upper bounds.
 
-The published source also requires a sample-scope caution.  Printed p.66 says
-the hours item targets respondents answering ``yes'' to the preceding p.65
-question.  But p.65 reports n=3,965 and 17.0% yes; one-decimal rounding permits
-only 673--676 such responses, which cannot contain the VAT item n=1,514.  The
-repository records this internal inconsistency rather than silently correcting
-the source label.
+The published source also requires a sample-scope caution.  Results p.66 says
+the hours item targets respondents answering ``yes'' to the preceding Q8-1,
+whereas questionnaire Q8-3 explicitly targets Q8-1 ``No'' respondents.  The
+results-page label is also numerically impossible as a literal selector: p.65
+reports n=3,965 and 17.0% yes, so one-decimal rounding permits only 673--676 yes
+responses, fewer than the VAT item n=1,514.  The repository preserves this
+source conflict rather than inventing a sample definition.
 
 METI p.70 also reports annual external tax-procedure outsourcing expenditure,
 but it is not disaggregated by tax type.  It therefore cannot be assigned to
 VAT.
 
 Consequently, the METI result partially identifies VAT-specific *internal
-hours within the observed respondent subset*, but it still does not identify a
-Japan-wide VAT-only real-resource share of baseline output.  Population
-selection/reweighting, an appropriate wage or opportunity-cost conversion, and
-VAT-specific external expenditure are still missing.
+hours within the observed respondent subset and reported Q8-3 period*.  Because
+the tax-item hours are not explicitly labelled annual, it cannot yet be
+multiplied by an annual wage benchmark as though its period were identified.
+It also does not identify a Japan-wide VAT-only real-resource share of baseline
+output.
+
+=== BSWS wage-conversion bridge
+
+RIETI 21-P-018 states that tax-procedure labor time was valued using
+industry-specific hourly wages from the Ministry of Health, Labour and Welfare
+Basic Survey on Wage Structure.  The paper does not identify the exact e-Stat
+table or the exact arithmetic used to construct its hourly wage, so this
+repository does not claim an exact replication of that unpublished step.
+
+For 2019 e-Stat Table 1 (statInfId 000031919751; DB sid 0003084009), the
+repository preserves four official components for 17 industry-total/major-
+industry rows: scheduled actual hours, overtime actual hours, regular cash
+earnings, and scheduled cash earnings.  Two transparent wage candidates are
+then defined:
+
+[stem]
+++++
+w^{sched}_j = rac{1000\,S_j}{H^{sched}_j},
+\qquad
+w^{eff}_j = rac{1000\,R_j}{H^{sched}_j+H^{ot}_j},
+++++
+
+where stem:[S_j] is scheduled cash earnings in thousand yen, stem:[R_j] is
+regular cash earnings in thousand yen, and the two hour variables are monthly
+actual hours.  For the industry-total row these yield 1,923.125 yen/hour and
+1,953.757225433526 yen/hour.  Across the 16 major-industry rows the transparent
+rate range is approximately 1,466--2,852 yen/hour depending on formula and
+industry.
+
+Combining either hourly rate with the METI conditional lower-bound hours is a
+*mechanical cross-source conversion*, not a newly identified annual cost.  At
+the industry-total rates:
+
+----
+15.126155878468 h x 1,923.125 yen/h = about 29,089 yen/respondent/Q8-3 reported period
+15.126155878468 h x 1,953.757225... yen/h = about 29,553 yen/respondent/Q8-3 reported period
+----
+
+The full 34-scenario industry/formula table is retained for sensitivity.  The
+conversion still lacks an explicitly annual Q8-3 period, respondent-subset
+industry weights, population-selection correction, temporal alignment between
+2019 wages and the FY2021 survey, and VAT-specific external outsourcing.
+Therefore it cannot be interpreted as Japan-wide stem:[c_{VAT}].
 
 Therefore:
 
@@ -277,7 +323,9 @@ Issue #26 remains open after this Phase-1 implementation.
 
 Before policy optimization, additional work is required to identify or bound:
 
-* VAT-specific hours and monetary resource costs by firm size;
+* an identified reporting period and population weights for VAT-specific hours;
+* VAT-specific monetary resource costs by firm size and industry;
+* the exact RIETI BSWS hourly-wage construction, or a justified replacement;
 * the fraction of saved owner/worker time that becomes productive activity;
 * persistent versus transitional software/adviser costs;
 * allocative effects from exemption-threshold and invoice-network distortions;
@@ -297,6 +345,9 @@ Gini, FGT2, fiscal and debt outcomes for Issue #26.
 python scripts/build_source_catalog.py
 python scripts/extract_meti_vat_internal_hours.py
 python scripts/test_meti_vat_internal_hours.py
+python scripts/build_bsws_2019_industry_hourly_wage_bridge.py
+python scripts/build_meti_vat_internal_labor_cost_bridge.py
+python scripts/test_bsws_vat_wage_bridge.py
 python scripts/extract_vat_compliance_evidence.py
 python scripts/test_vat_compliance_evidence.py
 python research/vat_compliance_productivity/run_vat_compliance_productivity.py
@@ -307,6 +358,8 @@ Generated artifacts:
 
 * +data/derived/meti_2021_vat_internal_hours_distribution.csv+
 * +data/derived/meti_2021_vat_internal_hours_bounds.csv+
+* +data/derived/bsws_2019_industry_hourly_wage_bridge.csv+
+* +data/derived/meti_vat_internal_labor_cost_wage_sensitivity.csv+
 * +data/derived/vat_compliance_observed_evidence.csv+
 * +data/derived/vat_compliance_identification_status.csv+
 * +data/derived/vat_compliance_productivity_sensitivity.csv+

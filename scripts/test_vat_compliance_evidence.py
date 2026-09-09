@@ -22,6 +22,11 @@ anchors={
  "meti2021_vat_internal_hours_mean_lower_bound":"15.126155878468",
  "meti2021_hours_selection_label_internal_inconsistency":"1",
  "meti2021_all_tax_external_outsourcing_scope":"1",
+ "rieti2021_bsws_industry_hourly_wage_method":"1",
+ "bsws2019_industry_total_scheduled_hour_rate_yen":"1923.125",
+ "bsws2019_industry_total_regular_cash_effective_hour_rate_yen":"1953.757225433526",
+ "meti2021_vat_internal_labor_cost_industry_total_scheduled_bridge":"29089.488523778772500",
+ "meti2021_vat_internal_labor_cost_industry_total_effective_bridge":"29552.836340590658784668718168",
  "jcci2024_invoice_cost_increase_share":"0.488",
  "jcci2024_invoice_admin_burden_increase_share":"0.822",
  "jcci2025_invoice_cost_increase_share":"0.458",
@@ -45,6 +50,10 @@ assert ev["rieti2021_vat_output_response_compliance_vs_rate"]["model_calibration
 assert ident["vat_specific_internal_hours_respondent_subset"]["status"]=="PARTIALLY_IDENTIFIED_CONDITIONAL_ON_RESPONDENT_SUBSET"
 assert ident["vat_specific_internal_hours_respondent_subset"]["point_identified"]=="LOWER_BOUND_ONLY_TOP_CODED"
 assert ident["vat_specific_internal_hours_respondent_subset"]["model_use"]=="HOURS_EVIDENCE_NOT_NATIONAL_C_VAT"
+assert ident["rieti_exact_bsws_hourly_wage_formula"]["status"]=="NOT_IDENTIFIED_FROM_PAPER"
+assert ident["rieti_exact_bsws_hourly_wage_formula"]["model_use"]=="TRANSPARENT_ALTERNATIVE_FORMULAS_ONLY"
+assert ident["vat_specific_internal_labor_cost_respondent_reported_period"]["status"]=="MECHANICAL_WAGE_CONVERSION_ONLY"
+assert ident["vat_specific_internal_labor_cost_respondent_reported_period"]["point_identified"]=="NO_ANNUAL_OR_POPULATION_POINT"
 assert ident["vat_specific_real_resource_cost_share_of_output"]["status"]=="NOT_IDENTIFIED"
 assert ident["vat_specific_real_resource_cost_share_of_output"]["model_use"]=="STRESS_TEST_PARAMETER_ONLY"
 assert ident["productive_redeployment_fraction_rho"]["status"]=="NOT_IDENTIFIED"
@@ -54,6 +63,8 @@ assert ident["compliance_savings_one_for_one_gdp"]["status"]=="PROHIBITED"
 assert ident["income_gini_and_FGT2_effect"]["status"]=="NOT_MODELED_PHASE1"
 assert ident["fiscal_debt_effect"]["model_use"]=="FINANCING_CHANNEL_SEPARATE"
 hashes={
+ "ESTAT-BSWS-2019-INDUSTRY-WAGE-T1":"9583495007287b89e163a3202c4d3f6e757dfcfc355076dcde0321e0276ac811",
+ "ESTAT-BSWS-2019-INDUSTRY-WAGE-DB-SNAPSHOT":"510b65c6a47d54d4074594fe376458920e5a74edc105acc7aa14aea49993a8a1",
  "METI-2021-SME-TAX-SURVEY":"e6a5767910f2c1e024ec0b281e6f300949e735cdc6c9b052e164b6890948e563",
  "JCCI-2024-INVOICE-BACKOFFICE-SURVEY":"7ab80915efa7659e6f25cc152b7b5d2eef3c70038333eb6bc043642759d56126",
  "JCCI-2025-INVOICE-SURVEY":"d89a599e900146c7c8ec5e1f4b0702b9dd7d292b47042e9e57186dda4525605e",
@@ -79,9 +90,13 @@ for k in ("jcci2024_invoice_admin_burden_increase_share",
     assert ev[k]["evidence_type"]=="SURVEY_RESPONSE_SHARE"
 
 subprocess.run([sys.executable,str(ROOT/"scripts/extract_vat_compliance_evidence.py"),"--check"],cwd=ROOT,check=True)
+assert ev["meti2021_vat_internal_hours_mean_lower_bound"]["unit"]=="hours_per_responding_corporation_reported_period"
 assert ev["meti2021_vat_internal_hours_mean_lower_bound"]["model_calibration_permission"]=="HOURS_BOUND_ONLY_NOT_C_VAT"
 assert ev["meti2021_all_tax_external_outsourcing_scope"]["model_calibration_permission"]=="DO_NOT_ATTRIBUTE_TO_VAT"
 assert ev["meti2021_corporate_survey_target_n"]["model_calibration_permission"]=="FRAME_CONTEXT_NOT_POPULATION_WEIGHT"
 assert ev["meti2021_corporate_survey_valid_response_n"]["model_calibration_permission"]=="FRAME_CONTEXT_NOT_VAT_ITEM_RESPONSE_RATE"
-assert len(ev)==40 and len(ident)==11
-print("VAT compliance evidence tests: OK (40 observed-evidence rows; respondent-subset VAT hours partially identified; national VAT resource share remains NOT_IDENTIFIED)")
+assert ev["rieti2021_bsws_industry_hourly_wage_method"]["model_calibration_permission"]=="METHOD_BRIDGE_ONLY"
+assert ev["bsws2019_industry_total_scheduled_hour_rate_yen"]["model_calibration_permission"]=="WAGE_CONVERSION_SENSITIVITY_ONLY"
+assert ev["meti2021_vat_internal_labor_cost_industry_total_scheduled_bridge"]["model_calibration_permission"]=="DO_NOT_USE_AS_NATIONAL_C_VAT"
+assert len(ev)==45 and len(ident)==13
+print("VAT compliance evidence tests: OK (45 observed-evidence rows; hours-to-yen mechanical bridge added; national VAT resource share remains NOT_IDENTIFIED)")
