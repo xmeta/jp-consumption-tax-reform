@@ -1,0 +1,2 @@
+spec_version,bridge_scheme,zero_discrepancy_feasible,delta_zero_star,average_percentile_rank_displacement_pp,solver_status_code,solver_message,numpy_version,scipy_version,solver_method,scientific_status,historical_v6_restricted_lp_reproduced,p1c13_v1_modified,p1c14_v2_modified
+rank_bridge_lp_v3,rank_transport_budget,False,,,2,The problem is infeasible. (HiGHS Status 8: model_status is Infeasible; primal_status is None),2.5.3,1.18.1,highs-ds,MODEL_CONTINGENT_RANK_TRANSPORT_BUDGET,False,False,False

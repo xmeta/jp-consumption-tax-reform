@@ -252,7 +252,28 @@ At displacement budget zero, the v3 feasible set must reproduce v2 exactly.
 The public tables 7-141-1 and 7-171 remain interpretation-only diagnostics and
 do not impose an NSFCW-to-NTA category crosswalk.
 
-No v3 numerical result is present at the pre-specification stage.
+The pre-specification commit contains no v3 numerical result.
+
+v3 is subsequently implemented in `run_rank_bridge_lp_v3.py` and verified by
+`test_rank_bridge_lp_v3.py`.  Generated evidence is:
+
+* `rank_bridge_lp_v3_minimum_relaxation_frontier.csv`;
+* `rank_bridge_lp_v3_minimum_decile_diagnostics.csv`;
+* `rank_bridge_lp_v3_zero_discrepancy_threshold.csv`;
+* `rank_bridge_lp_v3_analytical_rate_floor.csv`;
+* `rank_bridge_lp_v3_transport_plans.csv`;
+* `rank_bridge_lp_v3_endpoints.csv`.
+
+The analytical-rate-floor artifact separates the aggregate/non-negativity
+compatibility floor from rank-transport restrictions.  Frontier MTR endpoints
+at a minimum-discrepancy solution must not be interpreted as point
+identification merely because their numerical interval can collapse: the
+minimum-epsilon objective itself can force the pseudo-filer mixture to an
+extreme scenario boundary.
+
+v3 remains a model-contingent sensitivity and does not modify P1-C13 or
+P1-C14.  Paper promotion remains separate and is prohibited until the
+implementation commit passes CI.
 
 == Reproduction
 
@@ -268,6 +289,8 @@ python research/income_tax_partial_identification/run_replacement_transport_lp.p
 python research/income_tax_partial_identification/test_replacement_transport_lp.py
 python research/income_tax_partial_identification/run_rank_bridge_lp_v2.py
 python research/income_tax_partial_identification/test_rank_bridge_lp_v2.py
+python research/income_tax_partial_identification/run_rank_bridge_lp_v3.py
+python research/income_tax_partial_identification/test_rank_bridge_lp_v3.py
 ----
 
 The generated outputs must remain deterministic under a clean checkout and all
