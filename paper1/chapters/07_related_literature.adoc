@@ -1,0 +1,56 @@
+== Relation to the literature
+
+=== Partial identification
+
+The methodological stance follows the partial-identification literature:
+empirical content should be characterized by the set of parameter values
+consistent with data and maintained assumptions, rather than by forcing a
+point estimate when the data do not support one.  This perspective is
+developed by <<manski2003>>, surveyed by <<tamer2010>>, and updated by
+<<kline-tamer2023>>.
+
+Our stage-1 result is especially close in spirit to this literature because the
+unobserved population mismatch is left as an explicit nuisance parameter and
+the conclusion is stated as a threshold frontier.  We do not yet construct
+sampling confidence regions for the full latent MTR set.  The distinction
+between an identified set and statistical confidence regions follows
+<<chernozhukov-hong-tamer2007>>.
+
+=== Taxable-income responses and marginal rates
+
+The elasticity-of-taxable-income literature emphasizes that marginal tax rates
+and behavioral responses are distinct empirical objects and that ETI can serve
+as a sufficient statistic only under additional assumptions; see
+<<saez-slemrod-giertz2012>>.
+
+That distinction motivates our refusal to infer behavioral net revenue from a
+static liability reconstruction.  The present paper concerns identification of
+incidence inputs, not estimation of ETI from aggregate household tables.
+
+=== Tax-benefit microsimulation
+
+Microsimulation is a standard tool for evaluating tax incidence,
+redistribution, poverty, and policy reforms.  <<bourguignon-spadaro2006>>
+discuss the interpretation and limits of redistribution microsimulation, while
+<<sutherland-figari2013>> describe the data, policy coding, and validation
+architecture of EUROMOD.
+
+For Japan, <<ohno2023>> develops a household-microdata microsimulation of
+personal income taxation and highlights applications including marginal tax
+rates and distributional burden analysis.
+
+Our contribution is complementary rather than a substitute for those models.
+When suitable household or filer microdata are available, microsimulation can
+apply tax law at the unit level.  Our question is what remains defensibly
+identified when redistribution of the underlying microdata is unavailable and
+the reproducible researcher instead observes public aggregate tables from
+different populations.
+
+=== Aggregate-data reconstruction
+
+The paper therefore treats synthetic reconstruction as a selection device,
+not an identification result.  Maximum-entropy or calibrated pseudo-unit
+solutions may be useful for sensitivity analysis, but conclusions are promoted
+to identified claims only when they hold over the admissible population set or
+when an explicit robustness frontier states the dependence on unresolved
+quantities.

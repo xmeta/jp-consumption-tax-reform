@@ -1,0 +1,188 @@
+== Marginal-incidence identification status
+
+The stage-1 result does not by itself identify the filer-level statutory
+marginal-tax-rate distribution.
+
+=== Reproducible pseudo-filer sensitivity construction
+
+The repository now contains an independently reproducible pseudo-filer
+sensitivity core under
+`research/income_tax_pseudofiler/`.
+
+The core is generated from repository-tracked official-source-derived inputs:
+F71561 household-type/decile aggregates, the F71911 household-size and age
+bridge, F71531 tax and social-insurance moments, and versioned 2026 National Tax
+Agency statutory parameters.  The raw official source files, source locators,
+and SHA-256 values are retained in the repository.
+
+For each decile and sensitivity scenario, the construction allocates aggregate
+income components to pseudo tax units, applies the statutory income
+transformations and tax brackets, and chooses a nuisance income scale to match
+the observed aggregate income-tax liability moment or, at statutory
+discontinuities, the nearest achievable moment.
+
+The nuisance scale is a calibration device.  It is not a behavioral,
+structural, or causal parameter.
+
+The construction evaluates thirteen explicit scenarios over ten income deciles, including NTA Table 17 salary-class and F71551 pension-age external sensitivities.
+The generated outputs and executable tests are regenerated in CI.  Its
+reproducibility status is therefore
+`SENSITIVITY_ONLY_REPRODUCED`.
+
+This is a reproducibility statement, not an identification statement.
+
+The construction still does not observe:
+
+* filer-level income;
+* filer status for the F71561 household cells;
+* within-cell joint income and deduction distributions;
+* actual household tax-unit partitioning;
+* filer-level age assignment;
+* the true joint distribution of taxable income and statutory marginal rates.
+
+Accordingly, the generated pseudo-filer MTRs may parameterize ETI or stress-test
+scenarios, but they cannot supply the headline identified incidence result and
+cannot be treated as point-identified inputs to optimal-policy conclusions.
+
+The historical V6 file `18_income_tax_pseudofiler_mtr.py` remains a separate
+`RECOVERY_GAP`.  The status above refers to the new independently
+reproducible sensitivity core, not to byte-identical restoration of the lost
+historical implementation.
+
+=== Calibration and statutory rounding
+
+The aggregate moment calibration uses a continuous quick-table convention,
+matching the historical sensitivity-construction convention.  The repository
+then recomputes ordinary national income tax under the statutory rule that
+taxable income is rounded down to the nearest JPY 1,000.
+
+These two quantities are reported separately.
+
+The 2026 basic deduction also changes discontinuously at statutory total-income
+thresholds.  Some extreme sensitivity scenarios therefore cannot hit the
+aggregate liability moment exactly with one nuisance scale.  Such cases are
+reported as nearest-achievable sensitivity diagnostics; the tax-law
+discontinuity is not smoothed away to improve fit.
+
+=== Pre-specified replacement transport-relaxation frontier
+
+The historical V6 restricted-LP constraint chain remains unreproduced.  We
+therefore do not reconstruct its endpoints by reverse engineering recovered
+numbers.
+
+Separately, the repository pre-specified a new transport-relaxation LP before
+computing its endpoints.  The model uses all thirteen committed pseudo-filer
+scenarios and the five exact NTA primary-income-type stage-2 rates.  It imposes
+the published NTA primary-type composition while allowing a common absolute
+discrepancy stem:[\varepsilon] between each decile's pseudo-filer
+positive-tax share and its transported NTA stage-2 rate.
+
+Two decile-weight schemes were fixed before endpoint computation: equal decile
+weights and normalized F71561 leaf-household counts.  The minimum feasible
+common relaxation and the conditional overall MTR envelopes are generated
+directly from the research outputs:
+
+.Replacement transport-relaxation results at the minimum common relaxation
+[%header,format=csv]
+|===
+include::{docdir}/data/transport_lp_summary_table.csv[]
+|===
+
+The required minimum common discrepancy is therefore large under both
+pre-specified weight schemes: approximately 24.19 percentage points under
+equal-decile weights and 22.20 percentage points under F71561 leaf-count
+weights.  Exact equality at stem:[\varepsilon=0] is infeasible in this model.
+
+This gap is not a standard error or an estimate of measurement error.  It
+quantifies incompatibility between two aggregate constructions *under the
+stated transport model*: pseudo-filer positive-tax shares are constructed from
+household aggregates, whereas the NTA stage-2 rates are observed in the Table 2-2(1) population:
+persons who filed or whose income-tax cases were processed by correction,
+determination, or related procedures under the table's stated cutoff, grouped
+into five primary income categories.  This Table 2-2(1) denominator is not
+identical to the separate stage-1 final-return benchmark population.
+
+The MTR ranges in the table are conditional envelopes at
+stem:[\varepsilon^*].  They are reproducible consequences of the
+pre-specified transport-relaxation model, but they are not:
+
+* the historical V6 restricted-LP endpoints;
+* statistically sharp identified sets;
+* confidence intervals;
+* causal bounds;
+* point-identified filer MTR distributions.
+
+The historical P1-C06 restricted-LP claim consequently remains
+`DOCUMENTED_PRIOR_RUN_NOT_REPRODUCED`.  The v1 replacement result is tracked
+separately as P1-C13, a model-contingent sensitivity claim.
+
+=== Pre-specified same-rank v2 frontier
+
+After v1 was completed, the repository reproduced a stronger NTA object from
+Annual Statistics Table 2-2(1): exact administrative counts for 25 ordered
+total-net-income classes by primary income type and filing-status category.
+The 125 positive-liability cells also agree exactly with the independently
+extracted NTA Sample Survey Table 2 cells.
+
+Before computing v2 endpoints, a second model was pre-specified.  It does not
+match NTA and F71561 income amounts in yen.  Instead, it partitions the ordered
+NTA Table 2-2(1) population into ten equal rank bins and assumes only that
+F71561 decile stem:[d] corresponds to NTA rank decile stem:[d].
+
+When an NTA income class crosses a rank-decile boundary, the number of persons
+from that class entering each rank bin is fixed by the grouped population
+counts, but the positive-liability persons inside that class may be allocated
+arbitrarily across the overlapping rank bins subject to the published class
+total.  Thus no proportional-within-class allocation assumption is imposed.
+
+The resulting v2 summary is generated directly from the committed research
+outputs:
+
+.Rank-bridge v2 results at the minimum common relaxation
+[%header,format=csv]
+|===
+include::{docdir}/data/rank_bridge_v2_summary_table.csv[]
+|===
+
+The minimum common relaxation is 14.9016 percentage points.  On the
+pre-specified grid, values through 12.5 percentage points are infeasible and
+15.0 percentage points is feasible.
+
+This required relaxation is numerically smaller than in v1, but the comparison
+is not an identification ranking.  v2 adds the unobserved same-rank
+correspondence between two different population and income concepts:
+
+* F71561 ranks households by equivalized annual household income;
+* NTA Table 2-2(1) ranks its tax-administration population by total net income
+  etc.
+
+The same-rank bridge is therefore a model assumption, not an observed
+crosswalk.  The v2 MTR ranges are conditional envelopes under that assumption,
+not statistically sharp identified sets.
+
+In particular, v2 does not establish:
+
+* equality of F71561 and NTA income concepts or yen thresholds;
+* equality of household and tax-administration units;
+* an observed record linkage between the two systems;
+* a confidence interval or causal bound for filer MTR;
+* restoration of the historical V6 restricted LP.
+
+P1-C13 remains unchanged, P1-C06 remains unreproduced, and v2 is tracked
+separately as P1-C14.
+
+=== Static liability versus behavioral incidence
+
+Observed F71561 income-tax liability moments can support static,
+first-order liability calculations under explicitly stated accounting
+assumptions.  This is the meaning of `READY_STATIC_ONLY`.
+
+Static liability incidence does not identify:
+
+* filer selection under a policy change;
+* taxable-income elasticities;
+* general-equilibrium earnings responses;
+* dynamic tax revenue;
+* the joint welfare effect of a VAT-income-tax reform.
+
+Those quantities remain `NOT_READY`.

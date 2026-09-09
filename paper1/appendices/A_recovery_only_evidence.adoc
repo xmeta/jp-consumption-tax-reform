@@ -1,0 +1,61 @@
+[appendix]
+== Recovery-only evidence
+
+This appendix is not part of the reproduced empirical result set.
+
+The V6 handoff records post-base analyses whose source files were lost during a
+runtime reset. They remain useful only as recovery targets and labelled
+numerical applications.
+
+=== Recovered stage-1 threshold application
+
+The V6 handoff records a `score_power=2.0` admissibility threshold of 2.20%.
+The source chain that generated that threshold has not yet been restored.
+
+Applying the *reproduced general robustness formula* to that *unreproduced
+recovered threshold* gives a break-even untracked mismatch budget of
+
+[stem]
+++++
+C_U^*(0.022)=8{,}578{,}123.822.
+++++
+
+This numerical value is not a reproduced main result because one of its inputs,
+the 2.20% threshold, is recovery-only. It is retained here so a future source
+reconstruction can be checked against the V6 record.
+
+=== Historical restricted-LP endpoints
+
+The handoff records restricted-LP marginal-rate endpoints generated under
+additional assumptions. Because the historical post-base source chain has not
+been restored, P1-C06 remains recovery-only.
+
+Two different, newly pre-specified sensitivity models are reported in the
+main text as P1-C13 and P1-C14.  P1-C13 uses aggregate primary-type transport;
+P1-C14 uses a same-rank bridge built from the 25-class NTA Table 2-2(1)
+distribution.  Neither may be interpreted as restoration of the historical V6
+endpoint chain.
+
+=== Historical external-holdout artifacts
+
+The handoff records a five-category NTA Table 3-1 point-agreement diagnostic:
+all five primary categories were within 0.1 percentage point, with a maximum
+absolute difference of 0.08444 percentage point.
+
+The byte-identical historical files remain recovery gaps.  However, the
+scientific numerical function has now been independently reconstructed from
+official NTA sources: the current cross-publication point check reproduces
+0.084436... percentage point, rounding to 0.08444 percentage point.
+
+That reproduced result is tracked as P1-C07 and is still not a confidence-
+coverage statement or independent-sample holdout.
+
+=== Promotion rule
+
+A recovery-only item can enter the reproduced result set only after:
+
+. source code and input provenance are restored;
+. the result is regenerated from a fresh checkout;
+. executable tests or equivalent verification pass;
+. the SHA-256 manifest is regenerated and validated;
+. the claim registry status is updated in the same reviewed commit.

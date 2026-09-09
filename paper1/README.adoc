@@ -1,0 +1,32 @@
+= Paper 1 build notes
+
+This directory contains the first-submission manuscript only.
+
+It does not claim an optimal VAT rate, a structural macro effect, a
+point-identified filer MTR distribution, or an unconditional filing-rate lower
+bound.
+
+The paper asks which identification and robustness statements remain defensible
+when reproducible public aggregate data are available but filer microdata are
+not.
+
+== Build
+
+[source,shell]
+----
+python paper1/scripts/generate_stage1_attributes.py --check
+python paper1/scripts/generate_frontier_table.py --check
+python paper1/scripts/generate_transport_lp_table.py --check
+python paper1/scripts/generate_rank_bridge_v2_table.py --check
+python paper1/scripts/validate_claim_registry.py
+asciidoctor paper1/index.adoc
+----
+
+== Authority order
+
+. Reproduced Git results and official public-source inputs.
+. Reproduced robustness-frontier propositions with unresolved quantities kept explicit.
+. Reproduced model-contingent transport-relaxation results, with their transport assumptions and relaxation budget explicit.
+. Recovered V6 prior-run results, labelled recovery-only.
+. Sensitivity-only constructions.
+. NOT_READY quantities, which cannot enter headline conclusions.

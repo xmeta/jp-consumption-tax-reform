@@ -1,0 +1,71 @@
+== Validation, recovery status, and claim discipline
+
+This project separates validation of a numerical output from identification of
+the economic object represented by that output.
+
+=== Reproduced results
+
+The stage-1 overlap, contamination frontier, and unresolved-nonresident
+frontier are reproduced from source in the Git repository and covered by
+executable tests.
+
+The repository also reproduces two additional *external diagnostics*:
+
+* exact FY2024 NTA positive-liability rates for the five published primary
+  income-earner categories; and
+* the cross-publication composition comparison between the exact annual
+  statistics and the rounded Table 3-1 press-release counts.
+
+The latter has a maximum absolute category-composition difference of
+0.084436 percentage point, which rounds to the historical V6 recovery target
+0.08444 percentage point.
+
+These two diagnostics do not identify the missing F71561-to-filer mapping.
+
+The repository also checks a SHA-256 manifest and a scientific-state validator.
+
+=== Restricted-LP recovery status
+
+The historical restricted-LP scripts and endpoint-generation chain remain
+unreproduced.
+
+Reproducing the NTA primary-type stage-2 rates does not by itself recover the
+LP constraint set, transport assumptions, or decile-specific endpoint
+construction.  The claim registry therefore keeps the restricted-LP endpoint
+claim at `DOCUMENTED_PRIOR_RUN_NOT_REPRODUCED`.
+
+=== Table 3-1 point check is not an independent holdout
+
+Table 3-1 reports its five positive-liability category counts in thousand
+persons.  Those displayed components sum to 5,174 thousand while the
+separately displayed grand total is 5,175 thousand; the source explicitly
+notes that totals and components may differ because of rounding.
+
+For composition comparison, the five displayed components are normalized by
+their own displayed sum.  Against the exact FY2024 annual-statistics
+composition, the maximum absolute difference is 0.08444 percentage point.
+
+This is a deterministic cross-publication point check.  It is not an
+independent-sample holdout because both publications are NTA administrative
+outputs for the same tax-year population.  No confidence interval, sampling
+coverage, causal validation, or filer-MTR validation is inferred from this
+agreement.
+
+=== Recovered prior-run evidence
+
+The V6 handoff still records analyses whose byte-identical post-base source
+files were lost during a runtime reset.  Recovery metadata are retained so that
+future source restoration can be checked against the prior run without
+silently upgrading unreproduced numbers into evidence.
+
+Where a scientific function has now been independently reconstructed, the
+current reproducible implementation and the lost historical artifact are kept
+as separate objects.  The restricted-LP endpoint chain remains a recovery-only
+object.
+
+=== Machine-readable claims
+
+The normative status of each claim is stored in
+`paper1/data/claim_registry.csv`.  The manuscript validator rejects unknown
+statuses and requires `NOT_READY`, sensitivity, external-diagnostic, and
+point-check claims to retain explicit forbidden-claim language.

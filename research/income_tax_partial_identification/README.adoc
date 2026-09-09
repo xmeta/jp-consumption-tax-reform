@@ -1,0 +1,239 @@
+= Income-tax selection and partial-identification evidence
+:revdate: 2026-09-08
+
+== Scope
+
+This directory separates three distinct objects:
+
+. an external National Tax Agency primary-income-type positive-liability
+  diagnostic;
+. a cross-publication point check of primary-type composition;
+. restricted-LP marginal-rate bounds, whose historical V6 implementation is
+  still not reproduced.
+
+Reproducing the first two objects does not identify the third.
+
+== NTA primary-type stage-2 diagnostic
+
+The official FY2024 NTA Annual Statistics Report, Table 2-2(1), reports exact
+person counts for five primary income-earner categories.  Its denominator is
+the Table 2-2(1) population: persons who filed for 2024 or whose income-tax
+cases were processed by correction, determination, or related procedures under
+the table's stated cutoff.  It is not identical to the separate stage-1
+final-return benchmark population:
+
+* business;
+* real estate;
+* salary;
+* miscellaneous;
+* other / not otherwise classified.
+
+For category stem:[k], the reproduced diagnostic is
+
+[stem]
+++++
+r_k = N^{+}_k / N^{T22}_k ,
+++++
+
+where stem:[N^{+}_k] is the exact number with positive self-assessed income tax
+and stem:[N^{T22}_k] is the exact Table 2-2(1) denominator count in that NTA
+category.
+
+The resulting rates are stored in
+`data/derived/nta_primary_type_stage2_2024.csv`.
+
+These are observed NTA administrative category rates. They are *not* an
+identified mapping from F71561 household deciles to filers. Applying them to
+F71561 or to pseudo-filer units requires an additional transport/selection
+assumption.
+
+Scientific status:
+
+----
+EXTERNAL_STAGE2_DIAGNOSTIC_REPRODUCED
+----
+
+== Table 3-1 cross-publication point check
+
+The NTA final-return press release reports Table 3-1 in thousand persons.
+Its five displayed positive-liability category counts sum to 5,174 thousand,
+while the separately displayed positive-liability grand total is 5,175
+thousand. The table itself warns that totals and components can disagree due
+to rounding.
+
+For a category-composition comparison, the five displayed categories are
+therefore normalized by their own displayed sum:
+
+[stem]
+++++
+q^{T31}_k =
+  N^{T31,+}_k /
+  sum_j N^{T31,+}_j .
+++++
+
+The exact annual-statistics composition is
+
+[stem]
+++++
+q^{annual}_k =
+  N^{annual,+}_k /
+  sum_j N^{annual,+}_j .
+++++
+
+The check reports
+
+[stem]
+++++
+d_k = 100 (q^{T31}_k - q^{annual}_k)
+++++
+
+in percentage points.
+
+The maximum absolute difference is
+
+----
+0.0844360351759 percentage point
+----
+
+which rounds to the historical V6 recovery target of
+
+----
+0.08444 percentage point.
+----
+
+The largest difference is for the miscellaneous-income category.
+
+This exact recovery of the historical numerical target establishes that the
+rounding/composition calculation has been reconstructed. It does not convert
+the comparison into an independent holdout sample: both publications are NTA
+administrative outputs concerning the same tax-year population.
+
+Scientific status:
+
+----
+CROSS_PUBLICATION_POINT_CHECK_REPRODUCED
+----
+
+It is prohibited to describe this result as:
+
+* confidence-interval coverage;
+* independent-sample external validation;
+* causal validation;
+* validation of a filer-level MTR distribution;
+* evidence that F71561 household-to-filer selection is identified.
+
+== Sample Survey for Self-Assessment Income Tax
+
+The official 2024 sample-survey report is retained as an additional raw source
+because it documents the positive-self-assessed-tax target population and the
+same five primary income categories.
+
+It is not used to manufacture an independent validation claim. A calibration
+or weighting design that anchors to administrative category totals would not
+constitute an independent holdout merely because it appears in a different
+publication.
+
+== Restricted LP
+
+The historical V6 artifacts
+
+* `40_income_tax_partial_identification_lp.py`;
+* `41_income_tax_partial_identification_checks.py`;
+* `42_income_tax_partial_identification_outputs.py`
+
+remain byte-identical recovery gaps.
+
+No new restricted-LP endpoints will be promoted until the original constraint
+set can be recovered or an independently specified replacement model is
+written down before inspecting its endpoint results. The currently reproduced
+stage-2 diagnostic is an input candidate for such a model, not sufficient
+identification by itself.
+
+== Pre-specified replacement model
+
+A separate replacement transport-relaxation LP has now been specified *before*
+endpoint computation in:
+
+* `replacement_transport_lp_spec.adoc`;
+* `replacement_transport_lp_config.csv`;
+* repository root `requirements-research-lp.txt`.
+
+The specification fixes the 13-scenario set, two decile-weight schemes,
+transport equations, common-relaxation definition, epsilon grid, endpoint
+objectives, solver, exact package versions, and post-solve residual tolerances.
+
+The pre-specification was committed separately before numerical endpoint
+computation.
+
+The replacement model is now implemented in
+`run_replacement_transport_lp.py` and checked by
+`test_replacement_transport_lp.py`. Its generated artifacts are:
+
+* `replacement_transport_lp_decile_weights.csv`;
+* `replacement_transport_lp_minimum_relaxation.csv`;
+* `replacement_transport_lp_minimum_decile_diagnostics.csv`;
+* `replacement_transport_lp_feasibility.csv`;
+* `replacement_transport_lp_endpoints.csv`.
+
+All rows are labelled `MODEL_CONTINGENT_TRANSPORT_RELAXATION` and explicitly
+record `historical_v6_restricted_lp_reproduced=False`.
+
+These numerical outputs are not P1-C06 and are not automatically Paper 1
+claims. Promotion to a manuscript claim requires successful CI on the
+implementation commit and a later, separate claim-registry commit.
+
+== Pre-specified v2 rank bridge
+
+A second model is now pre-specified in:
+
+* `rank_bridge_lp_v2_spec.adoc`;
+* `rank_bridge_lp_v2_config.csv`.
+
+v2 uses the newly reproduced NTA Table 2-2(1) 25-income-class filing-status
+cross-tab and maps only *rank decile to rank decile*.  It does not equate NTA
+total net income to F71561 equivalized household income in yen.
+
+Within any NTA income class that crosses a rank-decile boundary, the
+positive-liability mass remains free subject to the published class total and
+overlap capacity.  Thus v2 does not impose proportional-within-class
+allocation.
+
+The pre-specification was committed separately before any v2 endpoint was
+computed.
+
+v2 is now implemented in `run_rank_bridge_lp_v2.py` and tested by
+`test_rank_bridge_lp_v2.py`.  Its generated artifacts are:
+
+* `rank_bridge_lp_v2_class_inputs.csv`;
+* `rank_bridge_lp_v2_class_rank_overlap.csv`;
+* `rank_bridge_lp_v2_minimum_relaxation.csv`;
+* `rank_bridge_lp_v2_minimum_decile_diagnostics.csv`;
+* `rank_bridge_lp_v2_feasibility.csv`;
+* `rank_bridge_lp_v2_endpoints.csv`.
+
+All generated rows are labelled
+`MODEL_CONTINGENT_RANK_BRIDGE_RELAXATION`,
+`historical_v6_restricted_lp_reproduced=False`, and
+`p1c13_v1_modified=False`.
+
+The implementation commit passed GitHub Actions and v2 is promoted separately
+as P1-C14.  P1-C14 remains a model-contingent same-rank-bridge sensitivity
+claim.  The promotion does not alter P1-C13, and neither P1-C13 nor P1-C14
+restores historical P1-C06.
+
+== Reproduction
+
+[source,shell]
+----
+python scripts/build_source_catalog.py
+python scripts/extract_nta_stage2_holdout.py
+python scripts/test_nta_stage2_holdout.py
+python -m pip install -r requirements-research-lp.txt
+python research/income_tax_partial_identification/run_replacement_transport_lp.py
+python research/income_tax_partial_identification/test_replacement_transport_lp.py
+python research/income_tax_partial_identification/run_rank_bridge_lp_v2.py
+python research/income_tax_partial_identification/test_rank_bridge_lp_v2.py
+----
+
+The generated outputs must remain deterministic under a clean checkout and all
+source SHA-256 values must match `data/source_catalog.csv`.

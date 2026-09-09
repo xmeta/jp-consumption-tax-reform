@@ -1,0 +1,12 @@
+key,value,unit,note
+spec_version,transport_lp_v1,,pre-specified before endpoint computation
+scenario_set,all_13_committed_pseudofiler_scenarios,,no post-result scenario selection
+weight_schemes,equal_decile;f71561_leaf_count_normalized,,reported separately
+epsilon_grid,0;0.025;0.05;0.075;0.10;0.125;0.15;0.175;0.20;0.225;0.25;0.275;0.30,absolute rate,plus epsilon_star
+endpoint_metrics,taxable_income_weighted_mean_MTR;income_tax_liability_weighted_mean_MTR;pseudo_filer_positive_tax_share,,decile endpoints plus overall MTR endpoints
+solver,scipy.optimize.linprog,,pinned dependency
+solver_method,highs-ds,,dual simplex
+equality_residual_tolerance,1e-8,absolute,post-solve rejection threshold
+inequality_residual_tolerance,1e-8,absolute,post-solve rejection threshold
+numpy_version,2.5.3,,pinned
+scipy_version,1.18.1,,pinned

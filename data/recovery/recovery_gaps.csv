@@ -1,0 +1,9 @@
+artifact_id,expected_path_or_name,status,last_known_role,recovery_basis,allowed_use
+18_income_tax_pseudofiler_mtr.py,scripts/18_income_tax_pseudofiler_mtr.py,RECOVERY_GAP,Pseudo-filer statutory MTR sensitivity construction,V6 handoff + File Library evidence; byte-exact source not restored,Sensitivity/recovery description only; no reproduced numerical claim
+39_income_tax_stage1_filing_bound.py,scripts/39_income_tax_stage1_filing_bound.py,RECOVERY_GAP,Prior stage-1 threshold/filing bound analysis,V6 handoff record,Byte-identical recovery target only; stage-1 robustness frontier and NTA external stage-2 diagnostics are independently reproduced elsewhere
+40_income_tax_partial_identification_lp.py,scripts/40_income_tax_partial_identification_lp.py,RECOVERY_GAP,Restricted LP marginal-incidence bounds,V6 handoff record,Recovery target only
+41_income_tax_partial_identification_checks.py,scripts/41_income_tax_partial_identification_checks.py,RECOVERY_GAP,LP checks/validation,V6 handoff record,Recovery target only
+42_income_tax_partial_identification_outputs.py,scripts/42_income_tax_partial_identification_outputs.py,RECOVERY_GAP,LP endpoint outputs,V6 handoff record,Recovery target only
+43_income_tax_external_holdout.py,scripts/43_income_tax_external_holdout.py,RECOVERY_GAP,NTA external composition holdout,V6 handoff record,Byte-identical recovery target only; 0.08444pp Table 3-1 composition point check is independently reproduced in current research code
+44_income_tax_holdout_checks.py,scripts/44_income_tax_holdout_checks.py,RECOVERY_GAP,Holdout checks,V6 handoff record,Byte-identical recovery target only; 0.08444pp Table 3-1 composition point check is independently reproduced in current research code
+45_income_tax_package_validator.py,scripts/45_income_tax_package_validator.py,RECOVERY_GAP,Post-base package validation,V6 handoff record,Byte-identical recovery target only; current repository has independent validators and manifest gates

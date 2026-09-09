@@ -1,0 +1,123 @@
+= F71911 Household-Size Sensitivity Bridge
+:revdate: 2026-09-08
+:stem: latexmath
+
+== Scope
+
+This note defines the household-size and age-65+ bridge used only for
+pseudo-filer sensitivity analysis.
+
+The official source is e-Stat table 7-191-1
+(`statInfId=000040490431`), stored byte-for-byte as
+`data/raw/estat/000040490431.xlsx`.
+
+The bridge does *not* identify a filer population or a true filer marginal tax
+rate distribution.
+
+== Published quantities
+
+For each equivalized-disposable-income decile stem:[d], F71911 reports the
+number of persons by household-size category:
+
+[stem]
+++++
+P_{d,1},P_{d,2},P_{d,3},P_{d,4},P_{d,5},P_{d,6+}.
+++++
+
+The first five categories have exact category sizes.  The last category is
+top-coded as six persons or more.  Therefore the exact number of households in
+the last category, and hence the exact mean household size, are not identified
+from this table alone.
+
+== Compatibility proxy
+
+For a top-code representative value stem:[k \ge 6], define
+
+[stem]
+++++
+\widetilde H_d^{(k)}
+=
+\sum_{s=1}^{5}\frac{P_{d,s}}{s}
++
+\frac{P_{d,6+}}{k},
+++++
+
+and
+
+[stem]
+++++
+\widetilde n_d^{(k)}
+=
+\frac{
+\sum_{s=1}^{5}P_{d,s}+P_{d,6+}
+}{
+\widetilde H_d^{(k)}
+}.
+++++
+
+The compatibility column `household_size_proxy` uses stem:[k=6].
+
+Because every household in the top-coded class contains at least six persons,
+stem:[k=6] maximizes the imputed household count for that class and therefore
+produces a lower-side proxy for mean household size.  It must not be described
+as the exact mean or as a point-identified household-size parameter.
+
+For sensitivity analysis the repository also reports stem:[k=7,8,10].
+
+== Age-65+ ratio
+
+On the all-household-size row, F71911 separately reports persons aged 65--74,
+75--84 and 85+.  The published aggregate ratio is
+
+[stem]
+++++
+s_{65+,d}
+=
+\frac{
+P_{65-74,d}+P_{75-84,d}+P_{85+,d}
+}{
+P_d
+}.
+++++
+
+This is an aggregate decile ratio, not a filer-level mapping.
+
+== Reproduction
+
+Run:
+
+[source,shell]
+----
+python scripts/extract_estat_f71911_bridge.py
+python scripts/test_estat_f71911_bridge.py
+----
+
+Generated artifacts:
+
+* `data/derived/estat_71911_decile_household_size_age_bridge.csv`
+* `data/derived/income_tax_bridge_deciles_2024.csv`
+
+Both files carry the source file SHA-256 and exact source-cell locators.
+
+== Identification status
+
+[cols="1,1,2"]
+|===
+|Quantity |Status |Allowed use
+
+|F71911 household-size compatibility proxy
+|SENSITIVITY_ONLY
+|Pseudo-filer scale sensitivity and robustness checks
+
+|Exact mean household size within decile
+|NOT_IDENTIFIED_FROM_F71911_ALONE
+|Do not report as a point estimate from this bridge
+
+|Age-65+ aggregate person share
+|PUBLISHED_AGGREGATE_RATIO
+|Aggregate sensitivity input; not a filer-level age assignment
+
+|True filer MTR distribution
+|NOT_READY
+|No point-identified policy optimization input
+|===

@@ -1,0 +1,33 @@
+== Populations and public data
+
+The analysis connects public statistics that describe different populations.
+The central empirical difficulty is therefore not merely sampling error; it is
+the absence of a public micro-level crosswalk between those populations.
+
+=== F71561 household population
+
+F71561 reports household and equivalized-income aggregates by income decile and
+household type.  It contains income components and income-tax liability
+moments, but it is not a filer-level tax-return file.
+
+The 2024 survey frame is built from the 2020 Population Census, rearranged to
+2024 municipality boundaries.  The mother-population construction excludes the
+four Okunoto municipalities and removes student single-person households from
+the eligible single-person population.
+
+=== NTA final-return population
+
+For filing participation we use the FY2024 NTA annual-statistics
+`final-return` row, {stage1-final-return-filers} persons.  We do not use the broader
+23,362,184 total covering final returns and other cases processed.
+
+The NTA filing population and the F71561/Census-based population are not
+assumed identical.  Their mismatch is carried as an explicit contamination
+parameter in the identification analysis.
+
+=== Unit discipline
+
+Income-tax liability is an individual tax concept, whereas F71561 is reported
+at household/equivalized-income cells.  Household reconstruction therefore
+cannot by itself reveal the true filer-level statutory marginal-rate
+distribution.

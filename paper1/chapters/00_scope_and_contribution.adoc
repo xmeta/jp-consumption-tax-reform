@@ -1,0 +1,34 @@
+== Scope and contribution
+
+This paper studies a narrower question than the companion consumption-tax
+policy project: what can be learned about Japanese personal income-tax
+marginal incidence from public aggregate data when filer microdata are not
+available for a fully reproducible analysis?
+
+The paper does not estimate an optimal VAT rate, an optimal macro policy mix,
+or a structural GDP effect.  Those questions require additional behavioral and
+macro identification and are deliberately outside this submission.
+
+=== Contributions
+
+First, we treat population mismatch as an identification problem rather than
+silently mapping household aggregates into filer microdata.
+
+Second, we distinguish observed moments, partial identified sets, reference
+selections, sensitivity constructions, recovered prior-run evidence, and
+quantities that remain not identified.
+
+Third, we derive a reproducible stage-1 filing-participation robustness
+frontier.  The result leaves the unresolved number of frame-incompatible
+final-return filers explicit rather than imputing it.
+
+Fourth, after pre-specifying each model before inspecting its endpoints, we
+report two model-contingent transport diagnostics.  The first uses aggregate
+NTA primary-income-type composition.  The second uses the stronger 25-class
+NTA income-rank information while leaving within-class positive-liability
+allocation unrestricted at rank boundaries.  Both quantify compatibility under
+explicit bridge assumptions rather than presenting the resulting MTR envelopes
+as identified sets.
+
+Fifth, every substantive statement is tied to a machine-readable claim
+registry, making overstatement detectable during revision.
