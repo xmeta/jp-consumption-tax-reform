@@ -146,6 +146,11 @@ for root in scan_roots:
     for path in paths:
         if not path.is_file() or path.resolve() in excluded:
             continue
+        # Raw official evidence must remain byte-faithful to the publisher.
+        # Some official CSVs are CP932 rather than UTF-8, and raw-source
+        # vocabulary is not part of the repository schema migration.
+        if (ROOT / "data/raw") in path.parents:
+            continue
         if path.name == "MANIFEST.sha256":
             continue
         if path.suffix.lower() not in {".py", ".adoc", ".csv", ".yml", ".yaml"}:
