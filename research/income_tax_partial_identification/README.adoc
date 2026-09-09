@@ -362,18 +362,48 @@ object built from 2024 household aggregates, so the cross-system inequality is
 not treated as an observed identity.  A v5 model must be pre-specified in a
 separate commit before any v5 result is computed.
 
-Current status: `V5_RESULT_NOT_COMPUTED`.
+Audit-stage status before pre-specification: `V5_RESULT_NOT_COMPUTED`.
 
-The subsequent v5 design is now pre-specified in
+The subsequent v5 design was pre-specified in
 `rank_one_sided_bridge_v5_spec.adoc` and
 `rank_one_sided_bridge_v5_config.csv`.  It replaces the symmetric event-rate
 gap with a one-sided directional-violation budget `eta`, preserves the v3 rank
 transport grid, and fixes solver/tolerance/nesting checks before any v5 result
-is available.  `test_rank_one_sided_bridge_v5_prespec.py` enforces that the
-pre-specification commit contains no v5 implementation, generated result, or
-Paper 1 P1-C17 claim.
+is available.  The original `fef4776` version of
+`test_rank_one_sided_bridge_v5_prespec.py` enforced that the pre-specification
+commit contained no v5 implementation, generated result, or Paper 1 P1-C17
+claim.  Git history preserves that gate; the current test SHA-locks the exact
+spec/config and continues to prohibit implementation-time Paper promotion.
 
-Current v5 status: `PRESPECIFIED_NO_V5_RESULT`.
+The pre-specification state at commit `fef4776` is
+`PRESPECIFIED_NO_V5_RESULT`; the exact spec/config bytes remain SHA-256 locked
+by `test_rank_one_sided_bridge_v5_prespec.py`.
+
+The later implementation in `run_rank_one_sided_bridge_v5.py` follows that
+frozen specification.  The first result is:
+
+* `eta_star = 0` at every pre-specified Delta in
+  `0, 0.25, 0.5, 1, 2, 3, 4, 5`;
+* zero directional violation is feasible already at `Delta = 0`;
+* both HiGHS-DS and HiGHS-IPM reproduce those frontier/threshold results;
+* an independent reduced LP, separate from the v5 inequality builder, also
+  verifies Delta=0 / eta=0 feasibility;
+* exactly 672 pre-specified endpoint rows are produced;
+* the equal-decile overall taxable-income-weighted MTR envelope is
+  10.0884%--12.8680%, and the liability-weighted envelope is
+  10.8806%--13.7776%, at each pre-specified Delta.
+
+This means the positive v2/v3 symmetric discrepancy is not required as a
+*directional subset violation* once the tax events are ordered correctly.  It
+does not establish person-level linkage, true rank correspondence, a causal
+bound, or a statistically sharp identified set.  The v5 endpoint set is also
+not claimed to nest the v3 endpoint set because the two are evaluated at
+different optimized compatibility budgets.
+
+Current implementation status:
+`MODEL_CONTINGENT_RANK_ONE_SIDED_SUBSET_COMPATIBILITY`.
+Paper 1 remains at 16 claims; no P1-C17 is introduced by the implementation
+commit.
 
 == Reproduction
 
@@ -399,6 +429,8 @@ python research/income_tax_partial_identification/run_rank_epsilon_surface_v4.py
 python research/income_tax_partial_identification/test_rank_epsilon_surface_v4.py
 python research/income_tax_partial_identification/test_self_assessed_balance_schema_migration.py
 python research/income_tax_partial_identification/test_rank_one_sided_bridge_v5_prespec.py
+python research/income_tax_partial_identification/run_rank_one_sided_bridge_v5.py
+python research/income_tax_partial_identification/test_rank_one_sided_bridge_v5.py
 ----
 
 The generated outputs must remain deterministic under a clean checkout and all
