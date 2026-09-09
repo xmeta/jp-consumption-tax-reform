@@ -1,0 +1,242 @@
+= Public-sector person coverage audit
+:toc:
+:stem: latexmath
+
+== Status
+
+----
+EXTERNAL_PUBLIC_WORKFORCE_BENCHMARK_NOT_NTA_DENOMINATOR
+----
+
+This audit asks whether current official public-employee statistics can fill
+the person-count field missing from the NTA FY2024 source-withholding
++Public Offices+ salary table.
+
+They cannot.
+
+The National Personnel Authority and the Local Public Employee Salary Survey
+do provide current person counts, but their statistical populations differ
+from the NTA withholding population.  They are retained only as external
+workforce benchmarks.
+
+No v1-v5 endpoint or Paper 1 claim is changed.
+
+== National public employee benchmark
+
+The 2024 National Public Employee Salary Survey reports:
+
+----
+covered persons at 2024-04-01 = 250,434
+----
+
+The summary CSV and Table 1 independently reproduce the same total.
+
+The official results document defines a narrower population than all persons
+receiving salary from an NTA +Public Offices+ payer.  It covers permanent
+employees subject to specified national pay statutes and excludes, among
+others:
+
+* new hires between January 16 and April 1;
+* specified re-employed categories;
+* employees at overseas establishments;
+* employees on leave;
+* certain dispatched employees;
+* employees on childcare or other specified leave; and
+* employees appointed for terms of one year or less.
+
+It is therefore classified as:
+
+----
+EXTERNAL_NATIONAL_PUBLIC_WORKFORCE_BENCHMARK
+----
+
+and not as an NTA withholding denominator.
+== Local public employee benchmark
+
+The 2024 Local Public Employee Salary Survey Table 1 for all local public
+bodies reports:
+
+[cols="3,1",options="header"]
+|===
+| Published component | Persons
+| total | *2,813,939*
+| regular-category subtotal | 2,754,139
+| general staff | 1,637,851
+| education public employees | 856,644
+| police | 259,644
+| temporary staff | 59,800
+|===
+
+The published identities are exact:
+
+[stem]
+++++
+2{,}754{,}139 + 59{,}800 = 2{,}813{,}939
+++++
+
+and
+
+[stem]
+++++
+1{,}637{,}851 + 856{,}644 + 259{,}644 = 2{,}754{,}139.
+++++
+
+The all-body total also reproduces the published functional subtotals.
+
+This source is classified as:
+
+----
+EXTERNAL_LOCAL_PUBLIC_WORKFORCE_BENCHMARK
+----
+
+It is not asserted identical to the NTA +Public Offices+ salary-recipient
+population.
+== Observable external subtotal
+
+Pure arithmetic across the two external workforce statistics gives:
+
+[stem]
+++++
+250{,}434 + 2{,}813{,}939 = 3{,}064{,}373.
+++++
+
+The repository retains this number only under the status:
+
+----
+EXTERNAL_PUBLIC_WORKFORCE_BENCHMARK_NOT_NTA_DENOMINATOR
+----
+
+The subtotal does not cover all national public-sector categories under a
+common NTA tax-reporting definition, and the two input surveys have their own
+coverage and timing rules.
+
+It must not be relabeled as:
+
+* NTA Public Offices salary recipients;
+* public-sector taxpayers;
+* final-return filers;
+* persons with salary receipts above 20 million yen; or
+* an additive correction to the Private Salary Survey.
+
+== NTA Public Offices remains without a person denominator
+
+The existing NTA source-withholding table directly reports:
+
+[cols="3,1",options="header"]
+|===
+| Item | FY2024
+| Public Offices salary/wages/bonus payments | 28,282,710 million yen
+| Public Offices withholding tax | 917,029 million yen
+| Public Offices salary-recipient persons | *NOT_IDENTIFIED*
+|===
+
+The current NTA table does not publish the corresponding salary-recipient
+person count.
+
+Consequently:
+
+----
+nta_public_offices_salary_person_count = NOT_IDENTIFIED
+----
+
+with status:
+
+----
+NTA_PUBLIC_OFFICES_PERSON_COUNT_NOT_IDENTIFIED
+----
+== Prohibited cross-frame calculations
+
+A numerically possible but unidentified calculation would divide:
+
+[stem]
+++++
+28{,}282{,}710	ext{ million yen}
+++++
+
+by the external subtotal:
+
+[stem]
+++++
+3{,}064{,}373	ext{ persons}.
+++++
+
+The resulting quotient is not an identified NTA average salary because the
+amount numerator and person denominator come from non-equivalent statistical
+frames.
+
+The machine-readable status is:
+
+----
+DO_NOT_DIVIDE_CROSS_FRAME_AMOUNT_BY_PERSON_SUBTOTAL
+----
+
+Likewise, the external workforce totals contain no compatible joint table of:
+
+----
+public/private employer class
+x salary receipts >20m
+x final-return status
+x person
+----
+
+Therefore using these public-employee totals to adjust the Table 7
+235,287-person >20m estimate is:
+
+----
+PROHIBITED
+----
+
+under status:
+
+----
+NO_PUBLIC_SECTOR_HIGH_SALARY_CROSSTAB
+----
+
+== Identification consequence
+
+The evidence map is now:
+
+----
+NTA withholding statistics
+  Public Offices
+    payment amount       = observed
+    withholding amount   = observed
+    person count         = NOT_IDENTIFIED
+
+external workforce statistics
+  NPA covered national employees = 250,434
+  local public employees          = 2,813,939
+  arithmetic subtotal             = 3,064,373
+       |
+       | population definitions do not match NTA
+       v
+  NTA denominator substitution    = PROHIBITED
+----
+
+This strengthens the coverage audit but does not close the payroll-to-return
+person-linkage gap.
+
+== Reproduction
+
+[source,shell]
+----
+python scripts/build_source_catalog.py
+python scripts/extract_public_sector_person_coverage.py
+python scripts/test_public_sector_person_coverage.py
+python scripts/build_derived_catalog.py
+----
+
+Current anchors:
+
+----
+national covered public employees = 250,434
+local public employee total       = 2,813,939
+external arithmetic subtotal      = 3,064,373
+
+NTA Public Offices salary payment = 28,282,710 million yen
+NTA Public Offices withholding    = 917,029 million yen
+
+NTA Public Offices persons        = NOT_IDENTIFIED
+cross-frame average salary        = PROHIBITED
+Table 7 public-sector adjustment  = PROHIBITED
+----

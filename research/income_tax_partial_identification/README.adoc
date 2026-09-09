@@ -542,6 +542,32 @@ pair.
 Current source-system coverage status:
 `MONETARY_COVERAGE_DIAGNOSTIC_NO_PERSON_INFERENCE`.
 
+== Public-sector person coverage audit
+
+`public_sector_person_coverage_audit.adoc` asks whether current official
+public-employee statistics can supply the person count missing from the NTA
+source-withholding `Public Offices` salary table.
+
+The 2024 National Personnel Authority salary survey reports 250,434 covered
+employees.  The 2024 Local Public Employee Salary Survey reports 2,813,939
+employees for all local public bodies, including a regular-category subtotal
+of 2,754,139 and 59,800 temporary staff.
+
+Their arithmetic sum is 3,064,373, but it is retained only as an external
+workforce subtotal.  The underlying workforce scopes differ from the NTA
+withholding population, so the subtotal is not an NTA `Public Offices`
+salary-recipient denominator.
+
+Consequently the current status remains:
+`NTA_PUBLIC_OFFICES_PERSON_COUNT_NOT_IDENTIFIED`.
+
+Dividing the NTA Public Offices payment amount by the external person subtotal,
+or using the subtotal to adjust the Table 7 >20m salary-receipt person estimate,
+is explicitly prohibited.
+
+Current public-sector benchmark status:
+`EXTERNAL_PUBLIC_WORKFORCE_BENCHMARK_NOT_NTA_DENOMINATOR`.
+
 == Reproduction
 
 [source,shell]
@@ -567,6 +593,8 @@ python scripts/extract_nta_salary_receipt_return_bridge.py
 python scripts/test_nta_salary_receipt_return_bridge.py
 python scripts/extract_nta_salary_source_system_coverage.py
 python scripts/test_nta_salary_source_system_coverage.py
+python scripts/extract_public_sector_person_coverage.py
+python scripts/test_public_sector_person_coverage.py
 python -m pip install -r requirements-research-lp.txt
 python research/income_tax_partial_identification/run_replacement_transport_lp.py
 python research/income_tax_partial_identification/test_replacement_transport_lp.py

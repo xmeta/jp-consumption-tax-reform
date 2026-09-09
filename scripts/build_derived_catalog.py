@@ -211,6 +211,14 @@ SPECS = [
         "FY2024 source-withholding salary payment/tax amounts split into Public Offices/Others/Total compared with Private Salary Survey Table 1; public-office person share remains NOT_IDENTIFIED and applying amount shares to Table 7 person counts is prohibited",
     ),
     (
+        "PUBLIC-SECTOR-PERSON-COVERAGE-2024",
+        "public_sector_person_coverage_audit_2024.csv",
+        "scripts/extract_public_sector_person_coverage.py",
+        "JINJI-2024-PUBLIC-SALARY-SURVEY-SUMMARY;JINJI-2024-PUBLIC-SALARY-SURVEY-T1;JINJI-2024-PUBLIC-SALARY-SURVEY-RESULTS;ESTAT-LOCAL-PUBLIC-SALARY-2024-T1;ESTAT-LOCAL-PUBLIC-SALARY-2024-METADATA;NTA-FY2024-WITHHOLDING-STATUS",
+        "DERIVED_REPRODUCED_EXTERNAL_PUBLIC_WORKFORCE_COVERAGE_AUDIT",
+        "2024 national covered public employees and local public employees as external person benchmarks; arithmetic subtotal 3,064,373 is explicitly not an NTA Public Offices denominator and cross-frame average/high-salary adjustments are prohibited",
+    ),
+    (
         "NTA-2024-ANNUAL-INCOME-CLASS-PRIMARY-TYPE-FILING-STATUS",
         "nta_income_class_primary_type_filing_status_2024.csv",
         "scripts/extract_nta_annual_income_class_filing_status.py",
