@@ -55,7 +55,7 @@ same-rank bridge, its minimum common relaxation is 14.9016 percentage points.
 The smaller v2 relaxation does not identify the source of the remaining
 discrepancy and does not validate the same-rank bridge.  The highest-value next
 data would directly connect, or defensibly statistically bridge, the two income
-rank concepts themselves: F71561 equivalized household income and NTA total net
+rank concepts themselves: F71561 equivalized disposable income and NTA total net
 income etc.
 
 === Scope of policy conclusions

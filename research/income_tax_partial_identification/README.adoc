@@ -191,7 +191,7 @@ A second model is now pre-specified in:
 
 v2 uses the newly reproduced NTA Table 2-2(1) 25-income-class filing-status
 cross-tab and maps only *rank decile to rank decile*.  It does not equate NTA
-total net income to F71561 equivalized household income in yen.
+total net income to F71561 equivalized disposable income in yen.
 
 Within any NTA income class that crosses a rank-decile boundary, the
 positive-liability mass remains free subject to the published class total and

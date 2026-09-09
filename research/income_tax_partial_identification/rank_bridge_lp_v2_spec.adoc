@@ -53,7 +53,7 @@ income amounts to F71561 income amounts.
 
 The two systems remain different.
 
-F71561:: household aggregates ranked by equivalized annual household income.
+F71561:: household aggregates ranked by equivalized disposable income.
 
 NTA Table 2-2(1):: persons who filed for 2024 or whose income-tax cases were
 processed by correction, determination, or related procedures under the

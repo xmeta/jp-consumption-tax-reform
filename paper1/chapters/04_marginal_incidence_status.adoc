@@ -152,7 +152,7 @@ This required relaxation is numerically smaller than in v1, but the comparison
 is not an identification ranking.  v2 adds the unobserved same-rank
 correspondence between two different population and income concepts:
 
-* F71561 ranks households by equivalized annual household income;
+* F71561 ranks households by equivalized disposable income;
 * NTA Table 2-2(1) ranks its tax-administration population by total net income
   etc.
 
