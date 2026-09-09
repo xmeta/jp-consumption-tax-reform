@@ -164,7 +164,7 @@ for r in rows:
     assert r["pypdf_version"] == pypdf.__version__
     assert r["cryptography_version"] == cryptography.__version__
     assert "processed" in r["population_definition"]
-    assert "not the stage-1 NTA final-return numerator" in r["denominator_note"]
+    assert "not the stage-1 NTA Table 2-1 Final-return processing-row numerator" in r["denominator_note"]
     assert "F71561" in r["identification_warning"]
     assert "bridge assumption" in r["identification_warning"]
 

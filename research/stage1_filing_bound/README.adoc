@@ -15,7 +15,7 @@ person-set lower bound.
 
 The official public counts used by the reproduced pipeline are:
 
-* NTA FY2024 final-return persons: `23,090,075`;
+* NTA FY2024 Table 2-1 Final-return processing-row persons: `23,090,075`;
 * 2020 Census population used as a loose person denominator: `126,146,099`;
 * F71561 mother-population frame benchmark: `122,494,621`;
 * nominal exact-correspondence overlap benchmark: `19,438,597`.
@@ -61,8 +61,11 @@ their source-generating chain is restored.
 
 * link:candidate_person_coverage.adoc[candidate_person_coverage.adoc] explains
   why the entire Census population is a deliberately loose denominator.
+* link:final_return_processing_row_reconciliation.adoc[final_return_processing_row_reconciliation.adoc]
+  reconciles the 23,090,075 Table 2-1 Final-return processing row with the
+  distinct rounded press-release count based on returns submitted by March 31.
 * link:nonresident_source_audit.adoc[nonresident_source_audit.adoc] documents
-  the public-data search for non-resident final-return counts. Non-resident
+  the public-data search for a resident/non-resident split of the Table 2-1 Final-return processing row. Non-resident
   mismatch is only one possible component of stem:[C_U].
 * link:proposition_stage1_frontier.adoc[proposition_stage1_frontier.adoc]
   states and proves the general break-even formula.
@@ -85,6 +88,9 @@ students, and `20,540,114` included single-person households.
   https://toukei.pref.ishikawa.lg.jp/dl/4461/R2census_jinkou.pdf
 * National Tax Agency, FY2024 Annual Statistics Report, table 2-1(1):
   https://www.nta.go.jp/publication/statistics/kokuzeicho/r06/R06.pdf
+* National Tax Agency, 2024 income-tax final-return filing status press release,
+  Table 3-1:
+  https://www.nta.go.jp/topics/pdf/0025005-063.pdf
 * Statistics Bureau, Basic Resident Register migration report 2024:
   https://www.stat.go.jp/data/idou/2024np/jissu/pdf/gaiyou.pdf
 * MHLW, final 2024 vital statistics:

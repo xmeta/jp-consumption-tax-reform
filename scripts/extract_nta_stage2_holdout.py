@@ -130,7 +130,7 @@ def build():
             "legacy_field_note":
                 "final_return_persons_exact is retained for backward compatibility; canonical denominator is table22_population_persons_exact",
             "interpretation":
-                "external NTA primary-type stage-2 positive-self-assessed-balance diagnostic for the Table 2-2(1) population; not F71561 selection identification and not the stage-1 final-return numerator",
+                "external NTA primary-type stage-2 positive-self-assessed-balance diagnostic for the Table 2-2(1) population; not F71561 selection identification and not the stage-1 Table 2-1 Final-return processing-row numerator",
         })
 
         _, ptotal, ppositive, prefund, pzero = press_by[category]

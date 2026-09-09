@@ -34,6 +34,8 @@ jobs:
           python scripts/test_nta_table17_and_f71551.py
           python scripts/extract_nta_stage2_holdout.py
           python scripts/test_nta_stage2_holdout.py
+          python scripts/extract_nta_final_return_processing_reconciliation.py
+          python scripts/test_nta_final_return_processing_reconciliation.py
           python scripts/extract_nta_shinkoku_income_class_primary_type.py
           python scripts/test_nta_shinkoku_income_class_primary_type.py
           python scripts/extract_nta_positive_balance_tax_flow.py

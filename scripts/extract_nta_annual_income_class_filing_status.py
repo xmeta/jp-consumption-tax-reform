@@ -232,7 +232,7 @@ def build():
                 "population_definition":
                     "Table 2-2(1): persons who filed for 2024 or whose income-tax cases were processed (correction/determination etc.) by 2025-03-31, classified as of 2025-06-30",
                 "denominator_note":
-                    "table22_population_persons is not the stage-1 NTA final-return numerator and is not restricted to voluntary final-return filings alone",
+                    "table22_population_persons is not the stage-1 NTA Table 2-1 Final-return processing-row numerator and is not restricted to voluntary final-return filings alone",
                 "cell_nature": "ADMINISTRATIVE_ANNUAL_STATISTICS_COUNT",
                 "evidence_status":
                     "REPRODUCED_OFFICIAL_ADMINISTRATIVE_CROSSTAB",

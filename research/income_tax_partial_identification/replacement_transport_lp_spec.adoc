@@ -31,8 +31,8 @@ canonical denominator is the Table 2-2(1) population defined by the source:
 persons who filed for 2024 or whose income-tax cases were processed by
 correction, determination, or related procedures under the stated cutoff.
 This wording correction changes no input count, equation, constraint, solver
-setting, or reported v1 endpoint.  The separate stage-1 final-return numerator
-remains a different population object.
+setting, or reported v1 endpoint.  The separate stage-1 Table 2-1
+Final-return processing-row numerator remains a different population object.
 
 A second post-specification semantic clarification is also now canonical.  The
 NTA positive event is `申告納税額>0`, a positive self-assessed return balance

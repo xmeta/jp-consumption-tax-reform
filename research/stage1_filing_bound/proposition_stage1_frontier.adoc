@@ -6,7 +6,7 @@
 
 Let:
 
-* stem:[F=23{,}090{,}075] be the observed NTA FY2024 final-return persons;
+* stem:[F=23{,}090{,}075] be the observed NTA FY2024 Table 2-1 Final-return processing-row persons;
 * stem:[P=126{,}146{,}099] be the 2020 Census population used as a deliberately loose person-denominator benchmark;
 * stem:[M_0=122{,}494{,}621] be the published F71561 mother-population *frame benchmark* reconstructed from the 2020 Census-based survey design;
 * stem:[D=8{,}085{,}259] be the deliberately adverse tracked mismatch allowance;
@@ -66,7 +66,7 @@ any additional untracked overlap loss below stem:[C_U^*(A)].
 
 The first step is only a nominal benchmark.  If the published frame benchmark
 stem:[M_0] were an exact subset cardinality inside the person universe
-stem:[P], the Fréchet lower overlap with stem:[F] final-return persons would be
+stem:[P], the Fréchet lower overlap with stem:[F] Table 2-1 Final-return processing-row persons would be
 
 [stem]
 ++++

@@ -25,6 +25,8 @@
 
 * National Tax Agency. FY2024. _Annual Statistics Report_. Table 2-1(1), self-assessment income tax. https://www.nta.go.jp/publication/statistics/kokuzeicho/r06/R06.pdf
 
+* National Tax Agency. 2025. _2024 Income Tax Final Return Filing Status_. Table 3-1. https://www.nta.go.jp/topics/pdf/0025005-063.pdf
+
 * Statistics Bureau of Japan. 2024. _Report on Internal Migration in Japan Derived from the Basic Resident Registration_. https://www.stat.go.jp/data/idou/2024np/jissu/pdf/gaiyou.pdf
 
 * Ministry of Health, Labour and Welfare. 2024. _Vital Statistics of Japan, Final Data_. https://www.mhlw.go.jp/toukei/saikin/hw/jinkou/kakutei24/
