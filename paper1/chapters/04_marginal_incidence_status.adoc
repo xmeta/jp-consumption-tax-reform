@@ -312,6 +312,77 @@ sensitivity result.  It is not a confidence region, posterior region, causal
 bound, statistically sharp identified set, or point-identified filer MTR.
 P1-C13 through P1-C15 remain unchanged, and P1-C06 remains unreproduced.
 
+=== One-sided tax-event compatibility bridge v5
+
+The semantic audit preceding v5 changes the compatibility question rather than
+the underlying public data.  NTA Sample Survey Tables 1, 4, and 5 separately
+report calculated income tax, tax credits, source withholding, and
+self-assessed balance within the already positive-self-assessed-balance target.
+Across the common 25 income classes and five primary-income categories, the
+Table 1 tax-credit amount matches Table 4 and the Table 1 withholding persons
+and amount match Table 5 in all 125 cells.
+
+For one person in one tax year, positive self-assessed balance is downstream of
+positive calculated tax: credits and source withholding are subtracted before
+the final return balance is determined.  Thus the economically relevant
+direction is subset-like.  The audit nevertheless does not observe persons
+with nonpositive self-assessed balance, and the pseudo calculation applies
+2026 ordinary-income-tax rules to tax units reconstructed from 2024 household
+aggregates.  The direction is therefore used as a model-contingent
+compatibility restriction, not as observed cross-system record linkage.
+
+v5 was pre-specified in commit fef4776 before any v5 result was computed and
+implemented only after the pre-specification passed GitHub Actions.  It keeps
+the v3 grouped-NTA uncertainty, rank transport, thirteen pseudo scenarios, and
+the complete pre-specified rank grid, but replaces the symmetric absolute-gap
+restriction with
+
+[stem]
+++++
+r_d^{B}-r_d^{PF}\le\eta,
+++++
+
+where stem:[r_d^{B}] is the transported NTA positive-self-assessed-balance rate
+and stem:[r_d^{PF}] is the pseudo modeled annual-income-tax-positive share.
+There is deliberately no mirror penalty when stem:[r_d^{PF}>r_d^{B}].
+
+The Paper 1 summary is generated directly from the committed v5 frontier and
+endpoint artifacts:
+
+.One-sided v5 directional-compatibility frontier
+[%header,format=csv]
+|===
+include::{docdir}/data/rank_one_sided_v5_overall_table.csv[]
+|===
+
+The minimum directional-violation budget is stem:[\eta^*=0] at every
+pre-specified rank budget
+Delta={0,0.25,0.5,1,2,3,4,5}.  A separate solve that fixes
+stem:[\eta=0] and minimizes rank-displacement cost is feasible at
+stem:[\Delta^*=0].  HiGHS-DS and HiGHS-IPM agree on both results.  An
+independent reduced LP that does not use the v5 directional-constraint builder
+also verifies the exact-same-rank stem:[(\Delta,\eta)=(0,0)] feasibility.
+
+At the minimum directional-violation frontier, the equal-decile overall
+taxable-income-weighted MTR envelope is 10.0884--12.8680% and the
+income-tax-liability-weighted envelope is 10.8806--13.7776% at every
+pre-specified stem:[\Delta].  These remain positive-width conditional
+sensitivity envelopes.
+
+The zero directional violation has a narrower interpretation than zero
+symmetric discrepancy.  v3/v4 ask how close the two event rates can be made in
+both directions, whereas v5 asks only whether the downstream NTA
+positive-balance rate must exceed the upstream pseudo calculated-tax-positive
+rate.  A positive symmetric gap can therefore coexist with zero directional
+violation.  The v5 result does not show that the two tax events are equal, that
+the same-rank correspondence is observed, or that the pseudo model is true.
+It also does not convert the MTR envelopes into confidence intervals, causal
+bounds, or statistically sharp identified sets.
+
+P1-C17 records this pre-specified one-sided result as a reproduced
+model-contingent compatibility diagnostic.  P1-C13 through P1-C16 remain
+distinct results, and P1-C06 remains unreproduced.
+
 === Static liability versus behavioral incidence
 
 Observed F71561 income-tax liability moments can support static,

@@ -41,13 +41,13 @@ The highest-value additional data would be:
   taxable-income components, deductions, filing status, and tax liability;
 . a direct or statistically linkable crosswalk between F71561-style
   equivalized disposable-income rank and NTA total-net-income rank, so the
-  model-contingent rank assumptions used by P1-C14 through P1-C16 can be
+  model-contingent rank assumptions used by P1-C14 through P1-C17 can be
   replaced by evidence;
 . directly comparable person/tax-unit tabulations linking rank, filing or
   processing status, calculated annual tax, tax credits, source withholding,
-  and positive self-assessed return balance, so the remaining cross-concept
-  rate gap can be decomposed rather than absorbed by a common relaxation
-  parameter;
+  and positive self-assessed return balance, so the transition from positive
+  calculated tax to positive return balance can be measured directly rather
+  than represented only by event ordering or symmetric compatibility budgets;
 . public cross-tabs connecting household income deciles to tax-unit
   characteristics without synthetic assignment;
 . repeated-year equivalents permitting validation of stability and transport.
@@ -80,18 +80,33 @@ relaxed.  Some transported-NTA decile-rate endpoints do continue to widen with
 stem:[Delta], so this is an MTR-envelope statement rather than full saturation
 of the transport model.
 
-This changes the data priority.  Better rank linkage is still valuable, but
-rank linkage alone cannot remove the residual discrepancy in the v3/v4
-specification, and finer rank freedom beyond the first positive pre-specified
-grid point does not tighten the conditional MTR envelopes.  Higher-value
-evidence therefore also includes directly comparable person/tax-unit
-denominators and positive-self-assessed-balance selection by income rank,
-plus source-withholding and tax-credit information that connects calculated
-annual tax to the return balance.  Microdata or sufficiently detailed
-tabulations could then validate or replace the pseudo modeled-annual-tax-
-positive calibration and reduce the need for an externally imposed
-stem:[epsilon] budget.  Neither stem:[Delta] nor
-stem:[epsilon] is estimated by P1-C16.
+P1-C17 then changes the compatibility question after the separate NTA
+tax-flow audit.  Rather than penalizing the two positive-event rates in both
+directions, v5 imposes only the tax-flow-consistent direction
+stem:[r_d^{B}-r_d^{PF}\le\eta].  The minimum directional-violation budget is
+stem:[\eta^*=0] at all eight pre-specified rank budgets, and the separate
+zero-violation minimum-rank-cost solve is feasible already at
+stem:[\Delta=0].  Thus the positive v3/v4 symmetric discrepancy does not imply
+a violation of the subset direction.  The two findings are compatible because
+they answer different questions.
+
+This further sharpens the data priority.  Better rank linkage is still
+valuable for replacing model-contingent rank transport, but the highest-value
+new evidence is now a directly comparable tax-unit denominator that observes
+both positive calculated tax and the downstream positive self-assessed balance
+by income rank.  Such data would identify the transition from calculated tax
+through tax credits and source withholding to the final return balance,
+including the persons currently absent from the positive-balance-conditioned
+Sample Survey.  It would therefore test the v5 event ordering quantitatively
+rather than merely impose it as a directional compatibility condition.
+
+Microdata or sufficiently detailed tabulations could also validate or replace
+the pseudo modeled-annual-tax-positive calibration and show whether the
+positive symmetric v3/v4 gap reflects population/frame mismatch, tax-event
+definition, pseudo-model misspecification, or some combination.  Neither
+stem:[Delta] nor stem:[epsilon] is estimated by P1-C16, and stem:[eta] is not
+an estimated transition, withholding, tax-credit, or measurement-error rate in
+P1-C17.
 
 === Scope of policy conclusions
 

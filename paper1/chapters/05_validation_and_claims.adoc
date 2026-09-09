@@ -40,6 +40,19 @@ boundary, and verify feasible-set and endpoint nesting when either budget is
 relaxed.  These are computational validation checks; they do not convert the
 bridge or budget assumptions into observed identification.
 
+For v5, the repository first freezes the exact pre-specification and
+configuration bytes from commit fef4776 by SHA-256.  The implementation tests
+then require stem:[\eta^*=0] at all eight pre-specified rank budgets, agreement
+between HiGHS-DS and HiGHS-IPM, a zero-violation minimum-rank-cost solution at
+stem:[\Delta=0], and deterministic regeneration of 672 endpoint rows.  A
+separate reduced LP verifies the exact-same-rank stem:[(\Delta,\eta)=(0,0)]
+feasibility without calling the v5 directional-constraint construction.  The
+test also enforces the pre-specified frontier inclusion
+stem:[\eta^*_{v5}(\Delta)\le\varepsilon^*_{v3}(\Delta)].  These checks validate
+the computation conditional on the one-sided model; they do not validate
+same-person linkage, the household-to-tax-unit reconstruction, or the economic
+truth of the pseudo scenarios.
+
 The repository also checks a SHA-256 manifest and a scientific-state validator.
 
 === Restricted-LP recovery status

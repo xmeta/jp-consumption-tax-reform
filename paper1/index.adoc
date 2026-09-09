@@ -40,9 +40,20 @@ stem:[Delta] and `epsilon` grids without minimizing
 point retains positive-width overall MTR envelopes, and for each feasible
 `epsilon` the taxable- and liability-weighted MTR bounds are identical
 across all positive pre-specified rank budgets
-`Delta=0.25,...,5`.  These are model-contingent compatibility and
-sensitivity diagnostics, not an estimated rank map, confidence region, or
-identified filer MTR.
+`Delta=0.25,...,5`.
+
+After separately auditing the NTA calculated-tax, tax-credit, withholding, and
+self-assessed-balance flow, a fifth model was pre-specified before its results
+were computed.  It replaces the symmetric rate-gap requirement by the
+one-sided compatibility condition that transported positive self-assessed
+balance should not exceed the pseudo modeled calculated-tax-positive rate
+except for a directional-violation budget stem:[eta].  The pre-specified result
+is stem:[eta^*=0] at every rank budget, including exact same-rank
+stem:[Delta=0]; the separate zero-violation minimum-rank-cost solve also returns
+stem:[Delta^*=0].  This does not invalidate the v3/v4 symmetric-gap
+diagnostics: the models answer different compatibility questions.  All of
+these results remain model-contingent rather than an estimated rank map,
+confidence region, causal bound, or identified filer MTR.
 
 Other marginal-incidence quantities remain sensitivity-only, recovery-only, or
 not identified. A machine-readable claim registry prevents calibrated or

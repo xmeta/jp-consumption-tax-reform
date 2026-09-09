@@ -372,8 +372,10 @@ transport grid, and fixes solver/tolerance/nesting checks before any v5 result
 is available.  The original `fef4776` version of
 `test_rank_one_sided_bridge_v5_prespec.py` enforced that the pre-specification
 commit contained no v5 implementation, generated result, or Paper 1 P1-C17
-claim.  Git history preserves that gate; the current test SHA-locks the exact
-spec/config and continues to prohibit implementation-time Paper promotion.
+claim.  The implementation commit `006e259` also kept Paper 1 at 16 claims and
+passed GitHub CI before promotion.  Git history preserves both gates; the
+current test SHA-locks the exact spec/config and verifies the later separate
+P1-C17 promotion without changing the frozen v5 specification.
 
 The pre-specification state at commit `fef4776` is
 `PRESPECIFIED_NO_V5_RESULT`; the exact spec/config bytes remain SHA-256 locked
@@ -402,8 +404,10 @@ different optimized compatibility budgets.
 
 Current implementation status:
 `MODEL_CONTINGENT_RANK_ONE_SIDED_SUBSET_COMPATIBILITY`.
-Paper 1 remains at 16 claims; no P1-C17 is introduced by the implementation
-commit.
+The implementation commit itself left Paper 1 at 16 claims.  After its push,
+PR, and main post-merge CI succeeded, the result was promoted separately as
+P1-C17 with status
+`MODEL_CONTINGENT_RANK_ONE_SIDED_BRIDGE_REPRODUCED`.
 
 == Reproduction
 
