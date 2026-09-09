@@ -275,6 +275,28 @@ v3 remains a model-contingent sensitivity and does not modify P1-C13 or
 P1-C14.  Paper promotion remains separate and is prohibited until the
 implementation commit passes CI.
 
+== Pre-specified v4 fixed-budget sensitivity surface
+
+v4 is pre-specified in:
+
+* `rank_epsilon_surface_v4_spec.adoc`;
+* `rank_epsilon_surface_v4_config.csv`.
+
+It does not minimize the discrepancy budget.  Instead it evaluates the
+Cartesian product of the already committed v3 rank-displacement grid and the
+already committed v2 fixed-epsilon grid: 8 x 13 = 104 points.  Every point must
+be reported in the feasibility surface, and all 84 v2/v3 endpoint objectives
+must be evaluated at every feasible point.
+
+This design separates conditional MTR-envelope sensitivity from the
+minimum-epsilon objective that can force the pseudo-filer mixture to a scenario
+boundary.  Delta and epsilon remain model budgets, not estimated error
+parameters.
+
+At the pre-specification stage there are no v4 feasibility classifications,
+endpoint values, or endpoint widths.  Implementation, CI, and any Paper 1
+promotion must occur in later commits.
+
 == Reproduction
 
 [source,shell]

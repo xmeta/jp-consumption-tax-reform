@@ -1,0 +1,265 @@
+= Pre-specified rank-displacement x discrepancy-budget surface v4
+:revdate: 2026-09-09
+:stem: latexmath
+
+== Status and purpose
+
+This document pre-specifies v4 *before any v4 numerical result is computed*.
+
+v3 minimizes the common positive-rate discrepancy stem:[\varepsilon] at each
+rank-displacement budget stem:[\Delta].  That optimization can force the
+pseudo-filer mixture to a scenario boundary and can therefore collapse an MTR
+endpoint interval at the minimum-discrepancy frontier without implying point
+identification.
+
+v4 does not minimize stem:[\varepsilon].  Instead it fixes both
+stem:[\Delta] and stem:[\varepsilon] on grids that were already committed in
+v3 and v2 respectively, then reports feasibility and MTR envelopes over the
+resulting conditional feasible set.
+
+Until implementation, generated outputs, tests, and CI are complete, v4 has
+status
+
+----
+PRE_SPECIFIED_RANK_EPSILON_SURFACE_MODEL_CONTINGENT_NOT_IDENTIFIED
+----
+
+No v4 result may enter Paper 1 before a later, separate promotion commit.
+
+== No new post-result grid selection
+
+v4 reuses grids that were fixed in prior pre-specification commits.
+
+From v3:
+
+----
+Delta = 0;0.25;0.5;1;2;3;4;5
+----
+
+where stem:[\Delta] is average absolute decile-index displacement.
+
+From v2:
+
+----
+epsilon = 0;0.025;0.05;0.075;0.10;0.125;0.15;0.175;0.20;0.225;0.25;0.275;0.30
+----
+
+where stem:[\varepsilon] is an absolute positive-rate discrepancy budget.
+
+Their Cartesian product contains exactly stem:[8\times13=104] pre-specified
+points.  Every point must appear in the v4 feasibility output.  No point may be
+removed because it is infeasible, redundant, wide, narrow, or inconvenient.
+
+v4 does not add the data-dependent v2/v3 stem:[\varepsilon^*] values to this
+grid.
+
+== Inputs and model equations
+
+v4 uses the committed v3 model without changing its scientific constraints:
+
+* all 13 committed pseudo-filer scenarios;
+* the same 25 ordered NTA Table 2-2(1) total-net-income classes;
+* free within-class positive-liability allocation subject to NTA grouped-rank
+  overlap capacities;
+* scaled doubly-stochastic population rank transport stem:[T_{dq}];
+* positive-liability transport stem:[z_{dq}\le T_{dq}];
+* preservation of NTA rank positive-liability margins;
+* the v3 rank-displacement cost
+  stem:[W(T)=\sum_{d,q}|d-q|T_{dq}].
+
+For each fixed surface point stem:[(\Delta,\varepsilon)], impose
+
+[stem]
+++++
+W(T)\le\Delta
+++++
+
+and, for every F71561 decile stem:[d],
+
+[stem]
+++++
+|r_d^{PF}-r_d^{NTA\to F}|\le\varepsilon.
+++++
+
+Neither stem:[\Delta] nor stem:[\varepsilon] is estimated from the public
+data.  They are sensitivity budgets.
+
+The public NSFCW tables 7-141-1 and 7-171 remain interpretation-only
+diagnostics and do not impose an NSFCW-to-NTA category identity.
+
+== Feasibility surface
+
+For every one of the 104 grid points, solve a zero-objective LP with all v3
+constraints and record:
+
+* feasible / infeasible;
+* solver status and message;
+* maximum equality residual when feasible;
+* maximum inequality excess when feasible;
+* transport cost at one feasible solution when feasible;
+* maximum decile bridge gap at one feasible solution when feasible.
+
+The primary solver is `highs-ds`.
+
+Every feasibility classification must be independently cross-checked with
+`highs-ipm`.  The two methods must agree on feasible versus infeasible for
+all 104 points.
+
+== Endpoint surface
+
+For every feasible grid point, report the same 84 endpoint objectives used by
+v2/v3:
+
+=== Decile endpoints
+
+For each of ten deciles, minimum and maximum of:
+
+. taxable-income-weighted mean statutory MTR;
+. income-tax-liability-weighted mean statutory MTR;
+. pseudo-filer positive-tax share;
+. transported NTA positive-liability rate.
+
+This gives stem:[10\times4\times2=80] decile endpoints.
+
+=== Overall endpoints
+
+With equal 0.1 weight on each F rank decile, minimum and maximum of:
+
+. taxable-income-weighted mean statutory MTR;
+. income-tax-liability-weighted mean statutory MTR.
+
+This gives four additional endpoints.
+
+Thus each feasible surface point contributes exactly 84 endpoint rows.
+
+No endpoint is generated for an infeasible point.  Infeasibility is retained
+explicitly in the separate 104-row feasibility artifact.
+
+== Summary surface
+
+A deterministic summary artifact must contain all 104 grid points and, for each
+feasible point, the overall MTR bounds and widths:
+
+* taxable-income-weighted overall MTR minimum;
+* taxable-income-weighted overall MTR maximum;
+* taxable-income-weighted overall MTR width;
+* liability-weighted overall MTR minimum;
+* liability-weighted overall MTR maximum;
+* liability-weighted overall MTR width.
+
+For infeasible points these endpoint fields remain blank rather than being
+imputed.
+
+== Set-nesting invariants
+
+The v4 feasible sets are nested by construction.
+
+For fixed stem:[\Delta], if stem:[\varepsilon_2\ge\varepsilon_1], then
+
+[stem]
+++++
+\mathcal F(\Delta,\varepsilon_1)
+\subseteq
+\mathcal F(\Delta,\varepsilon_2).
+++++
+
+For fixed stem:[\varepsilon], if stem:[\Delta_2\ge\Delta_1], then
+
+[stem]
+++++
+\mathcal F(\Delta_1,\varepsilon)
+\subseteq
+\mathcal F(\Delta_2,\varepsilon).
+++++
+
+Therefore the implementation tests must verify:
+
+* feasibility is monotone when either budget is relaxed;
+* for the same objective, a minimum endpoint cannot increase when moving to a
+  weakly larger feasible set, up to numerical tolerance;
+* for the same objective, a maximum endpoint cannot decrease when moving to a
+  weakly larger feasible set, up to numerical tolerance;
+* endpoint widths cannot shrink when either budget is relaxed, up to numerical
+  tolerance.
+
+These are mathematical invariants of the specified LP family, not empirical
+claims.
+
+== Nesting and cross-checks against committed v2/v3 artifacts
+
+The implementation must verify all applicable exact correspondences.
+
+=== Delta = 0
+
+At stem:[\Delta=0], the v4 model reduces to the v2 exact same-rank model.
+For every v2 fixed stem:[\varepsilon] grid value:
+
+* v4 feasibility must equal committed v2 feasibility;
+* whenever feasible, all 84 v4 endpoints must equal the corresponding
+  committed v2 endpoints within numerical tolerance.
+
+=== v3 minimum-discrepancy frontier as a feasibility boundary
+
+The committed v3 stem:[\varepsilon_3^*(\Delta)] values are not added as v4
+grid points.  They are used only as an external regression check:
+
+* every v4 grid point with
+  stem:[\varepsilon < \varepsilon_3^*(\Delta)-10^{-8}] must be infeasible;
+* every v4 grid point with
+  stem:[\varepsilon > \varepsilon_3^*(\Delta)+10^{-8}] must be feasible.
+
+A grid point numerically equal to the minimum frontier within tolerance is
+checked directly but is not required to be classified from the strict
+inequalities above.
+
+== Numerical safeguards
+
+Pinned environment and tolerances remain those of v3:
+
+* NumPy 2.5.3;
+* SciPy 1.18.1;
+* `scipy.optimize.linprog`;
+* primary method `highs-ds`;
+* independent cross-check method `highs-ipm`;
+* maximum accepted equality residual: `1e-8`;
+* maximum accepted inequality excess: `1e-8`;
+* endpoint / nesting comparison tolerance: `1e-8`.
+
+Every solved endpoint must be recomputed from the returned decision vector and
+agree with the solver objective within `1e-9`.
+
+== Interpretation boundary
+
+Allowed language after implementation and CI:
+
+* conditional rank-displacement x discrepancy-budget sensitivity surface;
+* feasibility surface under fixed stem:[(\Delta,\varepsilon)] budgets;
+* model-contingent MTR envelope conditional on both budgets;
+* envelope width as sensitivity to relaxing explicit model budgets;
+* robustness comparison with v2/v3.
+
+Prohibited language:
+
+* estimated joint distribution of rank error and measurement error;
+* confidence region;
+* statistically sharp identified set;
+* causal bound;
+* posterior credible set;
+* observed F71561-to-NTA linkage;
+* point-identified filer MTR merely because a conditional envelope is narrow;
+* recovered historical V6 restricted LP.
+
+== Promotion rule
+
+v4 results may enter Paper 1 only after a later commit contains:
+
+. implementation;
+. executable tests;
+. deterministic feasibility, endpoint, and summary artifacts;
+. manifest regeneration;
+. successful local full gates;
+. successful GitHub Actions on the implementation commit;
+. then a separate Paper 1 claim-registry / manuscript promotion commit.
+
+This pre-specification commit must contain no v4 feasibility classification,
+MTR endpoint, endpoint width, or other v4 numerical result.
