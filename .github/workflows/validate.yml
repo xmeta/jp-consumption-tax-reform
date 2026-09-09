@@ -46,6 +46,8 @@ jobs:
           python research/income_tax_partial_identification/test_rank_bridge_lp_v2.py
           python research/income_tax_partial_identification/run_rank_bridge_lp_v3.py
           python research/income_tax_partial_identification/test_rank_bridge_lp_v3.py
+          python research/income_tax_partial_identification/run_rank_epsilon_surface_v4.py
+          python research/income_tax_partial_identification/test_rank_epsilon_surface_v4.py
           python scripts/build_derived_catalog.py
           python scripts/build_input_provenance.py
           python scripts/build_stage1_inputs.py

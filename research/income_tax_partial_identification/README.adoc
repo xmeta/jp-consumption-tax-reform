@@ -293,9 +293,27 @@ minimum-epsilon objective that can force the pseudo-filer mixture to a scenario
 boundary.  Delta and epsilon remain model budgets, not estimated error
 parameters.
 
-At the pre-specification stage there are no v4 feasibility classifications,
-endpoint values, or endpoint widths.  Implementation, CI, and any Paper 1
-promotion must occur in later commits.
+The pre-specification commit contains no v4 feasibility classifications,
+endpoint values, or endpoint widths.
+
+v4 is subsequently implemented in `run_rank_epsilon_surface_v4.py` and
+verified by `test_rank_epsilon_surface_v4.py`.  Generated evidence is:
+
+* `rank_epsilon_surface_v4_feasibility.csv`: all 104 fixed surface points;
+* `rank_epsilon_surface_v4_endpoints.csv`: all 84 objectives at each feasible
+  point;
+* `rank_epsilon_surface_v4_summary.csv`: all 104 points with overall MTR
+  minima, maxima, and widths when feasible.
+
+The implementation checks both HiGHS-DS and HiGHS-IPM feasibility
+classification at all 104 points, exact Delta=0 regression to the committed v2
+fixed-epsilon artifacts, the committed v3 minimum-discrepancy boundary, and
+two-dimensional feasible-set nesting as either budget is relaxed.
+
+These outputs remain model-contingent sensitivity evidence.  A finite or narrow
+conditional MTR envelope is not point identification.  Paper 1 promotion
+remains prohibited until the implementation commit passes CI and a later,
+separate claim-registry/manuscript commit is made.
 
 == Reproduction
 
@@ -313,6 +331,8 @@ python research/income_tax_partial_identification/run_rank_bridge_lp_v2.py
 python research/income_tax_partial_identification/test_rank_bridge_lp_v2.py
 python research/income_tax_partial_identification/run_rank_bridge_lp_v3.py
 python research/income_tax_partial_identification/test_rank_bridge_lp_v3.py
+python research/income_tax_partial_identification/run_rank_epsilon_surface_v4.py
+python research/income_tax_partial_identification/test_rank_epsilon_surface_v4.py
 ----
 
 The generated outputs must remain deterministic under a clean checkout and all
