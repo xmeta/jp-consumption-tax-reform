@@ -364,6 +364,17 @@ separate commit before any v5 result is computed.
 
 Current status: `V5_RESULT_NOT_COMPUTED`.
 
+The subsequent v5 design is now pre-specified in
+`rank_one_sided_bridge_v5_spec.adoc` and
+`rank_one_sided_bridge_v5_config.csv`.  It replaces the symmetric event-rate
+gap with a one-sided directional-violation budget `eta`, preserves the v3 rank
+transport grid, and fixes solver/tolerance/nesting checks before any v5 result
+is available.  `test_rank_one_sided_bridge_v5_prespec.py` enforces that the
+pre-specification commit contains no v5 implementation, generated result, or
+Paper 1 P1-C17 claim.
+
+Current v5 status: `PRESPECIFIED_NO_V5_RESULT`.
+
 == Reproduction
 
 [source,shell]
@@ -387,6 +398,7 @@ python research/income_tax_partial_identification/test_rank_bridge_lp_v3.py
 python research/income_tax_partial_identification/run_rank_epsilon_surface_v4.py
 python research/income_tax_partial_identification/test_rank_epsilon_surface_v4.py
 python research/income_tax_partial_identification/test_self_assessed_balance_schema_migration.py
+python research/income_tax_partial_identification/test_rank_one_sided_bridge_v5_prespec.py
 ----
 
 The generated outputs must remain deterministic under a clean checkout and all

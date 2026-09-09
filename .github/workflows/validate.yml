@@ -51,6 +51,7 @@ jobs:
           python research/income_tax_partial_identification/run_rank_epsilon_surface_v4.py
           python research/income_tax_partial_identification/test_rank_epsilon_surface_v4.py
           python research/income_tax_partial_identification/test_self_assessed_balance_schema_migration.py
+          python research/income_tax_partial_identification/test_rank_one_sided_bridge_v5_prespec.py
           python scripts/build_derived_catalog.py
           python scripts/build_input_provenance.py
           python scripts/build_stage1_inputs.py

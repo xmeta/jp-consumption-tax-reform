@@ -1,0 +1,336 @@
+= Rank one-sided bridge LP v5 pre-specification
+:toc:
+:stem: latexmath
+
+== Status
+
+----
+PRESPECIFIED_NO_V5_RESULT
+----
+
+This specification is committed only after the official NTA tax-flow audit
+commit \`b42c632\` passed both push and pull-request CI.
+
+No v5 feasibility classification, minimum violation, transport plan, MTR
+endpoint, or Paper 1 claim is permitted in this pre-specification commit.
+
+== Motivation
+
+v1-v4 used a symmetric rate-gap constraint between:
+
+* the pseudo modeled ordinary annual-income-tax-positive event; and
+* NTA positive self-assessed balance (\`申告納税額>0\`).
+
+The NTA Table 1/4/5 audit shows that these are not two measurements of one
+event. For one person in one tax year, positive self-assessed balance is a
+downstream subset-type event relative to positive calculated tax because tax
+credits and source withholding occur between those concepts.
+
+The public audit does not identify the missing calculated-tax-positive
+population outside the positive-balance target. Therefore v5 does not
+calibrate the size of the gap from Table 1/4/5 exposure rates. It uses those
+tables only to pre-specify the *direction* of the compatibility restriction.
+
+== Inputs
+
+v5 must use exactly the existing committed inputs:
+
+. all 13 pseudo-filer scenarios;
+. the same 25 NTA income classes and positive-self-assessed-balance counts used
+  by v3;
+. the same class-to-rank overlap construction;
+. the same equal-mass ten-decile population coupling;
+. the same v3 rank-displacement grid
+  stem:[\Delta\in\{0,0.25,0.5,1,2,3,4,5\}].
+
+The new tax-flow artifact
+
+----
+data/derived/nta_positive_self_assessed_balance_tax_flow_income_class_primary_type_2024.csv
+----
+
+is *semantic-direction evidence only*. Its withholding and tax-credit exposure
+rates must not be used to fit, tune, weight, or select the v5 directional
+violation budget.
+
+== Variables
+
+Indices:
+
+* stem:[d=1,\ldots,10]: F71561/pseudo rank decile;
+* stem:[q=1,\ldots,10]: NTA rank decile;
+* stem:[j=1,\ldots,25]: NTA grouped income class;
+* stem:[s=1,\ldots,13]: committed pseudo scenario.
+
+Decision variables:
+
+* stem:[\lambda_{ds}\ge0]: pseudo-scenario mixture, with
+  stem:[\sum_s\lambda_{ds}=1];
+* stem:[y_{jq}\ge0]: allocation of NTA positive-self-assessed-balance mass from
+  grouped income class stem:[j] to NTA rank stem:[q];
+* stem:[T_{dq}\ge0]: population rank coupling;
+* stem:[z_{dq}\ge0]: positive-self-assessed-balance mass transported along
+  stem:[T];
+* stem:[\eta\in[0,1]]: common one-sided cross-system violation budget when the
+  frontier problem is solved.
+
+The v3 population, class-overlap, and positive-transport constraints are
+unchanged.
+
+== Pseudo and transported NTA rates
+
+For each F decile, define
+
+[stem]
+++++
+r_d^{PF}
+=
+\sum_s \lambda_{ds}u_{ds},
+++++
+
+where stem:[u_{ds}] is the committed pseudo modeled ordinary
+annual-income-tax-positive share.
+
+Define the transported NTA positive-self-assessed-balance rate
+
+[stem]
+++++
+r_d^{B}
+=
+10\sum_q z_{dq}.
+++++
+
+== One-sided compatibility restriction
+
+The only v5 event-rate restriction is
+
+[stem]
+++++
+r_d^{B}-r_d^{PF}\le \eta
+\qquad
+\forall d.
+++++
+
+There is intentionally *no* mirror constraint on
+
+[stem]
+++++
+r_d^{PF}-r_d^{B}.
+++++
+
+Thus a pseudo calculated-tax-positive rate above the transported positive-
+balance rate is not penalized merely for being above it.
+
+Interpretation of stem:[\eta]:
+
+* stem:[\eta=0] means the model can respect the subset direction in every
+  transported decile;
+* stem:[\eta>0] is the smallest common directional violation required by the
+  cross-year, cross-population model at the specified rank budget;
+* stem:[\eta] is not a withholding rate, tax-credit rate, confidence radius,
+  measurement-error standard deviation, causal parameter, or estimated true
+  subset violation.
+
+== Rank transport
+
+Population coupling constraints are unchanged from v3:
+
+[stem]
+++++
+\sum_q T_{dq}=0.1,
+\qquad
+\sum_d T_{dq}=0.1.
+++++
+
+Positive mass satisfies
+
+[stem]
+++++
+0\le z_{dq}\le T_{dq},
+++++
+
+with NTA-rank positive margins conserved exactly as in v3.
+
+The rank-displacement cost is
+
+[stem]
+++++
+W(T)=\sum_{d,q}|d-q|T_{dq}.
+++++
+
+For each pre-specified budget stem:[\Delta],
+
+[stem]
+++++
+W(T)\le\Delta.
+++++
+
+== Frontier objective
+
+For every fixed
+
+[stem]
+++++
+\Delta\in\{0,0.25,0.5,1,2,3,4,5\},
+++++
+
+solve
+
+[stem]
+++++
+\eta^\star(\Delta)
+=
+\min \eta
+++++
+
+subject to all constraints above.
+
+All eight frontier points must be reported. No stem:[\Delta] may be removed
+after seeing a result.
+
+== Zero-violation threshold
+
+Separately set stem:[\eta=0] and minimize stem:[W(T)].
+
+If feasible, report the minimum rank-displacement budget needed for zero
+directional violation. If infeasible, report infeasible.
+
+This solve must be cross-checked with both pre-specified HiGHS methods.
+
+== Endpoint objectives
+
+At each stem:[(\Delta,\eta^\star(\Delta))], evaluate exactly the same 84
+endpoint objectives as v3:
+
+* decile minimum/maximum taxable-income-weighted MTR;
+* decile minimum/maximum income-tax-liability-weighted MTR;
+* decile minimum/maximum pseudo modeled annual-income-tax-positive share;
+* decile minimum/maximum transported NTA positive-self-assessed-balance rate;
+* equal-decile overall minimum/maximum for the two MTR measures.
+
+Expected structural row count if all eight frontier solves succeed:
+
+----
+8 x 84 = 672 endpoint rows
+----
+
+This is a structural count, not a numerical result.
+
+== Pre-specified output files
+
+Implementation must write:
+
+----
+rank_one_sided_bridge_v5_minimum_violation_frontier.csv
+rank_one_sided_bridge_v5_minimum_decile_diagnostics.csv
+rank_one_sided_bridge_v5_zero_violation_threshold.csv
+rank_one_sided_bridge_v5_transport_plans.csv
+rank_one_sided_bridge_v5_endpoints.csv
+----
+
+No file with those names exists in this pre-specification commit.
+
+== Required implementation regressions
+
+The later implementation must enforce all of the following.
+
+=== v3 outer-set regression
+
+For the same stem:[\Delta], every v3 solution feasible at symmetric
+stem:[\varepsilon] is also feasible under the v5 one-sided restriction at
+stem:[\eta=\varepsilon].
+
+Therefore
+
+[stem]
+++++
+\eta^\star_{v5}(\Delta)
+\le
+\varepsilon^\star_{v3}(\Delta)
+++++
+
+must hold within the committed tolerance.
+
+This is a mathematical set-inclusion regression, not an expectation about the
+size of the v5 result.
+
+=== Rank-budget monotonicity
+
+Because increasing stem:[\Delta] only relaxes the feasible set,
+
+[stem]
+++++
+\eta^\star(\Delta_2)
+\le
+\eta^\star(\Delta_1)
+\quad\text{for}\quad
+\Delta_2\ge\Delta_1.
+++++
+
+=== Directional residual
+
+For every accepted solution,
+
+[stem]
+++++
+\max_d
+\left(
+r_d^{B}-r_d^{PF}-\eta
+\right)
+\le 10^{-8}.
+++++
+
+=== Solver cross-check
+
+The minimum frontier and zero-violation threshold must be classified with both:
+
+* \`highs-ds\`;
+* \`highs-ipm\`.
+
+Differences beyond the committed tolerances are a failed implementation gate.
+
+=== Legacy non-mutation
+
+Implementation must not alter:
+
+* P1-C13 / v1 evidence;
+* P1-C14 / v2 evidence;
+* P1-C15 / v3 evidence;
+* P1-C16 / v4 evidence;
+* the historical V6 unreproduced status.
+
+== Cross-year and cross-population limitation
+
+The one-sided relation is not claimed as an observed decile identity.
+
+NTA tax-flow data are 2024 individual-return data. The pseudo object applies
+2026 statutory ordinary-income-tax rules to tax units reconstructed from 2024
+household aggregates. Tax credits and Reconstruction Special Income Tax are
+outside the pseudo positive-event calculation.
+
+Therefore v5 remains a model-contingent sensitivity design even if
+stem:[\eta^\star=0] were later found feasible.
+
+== Paper 1 promotion rule
+
+This pre-specification adds no Paper 1 claim.
+
+A later implementation commit must first pass local and GitHub CI. Only a
+subsequent, separate promotion commit may decide whether a new claim such as
+P1-C17 belongs in Paper 1.
+
+The implementation commit itself must leave the Paper 1 claim registry
+unchanged.
+
+== Anti-result-tuning statement
+
+At the time this specification is committed:
+
+* no v5 solver has been implemented;
+* no v5 frontier has been computed;
+* no zero-violation threshold has been computed;
+* no v5 MTR endpoint has been computed.
+
+The stem:[\Delta] grid, one-sided direction, objective, output set, solver
+methods, tolerances, regressions, and promotion rule are fixed before those
+results are available.
