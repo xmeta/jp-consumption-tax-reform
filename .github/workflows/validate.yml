@@ -21,6 +21,8 @@ jobs:
       - name: Rebuild official-source catalogs and e-Stat extracts
         run: |
           python scripts/build_source_catalog.py
+          python scripts/extract_meti_vat_internal_hours.py
+          python scripts/test_meti_vat_internal_hours.py
           python scripts/extract_vat_compliance_evidence.py
           python scripts/test_vat_compliance_evidence.py
           python research/vat_compliance_productivity/run_vat_compliance_productivity.py

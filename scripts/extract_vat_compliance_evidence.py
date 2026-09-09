@@ -3,6 +3,7 @@
 from pathlib import Path
 import argparse, csv, io, re
 from pypdf import PdfReader
+from extract_meti_vat_internal_hours import build as build_meti_hours
 
 ROOT = Path(__file__).resolve().parents[1]
 CATALOG = ROOT / "data/source_catalog.csv"
@@ -41,6 +42,7 @@ def require_tokens(text, tokens, label):
 def build():
     cat={r["source_id"]:r for r in read_csv(CATALOG)}
     required=[
+      "METI-2021-SME-TAX-SURVEY",
       "JCCI-2024-INVOICE-BACKOFFICE-SURVEY",
       "JCCI-2025-INVOICE-SURVEY",
       "RIETI-2019-VAT-COMPLIANCE-FIRM-GROWTH",
@@ -88,7 +90,54 @@ def build():
     ]:
         require_tokens(text,tokens,label)
 
+    meti_dist, meti_bounds = build_meti_hours()
+    meti_bound = {r["bound_id"]: r for r in meti_bounds}
+    meti_bin = {r["bin_id"]: r for r in meti_dist}
+    meti = PdfReader(ROOT/cat["METI-2021-SME-TAX-SURVEY"]["raw_file"])
+    meti_p5 = meti.pages[4].extract_text() or ""
+    require_tokens(meti_p5,["対象エリア：全国","調査対象数：20,000件","回収数：4,412件","有効回答数：4,410件","株式会社帝国データバンク"],"METI2021 p5")
+
     rows=[]
+    # METI directly measures VAT-specific internal tax-procedure hours for a
+    # respondent subset.  It does not identify a national c_VAT.
+    rows += [
+      evidence("meti2021_corporate_survey_target_n","20000","corporations",
+        "OFFICIAL_SURVEY_DESIGN_COUNT","corporations sampled from Teikoku Databank business database under stated industry conditions","20000",
+        "METI-2021-SME-TAX-SURVEY","PDF p.5 / printed p.5",
+        "OBSERVED_SURVEY_FRAME","FRAME_CONTEXT_NOT_POPULATION_WEIGHT",
+        "Survey area is nationwide; 20,000 corporation targets were extracted from the Teikoku Databank business database under stated main-industry conditions."),
+      evidence("meti2021_corporate_survey_valid_response_n","4410","corporations",
+        "OFFICIAL_SURVEY_RESPONSE_COUNT","valid corporate survey responses","4410",
+        "METI-2021-SME-TAX-SURVEY","PDF p.5 / printed p.5",
+        "OBSERVED_SURVEY_FRAME","FRAME_CONTEXT_NOT_VAT_ITEM_RESPONSE_RATE",
+        "Published valid responses are 4,410 (22.1% valid response rate); the VAT-hours item has its own smaller n=1,514."),
+      evidence("meti2021_vat_internal_hours_sample_n","1514","respondents",
+        "OFFICIAL_SURVEY_RESPONSE_COUNT","corporations responding to the published consumption-tax internal-hours item","1514",
+        "METI-2021-SME-TAX-SURVEY","PDF p.67 / printed p.67",
+        "OBSERVED_CONDITIONAL_SURVEY_SUBSET","SAMPLE_SCOPE_ONLY",
+        "Published n for the consumption-tax internal tax-procedure hours distribution."),
+      evidence("meti2021_vat_internal_hours_topcoded_share","0.067","ratio",
+        "SURVEY_RESPONSE_SHARE","corporations responding to the published consumption-tax internal-hours item","1514",
+        "METI-2021-SME-TAX-SURVEY","PDF p.67 / printed p.67",
+        "OBSERVED_CONDITIONAL_SURVEY_SUBSET","DIRECT_VAT_HOURS_DISTRIBUTION_NOT_NATIONAL_MEAN",
+        "Published share in the open-ended 100 hours or more category."),
+      evidence("meti2021_vat_internal_hours_mean_lower_bound",meti_bound["no_top_code_cap"]["mean_hours_lower_bound"],"hours_per_responding_corporation_year",
+        "DERIVED_PARTIAL_IDENTIFICATION_BOUND","corporations responding to the published consumption-tax internal-hours item","1514",
+        "METI-2021-SME-TAX-SURVEY","PDF p.67 / printed p.67; derived with one-decimal rounding and integer-count constraints",
+        "CONDITIONAL_RESPONDENT_SUBSET_LOWER_BOUND","HOURS_BOUND_ONLY_NOT_C_VAT",
+        "Conservative mean lower bound using bin lower endpoints over all 28 integer count vectors compatible with n=1,514 and published rounded shares; not a national-firm mean."),
+      evidence("meti2021_hours_selection_label_internal_inconsistency","1","boolean",
+        "SOURCE_INTERNAL_CONSISTENCY_CHECK","published section 7 tax-procedure survey results","",
+        "METI-2021-SME-TAX-SURVEY","PDF pp.65-67 / printed pp.65-67",
+        "SOURCE_REPORTED_SELECTION_LABEL_INCONSISTENT_WITH_COUNTS","SAMPLE_SCOPE_CAUTION",
+        "Printed p.66 says the hours question targets Q(1)=yes, but p.65 n=3,965 at 17.0% implies only 673-676 yes responses under one-decimal rounding, fewer than the VAT item n=1,514; do not silently repair the source label."),
+      evidence("meti2021_all_tax_external_outsourcing_scope","1","boolean",
+        "OFFICIAL_SURVEY_SCOPE_DEFINITION","respondents to annual tax-procedure outsourcing-cost item","3755",
+        "METI-2021-SME-TAX-SURVEY","PDF p.70 / printed p.70",
+        "OBSERVED_ALL_TAX_EXTERNAL_OUTSOURCING","DO_NOT_ATTRIBUTE_TO_VAT",
+        "Published external outsourcing expenditure is for tax-procedure work generally and is not disaggregated to consumption tax."),
+    ]
+    assert meti_bin["ge100"]["published_percent"] == "6.7"
     # JCCI invoice burden incidence. These are response shares, not resource shares.
     rows += [
       evidence("jcci2024_invoice_cost_increase_share","0.488","ratio","SURVEY_RESPONSE_SHARE",
@@ -205,7 +254,8 @@ def build():
       {"quantity":"invoice_burden_incidence","status":"OBSERVED_SURVEY_RESPONSE","point_identified":"NO_POPULATION_CAUSAL_POINT","model_use":"DESCRIPTIVE_EVIDENCE","note":"JCCI respondent shares establish widespread reported burden, not national resource-cost shares."},
       {"quantity":"firm_size_backoffice_vulnerability","status":"OBSERVED_SURVEY_RESPONSE","point_identified":"NO_NATIONAL_CAUSAL_POINT","model_use":"HETEROGENEITY_MOTIVATION","note":"Small firms are much more likely to have one-person/no-dedicated accounting; not VAT-specific hours."},
       {"quantity":"all_tax_compliance_cost_sales_ratio","status":"OBSERVED_STUDY_ESTIMATE_ALL_TAX_TYPES","point_identified":"NO_VAT_COMPONENT","model_use":"SCALE_CONTEXT_ONLY","note":"0.06% large and 0.17% SME averages include multiple tax types and use study-specific imputation."},
-      {"quantity":"vat_specific_real_resource_cost_share_of_output","status":"NOT_IDENTIFIED","point_identified":"NO","model_use":"STRESS_TEST_PARAMETER_ONLY","note":"No current source here identifies a Japan-wide VAT-only resource-cost share of baseline output."},
+      {"quantity":"vat_specific_internal_hours_respondent_subset","status":"PARTIALLY_IDENTIFIED_CONDITIONAL_ON_RESPONDENT_SUBSET","point_identified":"LOWER_BOUND_ONLY_TOP_CODED","model_use":"HOURS_EVIDENCE_NOT_NATIONAL_C_VAT","note":"METI n=1,514 directly measures VAT-specific internal hours. Published one-decimal shares plus integer counts imply a 15.126155878468 h/respondent-year lower bound; 100+ top coding leaves the uncapped upper bound open, and source-reported selection scope is internally inconsistent."},
+      {"quantity":"vat_specific_real_resource_cost_share_of_output","status":"NOT_IDENTIFIED","point_identified":"NO","model_use":"STRESS_TEST_PARAMETER_ONLY","note":"METI now partially identifies VAT-specific internal hours within a respondent subset, but national population reweighting/selection, wage or opportunity-cost conversion, and VAT-specific external expenditure remain unavailable; therefore Japan-wide c_VAT is not identified."},
       {"quantity":"productive_redeployment_fraction_rho","status":"NOT_IDENTIFIED","point_identified":"NO","model_use":"STRESS_TEST_PARAMETER_ONLY","note":"Saved compliance resources need not convert one-for-one into measured output."},
       {"quantity":"allocative_efficiency_dividend","status":"NOT_IDENTIFIED","point_identified":"NO","model_use":"STRESS_TEST_PARAMETER_ONLY","note":"Bunching evidence motivates a separate allocation channel but does not identify a macro output percentage."},
       {"quantity":"zero_rate_equals_full_abolition","status":"FALSE_BY_POLICY_DEFINITION","point_identified":"NOT_APPLICABLE","model_use":"PROHIBITED_EQUIVALENCE","note":"Policy state must separately encode VAT administrative/invoice obligations."},

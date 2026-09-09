@@ -15,6 +15,13 @@ ident={r["quantity"]:r for r in read(I)}
 cat={r["source_id"]:r for r in read(C)}
 
 anchors={
+ "meti2021_corporate_survey_target_n":"20000",
+ "meti2021_corporate_survey_valid_response_n":"4410",
+ "meti2021_vat_internal_hours_sample_n":"1514",
+ "meti2021_vat_internal_hours_topcoded_share":"0.067",
+ "meti2021_vat_internal_hours_mean_lower_bound":"15.126155878468",
+ "meti2021_hours_selection_label_internal_inconsistency":"1",
+ "meti2021_all_tax_external_outsourcing_scope":"1",
  "jcci2024_invoice_cost_increase_share":"0.488",
  "jcci2024_invoice_admin_burden_increase_share":"0.822",
  "jcci2025_invoice_cost_increase_share":"0.458",
@@ -35,6 +42,9 @@ assert ev["jcci2025_invoice_admin_burden_increase_share"]["model_calibration_per
 assert ev["rieti2019_vat_threshold_bunching_compliance_heterogeneity"]["model_calibration_permission"]=="ALLOCATION_CHANNEL_MOTIVATION_NOT_POINT_CALIBRATION"
 assert ev["rieti2021_vat_output_response_compliance_vs_rate"]["model_calibration_permission"]=="ALLOCATION_CHANNEL_MOTIVATION_NOT_POINT_CALIBRATION"
 
+assert ident["vat_specific_internal_hours_respondent_subset"]["status"]=="PARTIALLY_IDENTIFIED_CONDITIONAL_ON_RESPONDENT_SUBSET"
+assert ident["vat_specific_internal_hours_respondent_subset"]["point_identified"]=="LOWER_BOUND_ONLY_TOP_CODED"
+assert ident["vat_specific_internal_hours_respondent_subset"]["model_use"]=="HOURS_EVIDENCE_NOT_NATIONAL_C_VAT"
 assert ident["vat_specific_real_resource_cost_share_of_output"]["status"]=="NOT_IDENTIFIED"
 assert ident["vat_specific_real_resource_cost_share_of_output"]["model_use"]=="STRESS_TEST_PARAMETER_ONLY"
 assert ident["productive_redeployment_fraction_rho"]["status"]=="NOT_IDENTIFIED"
@@ -44,6 +54,7 @@ assert ident["compliance_savings_one_for_one_gdp"]["status"]=="PROHIBITED"
 assert ident["income_gini_and_FGT2_effect"]["status"]=="NOT_MODELED_PHASE1"
 assert ident["fiscal_debt_effect"]["model_use"]=="FINANCING_CHANNEL_SEPARATE"
 hashes={
+ "METI-2021-SME-TAX-SURVEY":"e6a5767910f2c1e024ec0b281e6f300949e735cdc6c9b052e164b6890948e563",
  "JCCI-2024-INVOICE-BACKOFFICE-SURVEY":"7ab80915efa7659e6f25cc152b7b5d2eef3c70038333eb6bc043642759d56126",
  "JCCI-2025-INVOICE-SURVEY":"d89a599e900146c7c8ec5e1f4b0702b9dd7d292b47042e9e57186dda4525605e",
  "RIETI-2019-VAT-COMPLIANCE-FIRM-GROWTH":"458d092bddb5a49af25f2f36cd202c5b96876df710aefa651187851dbdb75eca",
@@ -68,4 +79,9 @@ for k in ("jcci2024_invoice_admin_burden_increase_share",
     assert ev[k]["evidence_type"]=="SURVEY_RESPONSE_SHARE"
 
 subprocess.run([sys.executable,str(ROOT/"scripts/extract_vat_compliance_evidence.py"),"--check"],cwd=ROOT,check=True)
-print("VAT compliance evidence tests: OK (33 observed-evidence rows; VAT-specific macro resource share remains NOT_IDENTIFIED)")
+assert ev["meti2021_vat_internal_hours_mean_lower_bound"]["model_calibration_permission"]=="HOURS_BOUND_ONLY_NOT_C_VAT"
+assert ev["meti2021_all_tax_external_outsourcing_scope"]["model_calibration_permission"]=="DO_NOT_ATTRIBUTE_TO_VAT"
+assert ev["meti2021_corporate_survey_target_n"]["model_calibration_permission"]=="FRAME_CONTEXT_NOT_POPULATION_WEIGHT"
+assert ev["meti2021_corporate_survey_valid_response_n"]["model_calibration_permission"]=="FRAME_CONTEXT_NOT_VAT_ITEM_RESPONSE_RATE"
+assert len(ev)==40 and len(ident)==11
+print("VAT compliance evidence tests: OK (40 observed-evidence rows; respondent-subset VAT hours partially identified; national VAT resource share remains NOT_IDENTIFIED)")
