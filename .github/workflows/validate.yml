@@ -52,6 +52,8 @@ jobs:
           python scripts/test_nta_salary_return_overlap.py
           python scripts/extract_nta_salary_receipt_return_bridge.py
           python scripts/test_nta_salary_receipt_return_bridge.py
+          python scripts/build_nta_salary_filing_bridge_source_matrix.py
+          python scripts/test_nta_salary_filing_bridge_source_matrix.py
           python scripts/extract_nta_salary_source_system_coverage.py
           python scripts/test_nta_salary_source_system_coverage.py
           python scripts/test_filed_processed_terminology.py

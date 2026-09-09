@@ -541,6 +541,41 @@ reconciliation failures.
 Current bridge status:
 `SAME_SALARY_RECEIPT_THRESHOLD_BRIDGE_REPRODUCED_PERSON_LINK_NOT_IDENTIFIED`.
 
+== Salary filing/processing source-matrix audit
+
+`salary_filing_bridge_source_matrix_audit.adoc` converts the remaining public
+source search into a machine-readable dimension matrix.
+
+Ten official 2024 source families are enumerated across payroll, legal,
+return-side sample/administrative, withholding, submitted-return and
+representative regional tables.  The matrix records whether each source
+contains salary-receipt classes, an explicit >20m threshold, year-end
+adjustment, submitted-return counts, processing status, positive/refund status,
+salary-source-withholding persons, employer sector, geography, and a
+cross-family person link.
+
+The reproduced counts of source families jointly containing the critical
+dimensions are all zero:
+
+----
+>20m salary receipts x submitted-return person count = 0
+>20m salary receipts x processing status             = 0
+year-end adjustment x processing status              = 0
+employer sector x return status                      = 0
+cross-family person link                             = 0
+----
+
+The regional check retains Nagoya Regional Taxation Bureau 2024 Tables 2-1 and
+2-2 as raw official workbooks.  They add tax-office and total-net-income detail
+but do not add the missing salary-receipt/year-end-adjustment x processing
+cross-tab.
+
+This is intentionally a bounded negative-source result, not a claim that
+unpublished NTA administrative data lack such a linkage.
+
+Current status:
+`NOT_FOUND_IN_EXAMINED_OFFICIAL_SOURCE_FAMILIES`.
+
 == Salary source-system coverage audit
 
 `salary_source_system_coverage_audit.adoc` compares the FY2024
