@@ -16,12 +16,13 @@ ALLOWED = {
     "MODEL_CONTINGENT_TRANSPORT_RELAXATION_REPRODUCED",
     "MODEL_CONTINGENT_RANK_BRIDGE_RELAXATION_REPRODUCED",
     "MODEL_CONTINGENT_RANK_TRANSPORT_BUDGET_REPRODUCED",
+    "MODEL_CONTINGENT_RANK_EPSILON_SURFACE_REPRODUCED",
     "DOCUMENTED_PRIOR_RUN_NOT_REPRODUCED",
     "READY_STATIC_ONLY",
     "NOT_READY",
 }
 
-REQUIRED = {f"P1-C{i:02d}" for i in range(1, 16)}
+REQUIRED = {f"P1-C{i:02d}" for i in range(1, 17)}
 LOCAL_SOURCE_STATUSES = {
     "ROBUSTNESS_FRONTIER_REPRODUCED",
     "READY_STATIC_ONLY",
@@ -31,6 +32,7 @@ LOCAL_SOURCE_STATUSES = {
     "MODEL_CONTINGENT_TRANSPORT_RELAXATION_REPRODUCED",
     "MODEL_CONTINGENT_RANK_BRIDGE_RELAXATION_REPRODUCED",
     "MODEL_CONTINGENT_RANK_TRANSPORT_BUDGET_REPRODUCED",
+    "MODEL_CONTINGENT_RANK_EPSILON_SURFACE_REPRODUCED",
     "NOT_READY",
 }
 
@@ -91,6 +93,8 @@ def main():
         errors.append("P1-C14 must remain model-contingent same-rank bridge")
     if by_id["P1-C15"]["status"] != "MODEL_CONTINGENT_RANK_TRANSPORT_BUDGET_REPRODUCED":
         errors.append("P1-C15 must remain model-contingent rank-transport-budget frontier")
+    if by_id["P1-C16"]["status"] != "MODEL_CONTINGENT_RANK_EPSILON_SURFACE_REPRODUCED":
+        errors.append("P1-C16 must remain model-contingent fixed-budget rank-epsilon surface")
     for cid in ("P1-C11", "P1-C12"):
         if by_id[cid]["status"] != "NOT_READY":
             errors.append(f"{cid} must remain NOT_READY")
@@ -114,10 +118,16 @@ def main():
         "rank-transport budget is estimated rank error",
         "v3 frontier mtr is point identified",
         "rank-transport v3 reproduces the historical v6 restricted lp",
+        "rank-epsilon surface is a confidence region",
+        "epsilon is estimated discrepancy",
+        "v4 mtr is point identified",
+        "rank-epsilon v4 reproduces the historical v6 restricted lp",
     ]
     for phrase in prohibited:
         if phrase.lower() in paper.lower():
             errors.append(f"prohibited manuscript phrase: {phrase}")
+    if "\x0b" in paper:
+        errors.append("manuscript contains vertical-tab control character; check LaTeX backslash escaping")
 
     if errors:
         print("\n".join("ERROR: " + e for e in errors))

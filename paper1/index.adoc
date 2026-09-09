@@ -30,8 +30,17 @@ same-rank bridge and lowers its minimum cross-system positive-rate discrepancy
 from 14.9016 to 8.6825 percentage points at a rank-displacement budget of
 stem:[Delta=0.25].  Further rank freedom through the unrestricted
 stem:[Delta=5] endpoint does not lower the discrepancy, and zero discrepancy
-remains infeasible.  These are model-contingent compatibility diagnostics, not
-an estimated rank map or identified filer MTR.
+remains infeasible.
+
+A fourth pre-specified fixed-budget surface evaluates the previously committed
+stem:[Delta] and `epsilon` grids without minimizing
+`epsilon`.  Seventy of 104 budget pairs are feasible.  Every feasible
+point retains positive-width overall MTR envelopes, and for each feasible
+`epsilon` the taxable- and liability-weighted MTR bounds are identical
+across all positive pre-specified rank budgets
+`Delta=0.25,...,5`.  These are model-contingent compatibility and
+sensitivity diagnostics, not an estimated rank map, confidence region, or
+identified filer MTR.
 
 Other marginal-incidence quantities remain sensitivity-only, recovery-only, or
 not identified. A machine-readable claim registry prevents calibrated or

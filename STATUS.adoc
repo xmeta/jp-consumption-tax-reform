@@ -23,6 +23,8 @@
 |Restricted-LP decile MTR endpoints |DOCUMENTED_PRIOR_RUN_NOT_REPRODUCED |旧40–42の制約集合・endpoint生成鎖は未回収。再現済みstage-2をLP endpointの識別へ読み替えない
 |Replacement transport-relaxation LP v1 |MODEL_CONTINGENT_TRANSPORT_RELAXATION_REPRODUCED |旧V6とは別に事前仕様→実装→CI成功の順で再現済み。transport仮定の不整合量と条件付きMTR envelopeのみを扱い、識別集合・CI・旧LP復元とは呼ばない
 |Rank-bridge transport-relaxation LP v2 |MODEL_CONTINGENT_RANK_BRIDGE_RELAXATION_REPRODUCED |事前仕様commit→別実装commit→GitHub Actions成功→別Paper昇格commitの順で再現。25所得階級を順位decileへ集約し階級境界のpositive配置を自由化。同順位対応は観測リンクではない
+|Rank-transport budget LP v3 |MODEL_CONTINGENT_RANK_TRANSPORT_BUDGET_REPRODUCED |同順位対応を平均rank-displacement budgetへ緩和した最小discrepancy frontier。Deltaは推定値ではなく感度budgetであり、MTRの点識別とは扱わない
+|Rank-epsilon fixed-budget surface v4 |MODEL_CONTINGENT_RANK_EPSILON_SURFACE_REPRODUCED |既存v3 Delta grid×v2 epsilon gridの104点を固定評価。条件付きMTR envelopeのみを扱い、Delta・epsilonの推定、confidence region、point identificationとは扱わない
 |Recovered score_power thresholds |DOCUMENTED_PRIOR_RUN_NOT_REPRODUCED |回復用メタデータのみ。主結果へ使わない
 |NTA Table 3-1 composition point check |CROSS_PUBLICATION_POINT_CHECK_REPRODUCED |5区分の千人丸め値を表示5区分合計5,174千人で再正規化し、年報の正確人員構成との差最大0.08444ppを再現。独立holdout・CIとは扱わない
 |===
@@ -37,4 +39,6 @@
 * 再現済みstage-2診断からrestricted-LP endpointが再現・識別されたとは主張しない。
 * replacement transport-relaxation LPを旧V6 restricted-LPの復元、統計的sharp identified set、信頼区間、因果boundとは呼ばない。
 * rank-bridge v2の同順位decile対応をF71561とNTAの観測リンク、所得金額の同一性、税務単位の同一性とは呼ばない。
+* rank-transport v3のDeltaを観測・推定された真の順位誤差とは扱わない。
+* rank-epsilon v4の固定budget surfaceを信頼領域・統計的identified set・点識別MTRとは扱わない。Delta>=0.25でMTR endpointが飽和しても、全transported-NTA rate endpointが不変とは主張しない。
 * モデルシミュレーションを政府公式の実質GDP予測とは呼ばない。

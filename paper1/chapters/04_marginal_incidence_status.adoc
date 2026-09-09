@@ -74,7 +74,7 @@ Separately, the repository pre-specified a new transport-relaxation LP before
 computing its endpoints.  The model uses all thirteen committed pseudo-filer
 scenarios and the five exact NTA primary-income-type stage-2 rates.  It imposes
 the published NTA primary-type composition while allowing a common absolute
-discrepancy stem:[\varepsilon] between each decile's pseudo-filer
+discrepancy `epsilon` between each decile's pseudo-filer
 positive-tax share and its transported NTA stage-2 rate.
 
 Two decile-weight schemes were fixed before endpoint computation: equal decile
@@ -192,7 +192,7 @@ W(T)=sum_{d=1}^{10}sum_{q=1}^{10}|d-q|T_{dq}leDelta.
 
 The complete stem:[Delta] grid was fixed before results at
 stem:[0,0.25,0.5,1,2,3,4,5].  Because one decile-index unit corresponds to ten
-percentile-rank points in this discretization, stem:[Delta=0.25] permits at
+percentile-rank points in this discretization, `Delta=0.25` permits at
 most 2.5 percentile-rank points of *average absolute displacement*.  It is a
 sensitivity budget, not an estimate of the true cross-system rank error.
 stem:[Delta=5] is the unrestricted-coupling endpoint for two equal ten-bin
@@ -207,10 +207,10 @@ research output:
 include::{docdir}/data/rank_bridge_v3_frontier_table.csv[]
 |===
 
-At stem:[Delta=0], v3 reproduces v2 exactly:
-stem:[arepsilon_3^*=14.9016] percentage points, including all 84
+At `Delta=0`, v3 reproduces v2 exactly:
+stem:[\varepsilon_3^*=14.9016] percentage points, including all 84
 minimum-relaxation endpoint objectives in the executable regression test.  At
-the first positive pre-specified budget, stem:[Delta=0.25], the minimum common
+the first positive pre-specified budget, `Delta=0.25`, the minimum common
 discrepancy falls to 8.6825 percentage points, a 6.2191-percentage-point
 reduction relative to exact same-rank matching.  It remains 8.6825 percentage
 points for every larger pre-specified budget through the unrestricted
@@ -225,7 +225,7 @@ NTA decile rates to remain nonnegative raises the unrestricted common
 discrepancy floor slightly to 8.6825 percentage points; the independent
 water-filling calculation in
 `rank_bridge_lp_v3_analytical_rate_floor.csv` exactly matches the LP
-frontier.  The separately pre-specified stem:[arepsilon=0] problem remains
+frontier.  The separately pre-specified stem:[\varepsilon=0] problem remains
 infeasible even when rank coupling is unrestricted.
 
 These results narrow the interpretation of the v2 discrepancy.  Allowing a
@@ -237,13 +237,76 @@ is erroneous, nor does it identify a true cross-system rank map.
 
 The raw v3 research artifacts also contain MTR endpoints evaluated exactly on
 the minimum-discrepancy frontier.  For positive stem:[Delta] those endpoints
-can numerically collapse because minimizing stem:[arepsilon] forces the
+can numerically collapse because minimizing `epsilon` forces the
 pseudo-filer mixture to an extreme lower-positive-tax boundary.  Such collapse
 is an optimization-boundary property, not point identification.  P1-C15
 therefore promotes the discrepancy frontier and its analytical floor, not a
 point-valued filer MTR.
 
 P1-C13 and P1-C14 remain unchanged, and P1-C06 remains unreproduced.
+
+=== Fixed-budget rank-displacement x discrepancy surface v4
+
+The v3 minimum-discrepancy frontier answers how small the common positive-rate
+discrepancy can be for a given rank-displacement budget.  It does not by itself
+show how the MTR envelope behaves at externally fixed discrepancy budgets.
+Because the v3 minimum `epsilon` objective can force the pseudo-filer
+mixture to an extreme scenario boundary, a numerically collapsed endpoint at
+that frontier is not evidence of point identification.
+
+We therefore pre-specified v4 before computing its numerical surface.  v4
+leaves the v3 LP constraints unchanged and reuses only grids that had already
+been committed in prior specifications:
+
+* the v3 rank-displacement grid
+  `Delta in {0,0.25,0.5,1,2,3,4,5}`; and
+* the v2 discrepancy grid
+  `epsilon in {0,0.025,...,0.30}`.
+
+The Cartesian product contains 104 fixed budget pairs.  All 104 are reported;
+infeasible points are retained rather than selected away.  At every feasible
+point, the same 84 endpoint objectives used by v2 and v3 are recomputed.
+
+The Paper 1 summary table is generated from the committed v4 research
+artifacts:
+
+.Fixed-budget v4 overall-MTR sensitivity surface
+[%header,format=csv]
+|===
+include::{docdir}/data/rank_epsilon_v4_overall_table.csv[]
+|===
+
+Seventy of the 104 pre-specified budget pairs are feasible.  At
+`Delta=0`, the complete fixed-`epsilon` feasibility and
+endpoint surface exactly reproduces v2.  For every feasible positive
+rank-displacement budget, all taxable-income-weighted and
+liability-weighted MTR endpoints are identical across the entire pre-specified
+set `Delta={0.25,0.5,1,2,3,4,5}` at a fixed
+`epsilon`.
+
+For example, at `epsilon=0.10`, the positive-`Delta` overall
+taxable-income-weighted MTR envelope is 10.5552--11.7415%, and the
+liability-weighted envelope is 11.4432--12.6219%.  At
+`epsilon=0.30`, the corresponding envelopes widen to
+10.0884--12.8680% and 10.8806--13.7776%, respectively.  Every feasible v4
+point has strictly positive overall MTR width.
+
+Thus, on the pre-specified grid, once the first positive rank-displacement
+budget is admitted, further rank freedom does not widen the MTR envelope; the
+remaining envelope width is primarily governed by the externally imposed
+discrepancy budget `epsilon`.  This is a conditional sensitivity
+statement, not an estimate that `Delta=0.25` is the true rank mismatch or
+that `epsilon` is a measured error parameter.
+
+The saturation statement is also deliberately limited to the MTR objectives.
+Some decile-specific transported-NTA positive-liability-rate endpoints continue
+to widen as stem:[Delta] increases.  v4 therefore does not imply that the
+entire transport solution is invariant once `Delta>=0.25`.
+
+P1-C16 records this fixed-budget surface as a reproduced model-contingent
+sensitivity result.  It is not a confidence region, posterior region, causal
+bound, statistically sharp identified set, or point-identified filer MTR.
+P1-C13 through P1-C15 remain unchanged, and P1-C06 remains unreproduced.
 
 === Static liability versus behavioral incidence
 

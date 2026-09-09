@@ -23,13 +23,16 @@ frontier.  The result leaves the unresolved number of frame-incompatible
 final-return filers explicit rather than imputing it.
 
 Fourth, after pre-specifying each model before inspecting its endpoints, we
-report three model-contingent transport diagnostics.  The first uses aggregate
-NTA primary-income-type composition.  The second uses the stronger 25-class
-NTA income-rank information with an exact same-rank bridge while leaving
-within-class positive-liability allocation unrestricted at rank boundaries.
-The third weakens exact same-rank correspondence to a pre-specified
-rank-displacement budget and reports the resulting minimum-discrepancy
-frontier.  These models quantify compatibility under explicit bridge
+report three model-contingent transport diagnostics and a fourth fixed-budget
+sensitivity surface.  The first uses aggregate NTA primary-income-type
+composition.  The second uses the stronger 25-class NTA income-rank
+information with an exact same-rank bridge while leaving within-class
+positive-liability allocation unrestricted at rank boundaries.  The third
+weakens exact same-rank correspondence to a pre-specified rank-displacement
+budget and reports the resulting minimum-discrepancy frontier.  The fourth
+reuses the already committed rank-displacement and discrepancy grids and
+evaluates conditional MTR envelopes without minimizing the discrepancy budget.
+These models quantify compatibility and sensitivity under explicit bridge
 assumptions rather than turning their outputs into identified MTR sets.
 
 Fifth, every substantive statement is tied to a machine-readable claim
