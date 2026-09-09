@@ -139,6 +139,14 @@ SPECS = [
         "25 total-income classes x five primary income-earner categories among positive-self-assessed-balance taxpayers; survey-estimated cells with exact row/column reconciliation",
     ),
     (
+        "NTA-2024-POSITIVE-SELF-ASSESSED-BALANCE-TAX-FLOW-INCOME-CLASS-PRIMARY-TYPE",
+        "nta_positive_self_assessed_balance_tax_flow_income_class_primary_type_2024.csv",
+        "scripts/extract_nta_positive_balance_tax_flow.py",
+        "NTA-2024-SHINKOKU-T1-XLSX;NTA-2024-SHINKOKU-T4-XLSX;NTA-2024-SHINKOKU-T5-XLSX",
+        "DERIVED_REPRODUCED_OFFICIAL_SURVEY_TAX_FLOW_DIAGNOSTIC",
+        "25 total-income classes x five primary income-earner categories within the positive-self-assessed-balance survey target; calculated tax, tax credits, withholding exposure/amount, self-assessed balance, and source-cell provenance",
+    ),
+    (
         "NTA-2024-ANNUAL-INCOME-CLASS-PRIMARY-TYPE-FILING-STATUS",
         "nta_income_class_primary_type_filing_status_2024.csv",
         "scripts/extract_nta_annual_income_class_filing_status.py",

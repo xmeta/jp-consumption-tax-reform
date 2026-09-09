@@ -339,6 +339,31 @@ are unchanged.
 budget rather than measurement error between two observations of the same
 positive-tax event.
 
+== NTA withholding / tax-credit bridge audit
+
+`withholding_credit_bridge_audit.adoc` extends the semantic audit using the
+2024 NTA Sample Survey Tables 1, 4 and 5.  The reproducible 125-cell artifact
+`data/derived/nta_positive_self_assessed_balance_tax_flow_income_class_primary_type_2024.csv`
+joins calculated tax, tax credits, source withholding and self-assessed balance
+within the already positive-balance survey target.
+
+The cell-level joins are exact across the three official workbooks.  The
+published grand totals include 5,158,260 positive-balance persons, 3,302,359
+persons with source withholding and 4,685,449 persons with at least one
+reported tax-credit entry.  These imply within-target exposure rates of about
+64.0% and 90.8%, respectively; neither is an all-calculated-tax-positive
+population rate.
+
+For a same-person same-year tax flow, positive self-assessed balance is a
+downstream subset-type event relative to positive calculated tax.  This points
+toward a one-sided compatibility bridge rather than the symmetric v1-v4 gap.
+However, the current pseudo calculation is a modeled 2026 ordinary income-tax
+object built from 2024 household aggregates, so the cross-system inequality is
+not treated as an observed identity.  A v5 model must be pre-specified in a
+separate commit before any v5 result is computed.
+
+Current status: `V5_RESULT_NOT_COMPUTED`.
+
 == Reproduction
 
 [source,shell]
@@ -348,6 +373,10 @@ python scripts/extract_estat_rank_bridge_diagnostics.py
 python scripts/test_estat_rank_bridge_diagnostics.py
 python scripts/extract_nta_stage2_holdout.py
 python scripts/test_nta_stage2_holdout.py
+python scripts/extract_nta_shinkoku_income_class_primary_type.py
+python scripts/test_nta_shinkoku_income_class_primary_type.py
+python scripts/extract_nta_positive_balance_tax_flow.py
+python scripts/test_nta_positive_balance_tax_flow.py
 python -m pip install -r requirements-research-lp.txt
 python research/income_tax_partial_identification/run_replacement_transport_lp.py
 python research/income_tax_partial_identification/test_replacement_transport_lp.py
