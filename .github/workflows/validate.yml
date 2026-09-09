@@ -26,6 +26,8 @@ jobs:
           python scripts/build_income_tax_decile_instruments.py
           python scripts/extract_estat_f71911_bridge.py
           python scripts/test_estat_f71911_bridge.py
+          python scripts/extract_estat_rank_bridge_diagnostics.py
+          python scripts/test_estat_rank_bridge_diagnostics.py
           python scripts/build_income_tax_2026_statutory_parameters.py
           python scripts/test_income_tax_2026_statutory_parameters.py
           python scripts/extract_nta_table17_and_f71551.py

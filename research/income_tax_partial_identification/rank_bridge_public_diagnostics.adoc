@@ -1,0 +1,104 @@
+= Public diagnostics for weakening the F71561-to-NTA rank bridge
+:toc:
+
+== Status
+
+This file records public-data diagnostics *before* any v3 transport-result
+calculation.  The diagnostics do not identify a cross-system rank map and are
+not used as hard equality constraints between the National Survey of Family
+Income, Consumption and Wealth (NSFCW) and National Tax Agency (NTA) data.
+
+The purpose is narrower: document observable heterogeneity within the NSFCW
+rank system, preserve the official source files, and make later rank-transport
+sensitivity assumptions auditable.
+
+== Registered official sources
+
+=== Table 7-141-1
+
+Source ID:: `ESTAT-7141-1-2024`
+e-Stat statInfId:: `000040490407`
+Raw file:: `data/raw/estat/000040490407.xlsx`
+SHA-256:: `69353ddff26920ab4f1769e89dd92ea82cb473dc204166ee1d6275eebe9c0a05`
+
+The extracted slice is national, all-sex, all-age, all housing-loan-status,
+average wealth class, and the ten OECD-new *equivalized disposable-income*
+deciles.  It reports household-member counts by the table's five
+"main annual-income type" columns:
+
+* total;
+* wages and salaries;
+* business and homework income;
+* property income;
+* current transfers.
+
+The machine-readable extract is
+`data/derived/estat_71411_main_income_by_disposable_decile_2024.csv`.
+
+Each published decile-total cell is 11,390,017 household members.  The four
+component columns sum to that total up to at most one person per decile,
+consistent with independent integer rounding.
+
+Two descriptive anchors illustrate why the internal NSFCW composition matters
+for bridge sensitivity:
+
+* decile 1: wages/salaries 3,034,335 / 11,390,017 = 26.6403%; current transfers
+  6,607,365 / 11,390,017 = 58.0101%;
+* decile 9: wages/salaries 9,774,366 / 11,390,017 = 85.8152%; current transfers
+  507,159 / 11,390,017 = 4.4527%.
+
+These are within-NSFCW composition facts.  They are not NTA filer shares.
+
+=== Table 7-171
+
+Source ID:: `ESTAT-7171-2024`
+e-Stat statInfId:: `000040490427`
+Raw file:: `data/raw/estat/000040490427.xlsx`
+SHA-256:: `e239ec816a1ebcd2de84c7bb53653a7fb11ee84917d066da2adb880317117cf6`
+
+The extracted slice uses the OECD-new equivalized-disposable-income concept and
+the same five main annual-income-type columns.  For each column it retains the
+reported approximate aggregate-household count plus p10, p25, median, p75, and
+p90.
+
+The machine-readable extract is
+`data/derived/estat_7171_main_income_disposable_quantiles_2024.csv`.
+
+Published all-household anchors are p10 = 1.436 million yen, median = 3.037
+million yen, and p90 = 5.479 million yen.  Source-group distributions differ
+materially; for example, the property-income group has p10 = 0.834 million,
+median = 3.247 million, and p90 = 8.014 million yen, while current transfers
+have 0.916, 2.044, and 3.463 million yen respectively.
+
+Again, these are within-survey diagnostics, not a cross-system identification
+result.
+
+== Why no NTA category equality is imposed
+
+The NSFCW categories are not a one-to-one partition of the NTA Table 2-2(1)
+primary-income-earner categories.  In particular:
+
+* NSFCW "wages and salaries" is conceptually related to NTA salary but is not
+  asserted to define the same unit or population;
+* NSFCW "business and homework income" is not asserted to equal the NTA
+  business-primary category;
+* NSFCW property income is broader than the NTA real-estate-primary label;
+* NSFCW current transfers can contain pension-type income, but it is not
+  identical to the NTA miscellaneous-primary category;
+* the NTA residual "other" primary category has no direct NSFCW counterpart in
+  this four-component source partition.
+
+Therefore neither extracted table supplies an observed cell-by-cell NTA
+crosswalk.  Any such crosswalk would be an additional model assumption.
+
+== Consequence for v3 design
+
+The core v3 bridge should weaken exact same-rank correspondence using a
+transparent rank-transport budget and should report a robustness surface over
+that budget.  These public diagnostics can justify treating exact rank
+correspondence as nontrivial and can support interpretation, but they should
+not be used to select a single transport budget after seeing tax-incidence
+outcomes.
+
+A category-constrained bridge, if studied later, must be registered as a
+separate sensitivity specification with its own explicit crosswalk uncertainty.

@@ -221,11 +221,27 @@ as P1-C14.  P1-C14 remains a model-contingent same-rank-bridge sensitivity
 claim.  The promotion does not alter P1-C13, and neither P1-C13 nor P1-C14
 restores historical P1-C06.
 
+== Public diagnostics for weaker rank transport
+
+Before specifying v3 outcomes, two additional official NSFCW tables are
+registered and machine-extracted:
+
+* table 7-141-1: main annual-income type by equivalized-disposable-income
+  decile;
+* table 7-171: equivalized-disposable-income quantiles by main annual-income
+  type.
+
+See `rank_bridge_public_diagnostics.adoc`.  These tables are retained as
+within-NSFCW diagnostics only.  They do not identify a cross-system NTA
+category map or a unique rank-transport budget.
+
 == Reproduction
 
 [source,shell]
 ----
 python scripts/build_source_catalog.py
+python scripts/extract_estat_rank_bridge_diagnostics.py
+python scripts/test_estat_rank_bridge_diagnostics.py
 python scripts/extract_nta_stage2_holdout.py
 python scripts/test_nta_stage2_holdout.py
 python -m pip install -r requirements-research-lp.txt

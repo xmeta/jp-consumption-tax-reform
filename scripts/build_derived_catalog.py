@@ -9,6 +9,22 @@ OUT = ROOT / "data/derived_catalog.csv"
 
 SPECS = [
     (
+        "ESTAT-71411-MAIN-INCOME-BY-DISPOSABLE-DECILE",
+        "estat_71411_main_income_by_disposable_decile_2024.csv",
+        "scripts/extract_estat_rank_bridge_diagnostics.py",
+        "ESTAT-7141-1-2024",
+        "DERIVED_REPRODUCED_EXTERNAL_DIAGNOSTIC",
+        "Table 7-141-1 household-member composition by main annual-income type across OECD-new equivalized-disposable-income deciles; no NTA category identity imposed",
+    ),
+    (
+        "ESTAT-7171-MAIN-INCOME-DISPOSABLE-QUANTILES",
+        "estat_7171_main_income_disposable_quantiles_2024.csv",
+        "scripts/extract_estat_rank_bridge_diagnostics.py",
+        "ESTAT-7171-2024",
+        "DERIVED_REPRODUCED_EXTERNAL_DIAGNOSTIC",
+        "Table 7-171 OECD-new equivalized-disposable-income quantiles by main annual-income type; within-NSFCW diagnostic only",
+    ),
+    (
         "STAGE1-OFFICIAL-INPUTS",
         "stage1_official_inputs.csv",
         "manual_transcription_verified",
