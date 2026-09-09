@@ -1,0 +1,364 @@
+= Salary-receipt / filing-processing bridge source-matrix audit
+:toc:
+:stem: latexmath
+
+== Status
+
+----
+DIRECT_BRIDGE_NOT_FOUND_IN_EXAMINED_OFFICIAL_SOURCE_FAMILIES
+----
+
+This audit closes a narrower public-data question:
+
+Can the currently examined official 2024 NTA aggregate/statistical source
+families directly connect a salary-receipt threshold or payroll year-end-
+adjustment status to observed final-return submission or later processing
+status at the person level?
+
+The answer is *no for the enumerated source families*.
+
+This is a bounded negative-source result. It does not claim that the National
+Tax Agency lacks an unpublished administrative linkage internally.
+
+No v1-v5 endpoint or Paper 1 claim is changed.
+
+== Why a source-dimension matrix is needed
+
+Several official sources each provide one or more valuable margins:
+
+* private payroll salary-receipt and year-end-adjustment information;
+* the legal filing rule for salary receipts above 20 million yen;
+* salary-receipt classes among positive-self-assessed-balance persons;
+* final-return / amended-return / correction processing categories;
+* submitted-return counts;
+* positive-balance / refund status;
+* salary-source withholding exposure;
+* public-office versus other withholding amounts; and
+* regional tax-office detail.
+
+The identification error to avoid is treating the union of those separate
+margins as if they formed a single cross-tab.
+
+The machine-readable matrix therefore records whether each source family
+actually contains each required dimension.
+
+== Examined source families
+
+The reproduced matrix contains ten current official source families.
+
+=== Private Salary Survey Table 16
+
++NTA-MINKAN-2024-T16+ provides private-sector payroll-side:
+
+* salary classes;
+* taxpayer / non-taxpayer status under the payroll statistic; and
+* year-end-adjustment distinctions.
+
+It does not provide submitted-return or return-processing status.
+
+=== Private Salary Survey Table 19
+
++NTA-MINKAN-2024-T19+ provides:
+
+* persons for whom year-end adjustment was not performed;
+* reason components;
+* salary-receipt classes; and
+* an explicit full-year salary-receipts-above-20-million-yen panel.
+
+The already reproduced payroll-side count is:
+
+----
+full-year salary receipts >20m = 320,983 estimated persons
+----
+
+No person identifier links those survey records to an income-tax return table.
+
+=== Salary-earner filing guidance
+
++NTA-2024-SALARY-FILING-REQUIREMENT+ establishes that salary receipts above
+20 million yen are, in principle, a final-return filing condition, together
+with other salary-earner filing rules and caveats.
+
+That is a legal bridge, not an observed compliance cross-tab.
+
+=== Sample Survey Table 7
+
++NTA-2024-SHINKOKU-T7-XLSX+ provides the same salary-receipt threshold concept
+on the return side.
+
+Within the positive-self-assessed-balance sample target it reproduces:
+
+----
+salary receipts >20m = 235,287 estimated persons
+salary-source withholding among them = observable within that target
+----
+
+But the sample target excludes refund and no-positive-balance cases.
+It also has no Final-return / amended-return / correction dimension.
+
+Therefore Table 7 materially improves the transition map but does not close
+the filing-status bridge.
+=== Annual Table 2-1 processing status
+
++NTA-2024-PROCESSING-STATUS+ provides exact administrative processing rows.
+
+For salary-primary cases:
+
+----
+Final-return processing row = 11,293,442
+filed-or-processed total    = 11,423,587
+later processing component =    130,145
+----
+
+The source distinguishes Final return, amended return,
+determination/correction and request-for-correction categories, but has no
+salary-receipt or payroll year-end-adjustment dimension.
+
+=== Submitted-return press Table 3-1
+
++NTA-2024-RETURN-PRESS-T31+ separately reports return forms submitted by the
+following March 31 at thousand-person display precision.
+
+For salary income earners:
+
+----
+submitted-return count = 11,442 thousand displayed persons
+----
+
+It does not publish salary-receipt threshold or year-end-adjustment status.
+
+The separate processing-row reconciliation audit already prohibits equating
+this publication with Table 2-1 processing rows.
+
+=== Annual Table 2-3
+
++NTA-2024-ANNUAL-T23-INCOME-TYPE+ provides exact filed-or-processed
+employment-income persons split into main and secondary income and by
+positive/refund status.
+
+It broadens return-side employment-income coverage but adds neither salary
+receipts nor year-end-adjustment status.
+
+=== Current withholding Public Offices / Others table
+
++NTA-FY2024-WITHHOLDING-STATUS+ provides salary payment and withholding-tax
+amounts for Public Offices, Others and Total.
+
+It does not publish the current corresponding person denominator, and it does
+not link employer sector to submitted-return or processing status.
+
+=== Regional Table 2-1 example
+
++NTA-NAGOYA-2024-SHINKOKU-21-XLSX+ is retained as a raw official regional
+workbook.
+
+Its workbook structure includes:
+
+* filing and processing status;
+* prior-year taxation;
+* exemptions; and
+* tax-office taxation status.
+
+It adds geography but not salary-receipt threshold or payroll
+year-end-adjustment dimensions.
+
+=== Regional Table 2-2 example
+
++NTA-NAGOYA-2024-SHINKOKU-22-XLSX+ includes:
+
+* total-net-income classes;
+* salary-primary tax-office tables; and
+* positive/refund status.
+
+The income-class dimension is total net income, not salary receipts.
+It therefore cannot be numerically matched to the 20-million-yen salary-
+receipt threshold without committing a category error.
+
+== Machine-readable source matrix
+
+The generated file
+
+----
+data/derived/nta_salary_filing_bridge_source_matrix_2024.csv
+----
+
+records for every source family:
+
+* salary-receipt-class dimension;
+* explicit >20m dimension;
+* year-end-adjustment dimension;
+* submitted-return dimension;
+* processing-status dimension;
+* positive/refund dimension;
+* salary-source-withholding person dimension;
+* employer-sector dimension;
+* geography; and
+* existence of a cross-family person link.
+
+All ten rows currently have:
+
+----
+cross_family_person_link = NO
+direct_bridge_status     = NO_DIRECT_PERSON_BRIDGE
+----
+== Reproduced negative-source results
+
+The audit file
+
+----
+data/derived/nta_salary_filing_bridge_identification_audit_2024.csv
+----
+
+reproduces:
+
+[cols="4,1",options="header"]
+|===
+| Test | Number of examined source families satisfying it
+
+| salary receipts >20m + observed submitted-return person count
+| 0
+
+| salary receipts >20m + processing status
+| 0
+
+| year-end-adjustment status + processing status
+| 0
+
+| employer sector + return submission/processing status
+| 0
+
+| cross-family person linkage
+| 0
+|===
+
+The resulting status is:
+
+----
+direct_salary_receipt_processing_status_bridge
+  = NOT_FOUND_IN_EXAMINED_OFFICIAL_SOURCE_FAMILIES
+----
+
+with identification classification:
+
+----
+PUBLIC_AGGREGATE_BRIDGE_NOT_IDENTIFIED
+----
+
+== Important partial bridges that remain valid
+
+The negative result does not erase the useful partial evidence.
+
+=== Same-threshold positive-balance bridge
+
+The comparison
+
+----
+Private Salary Survey Table 19 >20m = 320,983 estimated
+Sample Survey Table 7 >20m         = 235,287 estimated
+----
+
+uses the same salary-receipt threshold concept, which is stronger than
+comparing salary receipts to total-net-income classes.
+
+But these are different survey populations without a common person link.
+
+Therefore the ratio of those counts is not a filing rate, compliance rate,
+overlap probability or conditional probability.
+
+=== Legal filing bridge
+
+The >20m filing rule makes the Table 19 high-salary group filing-relevant.
+
+It does not establish observed filing compliance.
+
+Machine status:
+
+----
+salary_gt20_legal_rule_is_observed_person_link = NO
+LEGAL_RULE_NOT_OBSERVED_COMPLIANCE_LINK
+----
+
+=== Regional detail
+
+Regional 2-1/2-2 tables add tax-office geography and return-side margins.
+
+They do not add the missing salary-receipt / year-end-adjustment x processing
+cross-tab.
+
+Machine status:
+
+----
+regional_tables_close_salary_filing_bridge = NO
+REGIONAL_DETAIL_ADDS_GEOGRAPHY_NOT_REQUIRED_CROSS_TAB
+----
+== Identification boundary
+
+The public-data evidence map can now be written as:
+
+----
+private payroll
+  salary receipts
+  year-end adjustment
+  >20m legal filing candidate
+        |
+        | no observed person crosswalk
+        v
+return-side aggregate systems
+  submitted-return publication
+  Table 2-1 processing status
+  positive/refund status
+  Table 7 positive-balance salary-receipt classes
+  salary-source withholding within positive-balance sample
+----
+
+The missing edge is not repaired by adding the margins.
+
+Consequently the following remain prohibited:
+
+* treating 235,287 / 320,983 as a filing or compliance rate;
+* adding private payroll counts to filed-or-processed return counts;
+* treating the statutory >20m filing rule as observed compliance;
+* using total-net-income classes as salary-receipt classes;
+* applying Public Offices payment shares to person counts; and
+* interpreting regional tax-office detail as a payroll-return linkage.
+
+== Research consequence
+
+For public aggregate data, this evidence edge has reached a useful stop
+condition:
+
+----
+DIRECT_PUBLIC_AGGREGATE_BRIDGE = NOT_IDENTIFIED
+----
+
+Further searches should be justified by a genuinely new source class, not by
+repeatedly scanning equivalent tables.
+
+A restricted administrative-microdata route is tracked separately and is not
+required for the current public-data Paper 1 completion.
+
+== Reproduction
+
+[source,shell]
+----
+python scripts/build_source_catalog.py
+python scripts/build_nta_salary_filing_bridge_source_matrix.py
+python scripts/test_nta_salary_filing_bridge_source_matrix.py
+python scripts/build_derived_catalog.py
+python scripts/validate_provenance.py
+python scripts/validate_repo.py
+----
+
+Current anchors:
+
+----
+examined official source families = 10
+gt20 x submitted-return sources   = 0
+gt20 x processing-status sources  = 0
+YEA x processing-status sources   = 0
+employer-sector x return sources  = 0
+cross-family person-link sources  = 0
+
+direct bridge =
+  NOT_FOUND_IN_EXAMINED_OFFICIAL_SOURCE_FAMILIES
+----

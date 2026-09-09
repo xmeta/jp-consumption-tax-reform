@@ -1,0 +1,11 @@
+metric_id,value,unit,identification_status,note
+examined_official_source_families,10,source_families,ENUMERATED_OFFICIAL_SOURCE_FAMILIES,"Current 2024 payroll, legal, return, withholding and representative regional source families in the reproducible matrix."
+sources_with_gt20_and_submitted_return_person_count,0,source_families,DIRECT_BRIDGE_NOT_FOUND,No examined source jointly reports salary receipts >20m and observed submitted-return person counts.
+sources_with_gt20_and_processing_status,0,source_families,DIRECT_BRIDGE_NOT_FOUND,No examined source jointly reports salary receipts >20m and Final return/amended/correction processing status.
+sources_with_year_end_adjustment_and_processing_status,0,source_families,DIRECT_BRIDGE_NOT_FOUND,No examined source jointly reports payroll year-end-adjustment status and return processing status.
+sources_with_employer_sector_and_return_status,0,source_families,DIRECT_BRIDGE_NOT_FOUND,No examined source jointly reports public/private employer sector and return submission/processing status.
+cross_family_person_link_sources,0,source_families,PERSON_LINK_NOT_FOUND,No examined public source exposes a common person identifier or compatible person-level linkage across payroll and return families.
+table7_gt20_positive_balance_is_full_filing_bridge,NO,status,POSITIVE_BALANCE_CONDITIONAL_ONLY,Table 7 is valuable same-threshold evidence but is conditioned on positive self-assessed balance and excludes refund/no-positive-balance cases.
+salary_gt20_legal_rule_is_observed_person_link,NO,status,LEGAL_RULE_NOT_OBSERVED_COMPLIANCE_LINK,The legal filing requirement does not identify which payroll-survey records appear in submitted or processed return populations.
+regional_tables_close_salary_filing_bridge,NO,status,REGIONAL_DETAIL_ADDS_GEOGRAPHY_NOT_REQUIRED_CROSS_TAB,Representative regional 2-1/2-2 workbooks add tax-office/income-class detail but not salary-receipt x year-end-adjustment x processing status.
+direct_salary_receipt_processing_status_bridge,NOT_FOUND_IN_EXAMINED_OFFICIAL_SOURCE_FAMILIES,status,PUBLIC_AGGREGATE_BRIDGE_NOT_IDENTIFIED,Bounded negative-source result; does not claim that unpublished NTA administrative data lack such a linkage.

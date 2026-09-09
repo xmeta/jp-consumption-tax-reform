@@ -219,6 +219,22 @@ SPECS = [
         "Same-threshold >20m payroll/positive-balance salary-receipt diagnostic plus complete-survey Table 2-3 employment-income main/secondary semantics; exact cross-source person overlap remains NOT_IDENTIFIED",
     ),
     (
+        "NTA-2024-SALARY-FILING-BRIDGE-SOURCE-MATRIX",
+        "nta_salary_filing_bridge_source_matrix_2024.csv",
+        "scripts/build_nta_salary_filing_bridge_source_matrix.py",
+        "NTA-MINKAN-2024-T16;NTA-MINKAN-2024-T19;NTA-2024-SALARY-FILING-REQUIREMENT;NTA-2024-SHINKOKU-T7-XLSX;NTA-2024-PROCESSING-STATUS;NTA-2024-RETURN-PRESS-T31;NTA-2024-ANNUAL-T23-INCOME-TYPE;NTA-FY2024-WITHHOLDING-STATUS;NTA-NAGOYA-2024-SHINKOKU-21-XLSX;NTA-NAGOYA-2024-SHINKOKU-22-XLSX",
+        "DERIVED_REPRODUCED_PUBLIC_SOURCE_DIMENSION_MATRIX",
+        "Ten official 2024 payroll/legal/return/withholding/regional source families mapped across salary-receipt, year-end-adjustment, submission, processing, positive/refund, withholding, employer-sector and geography dimensions; no cross-family person link is observed",
+    ),
+    (
+        "NTA-2024-SALARY-FILING-BRIDGE-IDENTIFICATION-AUDIT",
+        "nta_salary_filing_bridge_identification_audit_2024.csv",
+        "scripts/build_nta_salary_filing_bridge_source_matrix.py",
+        "NTA-MINKAN-2024-T16;NTA-MINKAN-2024-T19;NTA-2024-SALARY-FILING-REQUIREMENT;NTA-2024-SHINKOKU-T7-XLSX;NTA-2024-PROCESSING-STATUS;NTA-2024-RETURN-PRESS-T31;NTA-2024-ANNUAL-T23-INCOME-TYPE;NTA-FY2024-WITHHOLDING-STATUS;NTA-NAGOYA-2024-SHINKOKU-21-XLSX;NTA-NAGOYA-2024-SHINKOKU-22-XLSX",
+        "DERIVED_REPRODUCED_BOUNDED_NEGATIVE_SOURCE_AUDIT",
+        "Bounded negative-source result: direct salary-receipt/year-end-adjustment x submitted-return/processing-status bridge is not found in the enumerated official source families; does not assert absence of unpublished administrative linkage",
+    ),
+    (
         "NTA-2024-SALARY-SOURCE-SYSTEM-COVERAGE",
         "nta_salary_source_system_coverage_2024.csv",
         "scripts/extract_nta_salary_source_system_coverage.py",
