@@ -1,0 +1,103 @@
+= F71561 Stage-1 Filing Participation: Robustness Frontier
+:revdate: 2026-09-08
+:stem: latexmath
+
+== Status
+
+This module does not identify a point filing rate and does not promote
+`income_tax` to READY.
+
+The 2024 survey mother-population size is a published frame benchmark derived
+from the 2020 Census design. It is not treated as a directly observed 2024
+person-set lower bound.
+
+== Reproduced benchmark
+
+The official public counts used by the reproduced pipeline are:
+
+* NTA FY2024 final-return persons: `23,090,075`;
+* 2020 Census population used as a loose person denominator: `126,146,099`;
+* F71561 mother-population frame benchmark: `122,494,621`;
+* nominal exact-correspondence overlap benchmark: `19,438,597`.
+
+Script 47 then allocates an intentionally adverse tracked mismatch allowance:
+
+* all 2020--2024 births: `3,836,677`;
+* all 2020--2024 gross international inflows: `2,643,204`;
+* every 2024 death as one potential quasi-final return: `1,605,378`.
+
+The allowance totals `8,085,259`, leaving a residual nominal benchmark of
+`11,353,338` before any additional untracked mismatch.
+
+== General robustness frontier
+
+Let stem:[C_U\ge0] be an analyst-specified budget for additional untracked
+reduction in nominal overlap. It includes any remaining timing, eligibility,
+residence, or population-definition mismatch.
+
+[stem]
+++++
+R(C_U)=
+\frac{\max\{0,11{,}353{,}338-C_U\}}
+{126{,}146{,}099}.
+++++
+
+For any externally supplied admissibility threshold stem:[A\in[0,1]], the
+break-even total untracked mismatch budget is
+
+[stem]
+++++
+C_U^*(A)=
+\max\{0,11{,}353{,}338-126{,}146{,}099A\}.
+++++
+
+This function is the reproduced stage-1 result. It does not identify the actual
+stem:[C_U] and therefore does not imply an unconditional threshold rejection.
+
+Recovered V6 threshold values are kept outside the reproduced result set until
+their source-generating chain is restored.
+
+== Supporting audits
+
+* link:candidate_person_coverage.adoc[candidate_person_coverage.adoc] explains
+  why the entire Census population is a deliberately loose denominator.
+* link:nonresident_source_audit.adoc[nonresident_source_audit.adoc] documents
+  the public-data search for non-resident final-return counts. Non-resident
+  mismatch is only one possible component of stem:[C_U].
+* link:proposition_stage1_frontier.adoc[proposition_stage1_frontier.adoc]
+  states and proves the general break-even formula.
+
+== Survey-frame facts
+
+The 2024 National Survey of Family Income, Consumption and Wealth sample design
+uses 2020 Census results rearranged to 2024 municipality boundaries. It
+explicitly excludes Wajima, Suzu, Anamizu and Noto from the mother-population
+estimate.
+
+Table 4 reports `21,142,885` one-person general households, `602,771`
+students, and `20,540,114` included single-person households.
+
+== Sources
+
+* Statistics Bureau, 2024 National Survey of Family Income, Consumption and Wealth sample design:
+  https://www.stat.go.jp/data/zenkokukakei/2024/pdf/hyohon2024.pdf
+* Ishikawa Prefecture, 2020 Population Census summary:
+  https://toukei.pref.ishikawa.lg.jp/dl/4461/R2census_jinkou.pdf
+* National Tax Agency, FY2024 Annual Statistics Report, table 2-1(1):
+  https://www.nta.go.jp/publication/statistics/kokuzeicho/r06/R06.pdf
+* Statistics Bureau, Basic Resident Register migration report 2024:
+  https://www.stat.go.jp/data/idou/2024np/jissu/pdf/gaiyou.pdf
+* MHLW, final 2024 vital statistics:
+  https://www.mhlw.go.jp/toukei/saikin/hw/jinkou/kakutei24/
+
+== Reproduction
+
+[source,shell]
+----
+python research/stage1_filing_bound/46_income_tax_stage1_population_overlap.py
+python research/stage1_filing_bound/47_income_tax_stage1_contamination_frontier.py
+python research/stage1_filing_bound/48_income_tax_stage1_untracked_frontier.py
+python research/stage1_filing_bound/test_stage1_population_overlap.py
+python research/stage1_filing_bound/test_stage1_contamination_frontier.py
+python research/stage1_filing_bound/test_stage1_untracked_frontier.py
+----

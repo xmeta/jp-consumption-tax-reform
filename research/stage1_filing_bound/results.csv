@@ -1,0 +1,4 @@
+prior,Amax_threshold,c0_pretracked_rate,reject_at_zero_untracked_before_tracked_allowance,mismatch_break_even_before_tracked_allowance,status
+score_power_0.5,0.8271,0.15409590271990892,False,0.0,NOMINAL_BRIDGE_BENCHMARK
+score_power_1.0,0.2668,0.15409590271990892,False,0.0,NOMINAL_BRIDGE_BENCHMARK
+score_power_2.0,0.022,0.15409590271990892,True,16663382.822,NOMINAL_BRIDGE_BENCHMARK

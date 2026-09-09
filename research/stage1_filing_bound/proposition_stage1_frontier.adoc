@@ -1,0 +1,109 @@
+= Proposition: F71561 Stage-1 Robustness Frontier
+:revdate: 2026-09-08
+:stem: latexmath
+
+== Objects
+
+Let:
+
+* stem:[F=23{,}090{,}075] be the observed NTA FY2024 final-return persons;
+* stem:[P=126{,}146{,}099] be the 2020 Census population used as a deliberately loose person-denominator benchmark;
+* stem:[M_0=122{,}494{,}621] be the published F71561 mother-population *frame benchmark* reconstructed from the 2020 Census-based survey design;
+* stem:[D=8{,}085{,}259] be the deliberately adverse tracked mismatch allowance;
+* stem:[C_U\ge0] be an analyst-specified upper budget for additional untracked reduction in the nominal overlap.
+
+Importantly, stem:[M_0] is not asserted to be a lower bound on the actual set of
+persons present in 2024.  The survey documentation states that the 2024 mother
+population is estimated from the 2020 Census frame rearranged to 2024
+municipality boundaries.
+
+== Nominal bridge
+
+Under exact set correspondence between the published frame benchmark and the
+filing population, define the nominal Fréchet overlap benchmark
+
+[stem]
+++++
+B_0=\max\{0,F-(P-M_0)\}=19{,}438{,}597.
+++++
+
+After allocating the full tracked allowance stem:[D] against that benchmark,
+
+[stem]
+++++
+B_R=\max\{0,B_0-D\}=11{,}353{,}338.
+++++
+
+For an additional untracked mismatch budget stem:[C_U], define the robustness
+frontier
+
+[stem]
+++++
+R(C_U)=
+\frac{\max\{0,B_R-C_U\}}{P}.
+++++
+
+This is a conditional robustness function, not an unconditional identified
+filing-rate lower bound.
+
+== Threshold proposition
+
+For any externally supplied admissibility threshold stem:[A\in[0,1]], the
+benchmark-adjusted participation rate remains above stem:[A] for every
+untracked mismatch budget satisfying
+
+[stem]
+++++
+C_U < C_U^*(A),
+\qquad
+C_U^*(A)=\max\{0,B_R-PA\}.
+++++
+
+Equivalently, the conclusion associated with threshold stem:[A] is robust to
+any additional untracked overlap loss below stem:[C_U^*(A)].
+
+== Proof
+
+The first step is only a nominal benchmark.  If the published frame benchmark
+stem:[M_0] were an exact subset cardinality inside the person universe
+stem:[P], the Fréchet lower overlap with stem:[F] final-return persons would be
+
+[stem]
+++++
+B_0=\max\{0,F-(P-M_0)\}.
+++++
+
+We then reduce that nominal overlap by the full tracked allowance stem:[D] and
+by an additional untracked loss no larger than stem:[C_U].  Conditional on
+that mismatch budget, the remaining overlap is no smaller than
+
+[stem]
+++++
+\max\{0,B_0-D-C_U\}.
+++++
+
+Dividing by the deliberately loose person denominator stem:[P] gives
+stem:[R(C_U)].  In the positive-overlap region,
+
+[stem]
+++++
+R(C_U)>A
+\iff
+B_R-C_U>PA
+\iff
+C_U<B_R-PA.
+++++
+
+Truncating the critical mismatch budget at zero yields stem:[C_U^*(A)].
+QED.
+
+== Interpretation boundary
+
+The proposition identifies the *break-even mismatch budget as a function of an
+externally supplied threshold*.  It does not identify the actual value of
+stem:[C_U], and therefore does not by itself reject any threshold
+unconditionally.
+
+A numerical application to recovered V6 thresholds belongs in the
+recovery-only appendix until those threshold-generating source files are
+restored and reproduced.
