@@ -11,7 +11,15 @@ Issue #26 Phase 1 separates VAT institutional abolition from a 0% statutory rate
 * +test_vat_compliance_productivity.py+ — architecture and numeric regression tests.
 
 Observed Japan evidence is generated separately by
++scripts/extract_meti_vat_internal_hours.py+ and
 +scripts/extract_vat_compliance_evidence.py+.
+
+Phase 2 now has a directly observed METI VAT-specific internal-hours
+distribution for n=1,514 respondents, nested within a nationwide corporation
+survey with 20,000 targets and 4,410 valid responses.  Rounding-consistent partial
+identification gives a 15.126155878468 hours/respondent-year lower bound, while
+the 100+ top code leaves the uncapped upper bound open.  This is not a national
+firm mean and does not identify +c_VAT+.
 
 == Scientific status
 

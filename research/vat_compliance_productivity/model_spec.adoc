@@ -67,14 +67,53 @@ The evidence registry establishes, among other things:
 * high reported incidence of invoice-related administrative burden;
 * persistent reported non-tax cost increases;
 * concentration of bookkeeping responsibility in very small firms;
+* METI's FY2021 survey directly reports annual internal tax-procedure hours for
+  consumption tax in a respondent subset (n=1,514);
 * a broader all-tax compliance-cost burden that is relatively larger for SMEs;
 * empirical VAT-threshold bunching and evidence that compliance costs matter
   for small-enterprise responses; and
 * current institutional filing, input-credit, invoice-retention, and exemption
   threshold mechanisms.
 
-None of the current sources identifies a Japan-wide VAT-only real-resource
-cost share of baseline output.
+=== METI VAT-specific internal-hours bound
+
+The corporate survey covered a nationwide target of 20,000 corporations drawn
+from the Teikoku Databank business database under stated industry conditions,
+and reports 4,410 valid responses (22.1%).  The consumption-tax hours item has
+a smaller published n=1,514.
+
+METI publishes nine one-decimal percentage bins from 0 hours through an
+open-ended 100-hours-or-more category.  Enforcing n=1,514 and treating each
+published percentage as rounded to the nearest 0.1 percentage point leaves 28
+jointly feasible integer count vectors.  Using only each bin's lower endpoint
+gives the conditional respondent-subset mean bound:
+
+----
+mean VAT-specific internal hours >= 15.126155878468 hours/respondent-year
+----
+
+The 100+ category prevents any finite empirical upper bound.  If an additional
+top-code cap is imposed only as a stress assumption, the corresponding upper
+suprema are 24.0350 hours at a 100-hour cap, 27.4036 at 150 hours, 34.1407 at
+250 hours, 50.9835 at 500 hours, and 84.6691 at 1,000 hours.  These are not
+confidence limits or population upper bounds.
+
+The published source also requires a sample-scope caution.  Printed p.66 says
+the hours item targets respondents answering ``yes'' to the preceding p.65
+question.  But p.65 reports n=3,965 and 17.0% yes; one-decimal rounding permits
+only 673--676 such responses, which cannot contain the VAT item n=1,514.  The
+repository records this internal inconsistency rather than silently correcting
+the source label.
+
+METI p.70 also reports annual external tax-procedure outsourcing expenditure,
+but it is not disaggregated by tax type.  It therefore cannot be assigned to
+VAT.
+
+Consequently, the METI result partially identifies VAT-specific *internal
+hours within the observed respondent subset*, but it still does not identify a
+Japan-wide VAT-only real-resource share of baseline output.  Population
+selection/reweighting, an appropriate wage or opportunity-cost conversion, and
+VAT-specific external expenditure are still missing.
 
 Therefore:
 
@@ -256,6 +295,8 @@ Gini, FGT2, fiscal and debt outcomes for Issue #26.
 [source,shell]
 ----
 python scripts/build_source_catalog.py
+python scripts/extract_meti_vat_internal_hours.py
+python scripts/test_meti_vat_internal_hours.py
 python scripts/extract_vat_compliance_evidence.py
 python scripts/test_vat_compliance_evidence.py
 python research/vat_compliance_productivity/run_vat_compliance_productivity.py
@@ -264,6 +305,8 @@ python research/vat_compliance_productivity/test_vat_compliance_productivity.py
 
 Generated artifacts:
 
+* +data/derived/meti_2021_vat_internal_hours_distribution.csv+
+* +data/derived/meti_2021_vat_internal_hours_bounds.csv+
 * +data/derived/vat_compliance_observed_evidence.csv+
 * +data/derived/vat_compliance_identification_status.csv+
 * +data/derived/vat_compliance_productivity_sensitivity.csv+
