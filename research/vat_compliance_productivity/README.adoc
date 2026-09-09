@@ -1,0 +1,25 @@
+= VAT compliance-productivity research
+
+Issue #26 Phase 1 separates VAT institutional abolition from a 0% statutory rate.
+
+== Files
+
+* +model_spec.adoc+ — formal channel, identification boundary and Phase-1 result.
+* +regimes.csv+ — four mutually exclusive policy states.
+* +sensitivity_axes.csv+ — non-identified stress-test axes.
+* +run_vat_compliance_productivity.py+ — deterministic 1,200-row sensitivity generator.
+* +test_vat_compliance_productivity.py+ — architecture and numeric regression tests.
+
+Observed Japan evidence is generated separately by
++scripts/extract_vat_compliance_evidence.py+.
+
+== Scientific status
+
+----
+MODEL_CONTINGENT_COMPLIANCE_PRODUCTIVITY_SENSITIVITY_PHASE1_COMPLETE
+----
+
+This module does not identify the optimal VAT rate and does not supply a
+macro GDP forecast, Gini effect, FGT2 effect, fiscal effect or debt path.
+
+The ordinary VAT demand channel and financing choices remain separate.
