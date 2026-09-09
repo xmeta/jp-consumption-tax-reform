@@ -235,6 +235,25 @@ See `rank_bridge_public_diagnostics.adoc`.  These tables are retained as
 within-NSFCW diagnostics only.  They do not identify a cross-system NTA
 category map or a unique rank-transport budget.
 
+== Pre-specified v3 rank-transport budget
+
+The next model is pre-specified in:
+
+* `rank_bridge_lp_v3_spec.adoc`;
+* `rank_bridge_lp_v3_config.csv`.
+
+v3 replaces exact same-rank correspondence with a scaled doubly-stochastic
+decile-rank coupling subject to a fixed average absolute rank-displacement
+budget.  The budget grid is fixed before outcomes at
+`0;0.25;0.5;1;2;3;4;5` decile-index units.  Positive-liability transport is
+represented separately so that the program remains linear.
+
+At displacement budget zero, the v3 feasible set must reproduce v2 exactly.
+The public tables 7-141-1 and 7-171 remain interpretation-only diagnostics and
+do not impose an NSFCW-to-NTA category crosswalk.
+
+No v3 numerical result is present at the pre-specification stage.
+
 == Reproduction
 
 [source,shell]

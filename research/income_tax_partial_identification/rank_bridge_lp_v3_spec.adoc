@@ -1,0 +1,370 @@
+= Pre-specified rank-transport budget LP v3
+:revdate: 2026-09-09
+:stem: latexmath
+
+== Status and lineage
+
+This document pre-specifies v3 *before any v3 numerical result is computed*.
+
+v3 weakens the v2 exact same-rank correspondence while preserving v2 as the
+special case with zero rank displacement.  It does not modify v1 (P1-C13) or
+v2 (P1-C14), and it does not restore historical P1-C06.
+
+Until implementation, deterministic outputs, tests, and CI are complete, v3
+has status
+
+----
+PRE_SPECIFIED_RANK_TRANSPORT_BUDGET_MODEL_CONTINGENT_NOT_IDENTIFIED
+----
+
+No v3 result may enter Paper 1 before a later, separate promotion commit.
+
+== Inputs fixed before outcomes
+
+v3 uses exactly the same core numerical inputs as v2:
+
+* all 13 committed pseudo-filer scenarios in
+  `research/income_tax_pseudofiler/pseudofiler_mtr_scenarios.csv`;
+* the 25 ordered NTA Table 2-2(1) total-net-income classes in
+  `data/derived/nta_income_class_primary_type_filing_status_2024.csv`;
+* the v2 grouped-data construction of NTA rank-decile overlap and free
+  within-class positive-liability allocation.
+
+The public NSFCW diagnostics in
+`rank_bridge_public_diagnostics.adoc` are *interpretive diagnostics only*.
+They do not impose a hard mapping from NSFCW main-income categories to NTA
+primary-income categories and do not choose any v3 transport budget.
+
+== Population systems remain distinct
+
+F71561:: household aggregates ranked by OECD-new equivalized disposable
+income.
+
+NTA Table 2-2(1):: persons in the table's administrative processing population,
+ranked by total net income etc.
+
+No equality of income amounts, units, tax units, populations, or records is
+assumed.
+
+== NTA grouped-rank uncertainty retained from v2
+
+Let NTA classes be stem:[j=1,\ldots,25], F71561 deciles be
+stem:[d=1,\ldots,10], and NTA rank deciles be stem:[q=1,\ldots,10].
+
+As in v2, let stem:[h_{jq}] be the population mass from NTA income class
+stem:[j] overlapping NTA rank decile stem:[q], normalized by total Table 2-2(1)
+population.  Let stem:[p_j] be the normalized positive-liability mass in class
+stem:[j].
+
+Introduce
+
+[stem]
+++++
+0 \le y_{jq} \le h_{jq},
+\qquad
+\sum_q y_{jq}=p_j.
+++++
+
+No proportional allocation inside a grouped NTA income class is imposed.
+
+The NTA positive-liability mass in rank decile stem:[q] is
+
+[stem]
+++++
+g_q=\sum_j y_{jq}.
+++++
+
+== Rank transport coupling
+
+v2 imposed stem:[d=q].  v3 instead introduces a population coupling
+
+[stem]
+++++
+T_{dq}\ge 0
+++++
+
+between F71561 decile stem:[d] and NTA rank decile stem:[q].
+
+Because both sides are normalized to ten equal rank bins, the margins are
+
+[stem]
+++++
+\sum_q T_{dq}=0.1 \quad \forall d,
+\qquad
+\sum_d T_{dq}=0.1 \quad \forall q.
+++++
+
+Thus stem:[T] is a scaled doubly-stochastic transport plan.
+
+The transport plan is not estimated from record linkage.  It ranges over all
+couplings satisfying the pre-specified rank-displacement budget below.
+
+== Positive-liability transport
+
+To avoid any bilinear product between a transport probability and an unknown
+NTA rank-decile positive rate, introduce positive-liability transport mass
+
+[stem]
+++++
+z_{dq}\ge0.
+++++
+
+It must satisfy
+
+[stem]
+++++
+0\le z_{dq}\le T_{dq}
+++++
+
+and preserve each NTA rank-decile positive-liability margin:
+
+[stem]
+++++
+\sum_d z_{dq}=g_q=\sum_j y_{jq}
+\qquad \forall q.
+++++
+
+The NTA positive-liability rate transported to F71561 decile stem:[d] is then
+
+[stem]
+++++
+r_d^{NTA\to F}=10\sum_q z_{dq}.
+++++
+
+This formulation deliberately leaves the identities of positive-liability
+persons within an admissible population coupling unspecified.
+
+== Pseudo-filer side
+
+For pseudo-filer scenario stem:[s], retain v2 variables
+
+[stem]
+++++
+\lambda_{ds}\ge0,
+\qquad
+\sum_s\lambda_{ds}=1.
+++++
+
+Let stem:[u_{ds}] denote the committed pseudo-filer positive-tax share.  Then
+
+[stem]
+++++
+r_d^{PF}=\sum_s\lambda_{ds}u_{ds}.
+++++
+
+The 13-scenario set is fixed; no scenario may be removed after v3 outcomes are
+observed.
+
+== Common rate-discrepancy relaxation
+
+For every F71561 decile,
+
+[stem]
+++++
+|r_d^{PF}-r_d^{NTA\to F}|\le\varepsilon.
+++++
+
+As in v2, stem:[\varepsilon] is a model incompatibility budget, not a standard
+error, confidence radius, causal bound, or measurement-error estimate.
+
+== Rank-displacement budget
+
+Define the average absolute decile displacement
+
+[stem]
+++++
+W(T)=\sum_{d=1}^{10}\sum_{q=1}^{10}|d-q|T_{dq}.
+++++
+
+Because total transported population mass equals one, stem:[W(T)] is directly
+the average absolute displacement in *decile-index units*.  One unit
+corresponds to ten percentile-rank points at this discretization.
+
+v3 constrains
+
+[stem]
+++++
+W(T)\le\Delta.
+++++
+
+The fixed pre-result grid is
+
+----
+0
+0.25
+0.50
+1.00
+2.00
+3.00
+4.00
+5.00
+----
+
+The grid may not be altered or selectively reported after results are seen.
+
+For equal 0.1 margins on both sides, the largest possible value of
+stem:[W(T)] is 5, attained by reverse-rank matching.  Therefore
+stem:[\Delta=5] is the unrestricted-coupling endpoint of this discretized
+transport model.
+
+Interpretation examples:
+
+* stem:[\Delta=0]: exact same-rank correspondence;
+* stem:[\Delta=0.5]: average absolute displacement at most half a decile,
+  i.e. five percentile-rank points on this discretization;
+* stem:[\Delta=1]: at most one decile on average;
+* stem:[\Delta=5]: no effective displacement restriction beyond the equal
+  rank-bin margins.
+
+An average budget does not prohibit a small population mass from moving
+farther than stem:[\Delta].  v3 makes no maximum-individual-displacement
+claim.
+
+== Exact nesting of v2
+
+At stem:[\Delta=0], non-negativity and
+stem:[W(T)=0] force
+
+[stem]
+++++
+T_{dq}=0 \quad\text{for }d\ne q,
+\qquad
+T_{dd}=0.1.
+++++
+
+Then stem:[z_{dq}=0] off the diagonal, and NTA positive-margin conservation
+implies
+
+[stem]
+++++
+z_{dd}=g_d=\sum_j y_{jd}.
+++++
+
+Hence
+
+[stem]
+++++
+r_d^{NTA\to F}=10\sum_j y_{jd},
+++++
+
+which is exactly the v2 same-rank bridge.  The implementation tests must verify
+that the v3 stem:[\Delta=0] minimum relaxation and all frontier endpoints agree
+with the committed v2 values within numerical tolerance.
+
+== Optimization sequence fixed ex ante
+
+=== A. Minimum discrepancy frontier
+
+For every fixed stem:[\Delta] in the grid, solve
+
+[stem]
+++++
+\varepsilon_3^*(\Delta)
+=
+\min \varepsilon
+++++
+
+subject to all constraints above.
+
+This produces the primary v3 robustness frontier.  The implementation must
+verify that stem:[\varepsilon_3^*(\Delta)] is non-increasing in
+stem:[\Delta] up to numerical tolerance.
+
+=== B. Minimum rank movement for zero discrepancy
+
+Independently solve
+
+[stem]
+++++
+\Delta_0^*
+=
+\min W(T)
+++++
+
+subject to all model constraints with stem:[\varepsilon=0].
+
+If the zero-discrepancy system is infeasible even at unrestricted coupling, the
+implementation must record that fact.  It must not relax or redefine the
+criterion post hoc.
+
+=== C. Frontier endpoint objectives
+
+At each grid value stem:[\Delta], fix
+stem:[\varepsilon=\varepsilon_3^*(\Delta)] and report minimum and maximum
+for the same endpoint set as v2:
+
+. each decile's taxable-income-weighted MTR;
+. each decile's liability-weighted MTR;
+. each decile's pseudo-filer positive-tax rate;
+. each decile's transported NTA positive-liability rate;
+. equal-decile overall taxable-income-weighted MTR;
+. equal-decile overall liability-weighted MTR.
+
+If stem:[\Delta_0^*] is finite and is not already a grid value within
+stem:[10^{-10}], also report the same endpoint set at
+stem:[(\Delta,\varepsilon)=(\Delta_0^*,0)].
+
+No endpoint may be omitted because it is wide or inconvenient.
+
+== Numerical safeguards
+
+The implementation must use the pinned research environment:
+
+* NumPy 2.5.3;
+* SciPy 1.18.1;
+* `scipy.optimize.linprog`;
+* primary method `highs-ds`.
+
+Maximum accepted post-solve equality or inequality residual is `1e-8`.
+
+Tests must check at least:
+
+* all pseudo-filer mixture sums;
+* NTA class positive-mass conservation;
+* NTA class/rank overlap capacities;
+* all stem:[T] row and column margins;
+* all stem:[z\le T] capacities;
+* NTA rank positive-margin conservation;
+* rank-displacement budget;
+* all bridge inequalities;
+* non-negativity;
+* objective recomputation;
+* monotonicity of the minimum-discrepancy frontier;
+* stem:[\Delta=0] equivalence to v2;
+* the maximum feasible coupling cost of 5 for equal decile margins;
+* independent `highs-ipm` cross-checks for frontier minima and
+  stem:[\Delta_0^*] when finite.
+
+== Scientific interpretation boundary
+
+Allowed language after implementation and CI:
+
+* rank-transport-budget sensitivity;
+* Wasserstein-1-like decile-rank coupling budget;
+* minimum rate discrepancy conditional on a rank-displacement budget;
+* minimum average rank movement needed for zero rate discrepancy;
+* model-contingent MTR envelope under partial rank correspondence.
+
+Prohibited language:
+
+* estimated or observed F71561-to-NTA rank map;
+* validated equality of NSFCW and NTA income categories;
+* statistically sharp identified set;
+* confidence interval;
+* causal bound;
+* recovered historical V6 restricted LP;
+* point-identified filer MTR.
+
+== Promotion rule
+
+v3 numerical results may enter Paper 1 only after a later commit contains:
+
+. implementation;
+. executable tests;
+. deterministic generated outputs;
+. manifest regeneration;
+. successful GitHub Actions;
+. then a separate Paper 1 claim-registry/paper promotion commit.
+
+This pre-specification commit must contain no v3 numerical endpoint,
+stem:[\varepsilon_3^*(\Delta)], or stem:[\Delta_0^*] result.
