@@ -147,6 +147,14 @@ SPECS = [
         "25 total-income classes x five primary income-earner categories within the positive-self-assessed-balance survey target; calculated tax, tax credits, withholding exposure/amount, self-assessed balance, and source-cell provenance",
     ),
     (
+        "NTA-2024-CALCULATED-TAX-POSITIVE-DENOMINATOR-AUDIT",
+        "nta_calculated_tax_positive_denominator_audit_2024.csv",
+        "scripts/extract_nta_calculated_tax_denominator_audit.py",
+        "NTA-SHINKOKU-JIKEIRETSU-T1-XLSX;NTA-SHINKOKU-JIKEIRETSU-T2-XLSX;NTA-2024-SHINKOKU-SAMPLE;NTA-R06",
+        "DERIVED_REPRODUCED_OFFICIAL_DENOMINATOR_SEMANTICS_AUDIT",
+        "Long-term Sample Survey taxpayer-count semantics audit: 2024 taxpayer count equals the 5,158,260 positive-self-assessed-balance survey target, not a public calculated-tax-positive person count; Table 2-2(1)-scope bound retained with explicit scope warning",
+    ),
+    (
         "NTA-2024-ANNUAL-INCOME-CLASS-PRIMARY-TYPE-FILING-STATUS",
         "nta_income_class_primary_type_filing_status_2024.csv",
         "scripts/extract_nta_annual_income_class_filing_status.py",
