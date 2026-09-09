@@ -420,7 +420,7 @@ same long-term workbooks separately report 8,044,571 million yen of calculated
 tax, but no person count for calculated tax > 0 outside the already
 positive-balance-conditioned target.
 
-Within the FY2024 Table 2-2(1) filed/processed population, the same-person
+Within the FY2024 Table 2-2(1) filed-or-processed income-tax population, the same-person
 same-year event ordering yields only the broad bound
 `5,158,260 <= N(calculated tax > 0) <= 23,362,184`, or
 22.0795%--100%.  The upper end is explicitly scoped to that administrative
@@ -457,7 +457,7 @@ positive rate, v5 `eta`, or a cross-source union count.
 Current payroll-diagnostic status:
 `EXTERNAL_PAYROLL_TAX_DIAGNOSTIC_NO_CROSS_SOURCE_UNION`.
 
-== Private-salary to final-return overlap audit
+== Private-salary to income-tax filing/processing overlap audit
 
 `salary_return_overlap_audit.adoc` extends the wage-side diagnostic with
 Private Salary Survey Table 19 and the full Table 2-2(1) salary-primary
@@ -473,7 +473,7 @@ records: 1,700,196 secondary-payroll, zero previous-employer-unknown, and
 Its high-salary panel reports 320,983 full-year salary earners with salary
 receipts above 20 million yen.  The 2024 NTA filing guidance makes that a
 statutory filing-relevant group, but the public aggregate tables do not observe
-the corresponding person-level final-return match.
+the corresponding person-level income-tax filing/processing match.
 
 On the return side, the 25 salary-primary Table 2-2(1) classes sum to
 11,423,587 filed-or-processed cases: 2,385,726 positive self-assessed balance,
@@ -513,7 +513,7 @@ only as a deprecated backward-compatible alias.
 Current processing-status audit:
 `TABLE22_POPULATION_IS_FILED_OR_PROCESSED_NOT_PURE_FINAL_RETURN_ROW`.
 
-== Salary-receipt to final-return bridge audit
+== Salary-receipt to income-tax filing/processing bridge audit
 
 `salary_receipt_return_bridge_audit.adoc` adds Sample Survey Table 7 and
 annual complete-survey Table 2-3.
@@ -531,7 +531,7 @@ positive-balance return-side sample survey, and no common person identifier or
 private/public employer cross-tab is published.
 
 Annual Table 2-3 separately provides complete-survey counts for people with
-employment income in the filed/processed population: 13,184,714 total,
+employment income in the filed-or-processed income-tax population: 13,184,714 total,
 including 11,425,783 Main and 1,758,931 Secondary.  The official notes also
 show that Table 2-3 Main employment income and the Table 2-2 salary
 income-earner category use different aggregation rules.  Their small count

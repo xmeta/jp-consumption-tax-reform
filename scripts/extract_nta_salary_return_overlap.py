@@ -87,7 +87,7 @@ def make_class_row(duration, status, idx, upper, row_number, vals, source_sha):
         "source_sha256": source_sha,
         "cell_nature": "PRIVATE_SALARY_SURVEY_ESTIMATE",
         "identification_warning": (
-            "Payroll-survey rows do not identify person-level overlap with final-return statistics."
+            "Payroll-survey rows do not identify person-level overlap with filed-or-processed income-tax statistics."
         ),
     }
 
@@ -245,7 +245,7 @@ def build():
                "OBSERVED_WITHIN_POSITIVE_BALANCE_SURVEY",
                "Positive-balance salary-primary returns with salary-source withholding."),
         metric("private_salary_to_final_return_person_overlap", "NOT_IDENTIFIED", "status",
-               "Cross-source payroll survey x final-return statistics",
+               "Cross-source payroll survey x filed-or-processed income-tax statistics",
                "NTA-MINKAN-2024-T16;NTA-MINKAN-2024-T19;NTA-R06",
                "cross-source", "DO_NOT_SUM_OR_INFER_EXACT_OVERLAP",
                "Private/public sector identity and person-level linkage are absent from published aggregates."),

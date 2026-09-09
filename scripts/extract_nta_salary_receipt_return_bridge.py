@@ -260,7 +260,7 @@ def build():
         metric(
             "annual_return_employment_income_persons_all",
             t23["all"][0], "persons_exact",
-            "2024 final-return/processed population with employment income",
+            "2024 filed-or-processed income-tax population with employment income",
             "NTA-2024-ANNUAL-T23-INCOME-TYPE;NTA-2024-ANNUAL-TABLE-NOTES",
             "Table 2-3(1), employment-income row",
             "COMPLETE_SURVEY_INCOME_TYPE_COUNT",
@@ -269,7 +269,7 @@ def build():
         metric(
             "annual_return_employment_income_persons_main",
             t23["all"][1], "persons_exact",
-            "2024 final-return/processed population",
+            "2024 filed-or-processed income-tax population",
             "NTA-2024-ANNUAL-T23-INCOME-TYPE;NTA-2024-ANNUAL-TABLE-NOTES",
             "Table 2-3(1), employment-income Main",
             "COMPLETE_SURVEY_T23_MAIN_DEFINITION",
@@ -278,7 +278,7 @@ def build():
         metric(
             "annual_return_employment_income_persons_secondary",
             t23["all"][2], "persons_exact",
-            "2024 final-return/processed population",
+            "2024 filed-or-processed income-tax population",
             "NTA-2024-ANNUAL-T23-INCOME-TYPE",
             "Table 2-3(1), employment-income Secondary",
             "COMPLETE_SURVEY_T23_SECONDARY_DEFINITION",
@@ -287,7 +287,7 @@ def build():
         metric(
             "annual_positive_balance_employment_income_persons",
             t23["positive_balance"][0], "persons_exact",
-            "Positive-self-assessed-balance final-return/processed population with employment income",
+            "Positive-self-assessed-balance subset of filed-or-processed income-tax population with employment income",
             "NTA-2024-ANNUAL-T23-INCOME-TYPE",
             "Table 2-3(1), employment-income positive-balance columns",
             "COMPLETE_SURVEY_INCOME_TYPE_COUNT",
@@ -296,7 +296,7 @@ def build():
         metric(
             "annual_positive_balance_employment_income_persons_main",
             t23["positive_balance"][1], "persons_exact",
-            "Positive-self-assessed-balance final-return/processed population",
+            "Positive-self-assessed-balance subset of filed-or-processed income-tax population",
             "NTA-2024-ANNUAL-T23-INCOME-TYPE",
             "Table 2-3(1), employment-income positive-balance Main",
             "COMPLETE_SURVEY_T23_MAIN_DEFINITION",
@@ -305,7 +305,7 @@ def build():
         metric(
             "annual_positive_balance_employment_income_persons_secondary",
             t23["positive_balance"][2], "persons_exact",
-            "Positive-self-assessed-balance final-return/processed population",
+            "Positive-self-assessed-balance subset of filed-or-processed income-tax population",
             "NTA-2024-ANNUAL-T23-INCOME-TYPE",
             "Table 2-3(1), employment-income positive-balance Secondary",
             "COMPLETE_SURVEY_T23_SECONDARY_DEFINITION",
@@ -314,7 +314,7 @@ def build():
         metric(
             "annual_refund_employment_income_persons",
             t23["refund"][0], "persons_exact",
-            "Refund final-return population with employment income",
+            "Refund subset of filed-or-processed income-tax population with employment income",
             "NTA-2024-ANNUAL-T23-INCOME-TYPE",
             "Table 2-3(1), employment-income refund columns",
             "COMPLETE_SURVEY_INCOME_TYPE_COUNT",
@@ -323,7 +323,7 @@ def build():
         metric(
             "annual_refund_employment_income_persons_main",
             t23["refund"][1], "persons_exact",
-            "Refund final-return population",
+            "Refund subset of filed-or-processed income-tax population",
             "NTA-2024-ANNUAL-T23-INCOME-TYPE",
             "Table 2-3(1), employment-income refund Main",
             "COMPLETE_SURVEY_T23_MAIN_DEFINITION",
@@ -332,7 +332,7 @@ def build():
         metric(
             "annual_refund_employment_income_persons_secondary",
             t23["refund"][2], "persons_exact",
-            "Refund final-return population",
+            "Refund subset of filed-or-processed income-tax population",
             "NTA-2024-ANNUAL-T23-INCOME-TYPE",
             "Table 2-3(1), employment-income refund Secondary",
             "COMPLETE_SURVEY_T23_SECONDARY_DEFINITION",
@@ -341,7 +341,7 @@ def build():
         metric(
             "t23_main_minus_t22_salary_category_all",
             t23["all"][1] - t22_all, "persons_difference",
-            "2024 final-return/processed population",
+            "2024 filed-or-processed income-tax population",
             "NTA-2024-ANNUAL-T23-INCOME-TYPE;NTA-2024-ANNUAL-TABLE-NOTES;NTA-R06",
             "Table 2-3 Main employment minus Table 2-2 salary income-earner category",
             "DEFINITION_DIFFERENCE_NOT_RECONCILIATION_ERROR",
@@ -350,7 +350,7 @@ def build():
         metric(
             "t23_main_minus_t22_salary_category_positive_balance",
             t23["positive_balance"][1] - t22_pos, "persons_difference",
-            "Positive-self-assessed-balance final-return/processed population",
+            "Positive-self-assessed-balance subset of filed-or-processed income-tax population",
             "NTA-2024-ANNUAL-T23-INCOME-TYPE;NTA-2024-ANNUAL-TABLE-NOTES;NTA-R06",
             "Table 2-3 Main employment minus Table 2-2 salary category",
             "DEFINITION_DIFFERENCE_NOT_RECONCILIATION_ERROR",
@@ -359,7 +359,7 @@ def build():
         metric(
             "t23_main_minus_t22_salary_category_refund",
             t23["refund"][1] - t22_ref, "persons_difference",
-            "Refund final-return population",
+            "Refund subset of filed-or-processed income-tax population",
             "NTA-2024-ANNUAL-T23-INCOME-TYPE;NTA-2024-ANNUAL-TABLE-NOTES;NTA-R06",
             "Table 2-3 Main employment minus Table 2-2 salary category",
             "DEFINITION_DIFFERENCE_NOT_RECONCILIATION_ERROR",

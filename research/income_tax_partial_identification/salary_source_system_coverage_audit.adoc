@@ -102,7 +102,7 @@ Private Salary Survey Table 1 reports for 2024:
 
 The 60,184,788 figure is an average-monthly survey estimate.  It is not
 classified as an annual unique-person count and is not added to or directly
-compared as a person union with final-return populations.
+compared as a person union with filed-or-processed income-tax populations.
 == Public-office amount shares
 
 Within the withholding administrative salary/wages/bonus amounts:

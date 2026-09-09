@@ -176,7 +176,7 @@ SPECS = [
         "scripts/extract_nta_salary_return_overlap.py",
         "NTA-MINKAN-2024-T19",
         "DERIVED_REPRODUCED_OFFICIAL_PRIVATE_SALARY_NO_YEAR_END_ADJUSTMENT_DIAGNOSTIC",
-        "Table 19 full-year/less-than-year x taxpayer/nontaxpayer/all x 14 salary classes; persons, salary and tax split by 乙欄, previous-employer salary unknown and other reasons; no person-level final-return linkage",
+        "Table 19 full-year/less-than-year x taxpayer/nontaxpayer/all x 14 salary classes; persons, salary and tax split by 乙欄, previous-employer salary unknown and other reasons; no person-level filed-or-processed income-tax linkage",
     ),
     (
         "NTA-2024-SALARY-RETURN-OVERLAP-AUDIT",
