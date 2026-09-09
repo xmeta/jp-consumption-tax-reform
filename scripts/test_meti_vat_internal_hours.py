@@ -19,7 +19,7 @@ assert all(r['sample_n']=='1514' for r in d)
 assert sum(Decimal(r['published_percent']) for r in d)==Decimal('99.9')
 assert d[-1]['upper_open_ended']=='YES' and d[-1]['upper_hours_supremum']==''
 assert all(r['joint_feasible_count_vectors']=='28' for r in d)
-assert all(r['selection_scope_status']=='SOURCE_REPORTED_SELECTION_LABEL_INCONSISTENT_WITH_COUNTS' for r in d)
+assert all(r['selection_scope_status']=='RESULTS_SELECTOR_CONFLICTS_WITH_QUESTIONNAIRE_AND_COUNTS' for r in d)
 
 # Independently reconstruct integer counts compatible with one-decimal published shares.
 def options(pct,n=1514):
@@ -60,4 +60,4 @@ assert cat[sid]['bytes']=='8447353'
 assert (ROOT/cat[sid]['raw_file']).exists()
 
 subprocess.run([sys.executable,str(ROOT/'scripts/extract_meti_vat_internal_hours.py'),'--check'],cwd=ROOT,check=True)
-print('METI VAT internal-hours tests: OK (9 bins; 28 feasible rounded-count vectors; conditional lower bound 15.126155878468 h; uncapped upper bound open)')
+print('METI VAT internal-hours tests: OK (9 bins; 28 feasible rounded-count vectors; conditional lower bound 15.126155878468 h/respondent for reported period; uncapped upper bound open)')

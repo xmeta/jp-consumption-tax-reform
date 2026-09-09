@@ -90,7 +90,7 @@ def build():
     selection_consistent=sample_n <= max(yes_options)
     if selection_consistent:
         raise RuntimeError('expected METI p66 selection-label/count inconsistency disappeared')
-    selection_status='SOURCE_REPORTED_SELECTION_LABEL_INCONSISTENT_WITH_COUNTS'
+    selection_status='RESULTS_SELECTOR_CONFLICTS_WITH_QUESTIONNAIRE_AND_COUNTS'
 
     dist=[]
     for (bid,label,lo,hi,open_end),pct,opts in zip(BINS,pcts,options):
@@ -111,7 +111,7 @@ def build():
       'finite_upper_bound':'NO','joint_feasible_count_vectors':len(feasible),
       'sample_n':sample_n,'source_id':SOURCE_ID,
       'identification_status':'CONDITIONAL_RESPONDENT_SUBSET_LOWER_BOUND_ONLY',
-      'note':'100+ hours is top-coded, so no finite upper bound follows without an added cap; bound is not a national-firm mean.',
+      'note':'100+ hours is top-coded, so no finite upper bound follows without an added cap. Q8-3 does not explicitly label tax-item hours as annual; bound is not a national-firm mean.',
     }]
     for cap in CAPS:
         upper=[b[3] if not b[4] else Decimal(cap) for b in BINS]
