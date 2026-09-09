@@ -15,13 +15,19 @@ The 2024 survey frame is built from the 2020 Population Census, rearranged to
 four Okunoto municipalities and removes student single-person households from
 the eligible single-person population.
 
-=== NTA final-return population
+=== NTA Table 2-1 Final-return processing-row benchmark
 
-For filing participation we use the FY2024 NTA annual-statistics
-`final-return` row, {stage1-final-return-filers} persons.  We do not use the broader
-23,362,184 total covering final returns and other cases processed.
+For the stage-1 public benchmark we use the FY2024 NTA annual-statistics
+Table 2-1 row labelled `Final return`, {stage1-final-return-filers} persons.
+Table 2-1 reports taxation status as of June 30 for persons who filed or whose
+cases were processed by March 31.  The row is therefore treated as an exact
+processing-row aggregate, not as the count of all persons whose return forms
+were submitted by the March deadline.  The separate NTA filing-status press
+release reports 23,389 thousand submitted-return persons at displayed
+thousand-person precision.  We also do not use the broader 23,362,184
+Table 2-1 filed-or-processed total.
 
-The NTA filing population and the F71561/Census-based population are not
+The NTA Table 2-1 processing-row benchmark and the F71561/Census-based population are not
 assumed identical.  Their mismatch is carried as an explicit contamination
 parameter in the identification analysis.
 
@@ -30,8 +36,8 @@ parameter in the identification analysis.
 For the rank-based sensitivity analyses we separately use NTA Annual Statistics
 Table 2-2(1), which provides 25 ordered total-net-income classes for the
 table's administrative processing population.  Its denominator is the broader
-23,362,184-person Table 2-2(1) population, not the stage-1 final-return
-numerator used above.  The 125 positive-self-assessed-balance cells by income class and
+23,362,184-person Table 2-2(1) population, not the stage-1 Table 2-1 Final-return processing-row
+benchmark used above.  The 125 positive-self-assessed-balance cells by income class and
 primary income type cross-check exactly to the independently extracted NTA
 Sample Survey Table 2 cells.
 

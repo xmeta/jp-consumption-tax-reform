@@ -50,7 +50,7 @@ for r in stage2:
     assert r["source_id"] == "NTA-R06"
     assert r["source_sha256"]
     assert "processed" in r["population_definition"]
-    assert "stage-1 final-return numerator" in r["interpretation"]
+    assert "stage-1 Table 2-1 Final-return processing-row numerator" in r["interpretation"]
     assert "not F71561" in r["interpretation"]
 
 displayed_pos = sum(

@@ -4,11 +4,11 @@
 == Question
 
 Can published NTA aggregate statistics directly identify or upper-bound the
-number of non-resident persons included in the FY2024 final-return count?
+number of non-resident persons included in the FY2024 Table 2-1 Final-return processing row?
 
 == Finding
 
-No direct resident/non-resident final-return person cross-tab was found in the
+No direct resident/non-resident cross-tab of the Table 2-1 Final-return processing row was found in the
 official published tables examined for this audit.
 
 This is a source-availability finding, not a claim that NTA has no such
@@ -19,11 +19,13 @@ administrative data internally.
 The FY2024 NTA Annual Statistics Report, table 2-1(1), reports:
 
 * total self-assessment / cases processed actual persons: `23,362,184`;
-* final-return persons: `23,090,075`;
+* Table 2-1 Final-return processing-row persons: `23,090,075`;
 * amended-return persons: `145,620`.
 
-The stage-1 benchmark uses the exact `23,090,075` final-return row rather than
-the broader cases-processed total.
+The stage-1 benchmark uses the exact `23,090,075` Table 2-1 Final-return
+processing row rather than the broader filed-or-processed total.  This row is
+not equated to the separate press-release count of return forms submitted by
+the March deadline.
 
 == Published table coverage examined
 
@@ -33,8 +35,8 @@ taxonomy examined here does not expose a residence-status dimension.
 
 The withholding-income-tax chapter separately publishes statistics on
 non-resident income, but those tables report payment and withholding-tax
-amounts rather than a deduplicated count of non-resident self-assessment
-final-return persons.
+amounts rather than a deduplicated resident-status split of the self-assessment
+Table 2-1 processing-row population.
 
 NTA guidance confirms that non-residents can have Japanese final-return
 obligations for domestic-source income, so the non-resident component cannot be
@@ -42,7 +44,7 @@ set to zero.
 
 == Role in the robustness frontier
 
-Non-resident final-return filers outside the Census/resident bridge are one
+Non-resident persons represented in the Table 2-1 processing-row benchmark but outside the Census/resident bridge are one
 possible component of the total untracked mismatch budget stem:[C_U].
 
 They are not equated with stem:[C_U]. Other timing, survey-eligibility,
@@ -57,8 +59,8 @@ The NTA FY2024 treaty-information-exchange report states that Japan provided
 concerning payments to non-residents.
 
 This is useful only as a scale diagnostic. It is not an upper bound on
-non-resident final-return persons because it counts information records, not
-deduplicated final-return filers, and its coverage differs from the
+non-resident Table 2-1 processing-row persons because it counts information records, not
+deduplicated persons in that benchmark, and its coverage differs from the
 self-assessment population.
 
 Therefore `920,649` is not used to set or reduce stem:[C_U].

@@ -1,7 +1,7 @@
 == Stage-1 filing-participation robustness frontier
 
 The first selection step asks how strongly the public survey-frame benchmark
-can constrain overlap with the NTA final-return population.
+can constrain overlap with the NTA Table 2-1 Final-return processing-row benchmark.
 
 We do not estimate a filing probability by pseudo-filer fitting. We first form
 a nominal overlap benchmark and then expose all additional untracked
@@ -10,7 +10,7 @@ population/frame mismatch as an explicit budget.
 === Published frame benchmark
 
 Let stem:[F={stage1-final-return-filers}] denote the observed NTA FY2024
-final-return count, stem:[P={stage1-candidate-upper}] the entire 2020 Census
+Table 2-1 Final-return processing-row count, stem:[P={stage1-candidate-upper}] the entire 2020 Census
 population used as a deliberately loose person denominator, and
 stem:[M_0={stage1-mother-benchmark}] the published F71561 mother-population
 frame benchmark reconstructed from the 2020-Census-based survey design.
@@ -19,7 +19,7 @@ frame benchmark reconstructed from the 2020-Census-based survey design.
 [cols="1,2,2,3",options="header"]
 |===
 |ID |Object |Status |Role
-|O1 |stem:[F] final-return persons |Observed public aggregate |Exact NTA final-return row; no behavioral interpretation
+|O1 |stem:[F] Table 2-1 Final-return processing-row persons |Observed public aggregate |Exact NTA processing row; not equated to all submitted-return persons and no behavioral interpretation
 |B1 |stem:[P] person denominator |Deliberately loose benchmark |Entire Census population; not a fitted tax-unit count
 |B2 |stem:[M_0] F71561 mother-population size |Published frame benchmark |2020-Census-based estimate used by the 2024 survey design; not asserted to be a 2024 person-set lower bound
 |B3 |stem:[D] tracked mismatch allowance |Adversarial allowance |Observable timing/death channels are allocated entirely against the nominal overlap

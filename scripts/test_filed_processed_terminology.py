@@ -63,15 +63,29 @@ assert (
     == "DEPRECATED_ALIAS_NOT_PURE_FINAL_RETURN_ROW"
 )
 
-# Stage-1 is intentionally different: it uses the exact pure Final-return row.
+# Stage-1 is intentionally different: it uses the exact Table 2-1
+# Final-return processing row, not the press-release count of return forms
+# submitted by the March deadline.
 with (ROOT / "data/derived/stage1_official_inputs.csv").open(
     encoding="utf-8", newline=""
 ) as f:
     stage1 = {r["value_id"]: r for r in csv.DictReader(f)}
 assert stage1["nta_final_return_filers_2024"]["value"] == "23090075"
-assert "final return" in stage1["nta_final_return_filers_2024"]["source_locator"].lower()
+assert "final return processing row" in stage1["nta_final_return_filers_2024"]["source_locator"].lower()
+assert "not the separate press-release count" in stage1["nta_final_return_filers_2024"]["note"].lower()
+
+with (ROOT / "data/derived/nta_final_return_processing_semantics_audit_2024.csv").open(
+    encoding="utf-8", newline=""
+) as f:
+    reconciliation = {r["metric_id"]: r for r in csv.DictReader(f)}
+assert reconciliation["stage1_table21_final_return_processing_row"]["value"] == "23090075"
+assert reconciliation["press_submitted_return_count_displayed"]["value"] == "23389"
+assert reconciliation["press_and_table21_final_row_same_statistical_object"]["value"] == "NO"
+assert reconciliation["stage1_23090075_numerical_change_required"]["value"] == "NO"
+assert reconciliation["stage1_23090075_wording_change_required"]["value"] == "YES"
 
 print(
     "filed-vs-processed terminology tests: OK "
-    "(Table 2-2/2-3 artifacts canonicalized; stage-1 pure Final-return row preserved)"
+    "(Table 2-2/2-3 canonicalized; stage-1 Table 2-1 processing row preserved "
+    "and separated from press submitted-return count)"
 )

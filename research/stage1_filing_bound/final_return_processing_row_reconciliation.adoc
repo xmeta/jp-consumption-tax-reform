@@ -1,0 +1,187 @@
+= NTA submitted-return vs Table 2-1 processing-row reconciliation
+:toc:
+:stem: latexmath
+
+== Question
+
+Does the FY2024 NTA Annual Statistics Table 2-1 row labelled +Final return+
+represent the same statistical object as the NTA press-release count of income
+tax final returns submitted by the following March 31?
+
+No.
+
+The publications use related but non-identical statistical scopes and reference
+dates. The difference must be explicit before the stage-1 numerator is
+interpreted.
+
+== Official publication scopes
+
+The NTA final-return-status press release Table 3-1 is displayed in thousand
+persons. Its note states that the figures are based on returns submitted by
+the following March 31.
+
+For 2024 it displays:
+
+[cols="2,1,1,1,1",options="header"]
+|===
+| Income category | Filing count, thousand | Positive tax | Refund | Zero
+| Total | 23,389 | 5,175 | 13,533 | 4,681
+| Business | 3,789 | 1,180 | 963 | 1,645
+| Real estate | 1,497 | 806 | 174 | 516
+| Salary | 11,442 | 2,389 | 7,711 | 1,343
+| Miscellaneous | 5,825 | 417 | 4,292 | 1,116
+| Other | 837 | 382 | 394 | 61
+|===
+
+The displayed five income categories do not always sum to the separately
+displayed grand total because the publication is rounded at thousand-person
+precision.
+
+The annual Table 2-1 publication instead states that it reports taxation status
+as of June 30, 2025 for persons who filed for 2024 or whose cases were processed
+by correction/determination by March 31, 2025.
+
+Therefore its +Final return+ row is a row in a filing-and-processing status
+table observed at a later reference date.
+== Exact Table 2-1 rows
+
+The exact annual Table 2-1 counts are reproduced directly from the official
+processing-status PDF.
+
+[cols="2,1,1",options="header"]
+|===
+| Income category | +Final return+ processing row | Filed-or-processed total
+| Total | 23,090,075 | 23,362,184
+| Business | 3,730,986 | 3,785,184
+| Real estate | 1,476,174 | 1,497,102
+| Salary | 11,293,442 | 11,423,587
+| Miscellaneous | 5,765,807 | 5,819,853
+| Other | 823,666 | 836,458
+|===
+
+For the salary category the same Table 2-1 source further decomposes the
+11,423,587 total into 11,293,442 on the +Final return+ row plus 130,145 in
+amended-return, determination/correction, and request-for-correction
+categories.
+
+That decomposition is an exact processing-status identity. It does *not* by
+itself prove that the press-publication difference is caused by those later
+processing categories.
+
+== Cross-publication comparison
+
+For the total, the displayed press count center is:
+
+[stem]
+++++
+23{,}389 \times 1000 = 23{,}389{,}000.
+++++
+
+Relative to Table 2-1 this is:
+
+[stem]
+++++
+23{,}389{,}000 - 23{,}090{,}075 = 298{,}925
+++++
+
+above the +Final return+ processing row, and
+
+[stem]
+++++
+23{,}389{,}000 - 23{,}362{,}184 = 26{,}816
+++++
+
+above the filed-or-processed total.
+
+For salary the analogous displayed-center differences are 148,558 and 18,413
+persons.
+
+These are *not exact count differences*: the press values are displayed in
+thousand persons. The generated artifact labels them as descriptive
+display-center differences only.
+== What is and is not identified
+
+The official publications establish:
+
+----
+press Table 3-1
+  = filing count based on returns submitted by March 31
+  = displayed at thousand-person precision
+
+annual Table 2-1
+  = taxation status as of June 30
+  = persons who filed or whose cases were processed by March 31
+  = exact persons
+----
+
+They do not establish an exact crosswalk between the two publications.
+
+In particular, this audit does not assume:
+
+* that the press and Table 2-1 income-category definitions are exactly
+  interchangeable;
+* that every cross-publication difference is caused by amended returns;
+* that the Table 2-1 +Final return+ row equals unique persons who submitted a
+  return by the deadline.
+
+Machine-readable statuses are:
+
+----
+press_and_table21_final_row_same_statistical_object = NO
+press_vs_table21_category_definition_equivalence = NOT_ESTABLISHED
+press_vs_table21_difference_mechanism = NOT_IDENTIFIED
+----
+
+== Stage-1 consequence
+
+The stage-1 robustness frontier used the exact public value:
+
+----
+23,090,075
+----
+
+Changing this number is not required merely because the press publication uses
+a different statistical object.
+
+The correct resolution is semantic:
+
+----
+stage1_23090075_numerical_change_required = NO
+stage1_23090075_wording_change_required   = YES
+----
+
+The canonical label is:
+
+----
+NTA Table 2-1 Final-return processing-row persons
+----
+
+The legacy data identifier +nta_final_return_filers_2024+ is retained for
+backward compatibility and deterministic reproduction. It must not be read as
+a claim that 23,090,075 is the count of all persons whose final-return forms
+were submitted by March 31.
+
+The stage-1 formula and all numerical frontier values remain unchanged.
+== Reproduction
+
+[source,shell]
+----
+python scripts/extract_nta_stage2_holdout.py
+python scripts/test_nta_stage2_holdout.py
+python scripts/extract_nta_final_return_processing_reconciliation.py
+python scripts/test_nta_final_return_processing_reconciliation.py
+python scripts/build_stage1_inputs.py
+python paper1/scripts/generate_stage1_attributes.py --check
+python paper1/scripts/validate_claim_registry.py
+----
+
+Generated evidence:
+
+* +data/derived/nta_final_return_submission_processing_reconciliation_2024.csv+
+* +data/derived/nta_final_return_processing_semantics_audit_2024.csv+
+
+Current status:
+
+----
+STAGE1_NUMERIC_RETAINED_TABLE21_PROCESSING_ROW_SEMANTICS_CANONICALIZED
+----
