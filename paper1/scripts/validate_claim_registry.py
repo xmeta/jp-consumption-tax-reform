@@ -17,12 +17,13 @@ ALLOWED = {
     "MODEL_CONTINGENT_RANK_BRIDGE_RELAXATION_REPRODUCED",
     "MODEL_CONTINGENT_RANK_TRANSPORT_BUDGET_REPRODUCED",
     "MODEL_CONTINGENT_RANK_EPSILON_SURFACE_REPRODUCED",
+    "MODEL_CONTINGENT_RANK_ONE_SIDED_BRIDGE_REPRODUCED",
     "DOCUMENTED_PRIOR_RUN_NOT_REPRODUCED",
     "READY_STATIC_ONLY",
     "NOT_READY",
 }
 
-REQUIRED = {f"P1-C{i:02d}" for i in range(1, 17)}
+REQUIRED = {f"P1-C{i:02d}" for i in range(1, 18)}
 LOCAL_SOURCE_STATUSES = {
     "ROBUSTNESS_FRONTIER_REPRODUCED",
     "READY_STATIC_ONLY",
@@ -33,6 +34,7 @@ LOCAL_SOURCE_STATUSES = {
     "MODEL_CONTINGENT_RANK_BRIDGE_RELAXATION_REPRODUCED",
     "MODEL_CONTINGENT_RANK_TRANSPORT_BUDGET_REPRODUCED",
     "MODEL_CONTINGENT_RANK_EPSILON_SURFACE_REPRODUCED",
+    "MODEL_CONTINGENT_RANK_ONE_SIDED_BRIDGE_REPRODUCED",
     "NOT_READY",
 }
 
@@ -95,6 +97,8 @@ def main():
         errors.append("P1-C15 must remain model-contingent rank-transport-budget frontier")
     if by_id["P1-C16"]["status"] != "MODEL_CONTINGENT_RANK_EPSILON_SURFACE_REPRODUCED":
         errors.append("P1-C16 must remain model-contingent fixed-budget rank-epsilon surface")
+    if by_id["P1-C17"]["status"] != "MODEL_CONTINGENT_RANK_ONE_SIDED_BRIDGE_REPRODUCED":
+        errors.append("P1-C17 must remain model-contingent one-sided subset-compatibility bridge")
 
     # Semantic boundary introduced by the post-v4 NTA terminology audit.
     # NTA 申告納税額>0 is a positive self-assessed return balance after
@@ -103,14 +107,19 @@ def main():
     c05_forbidden = by_id["P1-C05"]["forbidden_claim"].lower()
     if "positive annual income-tax liability" not in c05_forbidden:
         errors.append("P1-C05 must forbid equating self-assessed balance with positive annual liability")
-    for cid in ("P1-C13", "P1-C14", "P1-C15", "P1-C16"):
+    for cid in ("P1-C13", "P1-C14", "P1-C15", "P1-C16", "P1-C17"):
         forbidden = by_id[cid]["forbidden_claim"].lower()
         if "measurement error" not in forbidden:
-            errors.append(f"{cid} must forbid one-event measurement-error interpretation of epsilon")
+            errors.append(f"{cid} must forbid one-event measurement-error interpretation")
         if "申告納税額" not in by_id[cid]["forbidden_claim"]:
             errors.append(f"{cid} must explicitly distinguish the NTA self-assessed-balance event")
     if "pure rank mismatch" not in by_id["P1-C15"]["forbidden_claim"].lower():
         errors.append("P1-C15 must forbid interpreting the 8.6825pp floor as pure rank mismatch")
+    c17_forbidden = by_id["P1-C17"]["forbidden_claim"].lower()
+    if "eta=0 proves" not in c17_forbidden:
+        errors.append("P1-C17 must forbid treating eta=0 as proof of linkage/identity")
+    if "v3/v4 symmetric discrepancy results are invalid" not in c17_forbidden:
+        errors.append("P1-C17 must forbid invalidating the distinct v3/v4 symmetric-gap results")
 
     for cid in ("P1-C11", "P1-C12"):
         if by_id[cid]["status"] != "NOT_READY":
@@ -139,6 +148,11 @@ def main():
         "epsilon is estimated discrepancy",
         "v4 mtr is point identified",
         "rank-epsilon v4 reproduces the historical v6 restricted lp",
+        "eta=0 proves same-person linkage",
+        "v3/v4 symmetric discrepancy results are invalid",
+        "one-sided v5 is observed linkage",
+        "v5 mtr is point identified",
+        "rank one-sided v5 reproduces the historical v6 restricted lp",
     ]
     for phrase in prohibited:
         if phrase.lower() in paper.lower():

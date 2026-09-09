@@ -236,6 +236,7 @@ active_required = {
     "MODEL_CONTINGENT_RANK_BRIDGE_RELAXATION_REPRODUCED",
     "MODEL_CONTINGENT_RANK_TRANSPORT_BUDGET_REPRODUCED",
     "MODEL_CONTINGENT_RANK_EPSILON_SURFACE_REPRODUCED",
+    "MODEL_CONTINGENT_RANK_ONE_SIDED_BRIDGE_REPRODUCED",
 }
 for cid, claim in claims.items():
     ev_statuses = {r["evidence_status"] for r in by_claim.get(cid, [])}
@@ -250,6 +251,7 @@ for cid, claim in claims.items():
             "ACTIVE_REPRODUCED_MODEL_CONTINGENT_RANK_BRIDGE",
             "ACTIVE_REPRODUCED_MODEL_CONTINGENT_RANK_TRANSPORT",
             "ACTIVE_REPRODUCED_MODEL_CONTINGENT_RANK_EPSILON_SURFACE",
+            "ACTIVE_REPRODUCED_MODEL_CONTINGENT_RANK_ONE_SIDED",
             "ACTIVE_STATE",
         }:
             errors.append(f"{cid}: active claim lacks active evidence")

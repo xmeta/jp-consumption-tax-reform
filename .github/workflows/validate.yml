@@ -81,6 +81,7 @@ jobs:
           python paper1/scripts/generate_rank_bridge_v2_table.py --check
           python paper1/scripts/generate_rank_bridge_v3_table.py --check
           python paper1/scripts/generate_rank_epsilon_v4_table.py --check
+          python paper1/scripts/generate_rank_one_sided_v5_table.py --check
           python paper1/scripts/validate_claim_registry.py
 
       - name: Validate repository integrity

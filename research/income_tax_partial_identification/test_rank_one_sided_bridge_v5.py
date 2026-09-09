@@ -192,10 +192,18 @@ for delta in EXPECTED_DELTAS:
             float(r["endpoint_value"]), expected, abs_tol=2e-12, rel_tol=0.0
         ), (delta, r["metric"], r["bound"], r["endpoint_value"], expected)
 
-# Implementation must leave Paper 1 unpromoted.
+# The implementation commit itself left Paper 1 unpromoted; Git history
+# preserves that gate.  The current state contains the later separate P1-C17
+# promotion and must keep it model-contingent.
 claims = read(ROOT / "paper1/data/claim_registry.csv")
-assert len(claims) == 16
-assert all(r["claim_id"] != "P1-C17" for r in claims)
+assert len(claims) == 17
+by_claim = {r["claim_id"]: r for r in claims}
+assert by_claim["P1-C17"]["status"] == (
+    "MODEL_CONTINGENT_RANK_ONE_SIDED_BRIDGE_REPRODUCED"
+)
+assert "same-person or same-tax-unit linkage" in (
+    by_claim["P1-C17"]["forbidden_claim"]
+)
 
 subprocess.run(
     [sys.executable, str(HERE / "run_rank_one_sided_bridge_v5.py"), "--check"],

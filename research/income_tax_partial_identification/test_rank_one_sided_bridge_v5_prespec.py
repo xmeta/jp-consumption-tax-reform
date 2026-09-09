@@ -1,10 +1,11 @@
 #!/usr/bin/env python3
-"""Freeze the v5 pre-specification after implementation begins.
+"""Freeze the v5 pre-specification across implementation and Paper promotion.
 
-The original fef4776 version of this test required that no implementation or
-v5 result existed.  Git history preserves that gate.  From the implementation
-commit onward this test instead locks the exact pre-specification bytes and
-continues to prohibit a Paper 1 promotion inside the implementation commit.
+The original fef4776 version required that no implementation or v5 result
+existed.  The implementation commit 006e259 still kept Paper 1 at 16 claims.
+Git history preserves both gates.  The current promoted state keeps the exact
+pre-specification bytes frozen while requiring the later, separately promoted
+P1-C17 claim to retain its model-contingent status.
 """
 from pathlib import Path
 import csv
@@ -51,11 +52,21 @@ assert cfg["paper1_claim_before_ci"] == "false"
 assert cfg["paper1_claim_before_separate_promotion"] == "false"
 
 claims = read_csv(CLAIMS)
-assert len(claims) == 16
-assert all(r["claim_id"] != "P1-C17" for r in claims)
+assert len(claims) == 17
+by_id = {r["claim_id"]: r for r in claims}
+assert by_id["P1-C17"]["status"] == (
+    "MODEL_CONTINGENT_RANK_ONE_SIDED_BRIDGE_REPRODUCED"
+)
+assert by_id["P1-C17"]["source"] == (
+    "research/income_tax_partial_identification/rank_one_sided_bridge_v5_spec.adoc"
+)
+assert "eta=0 proves" in by_id["P1-C17"]["forbidden_claim"].lower()
+assert "v3/v4 symmetric discrepancy results are invalid" in (
+    by_id["P1-C17"]["forbidden_claim"].lower()
+)
 
 print(
     "rank one-sided bridge v5 pre-specification freeze: OK "
     f"(commit={PRESPEC_COMMIT[:7]}; exact spec/config SHA-256; "
-    "Paper 1 remains 16 claims)"
+    "separate P1-C17 promotion retained)"
 )
