@@ -27,6 +27,7 @@
 |Rank-epsilon fixed-budget surface v4 |MODEL_CONTINGENT_RANK_EPSILON_SURFACE_REPRODUCED |既存v3 Delta grid×v2 epsilon gridの104点を固定評価。条件付きMTR envelopeのみを扱い、Delta・epsilonの推定、confidence region、point identificationとは扱わない
 |One-sided subset-compatibility rank bridge v5 |MODEL_CONTINGENT_RANK_ONE_SIDED_BRIDGE_REPRODUCED |NTA tax-flow audit後に別commitで事前仕様化し、positive self-assessed balanceがpseudo modeled calculated-tax-positiveを上回る側だけをetaで緩和。全8 Deltaでeta*=0、zero-violationはDelta=0で可能。ただしsame-person linkage、rank同一性、causal/sharp identificationとは扱わない
 |Calculated-tax-positive person denominator |NOT_IDENTIFIED_PUBLIC_DATA |NTA長期時系列の「納税者数」は令和6年5,158,260人でpositive self-assessed balance標本母集団と完全一致し、算出税額>0人員ではない。Table 2-2(1)内では5,158,260～23,362,184人の広いboundのみ。一般人口/F71561上限には読み替えない
+|Private-salary payroll-tax-positive scale |EXTERNAL_PAYROLL_TAX_DIAGNOSTIC_NO_CROSS_SOURCE_UNION |民間給与実態統計Table 16を全56給与階級セルで再現。乙欄除外後の年末調整済み納税者35,556,416人/給与所得者52,797,680人（67.3447%）は給与側の規模診断。ただし確定申告後のfinal calculated-tax-positive厳密下限とはせず、申告納税額あり5,158,260人との重複不明のため加算しない
 |Recovered score_power thresholds |DOCUMENTED_PRIOR_RUN_NOT_REPRODUCED |回復用メタデータのみ。主結果へ使わない
 |NTA Table 3-1 composition point check |CROSS_PUBLICATION_POINT_CHECK_REPRODUCED |5区分の千人丸め値を表示5区分合計5,174千人で再正規化し、年報の正確人員構成との差最大0.08444ppを再現。独立holdout・CIとは扱わない
 |===
@@ -48,4 +49,5 @@
 * one-sided v5でeta*=0であることを、pseudoとNTAが同一人物・同一tax unitを観測している証明、rank概念の同一性、v3/v4 symmetric discrepancyの否定、真のtransition率の推定とは扱わない。
 * one-sided v5のMTR envelopeを信頼区間・causal bound・sharp identified set・point-identified filer MTRとは扱わない。
 * NTA長期時系列の「所得階級別納税者数」5,158,260人を算出税額>0の人数とは扱わない。これはpositive self-assessed balance標本母集団であり、23,362,184人という上限もTable 2-2(1)処理対象内だけの自明な上限である。
+* 民間給与実態統計Table 16の年末調整済み納税者35,556,416人を、確定申告後のfinal calculated-tax-positive人数の厳密下限とは扱わない。また5,158,260人との単純和40,714,676人をcross-source unionとして扱わない。person overlapは未識別である。
 * モデルシミュレーションを政府公式の実質GDP予測とは呼ばない。

@@ -1,0 +1,222 @@
+= Private-salary taxpayer-status transition diagnostic
+:toc:
+:stem: latexmath
+
+== Status
+
+----
+EXTERNAL_PAYROLL_TAX_DIAGNOSTIC_NO_CROSS_SOURCE_UNION
+----
+
+This audit asks whether the 2024 National Tax Agency Private Salary Survey can
+sharpen the missing calculated-tax-positive denominator identified in
+`calculated_tax_positive_denominator_audit.adoc`.
+
+It adds an external wage-side diagnostic. It does not alter v1-v5 model
+results or Paper 1 claims.
+
+== Official sources
+
+The repository retains:
+
+* `NTA-MINKAN-2024-T16`: 2024 Private Salary Survey Table 16,
+  salary-class taxpayer/non-taxpayer counts;
+* `NTA-MINKAN-METHODOLOGY`: the official methodology and terminology page.
+
+The methodology states that the survey target includes private-sector salary
+earners regardless of whether income tax is payable. It defines a
+`納税者` as a salary earner for whom source-withheld income tax exists.
+
+It also defines `乙欄適用者` as an independently counted secondary-payroll
+record when one salary earner receives salary from two or more payers. This is
+why Table 16 is reproduced both including and excluding those records.
+
+== Table 16 structure
+
+The workbook has four panels:
+
+. full-year salary earners;
+. less-than-year salary earners;
+. full-year salary earners excluding secondary-payroll (乙欄) records;
+. less-than-year salary earners excluding secondary-payroll records.
+
+Each panel contains fourteen salary classes and separately reports:
+
+* year-end-adjusted taxpayers, non-taxpayers and total;
+* not-year-end-adjusted taxpayers, non-taxpayers and total;
+* all taxpayers, non-taxpayers and total;
+* corresponding tax amounts.
+
+The class-level extraction retains all 56 panel-by-salary-class rows rather
+than selecting a preferred salary range.
+
+== Reproduced totals
+
+For full-year salary earners, including all payroll records:
+
+[cols="2,1",options="header"]
+|===
+| Quantity | Persons
+| year-end-adjusted taxpayers | 33,796,714
+| year-end-adjusted total | 47,213,036
+| all taxpayers | 37,526,454
+| all salary earners | 51,365,699
+|===
+
+For less-than-year salary earners, including all payroll records:
+
+[cols="2,1",options="header"]
+|===
+| Quantity | Persons
+| year-end-adjusted taxpayers | 1,759,702
+| year-end-adjusted total | 5,584,644
+| all taxpayers | 4,613,882
+| all salary earners | 9,408,447
+|===
+
+Excluding secondary-payroll (乙欄) records leaves the year-end-adjusted
+quantities unchanged but reduces the non-year-end-adjusted population.
+
+Combining the two duration groups after excluding secondary-payroll records
+gives:
+
+[stem]
+++++
+N_{	ext{YE-adjusted payroll-tax-positive}}
+=
+33{,}796{,}714 + 1{,}759{,}702
+=
+35{,}556{,}416,
+++++
+
+among
+
+[stem]
+++++
+52{,}797{,}680
+++++
+
+year-end-adjusted private salary earners, a rate of approximately
+
+[stem]
+++++
+67.344656%.
+++++
+
+The associated year-end-adjusted tax amount is 7,280,879 million yen.
+
+Including non-year-end-adjusted records after secondary-payroll exclusion
+gives 38,406,244 taxpayers among 57,040,054 payroll records/person-count units
+reported by the table, with 10,736,803 million yen of tax.
+
+== Why this is not the missing final calculated-tax denominator
+
+The Table 16 taxpayer concept is source-withholding based.
+
+Year-end adjustment makes the year-end-adjusted subgroup much more informative
+than a raw monthly withholding indicator, because payroll tax has been
+annualized using payroll information available to the employer.
+
+However, a later final income-tax return can introduce deductions, credits,
+loss offsets, or other information that changes final calculated tax and the
+self-assessed balance.
+
+Therefore:
+
+----
+35,556,416 is NOT asserted to be a strict lower bound on final
+calculated-tax-positive persons.
+----
+
+It is an external scale diagnostic for positive payroll income tax after
+year-end adjustment.
+
+The not-year-end-adjusted taxpayer count is weaker still: positive source
+withholding can later be refunded or offset.
+
+== Cross-source overlap problem
+
+The self-assessed-return audit identifies 5,158,260 persons with positive
+self-assessed balance.
+
+It is tempting to form
+
+[stem]
+++++
+35{,}556{,}416 + 5{,}158{,}260
+=
+40{,}714{,}676.
+++++
+
+That addition is not identified.
+
+A person represented in the Private Salary Survey may also file a final
+return and enter the self-assessed-return population. The public tables used
+here do not provide the cross-source overlap.
+
+Consequently the repository marks the union status as:
+
+----
+OVERLAP_WITH_SELF_ASSESSED_RETURNS_UNKNOWN_DO_NOT_SUM
+----
+
+No union count is reported or used for calibration.
+
+== Rounding audit
+
+Table 16 contains published integer estimates. Across the 56 salary-class
+rows, reproduced arithmetic shows small displayed-value rounding residuals:
+
+* taxpayer + non-taxpayer versus total: at most 1 person within a class;
+* salary-class sums versus published panel totals: at most 2 persons;
+* salary-class tax sums versus published panel totals: at most 2 million yen.
+
+The extractor treats only residuals beyond these observed publication-rounding
+limits as failures.
+
+== Identification consequence
+
+The Private Salary Survey materially improves scale knowledge:
+
+* the positive-payroll-tax population is tens of millions, not approximately
+  five million;
+* the five-million self-assessed positive-balance target therefore cannot be
+  interpreted as the universe of persons bearing positive income tax;
+* payroll and self-assessed-return statistics cover overlapping but different
+  administrative/event concepts.
+
+But the new source does not identify:
+
+* final calculated-tax-positive persons across all settlement channels;
+* overlap between payroll-tax-positive persons and self-assessed filers;
+* the transition from year-end-adjusted positive payroll tax to final
+  calculated tax after a return;
+* person-level rank correspondence to F71561.
+
+Therefore this evidence remains an external diagnostic and is not used to
+calibrate the pseudo calculated-tax-positive rate, v5 stem:[eta], or a
+cross-source union count.
+
+== Reproduction
+
+[source,shell]
+----
+python scripts/build_source_catalog.py
+python scripts/extract_nta_private_salary_taxpayer_status.py
+python scripts/test_nta_private_salary_taxpayer_status.py
+python scripts/build_derived_catalog.py
+----
+
+Current reproduced anchors:
+
+----
+Table 16 salary-class rows = 56
+summary rows = 5
+year-end-adjusted taxpayers, 乙欄 excluded = 35,556,416
+year-end-adjusted salary earners, 乙欄 excluded = 52,797,680
+year-end-adjusted taxpayer rate = 67.344656%
+year-end-adjusted tax = 7,280,879 million yen
+self-assessed positive-balance persons = 5,158,260
+cross-source union = NOT_IDENTIFIED / DO_NOT_SUM
+final calculated-tax-positive strict lower bound from Table 16 = NOT_ASSERTED
+----
