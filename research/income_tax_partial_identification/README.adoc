@@ -409,6 +409,28 @@ PR, and main post-merge CI succeeded, the result was promoted separately as
 P1-C17 with status
 `MODEL_CONTINGENT_RANK_ONE_SIDED_BRIDGE_REPRODUCED`.
 
+== Calculated-tax-positive denominator audit
+
+`calculated_tax_positive_denominator_audit.adoc` checks whether the official
+NTA long-term Sample Survey workbooks supply the missing person denominator for
+positive calculated tax.  They do not.  The 2024 long-term Table 1 taxpayer
+count and the Table 2 `納税者数（合計）` total are both 5,158,260, exactly the
+independently reproduced positive-self-assessed-balance survey target.  The
+same long-term workbooks separately report 8,044,571 million yen of calculated
+tax, but no person count for calculated tax > 0 outside the already
+positive-balance-conditioned target.
+
+Within the FY2024 Table 2-2(1) filed/processed population, the same-person
+same-year event ordering yields only the broad bound
+`5,158,260 <= N(calculated tax > 0) <= 23,362,184`, or
+22.0795%--100%.  The upper end is explicitly scoped to that administrative
+population; it is not a general-population, F71561, or withholding-only
+settlement upper bound.  Consequently the long-term `納税者数` series must not
+be used to calibrate the pseudo calculated-tax-positive rate or `eta`.
+
+Current audit status:
+`CALCULATED_TAX_POSITIVE_PERSON_COUNT_NOT_IDENTIFIED`.
+
 == Reproduction
 
 [source,shell]
@@ -422,6 +444,8 @@ python scripts/extract_nta_shinkoku_income_class_primary_type.py
 python scripts/test_nta_shinkoku_income_class_primary_type.py
 python scripts/extract_nta_positive_balance_tax_flow.py
 python scripts/test_nta_positive_balance_tax_flow.py
+python scripts/extract_nta_calculated_tax_denominator_audit.py
+python scripts/test_nta_calculated_tax_denominator_audit.py
 python -m pip install -r requirements-research-lp.txt
 python research/income_tax_partial_identification/run_replacement_transport_lp.py
 python research/income_tax_partial_identification/test_replacement_transport_lp.py

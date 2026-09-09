@@ -1,0 +1,216 @@
+= Calculated-tax-positive denominator audit
+:toc:
+:stem: latexmath
+
+== Status
+
+----
+CALCULATED_TAX_POSITIVE_PERSON_COUNT_NOT_IDENTIFIED
+----
+
+This audit asks whether the National Tax Agency's public long-term Sample
+Survey for Self-Assessment Income Tax supplies the missing person denominator
+for positive *calculated* income tax.
+
+It does not alter v1-v5 model results or Paper 1 claims.
+
+== Official sources retained
+
+The repository now retains the official NTA long-term workbooks:
+
+* `NTA-SHINKOKU-JIKEIRETSU-T1-XLSX`:
+  long-term Table 1, Summary;
+* `NTA-SHINKOKU-JIKEIRETSU-T2-XLSX`:
+  long-term Table 2, income-class series.
+
+The existing official sources
+
+* `NTA-2024-SHINKOKU-SAMPLE`; and
+* `NTA-R06`
+
+provide the 2024 survey-target and annual-statistics definitions used for the
+semantic cross-check.
+
+== What the long-term workbooks publish
+
+The official long-term Table 2 workbook contains separate sheets for:
+
+* taxpayer count;
+* income amount;
+* deductions;
+* taxable income;
+* calculated tax;
+* tax credits;
+* withholding tax; and
+* self-assessed balance.
+
+For 2024, the long-term Table 1 row 79 reports:
+
+[cols="2,1,1",options="header"]
+|===
+| Quantity | Value | Source cell
+| taxpayer persons | 5,158,260 | `合計!B79`
+| calculated income tax | 8,044,571 million yen | `合計!F79`
+| tax credits | 352,866 million yen | `合計!G79`
+| source-withholding persons | 3,302,359 | `合計!H79`
+| source-withholding tax | 3,446,992 million yen | `合計!I79`
+| self-assessed balance | 4,406,942 million yen | `合計!J79`
+|===
+
+The corresponding long-term Table 2 totals in column AE reproduce the same
+published totals:
+
+[cols="2,1,1",options="header"]
+|===
+| Sheet | 2024 total | Source cell
+| `納税者数（合計）` | 5,158,260 persons | `AE79`
+| `算出税額（合計）` | 8,044,571 million yen | `AE79`
+| `税額控除額（合計）` | 352,866 million yen | `AE79`
+| `源泉徴収税額（合計）` | 3,446,992 million yen | `AE79`
+| `申告納税額（合計）` | 4,406,942 million yen | `AE79`
+|===
+
+Thus the long-term workbooks provide a calculated-tax *amount* series, but
+their taxpayer-count series is not a calculated-tax-positive person series.
+
+== Why the taxpayer count is not the missing denominator
+
+The NTA defines the Sample Survey target as persons who have positive
+self-assessed income tax. Persons with income but no positive self-assessed
+balance, including refund filers, are outside that survey target.
+
+The independently reproduced FY2024 annual-statistics total for persons with
+positive self-assessed balance is also exactly:
+
+[stem]
+++++
+N_{B>0}=5{,}158{,}260.
+++++
+
+This exactly matches both long-term taxpayer-count totals above.
+
+Therefore the long-term `納税者数` series is the positive-self-assessed-balance
+survey population. It cannot be reinterpreted as
+
+[stem]
+++++
+N_{T^{calc}>0}.
+++++
+
+== Directional implication and the only public-data bound currently justified
+
+For one person in one tax year,
+
+[stem]
+++++
+B>0
+Longrightarrow
+T^{calc}>0.
+++++
+
+Therefore, within the FY2024 Table 2-2(1) filed/processed population,
+
+[stem]
+++++
+N_{T^{calc}>0}
+ge
+5{,}158{,}260.
+++++
+
+The same annual-statistics population contains 23,362,184 persons in total.
+Without person-level or sufficiently detailed cross-tabs linking calculated tax
+to the final balance, a conservative within-population upper bound is only
+
+[stem]
+++++
+N_{T^{calc}>0}
+le
+23{,}362{,}184.
+++++
+
+Hence
+
+[stem]
+++++
+5{,}158{,}260
+le
+N_{T^{calc}>0}
+le
+23{,}362{,}184,
+++++
+
+or, as a share of that Table 2-2(1) population,
+
+[stem]
+++++
+0.220795281811
+le
+Pr(T^{calc}>0)
+le
+1.
+++++
+
+The width is 18,203,924 persons. This is too broad to replace the current
+model-contingent bridge.
+
+The upper bound is *only* a Table 2-2(1)-population bound. It is not an upper
+bound for the Japanese population, F71561 household members, all wage earners,
+or all persons with positive calculated income tax under withholding-only
+settlement.
+
+== What remains unobserved
+
+Public sources examined here do not provide a person count for calculated-tax
+positive persons outside the positive-self-assessed-balance Sample Survey
+target.
+
+In particular, the long-term series does not identify
+
+[stem]
+++++
+Pr(B>0mid T^{calc}>0),
+++++
+
+because its person denominator is already conditioned on stem:[B>0].
+
+The missing high-value evidence remains a directly comparable tax-unit table
+or microdata source that observes, for the same population and year:
+
+. calculated-tax-positive status;
+. tax-credit status/amount;
+. source-withholding status/amount;
+. final self-assessed balance status; and
+. income rank or a sufficiently detailed income class.
+
+== Consequence for v5
+
+This audit supports the v5 *direction* but does not identify its cross-system
+transition probability.
+
+The long-term taxpayer count must not be used to calibrate the pseudo modeled
+calculated-tax-positive rate or a numerical stem:[eta] value.
+
+P1-C17 remains a model-contingent directional compatibility result. The audit
+does not turn it into observed person-level linkage or point identification.
+
+== Reproduction
+
+[source,shell]
+----
+python scripts/build_source_catalog.py
+python scripts/extract_nta_calculated_tax_denominator_audit.py
+python scripts/test_nta_calculated_tax_denominator_audit.py
+python scripts/build_derived_catalog.py
+----
+
+Current reproduced status:
+
+----
+long-term Table 1 taxpayer persons = 5,158,260
+long-term Table 2 taxpayer persons = 5,158,260
+annual positive self-assessed balance persons = 5,158,260
+calculated tax amount = 8,044,571 million yen
+public calculated-tax-positive person count = NOT_IDENTIFIED
+Table 2-2(1)-scope bound = 5,158,260 .. 23,362,184
+general-population upper bound = NOT_PROVIDED
+----
