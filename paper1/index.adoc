@@ -25,6 +25,14 @@ budget stem:[C_U^*(A)] for any externally supplied admissibility threshold
 stem:[A]. The actual value of stem:[C_U] is not identified, so the analysis
 does not claim an unconditional filing-rate lower bound.
 
+A separately pre-specified rank-transport sensitivity nests the exact
+same-rank bridge and lowers its minimum cross-system positive-rate discrepancy
+from 14.9016 to 8.6825 percentage points at a rank-displacement budget of
+stem:[Delta=0.25].  Further rank freedom through the unrestricted
+stem:[Delta=5] endpoint does not lower the discrepancy, and zero discrepancy
+remains infeasible.  These are model-contingent compatibility diagnostics, not
+an estimated rank map or identified filer MTR.
+
 Other marginal-incidence quantities remain sensitivity-only, recovery-only, or
 not identified. A machine-readable claim registry prevents calibrated or
 unreproduced results from being presented as reproduced identified facts.

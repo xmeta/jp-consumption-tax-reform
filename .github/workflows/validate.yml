@@ -26,6 +26,8 @@ jobs:
           python scripts/build_income_tax_decile_instruments.py
           python scripts/extract_estat_f71911_bridge.py
           python scripts/test_estat_f71911_bridge.py
+          python scripts/extract_estat_rank_bridge_diagnostics.py
+          python scripts/test_estat_rank_bridge_diagnostics.py
           python scripts/build_income_tax_2026_statutory_parameters.py
           python scripts/test_income_tax_2026_statutory_parameters.py
           python scripts/extract_nta_table17_and_f71551.py
@@ -42,6 +44,8 @@ jobs:
           python research/income_tax_partial_identification/test_replacement_transport_lp.py
           python research/income_tax_partial_identification/run_rank_bridge_lp_v2.py
           python research/income_tax_partial_identification/test_rank_bridge_lp_v2.py
+          python research/income_tax_partial_identification/run_rank_bridge_lp_v3.py
+          python research/income_tax_partial_identification/test_rank_bridge_lp_v3.py
           python scripts/build_derived_catalog.py
           python scripts/build_input_provenance.py
           python scripts/build_stage1_inputs.py
@@ -67,6 +71,7 @@ jobs:
           python paper1/scripts/generate_frontier_table.py --check
           python paper1/scripts/generate_transport_lp_table.py --check
           python paper1/scripts/generate_rank_bridge_v2_table.py --check
+          python paper1/scripts/generate_rank_bridge_v3_table.py --check
           python paper1/scripts/validate_claim_registry.py
 
       - name: Validate repository integrity

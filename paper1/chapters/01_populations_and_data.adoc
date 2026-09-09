@@ -25,6 +25,25 @@ The NTA filing population and the F71561/Census-based population are not
 assumed identical.  Their mismatch is carried as an explicit contamination
 parameter in the identification analysis.
 
+=== Ordered NTA income classes and within-survey rank diagnostics
+
+For the rank-based sensitivity analyses we separately use NTA Annual Statistics
+Table 2-2(1), which provides 25 ordered total-net-income classes for the
+table's administrative processing population.  Its denominator is the broader
+23,362,184-person Table 2-2(1) population, not the stage-1 final-return
+numerator used above.  The 125 positive-liability cells by income class and
+primary income type cross-check exactly to the independently extracted NTA
+Sample Survey Table 2 cells.
+
+Two additional 2024 NSFCW tables are retained as diagnostics for the strength
+of rank-bridge assumptions.  Table 7-141-1 reports main annual-income-type
+composition across OECD-new equivalized-disposable-income deciles, and Table
+7-171 reports equivalized-disposable-income quantiles by main annual-income
+type.  These tables show substantial within-survey composition differences
+across rank but do not provide an observed mapping to NTA primary-income
+categories or tax records.  They therefore motivate sensitivity analysis
+without entering the v3 LP as hard cross-system constraints.
+
 === Unit discipline
 
 Income-tax liability is an individual tax concept, whereas F71561 is reported

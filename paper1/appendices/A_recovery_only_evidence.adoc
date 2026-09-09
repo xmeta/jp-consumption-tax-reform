@@ -30,11 +30,11 @@ The handoff records restricted-LP marginal-rate endpoints generated under
 additional assumptions. Because the historical post-base source chain has not
 been restored, P1-C06 remains recovery-only.
 
-Two different, newly pre-specified sensitivity models are reported in the
-main text as P1-C13 and P1-C14.  P1-C13 uses aggregate primary-type transport;
-P1-C14 uses a same-rank bridge built from the 25-class NTA Table 2-2(1)
-distribution.  Neither may be interpreted as restoration of the historical V6
-endpoint chain.
+Three newly pre-specified sensitivity models are reported in the main text.
+P1-C13 uses aggregate primary-type transport; P1-C14 uses a same-rank bridge
+built from the 25-class NTA Table 2-2(1) distribution; P1-C15 weakens exact
+same-rank correspondence with a fixed rank-displacement-budget frontier.
+None may be interpreted as restoration of the historical V6 endpoint chain.
 
 === Historical external-holdout artifacts
 

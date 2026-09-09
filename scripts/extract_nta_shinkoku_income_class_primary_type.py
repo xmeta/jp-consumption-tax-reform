@@ -235,7 +235,7 @@ def build():
                 "evidence_status":
                     "REPRODUCED_OFFICIAL_SURVEY_ESTIMATE_CROSSTAB",
                 "identification_warning":
-                    "NTA total-income class is not F71561 equivalized household-income decile; any bridge requires an explicit transport assumption",
+                    "NTA total-income class is not F71561 equivalized disposable-income decile; any bridge requires an explicit transport assumption",
             })
 
         if sum(category_values) != income_total:

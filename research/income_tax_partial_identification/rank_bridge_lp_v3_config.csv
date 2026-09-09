@@ -1,0 +1,30 @@
+key,value,unit,note
+spec_version,rank_bridge_lp_v3,,pre-specified before any v3 numerical result
+input_pseudofiler_scenarios,all_13_committed_pseudofiler_scenarios,,no post-result selection
+input_nta_artifact,nta_income_class_primary_type_filing_status_2024.csv,,same 25-class NTA input as v2
+nta_income_class_count,25,,ordered ascending by total net income etc.
+bridge_scheme,rank_transport_budget,,population coupling between F deciles and NTA rank deciles
+rank_bin_mass,0.1,population share,ten equal bins on each margin
+within_class_positive_allocation,free_within_overlap_capacity,,same grouped-data uncertainty as v2
+transport_positive_allocation,free_within_transport_capacity,,z_dq bounded by T_dq with NTA rank positive margins conserved
+rank_cost,absolute_decile_index_distance,,cost |d-q|
+delta_grid,0;0.25;0.5;1;2;3;4;5,average decile-index displacement,fixed before results
+delta_unrestricted,5,average decile-index displacement,maximum possible cost with equal 0.1 margins
+zero_discrepancy_threshold,solve_minimum_delta_at_epsilon_0,,record infeasible if no solution
+frontier_endpoint_rule,epsilon_star_at_each_delta,,same endpoint metrics as v2 on minimum-discrepancy frontier
+endpoint_metrics,taxable_income_weighted_mean_MTR;income_tax_liability_weighted_mean_MTR;pseudo_filer_positive_tax_share;transported_nta_positive_liability_rate,,decile endpoints plus equal-decile overall MTR endpoints
+overall_weight_scheme,equal_decile,,0.1 per F rank decile
+public_diagnostics_role,interpretation_only_no_hard_crosswalk,,tables 7-141-1 and 7-171 do not identify NTA category mapping
+solver,scipy.optimize.linprog,,pinned dependency
+solver_method,highs-ds,,primary solver
+solver_crosscheck_method,highs-ipm,,frontier minima and zero-discrepancy threshold
+equality_residual_tolerance,1e-8,absolute,post-solve rejection threshold
+inequality_residual_tolerance,1e-8,absolute,post-solve rejection threshold
+v2_nesting_tolerance,1e-8,absolute,delta=0 must reproduce v2
+frontier_monotonicity_tolerance,1e-8,absolute,epsilon_star cannot increase materially with delta
+numpy_version,2.5.3,,pinned
+scipy_version,1.18.1,,pinned
+historical_v6_restricted_lp_reproduced,false,,must remain false
+p1c13_v1_modified,false,,must remain false
+p1c14_v2_modified,false,,must remain false
+paper1_claim_before_ci,false,,promotion prohibited before implementation CI success

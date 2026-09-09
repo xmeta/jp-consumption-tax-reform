@@ -237,7 +237,7 @@ def build():
                 "evidence_status":
                     "REPRODUCED_OFFICIAL_ADMINISTRATIVE_CROSSTAB",
                 "identification_warning":
-                    "NTA total net income is not F71561 equivalized household income; decile linkage still requires an explicit bridge assumption",
+                    "NTA total net income is not F71561 equivalized disposable income; decile linkage still requires an explicit bridge assumption",
             })
 
         prev_upper = upper
