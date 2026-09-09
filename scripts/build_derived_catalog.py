@@ -171,6 +171,22 @@ SPECS = [
         "Five Table 16 summaries including 35,556,416 year-end-adjusted taxpayers among 52,797,680 private salary earners after 乙欄 exclusion; not a strict final calculated-tax-positive subset and not additive to positive self-assessed returns",
     ),
     (
+        "NTA-2024-PRIVATE-SALARY-NOT-YEAR-END-ADJUSTED-BY-SALARY-CLASS",
+        "nta_private_salary_not_year_end_adjusted_by_salary_class_2024.csv",
+        "scripts/extract_nta_salary_return_overlap.py",
+        "NTA-MINKAN-2024-T19",
+        "DERIVED_REPRODUCED_OFFICIAL_PRIVATE_SALARY_NO_YEAR_END_ADJUSTMENT_DIAGNOSTIC",
+        "Table 19 full-year/less-than-year x taxpayer/nontaxpayer/all x 14 salary classes; persons, salary and tax split by 乙欄, previous-employer salary unknown and other reasons; no person-level final-return linkage",
+    ),
+    (
+        "NTA-2024-SALARY-RETURN-OVERLAP-AUDIT",
+        "nta_salary_return_overlap_audit_2024.csv",
+        "scripts/extract_nta_salary_return_overlap.py",
+        "NTA-MINKAN-2024-T16;NTA-MINKAN-2024-T19;NTA-2024-SALARY-FILING-REQUIREMENT;NTA-R06;NTA-2024-SHINKOKU-T1-XLSX;NTA-2024-SHINKOKU-T5-XLSX",
+        "DERIVED_REPRODUCED_OFFICIAL_CROSS_SYSTEM_OVERLAP_AUDIT",
+        "Payroll-side no-year-end-adjustment decomposition, >20m statutory filing candidate, all salary-primary return statuses and withholding exposure; exact cross-source person overlap remains NOT_IDENTIFIED and additive unions are prohibited",
+    ),
+    (
         "NTA-2024-ANNUAL-INCOME-CLASS-PRIMARY-TYPE-FILING-STATUS",
         "nta_income_class_primary_type_filing_status_2024.csv",
         "scripts/extract_nta_annual_income_class_filing_status.py",
