@@ -19,6 +19,7 @@ FISCAL = ROOT / "data/derived/vat_policy_fiscal_replacement_reference.csv"
 JGB_GDP = ROOT / "data/derived/vat_jgb_debt_gdp_reference.csv"
 HOUSEHOLD_EXP = ROOT / "data/derived/estat_2024_annual_income_decile_expenditure_diagnostic.csv"
 HOUSEHOLD_TAX = ROOT / "data/derived/vat_household_tax_content_envelope.csv"
+PASS_THROUGH = ROOT / "data/derived/vat_pass_through_evidence.csv"
 OUT = ROOT / "data/derived/vat_policy_scenario_matrix.csv"
 SUMMARY = ROOT / "data/derived/vat_policy_scenario_summary.csv"
 
@@ -58,6 +59,7 @@ def build():
     jgb_gdp = {r["scenario_id"]: r for r in read(JGB_GDP)}
     household_exp = read(HOUSEHOLD_EXP)
     household_tax = read(HOUSEHOLD_TAX)
+    pass_through = {r["evidence_id"]: r for r in read(PASS_THROUGH)}
     if not (set(fiscal) == EXPECTED_SCENARIOS):
         raise RuntimeError('scientific runtime invariant failed: research/vat_policy_integration/run_vat_policy_scenario_matrix.py:59')
     if not (set(jgb_gdp) == EXPECTED_SCENARIOS):
@@ -70,6 +72,19 @@ def build():
         raise RuntimeError('scientific runtime invariant failed: research/vat_policy_integration/run_vat_policy_scenario_matrix.py:63')
     if not (len(household_tax) == 80):
         raise RuntimeError('scientific runtime invariant failed: research/vat_policy_integration/run_vat_policy_scenario_matrix.py:64')
+    required_pass_through = {
+        "PT-2014-POS-HETEROGENEITY",
+        "PT-2019-BOJ-FULL-PASS-THROUGH-ASSUMPTION",
+        "QR-2019-BOJ-DEMAND-CHANNELS",
+        "QR-2014-CAO-FRONTLOAD-REBOUND",
+        "BASE-2019-MOF-RATE-SCOPE",
+    }
+    if set(pass_through) != required_pass_through:
+        raise RuntimeError("unexpected VAT pass-through evidence set")
+    if pass_through["PT-2019-BOJ-FULL-PASS-THROUGH-ASSUMPTION"]["identification_status"] != "MECHANICAL_ASSUMPTION_NOT_EMPIRICAL_ESTIMATE":
+        raise RuntimeError("BOJ full-pass-through assumption was promoted incorrectly")
+    if pass_through["PT-2014-POS-HETEROGENEITY"]["pass_through_point"]:
+        raise RuntimeError("historical heterogeneous POS evidence must not become a point parameter")
     tax_by_scenario = {}
     for r in household_tax:
         tax_by_scenario.setdefault(r["scenario_id"], []).append(r)
@@ -78,7 +93,10 @@ def build():
     if not (all((len(v) == 10 for v in tax_by_scenario.values()))):
         raise RuntimeError('scientific runtime invariant failed: research/vat_policy_integration/run_vat_policy_scenario_matrix.py:69')
     distribution_status = "ANNUAL_INCOME_DECILE_RATE_ONLY_TAX_CONTENT_ENVELOPE_AVAILABLE_OBJECTIVE_RANK_AND_ACTUAL_INCIDENCE_REQUIRED"
-    inflation_status = "RATE_ONLY_HOUSEHOLD_PRICE_RELIEF_ENVELOPE_AVAILABLE_CPI_PASS_THROUGH_AND_MACRO_LINK_REQUIRED"
+    inflation_status = "HISTORICAL_PASS_THROUGH_EVIDENCE_AVAILABLE_POLICY_PASS_THROUGH_AND_MACRO_LINK_NOT_IDENTIFIED"
+    historical_pass_through_status = "JAPAN_HISTORICAL_RATE_INCREASE_EVIDENCE_HETEROGENEOUS_POLICY_RATE_CUT_OR_ABOLITION_PARAMETER_NOT_IDENTIFIED"
+    vat_base_mix_status = "STANDARD_REDUCED_SCOPE_RULES_IDENTIFIED_DECILE_TAXABLE_SHARES_NOT_IDENTIFIED"
+    quantity_response_status = "HISTORICAL_INTERTEMPORAL_RESPONSE_EVIDENCE_AVAILABLE_STEADY_STATE_RATE_CUT_OR_ABOLITION_RESPONSE_NOT_IDENTIFIED"
 
     sens = read(SENS)
     if not (len(sens) == 1200):
@@ -170,6 +188,11 @@ def build():
                 "price_relief_share_current_spending_envelope": tax_d1["mechanical_price_relief_share_current_spending_envelope"],
                 "household_tax_content_envelope_status": tax_d1["tax_content_bound_status"],
                 "household_price_relief_envelope_status": tax_d1["price_relief_envelope_status"],
+                "historical_pass_through_evidence_status": historical_pass_through_status,
+                "policy_pass_through_parameter": "",
+                "policy_pass_through_parameter_status": "BASELINE_NO_POLICY_CHANGE" if scenario["scenario_id"] == "current_8_10" else "NOT_IDENTIFIED_FOR_RATE_CUT_OR_ABOLITION",
+                "vat_base_mix_status": vat_base_mix_status,
+                "quantity_response_status": "BASELINE_NO_POLICY_CHANGE" if scenario["scenario_id"] == "current_8_10" else quantity_response_status,
                 "income_gini_effect": "",
                 "income_gini_effect_status": distribution_status,
                 "wealth_gini_effect": "",
@@ -261,6 +284,11 @@ def build():
             "price_relief_share_current_spending_envelope": first["price_relief_share_current_spending_envelope"],
             "household_tax_content_envelope_status": first["household_tax_content_envelope_status"],
             "household_price_relief_envelope_status": first["household_price_relief_envelope_status"],
+            "historical_pass_through_evidence_status": first["historical_pass_through_evidence_status"],
+            "policy_pass_through_parameter": first["policy_pass_through_parameter"],
+            "policy_pass_through_parameter_status": first["policy_pass_through_parameter_status"],
+            "vat_base_mix_status": first["vat_base_mix_status"],
+            "quantity_response_status": first["quantity_response_status"],
             "income_gini_status": first["income_gini_effect_status"],
             "wealth_gini_status": first["wealth_gini_effect_status"],
             "intergenerational_gap_status": first["intergenerational_gap_effect_status"],

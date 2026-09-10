@@ -99,6 +99,26 @@ series; the two quantities are not equated.  The envelope is not an estimate of
 actual household VAT burden, CPI change, welfare, Gini, FGT2 or disposable-income
 effect.
 
+=== Historical pass-through and quantity evidence
+
++data/derived/vat_pass_through_evidence.csv+ keeps four distinct objects separate.
+Shiraishi's 2014 POS evidence finds heterogeneous retail pass-through, including
+under- and over-shifting.  The Bank of Japan's July 2019 full-pass-through input
+is retained as a *mechanical CPI assumption*, not relabeled as an empirical
+estimate.  The same BOJ outlook separates front-loading/subsequent decline from
+the real-income channel.  The Cabinet Office's ex-post 2014 estimate places the
+front-loading/rebound timing shift at 2.5--3.3 trillion yen (about 0.5--0.6% of
+real GDP), but this is intertemporal substitution around a tax increase, not a
+steady-state VAT-cut demand elasticity.  Ministry of Finance material fixes the
+10%/8% statutory scope, while decile-specific standard/reduced/exempt shares are
+still unidentified.
+
+Accordingly, the policy matrix exposes a blank +policy_pass_through_parameter+
+for every non-baseline scenario.  Historical rate-increase evidence is not
+extrapolated into a point estimate for a 5%, 0%, or institutional-abolition
+scenario.  Gini, FGT2 and real-disposable-income effects remain blank because the
+objective-rank bridge and household VAT-base/incidence mapping are still missing.
+
 The matrix also contains explicit fields for overall real GDP, annual real
 growth, growth-decline penalty, income Gini, wealth Gini, intergenerational gap,
 FGT2, real disposable income by decile, inflation, fiscal balance, debt/GDP and
@@ -120,6 +140,8 @@ statement.
   and full-JGB static financing-share reference.
 * +data/derived/estat_2024_annual_income_decile_expenditure_diagnostic.csv+:
   observed annual-income-decile household expenditure and composition diagnostic.
+* +data/derived/vat_pass_through_evidence.csv+: historical Japan pass-through,
+  mechanical-assumption, VAT-base-scope and intertemporal-quantity evidence.
 * +data/derived/vat_household_tax_content_envelope.csv+: eight scenarios x ten
   annual-income deciles of statutory-rate tax-content/price-relief envelopes.
 * +data/derived/vat_policy_scenario_matrix.csv+: 8 scenarios x 300
@@ -138,6 +160,8 @@ python research/vat_policy_integration/build_jgb_debt_gdp_reference.py
 python research/vat_policy_integration/test_jgb_debt_gdp_reference.py
 python scripts/build_estat_2024_annual_income_decile_expenditure_diagnostic.py
 python scripts/test_estat_2024_annual_income_decile_expenditure_diagnostic.py
+python scripts/build_vat_pass_through_evidence.py
+python scripts/test_vat_pass_through_evidence.py
 python scripts/build_vat_household_tax_content_envelope.py
 python scripts/test_vat_household_tax_content_envelope.py
 python research/vat_policy_integration/run_vat_policy_scenario_matrix.py

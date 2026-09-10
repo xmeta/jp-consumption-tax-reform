@@ -63,8 +63,17 @@ distribution_status = (
     "OBJECTIVE_RANK_AND_ACTUAL_INCIDENCE_REQUIRED"
 )
 inflation_status = (
-    "RATE_ONLY_HOUSEHOLD_PRICE_RELIEF_ENVELOPE_AVAILABLE_"
-    "CPI_PASS_THROUGH_AND_MACRO_LINK_REQUIRED"
+    "HISTORICAL_PASS_THROUGH_EVIDENCE_AVAILABLE_"
+    "POLICY_PASS_THROUGH_AND_MACRO_LINK_NOT_IDENTIFIED"
+)
+historical_pass_through_status = (
+    "JAPAN_HISTORICAL_RATE_INCREASE_EVIDENCE_HETEROGENEOUS_"
+    "POLICY_RATE_CUT_OR_ABOLITION_PARAMETER_NOT_IDENTIFIED"
+)
+vat_base_mix_status = "STANDARD_REDUCED_SCOPE_RULES_IDENTIFIED_DECILE_TAXABLE_SHARES_NOT_IDENTIFIED"
+quantity_response_status = (
+    "HISTORICAL_INTERTEMPORAL_RESPONSE_EVIDENCE_AVAILABLE_"
+    "STEADY_STATE_RATE_CUT_OR_ABOLITION_RESPONSE_NOT_IDENTIFIED"
 )
 assert all(
     r["household_expenditure_diagnostic_rank"] == "HOUSEHOLD_ANNUAL_INCOME_DECILE"
@@ -82,6 +91,13 @@ for col in (
 ):
     assert all(r[col] == distribution_status for r in rows), col
 assert all(r["inflation_effect_status"] == inflation_status for r in rows)
+assert all(r["historical_pass_through_evidence_status"] == historical_pass_through_status for r in rows)
+assert all(r["policy_pass_through_parameter"] == "" for r in rows)
+assert all(r["vat_base_mix_status"] == vat_base_mix_status for r in rows)
+assert all(r["policy_pass_through_parameter_status"] == "BASELINE_NO_POLICY_CHANGE" for r in rows if r["scenario_id"] == "current_8_10")
+assert all(r["policy_pass_through_parameter_status"] == "NOT_IDENTIFIED_FOR_RATE_CUT_OR_ABOLITION" for r in rows if r["scenario_id"] != "current_8_10")
+assert all(r["quantity_response_status"] == "BASELINE_NO_POLICY_CHANGE" for r in rows if r["scenario_id"] == "current_8_10")
+assert all(r["quantity_response_status"] == quantity_response_status for r in rows if r["scenario_id"] != "current_8_10")
 assert all(r["household_tax_content_envelope_status"] == "ACCOUNTING_UPPER_BOUND_FROM_10_PERCENT_STATUTORY_RATE_CAP" for r in rows)
 assert all(
     r["household_price_relief_envelope_status"]
@@ -151,6 +167,13 @@ assert all(
     for sid in expected
 )
 assert all(summary[sid]["inflation_status"] == inflation_status for sid in expected)
+assert all(summary[sid]["historical_pass_through_evidence_status"] == historical_pass_through_status for sid in expected)
+assert all(summary[sid]["policy_pass_through_parameter"] == "" for sid in expected)
+assert all(summary[sid]["vat_base_mix_status"] == vat_base_mix_status for sid in expected)
+assert summary["current_8_10"]["policy_pass_through_parameter_status"] == "BASELINE_NO_POLICY_CHANGE"
+assert all(summary[sid]["policy_pass_through_parameter_status"] == "NOT_IDENTIFIED_FOR_RATE_CUT_OR_ABOLITION" for sid in expected if sid != "current_8_10")
+assert summary["current_8_10"]["quantity_response_status"] == "BASELINE_NO_POLICY_CHANGE"
+assert all(summary[sid]["quantity_response_status"] == quantity_response_status for sid in expected if sid != "current_8_10")
 assert summary["current_8_10"]["annual_income_decile1_price_relief_upper_envelope_yen_month"] == "0"
 assert summary["current_8_10"]["annual_income_decile10_price_relief_upper_envelope_yen_month"] == "0"
 assert summary["reduced_5"]["annual_income_decile1_price_relief_upper_envelope_yen_month"] == "5885"
@@ -210,5 +233,5 @@ subprocess.run(
 print(
     "VAT policy scenario matrix tests: OK "
     "(8 requested scenarios; 2400 rows; joint GDP/growth/Gini/FGT2/fiscal/debt "
-    "reporting with static FY2024 VAT fiscal replacement reference, observed annual-income-decile expenditure plus statutory-rate tax-content/price-relief envelopes, and no unmodeled-channel imputation)"
+    "reporting with static FY2024 VAT fiscal replacement reference, observed annual-income-decile expenditure, statutory-rate tax-content envelopes, historical pass-through/quantity evidence, and no unmodeled-channel imputation)"
 )
