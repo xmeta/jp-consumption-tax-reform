@@ -142,7 +142,8 @@ jobs:
         run: |
           python scripts/validate_repo.py
           python scripts/check_manifest.py
-          git diff --exit-code
+          python scripts/test_check_clean_tree.py
+          python scripts/check_clean_tree.py
 
       - uses: ruby/setup-ruby@v1
         with:
