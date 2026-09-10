@@ -118,6 +118,52 @@ multiplied by an annual wage benchmark as though its period were identified.
 It also does not identify a Japan-wide VAT-only real-resource share of baseline
 output.
 
+=== Historical METI VAT-hours survey lineage
+
+The repository separately audits the FY2019, FY2020 and FY2021 METI survey
+instruments rather than assuming that a period label or scope from one year
+applies to another.  The three public sources provide complementary, but not
+joinable, pieces of the desired VAT-hours quantity.
+
+[cols="1,2,2,2",options="header"]
+|===
+|Survey |Period/scope evidence |Public VAT-hours numbers |Identification consequence
+
+|FY2019 corporate equipment survey, Q6-1
+|Explicitly requests answers for the target fiscal year ending between
+2018-04-01 and 2019-03-31.  VAT is recorded in three process columns.  The
+first process column explicitly includes accounting-purpose work.
+|No.  The public corporate-equipment results omit Q6-1 VAT-hour values, and
+the archived METI publication-list row 000249 has no data attachment.
+|Strong period-design evidence, but neither a public numeric calibration nor a
+pure measure of resources removable by VAT abolition.
+
+|FY2020 corporate survey, Q11-3
+|Collects VAT-specific internal hours arising after financial-statement
+preparation for Q11-1=No respondents.  Q11-3 itself does not state a period.
+RIETI 21-P-018 identifies the same 18,000-target/3,255-response survey and says
+the survey answers concern FY2019 corporate behavior.
+|No.  The METI corporate-results section does not publish Q11-3 values, and
+the archived publication-list row 000409 has no data attachment.  RIETI
+publishes all-tax compliance-cost aggregates, not VAT-specific Q11-3 values.
+|Conceptually closer to incremental tax compliance, but public microdata or
+VAT-specific numeric aggregates are missing.
+
+|FY2021 survey, Q8-3
+|The tax-item hours are not explicitly labelled annual; results-page selector
+metadata conflict with questionnaire routing and published counts.
+|Yes.  The n=1,514 rounded VAT-hours distribution supports the
+15.126155878468-hour conditional lower bound for the reported Q8-3 period.
+|Only the respondent-subset reported-period lower bound is partially
+identified.
+|===
+
+No public row jointly supplies (1) an explicit fiscal-year period, (2) numeric
+VAT-specific hour responses, and (3) unambiguous respondent selection.  In
+particular, the explicit FY2019 period in the older Q6 instrument is not a
+valid basis for annualizing the different FY2021 Q8-3 instrument.  The lineage
+audit is therefore a non-identification result, not an imputation rule.
+
 === BSWS wage-conversion bridge
 
 RIETI 21-P-018 states that tax-procedure labor time was valued using
@@ -323,7 +369,7 @@ Issue #26 remains open after this Phase-1 implementation.
 
 Before policy optimization, additional work is required to identify or bound:
 
-* an identified reporting period and population weights for VAT-specific hours;
+* a public numeric VAT-hours source with an identified reporting period and population weights, or access to the historical METI microdata needed to estimate it;
 * VAT-specific monetary resource costs by firm size and industry;
 * the exact RIETI BSWS hourly-wage construction, or a justified replacement;
 * the fraction of saved owner/worker time that becomes productive activity;
@@ -345,6 +391,8 @@ Gini, FGT2, fiscal and debt outcomes for Issue #26.
 python scripts/build_source_catalog.py
 python scripts/extract_meti_vat_internal_hours.py
 python scripts/test_meti_vat_internal_hours.py
+python scripts/build_meti_vat_hours_source_lineage.py
+python scripts/test_meti_vat_hours_source_lineage.py
 python scripts/build_bsws_2019_industry_hourly_wage_bridge.py
 python scripts/build_meti_vat_internal_labor_cost_bridge.py
 python scripts/test_bsws_vat_wage_bridge.py
@@ -358,6 +406,7 @@ Generated artifacts:
 
 * +data/derived/meti_2021_vat_internal_hours_distribution.csv+
 * +data/derived/meti_2021_vat_internal_hours_bounds.csv+
+* +data/derived/meti_vat_internal_hours_source_lineage.csv+
 * +data/derived/bsws_2019_industry_hourly_wage_bridge.csv+
 * +data/derived/meti_vat_internal_labor_cost_wage_sensitivity.csv+
 * +data/derived/vat_compliance_observed_evidence.csv+

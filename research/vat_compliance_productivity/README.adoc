@@ -12,6 +12,7 @@ Issue #26 Phase 1 separates VAT institutional abolition from a 0% statutory rate
 
 Observed Japan evidence is generated separately by
 +scripts/extract_meti_vat_internal_hours.py+,
++scripts/build_meti_vat_hours_source_lineage.py+,
 +scripts/build_bsws_2019_industry_hourly_wage_bridge.py+,
 +scripts/build_meti_vat_internal_labor_cost_bridge.py+, and
 +scripts/extract_vat_compliance_evidence.py+.
@@ -23,6 +24,19 @@ identification gives a 15.126155878468 hours/respondent lower bound for the repo
 the 100+ top code leaves the uncapped upper bound open.  Q8-3 does not explicitly
 label the tax-item hours as annual.  This is not a national firm mean and does
 not identify +c_VAT+.
+
+The 2019--2021 survey-lineage audit closes an important interpretation gap.
+The 2019 corporate Q6-1 questionnaire explicitly scopes VAT hours to a target
+fiscal year, but its public results do not publish the VAT-hour responses and
+one process column includes accounting-purpose work.  The 2020 corporate Q11-3
+questionnaire collects VAT-specific post-financial-statement hours, and RIETI
+21-P-018 says the underlying survey answers concern FY2019 corporate behavior,
+but the METI public report does not publish Q11-3 values and the official
+publication listing has no attached data file.  The 2021 survey is the opposite:
+it publishes an n=1,514 VAT-hours distribution but leaves the tax-item period
+non-explicit and has conflicting selector metadata.  No public year therefore
+jointly supplies an explicit fiscal period, numeric VAT hours, and unambiguous
+selection.  Historical designs must not be used to annualize the 2021 bound.
 
 The wage bridge adds 2019 MHLW Basic Survey on Wage Structure components for
 17 industry-total/major-industry rows. Two transparent hourly-wage formulas are

@@ -30,7 +30,7 @@
 |Private-salary payroll-tax-positive scale |EXTERNAL_PAYROLL_TAX_DIAGNOSTIC_NO_CROSS_SOURCE_UNION |民間給与実態統計Table 16を全56給与階級セルで再現。乙欄除外後の年末調整済み納税者35,556,416人/給与所得者52,797,680人（67.3447%）は給与側の規模診断。ただし確定申告後のfinal calculated-tax-positive厳密下限とはせず、申告納税額あり5,158,260人との重複不明のため加算しない
 |Recovered score_power thresholds |DOCUMENTED_PRIOR_RUN_NOT_REPRODUCED |回復用メタデータのみ。主結果へ使わない
 |NTA Table 3-1 composition point check |CROSS_PUBLICATION_POINT_CHECK_REPRODUCED |5区分の千人丸め値を表示5区分合計5,174千人で再正規化し、年報の正確人員構成との差最大0.08444ppを再現。独立holdout・CIとは扱わない
-|VAT abolition compliance-productivity channel |MODEL_CONTINGENT_COMPLIANCE_PRODUCTIVITY_SENSITIVITY |0%税率とVAT制度完全廃止を制度状態として分離し、4制度×300 stress pointsを再現。METI n=1,514のVAT固有社内税務時間は回答subset・Q8-3報告期間内で平均15.126155878468時間/回答法人の下限まで部分識別。2019賃金構造基本統計の17産業×2透明時給算式を接続し、産業計では機械的に約2.91万〜2.96万円/回答法人/Q8-3報告期間へ円換算できる。ただしQ8-3に「年間」の明記がなく、RIETI exact時給算式・subset産業構成・sample選択・時点整合・VAT固有外注費も未解決のため全国c_VATは未識別。0.6%最大値は引き続きstress grid端点であり実証上限ではない
+|VAT abolition compliance-productivity channel |MODEL_CONTINGENT_COMPLIANCE_PRODUCTIVITY_SENSITIVITY |0%税率とVAT制度完全廃止を制度状態として分離し、4制度×300 stress pointsを再現。METI 2019--2021 survey-lineageを監査し、2019は明示的対象事業年度＋VATプロセス別時間を収集する一方で数値非公開、2020は財務諸表作成後のVAT時間を収集しRIETIがFY2019企業行動と位置付ける一方で数値・添付データ非公開、2021はn=1,514の数値分布を公開する一方で税目別時間の期間非明示＋selector矛盾、と確定。よって別年設計から2021の15.126155878468時間下限を年率化しない。2019賃金構造基本統計による約2.91万〜2.96万円/回答法人/Q8-3報告期間の円換算も機械的感度に限定し、全国c_VATは未識別。0.6%最大値はstress grid端点であり実証上限ではない
 |===
 
 == Non-claims
