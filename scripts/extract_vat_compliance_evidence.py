@@ -7,6 +7,7 @@ from pypdf import PdfReader
 from extract_meti_vat_internal_hours import build as build_meti_hours
 from build_bsws_2019_industry_hourly_wage_bridge import build as build_bsws_wages
 from build_meti_vat_hours_source_lineage import build as build_meti_lineage
+from build_vat_transition_system_subsidy_bounds import build as build_transition_subsidy_bounds
 
 ROOT = Path(__file__).resolve().parents[1]
 CATALOG = ROOT / "data/source_catalog.csv"
@@ -50,6 +51,8 @@ def build():
       "METI-2020-SME-TAX-REPORT-ARCHIVED",
       "METI-2020-REPORT-LISTING-20211202-ARCHIVED",
       "METI-2021-SME-TAX-SURVEY",
+      "METI-2021-REPORT-LISTING-20220718-ARCHIVED",
+      "SMRJ-FY2019-LIGHT-RATE-SUBSIDY-PERFORMANCE",
       "ESTAT-BSWS-2019-INDUSTRY-WAGE-T1",
       "ESTAT-BSWS-2019-INDUSTRY-WAGE-DB-SNAPSHOT",
       "JCCI-2024-INVOICE-BACKOFFICE-SURVEY",
@@ -112,6 +115,7 @@ def build():
     w_sched=Decimal(wage_total["scheduled_hour_rate_yen"])
     w_eff=Decimal(wage_total["regular_cash_effective_hour_rate_yen"])
     lineage={r["survey_year"]:r for r in build_meti_lineage()}
+    transition={r["scope_id"]:r for r in build_transition_subsidy_bounds()}
 
     rows=[]
     rows += [
@@ -155,6 +159,45 @@ def build():
         "RIETI-2021-QUANT-TAX-COMPLIANCE-COST","PDF p.4 / printed p.2",
         "OBSERVED_STUDY_METHOD","SCOPE_LINKAGE_ONLY_NOT_PUBLIC_VAT_MICRODATA",
         "RIETI identifies the 18,000-target/3,255-response SME survey and states that both surveys concern FY2019 corporate behavior; its published estimates pool multiple tax types rather than releasing VAT-specific Q11-3 values."),
+      evidence("meti2021_public_microdata_attachment_listed","0","boolean",
+        "OFFICIAL_PUBLICATION_LIST_AUDIT","METI commissioned-report row 000139","",
+        "METI-2021-REPORT-LISTING-20220718-ARCHIVED","PDF p.3 row 000139",
+        "NO_LISTED_PUBLIC_DATA_ATTACHMENT","NO_PUBLIC_MICRODATA_CALIBRATION",
+        "Archived official METI listing gives the 000139 report URL but no HP data-address attachment; the 2021 VAT-hour microdata therefore cannot be treated as publicly available from this publication channel."),
+    ]
+    fy19=transition["fy2019"]
+    cum=transition["cumulative_through_fy2019"]
+    rows += [
+      evidence("smrj_fy2019_light_rate_subsidy_grant_count",fy19["grant_count"],"grant_records",
+        "OFFICIAL_PROGRAM_PERFORMANCE","FY2019 reduced-rate transition subsidy grants",fy19["grant_count"],
+        "SMRJ-FY2019-LIGHT-RATE-SUBSIDY-PERFORMANCE","PDF pp.31-32",
+        "OBSERVED_SELECTED_PROGRAM_GRANT_RECORDS","TRANSITION_COST_CONTEXT_ONLY",
+        "FY2019 grants supporting part of eligible expenses for multi-rate registers, ordering-system modifications, invoice-management-system modifications, and related implementation."),
+      evidence("smrj_fy2019_light_rate_subsidy_amount_yen",fy19["subsidy_amount_yen"],"yen",
+        "OFFICIAL_PROGRAM_PERFORMANCE","FY2019 reduced-rate transition subsidy grant records",fy19["grant_count"],
+        "SMRJ-FY2019-LIGHT-RATE-SUBSIDY-PERFORMANCE","PDF pp.31-32",
+        "OBSERVED_SUBSIDY_FLOW","LOWER_BOUND_ON_SELECTED_TRANSITION_EXPENDITURE_ONLY",
+        "Because SMRJ states that the subsidy covers part of eligible expenses, aggregate eligible transition expenditure among these grant records is at least this subsidy amount; it is not total cost or an annual recurring cost."),
+      evidence("smrj_fy2019_light_rate_subsidy_lower_bound_per_grant_record",fy19["eligible_transition_expenditure_lower_bound_yen_per_grant_record"],"yen_per_grant_record",
+        "DERIVED_ACCOUNTING_LOWER_BOUND","FY2019 reduced-rate transition subsidy grant records",fy19["grant_count"],
+        "SMRJ-FY2019-LIGHT-RATE-SUBSIDY-PERFORMANCE","PDF pp.31-32; subsidy amount / grant count",
+        "SELECTED_GRANT_RECORD_TRANSITION_EXPENDITURE_LOWER_BOUND","DO_NOT_GENERALIZE_TO_FIRMS_OR_PERSISTENT_C_VAT",
+        "Average eligible expenditure per grant record must be at least average subsidy paid. Grant records are selected program participants and need not map one-to-one to unique firms."),
+      evidence("smrj_cumulative_light_rate_subsidy_grant_count",cum["grant_count"],"grant_records",
+        "OFFICIAL_PROGRAM_PERFORMANCE","cumulative reduced-rate transition subsidy grants through FY2019",cum["grant_count"],
+        "SMRJ-FY2019-LIGHT-RATE-SUBSIDY-PERFORMANCE","PDF pp.31-32",
+        "OBSERVED_SELECTED_PROGRAM_GRANT_RECORDS","TRANSITION_COST_CONTEXT_ONLY",
+        "Cumulative grants through FY2019 for the reduced-rate transition support program."),
+      evidence("smrj_cumulative_light_rate_subsidy_amount_yen",cum["subsidy_amount_yen"],"yen",
+        "OFFICIAL_PROGRAM_PERFORMANCE","cumulative reduced-rate transition subsidy grant records through FY2019",cum["grant_count"],
+        "SMRJ-FY2019-LIGHT-RATE-SUBSIDY-PERFORMANCE","PDF pp.31-32",
+        "OBSERVED_SUBSIDY_FLOW","LOWER_BOUND_ON_SELECTED_TRANSITION_EXPENDITURE_ONLY",
+        "Cumulative subsidy flow through FY2019. Since the program subsidizes part of eligible expenses, selected-recipient eligible transition expenditure is at least this amount."),
+      evidence("smrj_cumulative_light_rate_subsidy_lower_bound_per_grant_record",cum["eligible_transition_expenditure_lower_bound_yen_per_grant_record"],"yen_per_grant_record",
+        "DERIVED_ACCOUNTING_LOWER_BOUND","cumulative reduced-rate transition subsidy grant records through FY2019",cum["grant_count"],
+        "SMRJ-FY2019-LIGHT-RATE-SUBSIDY-PERFORMANCE","PDF pp.31-32; cumulative subsidy amount / cumulative grant count",
+        "SELECTED_GRANT_RECORD_TRANSITION_EXPENDITURE_LOWER_BOUND","DO_NOT_GENERALIZE_TO_FIRMS_OR_PERSISTENT_C_VAT",
+        "Cumulative average eligible transition expenditure per grant record is bounded below by cumulative average subsidy; this is not a population mean or recurring VAT cost."),
     ]
     # METI directly measures VAT-specific internal tax-procedure hours for a
     # respondent subset.  It does not identify a national c_VAT.
@@ -344,7 +387,9 @@ def build():
       {"quantity":"vat_specific_internal_hours_respondent_subset","status":"PARTIALLY_IDENTIFIED_CONDITIONAL_ON_RESPONDENT_SUBSET","point_identified":"LOWER_BOUND_ONLY_TOP_CODED","model_use":"HOURS_EVIDENCE_NOT_NATIONAL_C_VAT","note":"METI n=1,514 directly measures VAT-specific internal hours for the reported Q8-3 response period. Published one-decimal shares plus integer counts imply a 15.126155878468 h/respondent lower bound; Q8-3 does not explicitly label tax-item hours as annual, 100+ top coding leaves the uncapped upper bound open, and results-page selector conflicts with the questionnaire and counts. Historical 2019/2020 survey designs do not license annualizing this 2021 bound."},
       {"quantity":"rieti_exact_bsws_hourly_wage_formula","status":"NOT_IDENTIFIED_FROM_PAPER","point_identified":"NO","model_use":"TRANSPARENT_ALTERNATIVE_FORMULAS_ONLY","note":"RIETI 21-P-018 identifies the MHLW Basic Survey on Wage Structure as the industry-hourly-wage source but does not identify the exact table/formula. The repository therefore carries two transparent official-component ratios rather than claiming exact replication."},
       {"quantity":"vat_specific_internal_labor_cost_respondent_reported_period","status":"MECHANICAL_WAGE_CONVERSION_ONLY","point_identified":"NO_ANNUAL_OR_POPULATION_POINT","model_use":"SENSITIVITY_ONLY_NOT_C_VAT","note":"The METI conditional hours lower bound can be multiplied by official BSWS wage candidates, giving about 29.1-29.6k yen/respondent at the industry-total candidates for the reported Q8-3 period. The period is not explicitly annual and respondent industry composition, selection, temporal alignment, and VAT-specific outsourcing remain unresolved."},
-      {"quantity":"vat_specific_real_resource_cost_share_of_output","status":"NOT_IDENTIFIED","point_identified":"NO","model_use":"STRESS_TEST_PARAMETER_ONLY","note":"METI partially identifies 2021 VAT-specific internal hours and the repository supplies transparent wage-conversion candidates. Historical 2019/2020 questionnaires confirm that VAT hours were collected, but their public reports do not release the needed VAT-hour values/data attachments and cannot fill the 2021 period/selection gap. National reweighting, respondent industry mix, temporal alignment, and VAT-specific external expenditure also remain unavailable. Therefore Japan-wide c_VAT is not identified."},
+      {"quantity":"vat_transition_system_implementation_cost_selected_grant_records","status":"PARTIALLY_BOUNDED_FROM_BELOW_BY_SUBSIDY_FLOW","point_identified":"LOWER_BOUND_ONLY_SELECTED_GRANT_RECORDS","model_use":"TRANSITION_COST_ONLY_NOT_PERSISTENT_C_VAT","note":"SMRJ FY2019 program performance reports 94,875 grants / 22.9146 billion yen in FY2019 and cumulative 174,781 grants / 44.6599 billion yen through FY2019 for part of expenses including multi-rate registers and ordering/invoice-management system modifications. Eligible transition expenditure among grant records is therefore at least the subsidy flow, but participants are selected, grant records are not proven unique firms, and this does not identify recurring VAT cost."},
+      {"quantity":"vat_specific_persistent_external_software_adviser_cost","status":"NOT_IDENTIFIED","point_identified":"NO","model_use":"REQUIRES_RECURRING_VAT_SPECIFIC_MONETARY_EVIDENCE","note":"METI external outsourcing values are all-tax rather than VAT-specific. JCCI identifies invoice-related incidence of system modification, adviser-fee and staffing cost increases but does not publish monetary magnitudes. SMRJ subsidy evidence identifies transition implementation support, not persistent annual software/adviser cost."},
+      {"quantity":"vat_specific_real_resource_cost_share_of_output","status":"NOT_IDENTIFIED","point_identified":"NO","model_use":"STRESS_TEST_PARAMETER_ONLY","note":"METI partially identifies 2021 VAT-specific internal hours and the repository supplies transparent wage-conversion candidates. Historical 2019/2020 questionnaires confirm that VAT hours were collected, but their public reports do not release the needed VAT-hour values/data attachments and cannot fill the 2021 period/selection gap; the 2021 official listing also has no data attachment. SMRJ subsidy flows establish nonzero selected transition implementation expenditure but not persistent annual VAT resource cost. National reweighting, respondent industry mix, temporal alignment, and VAT-specific recurring external expenditure remain unavailable. Therefore Japan-wide c_VAT is not identified."},
       {"quantity":"productive_redeployment_fraction_rho","status":"NOT_IDENTIFIED","point_identified":"NO","model_use":"STRESS_TEST_PARAMETER_ONLY","note":"Saved compliance resources need not convert one-for-one into measured output."},
       {"quantity":"allocative_efficiency_dividend","status":"NOT_IDENTIFIED","point_identified":"NO","model_use":"STRESS_TEST_PARAMETER_ONLY","note":"Bunching evidence motivates a separate allocation channel but does not identify a macro output percentage."},
       {"quantity":"zero_rate_equals_full_abolition","status":"FALSE_BY_POLICY_DEFINITION","point_identified":"NOT_APPLICABLE","model_use":"PROHIBITED_EQUIVALENCE","note":"Policy state must separately encode VAT administrative/invoice obligations."},

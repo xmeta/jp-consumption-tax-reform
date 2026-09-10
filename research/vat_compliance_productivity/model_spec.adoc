@@ -162,7 +162,66 @@ No public row jointly supplies (1) an explicit fiscal-year period, (2) numeric
 VAT-specific hour responses, and (3) unambiguous respondent selection.  In
 particular, the explicit FY2019 period in the older Q6 instrument is not a
 valid basis for annualizing the different FY2021 Q8-3 instrument.  The lineage
-audit is therefore a non-identification result, not an imputation rule.
+audit is therefore a non-identification result, not an imputation rule.  The
+archived FY2021 METI publication-list row 000139 also has no data attachment,
+closing the prior public-microdata audit gap for all three survey years.
+
+=== Transition implementation cost versus persistent compliance cost
+
+A VAT-system reform can incur *transition implementation costs* that are
+conceptually distinct from the *persistent annual compliance resources* that a
+full institutional abolition might release.  These quantities must not be
+netted or added without an explicit time path.
+
+SMRJ's FY2019 business-performance report gives observed program flows for the
+consumption-tax reduced-rate support program.  It states that the program
+subsidized part of eligible expenses for multi-rate registers, ordering-system
+modifications, invoice-management-system modifications, and related
+implementation.  The published counts and amounts are:
+
+[cols="1,1,1,1",options="header"]
+|===
+|Scope |Grant records |Subsidy amount |Subsidy / grant record
+
+|FY2019
+|94,875
+|22,914,612,620 yen
+|241,524.243689 yen
+
+|Cumulative through FY2019
+|174,781
+|44,659,886,587 yen
+|255,519.115848 yen
+|===
+
+Because the official source says that the subsidy covers *part* of eligible
+expenses, a purely accounting lower bound follows for the selected grant
+records:
+
+[stem]
+++++
+C^{transition,eligible}_{G} \ge S_G,
+\qquad
+\bar C^{transition,eligible}_{G} \ge \frac{S_G}{N_G},
+++++
+
+where stem:[S_G] is the observed subsidy flow and stem:[N_G] is the number of
+grant records.  Cumulatively through FY2019, eligible transition expenditure
+within these grant records is therefore at least 44.659886587 billion yen, or
+255,519.115848 yen per grant record on average.
+
+This is deliberately *not* interpreted as total private expenditure, a unique-
+firm average, a population-representative cost, or a recurring annual VAT cost.
+The subsidy program is selected, grant records are not proven one-to-one with
+unique firms, and the source does not identify how long any software/adviser
+expense persists.  It therefore supplies transition-cost context only and is
+not a calibration of stem:[c_{VAT}].
+
+Recurring VAT-specific external software/adviser expenditure remains
++NOT_IDENTIFIED+.  METI publishes annual external tax-procedure outsourcing only
+for all taxes combined, while JCCI identifies invoice-related incidence of
+system-modification, adviser-fee and staffing cost increases but not their yen
+magnitudes.
 
 === BSWS wage-conversion bridge
 
@@ -373,7 +432,7 @@ Before policy optimization, additional work is required to identify or bound:
 * VAT-specific monetary resource costs by firm size and industry;
 * the exact RIETI BSWS hourly-wage construction, or a justified replacement;
 * the fraction of saved owner/worker time that becomes productive activity;
-* persistent versus transitional software/adviser costs;
+* recurring VAT-specific software/adviser costs and their duration; transition implementation cost is now partially bounded only for selected subsidy grant records;
 * allocative effects from exemption-threshold and invoice-network distortions;
 * household incidence by income/wealth/age group;
 * demand and pass-through effects;
@@ -393,6 +452,8 @@ python scripts/extract_meti_vat_internal_hours.py
 python scripts/test_meti_vat_internal_hours.py
 python scripts/build_meti_vat_hours_source_lineage.py
 python scripts/test_meti_vat_hours_source_lineage.py
+python scripts/build_vat_transition_system_subsidy_bounds.py
+python scripts/test_vat_transition_system_subsidy_bounds.py
 python scripts/build_bsws_2019_industry_hourly_wage_bridge.py
 python scripts/build_meti_vat_internal_labor_cost_bridge.py
 python scripts/test_bsws_vat_wage_bridge.py
@@ -407,6 +468,7 @@ Generated artifacts:
 * +data/derived/meti_2021_vat_internal_hours_distribution.csv+
 * +data/derived/meti_2021_vat_internal_hours_bounds.csv+
 * +data/derived/meti_vat_internal_hours_source_lineage.csv+
+* +data/derived/vat_transition_system_subsidy_bounds.csv+
 * +data/derived/bsws_2019_industry_hourly_wage_bridge.csv+
 * +data/derived/meti_vat_internal_labor_cost_wage_sensitivity.csv+
 * +data/derived/vat_compliance_observed_evidence.csv+
