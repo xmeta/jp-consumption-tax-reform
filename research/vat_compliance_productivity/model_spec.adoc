@@ -223,6 +223,66 @@ for all taxes combined, while JCCI identifies invoice-related incidence of
 system-modification, adviser-fee and staffing cost increases but not their yen
 magnitudes.
 
+=== Historical threshold bunching and structural compliance-cost evidence
+
+RIETI Discussion Paper 21-E-090 supplies a separate line of evidence on the
+*behavioral distortion around the VAT exemption threshold*.  The study uses a
+panel of Japanese Census of Manufacture establishments and historical VAT
+reforms.  Its bunching procedure estimates an upper-bound sales response for
+the marginal buncher via the convergence method.  For the three 30-million-yen
+threshold periods used in the structural estimation, the published inputs are:
+
+[cols="1,1,1,1",options="header"]
+|===
+|Sample period |Excess bunching |Upper sales response (million yen) |stem:[\Delta y^*/y^*]
+
+|1989--1991 |1.397 |16.498 |55.0%
+|1992--1994 |1.243 |16.277 |54.3%
+|1997--1999 |1.212 |16.261 |54.2%
+|===
+
+These numbers demonstrate a large *local historical* response among marginal
+bunchers.  They are not an aggregate output loss: the public paper does not
+supply the absolute affected-firm mass and population reweighting needed to
+convert the local response into a national GDP percentage.
+
+The same paper assumes value added stem:[v=(1-\alpha)y] and parameterizes
+compliance cost as
+
+[stem]
+++++
+\Theta(y;\alpha)=\theta(1-\alpha)y.
+++++
+
+With stem:[\alpha=0.65], Table 5 reports:
+
+[cols="1,1,1,1",options="header"]
+|===
+|Group |Reform comparison |Tax elasticity stem:[e] |Compliance-cost stem:[\theta]
+
+|All |1992 |0.028 |0.130
+|All |1997 |0.073 |0.140
+|Firms |1992 |0.391 |0.091
+|Firms |1997 |0.263 |0.111
+|Sole proprietors |1992 |0.054 |0.116
+|Sole proprietors |1997 |0.047 |0.130
+|===
+
+For example, the paper itself illustrates that stem:[\theta=0.13] at 30 million
+yen of sales and stem:[\alpha=0.65] implies 1.365 million yen under its model.
+This is not an observed expenditure item.  The paper defines compliance costs
+more broadly than real resource expenditure, including monetary, time,
+operational, and psychological burdens.  It also states two model limitations
+that are material for policy transfer: no VAT pass-through is allowed, and the
+simplified tax system near the threshold is omitted.
+
+Accordingly, this repository assigns the structural estimates the status
++MODEL_CONTINGENT_LOCAL_STRUCTURAL_COMPLIANCE_COST_PARAMETER+.  They support
+the existence and potential economic importance of a threshold-allocation
+channel, but they are not mapped one-for-one to either stem:[c_{VAT}] or
+stem:[a_{alloc}].  The current 10-million-yen, invoice-era aggregate allocation
+effect remains +NOT_IDENTIFIED_FROM_HISTORICAL_STRUCTURAL_ESTIMATES+.
+
 === BSWS wage-conversion bridge
 
 RIETI 21-P-018 states that tax-procedure labor time was valued using
@@ -433,7 +493,8 @@ Before policy optimization, additional work is required to identify or bound:
 * the exact RIETI BSWS hourly-wage construction, or a justified replacement;
 * the fraction of saved owner/worker time that becomes productive activity;
 * recurring VAT-specific software/adviser costs and their duration; transition implementation cost is now partially bounded only for selected subsidy grant records;
-* allocative effects from exemption-threshold and invoice-network distortions;
+* population/current-regime mapping from historical local threshold responses to any macro +a_alloc+ bound;
+* allocative effects from current exemption-threshold and invoice-network distortions;
 * household incidence by income/wealth/age group;
 * demand and pass-through effects;
 * revenue and financing effects under JGB, income-tax, asset-tax and mixed
@@ -454,6 +515,8 @@ python scripts/build_meti_vat_hours_source_lineage.py
 python scripts/test_meti_vat_hours_source_lineage.py
 python scripts/build_vat_transition_system_subsidy_bounds.py
 python scripts/test_vat_transition_system_subsidy_bounds.py
+python scripts/build_rieti_vat_threshold_structural_bridge.py
+python scripts/test_rieti_vat_threshold_structural_bridge.py
 python scripts/build_bsws_2019_industry_hourly_wage_bridge.py
 python scripts/build_meti_vat_internal_labor_cost_bridge.py
 python scripts/test_bsws_vat_wage_bridge.py
@@ -469,6 +532,8 @@ Generated artifacts:
 * +data/derived/meti_2021_vat_internal_hours_bounds.csv+
 * +data/derived/meti_vat_internal_hours_source_lineage.csv+
 * +data/derived/vat_transition_system_subsidy_bounds.csv+
+* +data/derived/rieti_vat_threshold_bunching_response.csv+
+* +data/derived/rieti_vat_threshold_structural_estimates.csv+
 * +data/derived/bsws_2019_industry_hourly_wage_bridge.csv+
 * +data/derived/meti_vat_internal_labor_cost_wage_sensitivity.csv+
 * +data/derived/vat_compliance_observed_evidence.csv+
