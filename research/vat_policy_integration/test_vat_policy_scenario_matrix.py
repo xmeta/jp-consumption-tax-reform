@@ -70,7 +70,7 @@ historical_pass_through_status = (
     "JAPAN_HISTORICAL_RATE_INCREASE_EVIDENCE_HETEROGENEOUS_"
     "POLICY_RATE_CUT_OR_ABOLITION_PARAMETER_NOT_IDENTIFIED"
 )
-vat_base_mix_status = "STANDARD_REDUCED_SCOPE_RULES_IDENTIFIED_DECILE_TAXABLE_SHARES_NOT_IDENTIFIED"
+vat_base_mix_status = "ANNUAL_INCOME_DECILE_SURVEY_RATE_SCOPE_PROXY_AVAILABLE_TRANSACTION_LEVEL_VAT_BASE_NOT_IDENTIFIED"
 quantity_response_status = (
     "HISTORICAL_INTERTEMPORAL_RESPONSE_EVIDENCE_AVAILABLE_"
     "STEADY_STATE_RATE_CUT_OR_ABOLITION_RESPONSE_NOT_IDENTIFIED"
@@ -94,6 +94,10 @@ assert all(r["inflation_effect_status"] == inflation_status for r in rows)
 assert all(r["historical_pass_through_evidence_status"] == historical_pass_through_status for r in rows)
 assert all(r["policy_pass_through_parameter"] == "" for r in rows)
 assert all(r["vat_base_mix_status"] == vat_base_mix_status for r in rows)
+assert all(r["annual_income_decile1_reduced_rate_scope_proxy_core_yen_month"] == "33195" for r in rows)
+assert all(r["annual_income_decile10_reduced_rate_scope_proxy_core_yen_month"] == "80594" for r in rows)
+assert all(r["annual_income_decile1_reduced_rate_scope_proxy_with_all_newspaper_yen_month"] == "34616" for r in rows)
+assert all(r["annual_income_decile10_reduced_rate_scope_proxy_with_all_newspaper_yen_month"] == "82537" for r in rows)
 assert all(r["policy_pass_through_parameter_status"] == "BASELINE_NO_POLICY_CHANGE" for r in rows if r["scenario_id"] == "current_8_10")
 assert all(r["policy_pass_through_parameter_status"] == "NOT_IDENTIFIED_FOR_RATE_CUT_OR_ABOLITION" for r in rows if r["scenario_id"] != "current_8_10")
 assert all(r["quantity_response_status"] == "BASELINE_NO_POLICY_CHANGE" for r in rows if r["scenario_id"] == "current_8_10")
@@ -170,6 +174,10 @@ assert all(summary[sid]["inflation_status"] == inflation_status for sid in expec
 assert all(summary[sid]["historical_pass_through_evidence_status"] == historical_pass_through_status for sid in expected)
 assert all(summary[sid]["policy_pass_through_parameter"] == "" for sid in expected)
 assert all(summary[sid]["vat_base_mix_status"] == vat_base_mix_status for sid in expected)
+assert all(summary[sid]["annual_income_decile1_reduced_rate_scope_proxy_core_yen_month"] == "33195" for sid in expected)
+assert all(summary[sid]["annual_income_decile10_reduced_rate_scope_proxy_core_yen_month"] == "80594" for sid in expected)
+assert all(summary[sid]["annual_income_decile1_reduced_rate_scope_proxy_with_all_newspaper_yen_month"] == "34616" for sid in expected)
+assert all(summary[sid]["annual_income_decile10_reduced_rate_scope_proxy_with_all_newspaper_yen_month"] == "82537" for sid in expected)
 assert summary["current_8_10"]["policy_pass_through_parameter_status"] == "BASELINE_NO_POLICY_CHANGE"
 assert all(summary[sid]["policy_pass_through_parameter_status"] == "NOT_IDENTIFIED_FOR_RATE_CUT_OR_ABOLITION" for sid in expected if sid != "current_8_10")
 assert summary["current_8_10"]["quantity_response_status"] == "BASELINE_NO_POLICY_CHANGE"

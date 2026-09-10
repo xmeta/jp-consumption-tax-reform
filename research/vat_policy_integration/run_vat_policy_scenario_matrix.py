@@ -19,6 +19,7 @@ FISCAL = ROOT / "data/derived/vat_policy_fiscal_replacement_reference.csv"
 JGB_GDP = ROOT / "data/derived/vat_jgb_debt_gdp_reference.csv"
 HOUSEHOLD_EXP = ROOT / "data/derived/estat_2024_annual_income_decile_expenditure_diagnostic.csv"
 HOUSEHOLD_TAX = ROOT / "data/derived/vat_household_tax_content_envelope.csv"
+RATE_SCOPE = ROOT / "data/derived/estat_2024_annual_income_decile_vat_rate_scope_diagnostic.csv"
 PASS_THROUGH = ROOT / "data/derived/vat_pass_through_evidence.csv"
 OUT = ROOT / "data/derived/vat_policy_scenario_matrix.csv"
 SUMMARY = ROOT / "data/derived/vat_policy_scenario_summary.csv"
@@ -59,6 +60,7 @@ def build():
     jgb_gdp = {r["scenario_id"]: r for r in read(JGB_GDP)}
     household_exp = read(HOUSEHOLD_EXP)
     household_tax = read(HOUSEHOLD_TAX)
+    rate_scope = read(RATE_SCOPE)
     pass_through = {r["evidence_id"]: r for r in read(PASS_THROUGH)}
     if not (set(fiscal) == EXPECTED_SCENARIOS):
         raise RuntimeError('scientific runtime invariant failed: research/vat_policy_integration/run_vat_policy_scenario_matrix.py:59')
@@ -72,6 +74,10 @@ def build():
         raise RuntimeError('scientific runtime invariant failed: research/vat_policy_integration/run_vat_policy_scenario_matrix.py:63')
     if not (len(household_tax) == 80):
         raise RuntimeError('scientific runtime invariant failed: research/vat_policy_integration/run_vat_policy_scenario_matrix.py:64')
+    if len(rate_scope) != 10 or {int(r["annual_income_decile"]) for r in rate_scope} != set(range(1, 11)):
+        raise RuntimeError("unexpected VAT rate-scope diagnostic")
+    if not all(r["actual_vat_base_status"].startswith("NOT_IDENTIFIED_") for r in rate_scope):
+        raise RuntimeError("rate-scope proxy was promoted to an identified VAT base")
     required_pass_through = {
         "PT-2014-POS-HETEROGENEITY",
         "PT-2019-BOJ-FULL-PASS-THROUGH-ASSUMPTION",
@@ -85,6 +91,7 @@ def build():
         raise RuntimeError("BOJ full-pass-through assumption was promoted incorrectly")
     if pass_through["PT-2014-POS-HETEROGENEITY"]["pass_through_point"]:
         raise RuntimeError("historical heterogeneous POS evidence must not become a point parameter")
+    scope_by_decile = {int(r["annual_income_decile"]): r for r in rate_scope}
     tax_by_scenario = {}
     for r in household_tax:
         tax_by_scenario.setdefault(r["scenario_id"], []).append(r)
@@ -95,7 +102,7 @@ def build():
     distribution_status = "ANNUAL_INCOME_DECILE_RATE_ONLY_TAX_CONTENT_ENVELOPE_AVAILABLE_OBJECTIVE_RANK_AND_ACTUAL_INCIDENCE_REQUIRED"
     inflation_status = "HISTORICAL_PASS_THROUGH_EVIDENCE_AVAILABLE_POLICY_PASS_THROUGH_AND_MACRO_LINK_NOT_IDENTIFIED"
     historical_pass_through_status = "JAPAN_HISTORICAL_RATE_INCREASE_EVIDENCE_HETEROGENEOUS_POLICY_RATE_CUT_OR_ABOLITION_PARAMETER_NOT_IDENTIFIED"
-    vat_base_mix_status = "STANDARD_REDUCED_SCOPE_RULES_IDENTIFIED_DECILE_TAXABLE_SHARES_NOT_IDENTIFIED"
+    vat_base_mix_status = "ANNUAL_INCOME_DECILE_SURVEY_RATE_SCOPE_PROXY_AVAILABLE_TRANSACTION_LEVEL_VAT_BASE_NOT_IDENTIFIED"
     quantity_response_status = "HISTORICAL_INTERTEMPORAL_RESPONSE_EVIDENCE_AVAILABLE_STEADY_STATE_RATE_CUT_OR_ABOLITION_RESPONSE_NOT_IDENTIFIED"
 
     sens = read(SENS)
@@ -125,6 +132,8 @@ def build():
         tax_rows = sorted(tax_by_scenario[scenario["scenario_id"]], key=lambda r: int(r["annual_income_decile"]))
         tax_d1 = tax_rows[0]
         tax_d10 = tax_rows[-1]
+        scope_d1 = scope_by_decile[1]
+        scope_d10 = scope_by_decile[10]
         if not (tax_d1['annual_income_decile'] == '1' and tax_d10['annual_income_decile'] == '10'):
             raise RuntimeError('scientific runtime invariant failed: research/vat_policy_integration/run_vat_policy_scenario_matrix.py:98')
         for idx, source in enumerate(by_regime[scenario["vat_regime_id"]], 1):
@@ -192,6 +201,10 @@ def build():
                 "policy_pass_through_parameter": "",
                 "policy_pass_through_parameter_status": "BASELINE_NO_POLICY_CHANGE" if scenario["scenario_id"] == "current_8_10" else "NOT_IDENTIFIED_FOR_RATE_CUT_OR_ABOLITION",
                 "vat_base_mix_status": vat_base_mix_status,
+                "annual_income_decile1_reduced_rate_scope_proxy_core_yen_month": scope_d1["reduced_rate_scope_proxy_core_yen_month"],
+                "annual_income_decile10_reduced_rate_scope_proxy_core_yen_month": scope_d10["reduced_rate_scope_proxy_core_yen_month"],
+                "annual_income_decile1_reduced_rate_scope_proxy_with_all_newspaper_yen_month": scope_d1["reduced_rate_scope_proxy_with_all_newspaper_yen_month"],
+                "annual_income_decile10_reduced_rate_scope_proxy_with_all_newspaper_yen_month": scope_d10["reduced_rate_scope_proxy_with_all_newspaper_yen_month"],
                 "quantity_response_status": "BASELINE_NO_POLICY_CHANGE" if scenario["scenario_id"] == "current_8_10" else quantity_response_status,
                 "income_gini_effect": "",
                 "income_gini_effect_status": distribution_status,
@@ -288,6 +301,10 @@ def build():
             "policy_pass_through_parameter": first["policy_pass_through_parameter"],
             "policy_pass_through_parameter_status": first["policy_pass_through_parameter_status"],
             "vat_base_mix_status": first["vat_base_mix_status"],
+            "annual_income_decile1_reduced_rate_scope_proxy_core_yen_month": first["annual_income_decile1_reduced_rate_scope_proxy_core_yen_month"],
+            "annual_income_decile10_reduced_rate_scope_proxy_core_yen_month": first["annual_income_decile10_reduced_rate_scope_proxy_core_yen_month"],
+            "annual_income_decile1_reduced_rate_scope_proxy_with_all_newspaper_yen_month": first["annual_income_decile1_reduced_rate_scope_proxy_with_all_newspaper_yen_month"],
+            "annual_income_decile10_reduced_rate_scope_proxy_with_all_newspaper_yen_month": first["annual_income_decile10_reduced_rate_scope_proxy_with_all_newspaper_yen_month"],
             "quantity_response_status": first["quantity_response_status"],
             "income_gini_status": first["income_gini_effect_status"],
             "wealth_gini_status": first["wealth_gini_effect_status"],
