@@ -16,6 +16,7 @@ Observed Japan evidence is generated separately by
 +scripts/build_vat_transition_system_subsidy_bounds.py+,
 +scripts/build_rieti_vat_threshold_structural_bridge.py+,
 +scripts/build_ichikawa_2019_vat_10m_threshold_bridge.py+,
++scripts/build_jcci_invoice_network_distortion_bridge.py+,
 +scripts/build_bsws_2019_industry_hourly_wage_bridge.py+,
 +scripts/build_meti_vat_internal_labor_cost_bridge.py+, and
 +scripts/extract_vat_compliance_evidence.py+.
@@ -92,6 +93,27 @@ benefit of exemption.  This supports a compliance-burden motive but does not
 prove it.  Crucially, the study predates the October 2023 qualified-invoice
 system.  The current invoice-era aggregate allocation effect and macro
 +a_alloc+ therefore remain +NOT_IDENTIFIED+.
+
+Post-2023 invoice-era evidence is now quantitative at the transaction-network
+incidence level.  JCCI 2024 reports that, among n=782 respondents that had
+purchased from exempt businesses before invoice introduction, 74.0% continued
+nearly all such transactions, while 7.9% continued only some, 12.8% continued
+only very few, and 5.2% ended all.  The explicit contraction categories therefore
+sum to 25.9% (subject to published rounding).  JCCI 2025 reports that 43.7% of
+n=1,151 general-taxation invoice registrants still purchase from exempt
+businesses; among n=502 such respondents, 42.3% state that they plan to review
+prices or suppliers, including 11.8% that plan to stop all or most such
+purchases.  Among n=92 respondents planning to continue at unchanged prices,
+44.6% cite no alternative supplier, 39.1% cite search effort that is not worth
+the cost, and 38.0% cite labor-shortage/capacity needs.
+
+These figures establish *post-2023 network adjustment and substitution-friction
+incidence*.  They do not identify transaction-value loss, a causal counterfactual,
+productivity loss, or a population-weighted GDP effect.  Future plans are not
+realized behavior, multiple-response shares are not mutually exclusive firm
+fractions, and the 2024/2025 respondents are not the same businesses.  Therefore
+no simple cross-year registration trend is inferred and macro +a_alloc+ remains
++NOT_IDENTIFIED+.
 
 The wage bridge adds 2019 MHLW Basic Survey on Wage Structure components for
 17 industry-total/major-industry rows. Two transparent hourly-wage formulas are

@@ -331,6 +331,14 @@ SPECS = [
         "FY2019 and cumulative reduced-rate transition support: observed subsidy flows imply selected grant-record eligible expenditure of at least the subsidy amount; explicitly transition-only, nonrepresentative, and not persistent c_VAT",
     ),
     (
+        "JCCI-INVOICE-NETWORK-DISTORTION-BRIDGE",
+        "jcci_invoice_network_distortion_bridge.csv",
+        "scripts/build_jcci_invoice_network_distortion_bridge.py",
+        "JCCI-2024-INVOICE-BACKOFFICE-SURVEY;JCCI-2025-INVOICE-SURVEY",
+        "DERIVED_POST_2023_INVOICE_NETWORK_RESPONSE_EVIDENCE",
+        "Thirty-seven 2024/2025 JCCI survey metrics separating realized supplier-network status, future price/supplier intentions, invoice-registration pressure and substitution frictions; no cross-year panel trend or macro output effect inferred",
+    ),
+    (
         "ICHIKAWA-2019-VAT-10M-THRESHOLD-NATIONALIZED-ESTIMATES",
         "ichikawa_2019_vat_10m_threshold_nationalized_estimates.csv",
         "scripts/build_ichikawa_2019_vat_10m_threshold_bridge.py",

@@ -67,6 +67,17 @@ anchors={
  "jcci2024_invoice_admin_burden_increase_share":"0.822",
  "jcci2025_invoice_cost_increase_share":"0.458",
  "jcci2025_invoice_admin_burden_increase_share":"0.734",
+ "jcci_network_2024_post_intro_exempt_supplier_reported_contraction_category_share":"0.259",
+ "jcci_network_2024_future_exempt_supplier_stop_or_review_share":"0.294",
+ "jcci_network_2025_taxable_firms_with_exempt_supplier_purchases_share":"0.437",
+ "jcci_network_2025_exempt_supplier_purchase_amount_ge_1m_yen_share":"0.576",
+ "jcci_network_2025_current_price_unchanged_self_absorb_share":"0.875",
+ "jcci_network_2025_current_lower_purchase_price_by_denied_credit_share":"0.054",
+ "jcci_network_2025_future_price_or_supplier_review_share":"0.423",
+ "jcci_network_2025_future_supplier_reduction_or_exit_share":"0.118",
+ "jcci_network_2025_continue_reason_no_alternative_supplier_share":"0.446",
+ "jcci_network_2025_continue_reason_search_effort_not_worth_it_share":"0.391",
+ "jcci_network_2025_continue_reason_labor_shortage_requires_exempt_suppliers_share":"0.380",
  "jcci2025_le_10m_one_accounting_worker_share":"0.794",
  "jcci2025_le_10m_no_dedicated_accounting_employee_share":"0.764",
  "jcci2025_gt100m_one_accounting_worker_share":"0.145",
@@ -112,8 +123,17 @@ assert ident["vat_10m_threshold_lost_sales_mechanism_scenarios"]["status"]=="MEC
 assert ident["vat_10m_threshold_lost_sales_mechanism_scenarios"]["model_use"]=="DO_NOT_MAP_TO_GDP_OR_WELFARE_ONE_FOR_ONE"
 assert ident["vat_10m_threshold_adjustment_mechanism"]["status"]=="NOT_IDENTIFIED_INDIRECT_EVIDENCE_AGAINST_WIDESPREAD_REAL_SUPPRESSION"
 assert ident["vat_10m_threshold_adjustment_mechanism"]["model_use"]=="REAL_ADJUSTMENT_VS_AVOIDANCE_MIX_UNKNOWN"
-assert ident["current_invoice_era_threshold_allocation_effect"]["status"]=="PRE_INVOICE_10M_THRESHOLD_BEHAVIOR_OBSERVED_CURRENT_INVOICE_ERA_NOT_IDENTIFIED"
-assert ident["current_invoice_era_threshold_allocation_effect"]["point_identified"]=="NO_CURRENT_INVOICE_ERA_MACRO_EFFECT"
+assert ident["invoice_era_exempt_supplier_network_contraction"]["status"]=="OBSERVED_POST_INTRODUCTION_NETWORK_STATUS"
+assert ident["invoice_era_exempt_supplier_network_contraction"]["model_use"]=="INCIDENCE_ONLY_NOT_CAUSAL_OUTPUT_LOSS"
+assert ident["invoice_era_future_price_or_supplier_review"]["point_identified"]=="42.3_PERCENT_AMONG_N502"
+assert ident["invoice_era_future_supplier_reduction_or_exit"]["point_identified"]=="11.8_PERCENT_AMONG_N502"
+assert ident["invoice_era_supplier_substitution_friction"]["status"]=="OBSERVED_CONDITIONAL_SURVEY_RESPONSE"
+assert ident["invoice_era_registration_customer_pressure"]["status"]=="OBSERVED_STATED_REGISTRATION_RESPONSE_AND_INTENTION"
+assert ident["jcci_cross_year_registration_change"]["status"]=="NOT_IDENTIFIED_AS_PANEL_CHANGE"
+assert ident["jcci_cross_year_registration_change"]["model_use"]=="PROHIBIT_SIMPLE_2024_TO_2025_DIFFERENCE_AS_TRANSITION"
+assert ident["current_invoice_era_threshold_allocation_effect"]["status"]=="POST_2023_NETWORK_ADJUSTMENT_INCIDENCE_OBSERVED_MACRO_EFFECT_NOT_IDENTIFIED"
+assert ident["current_invoice_era_threshold_allocation_effect"]["point_identified"]=="SURVEY_INCIDENCE_ONLY_NO_OUTPUT_MAGNITUDE"
+assert ident["current_invoice_era_threshold_allocation_effect"]["model_use"]=="INVOICE_NETWORK_EVIDENCE_NOT_MACRO_A_ALLOC"
 assert ident["allocative_efficiency_dividend"]["status"]=="NOT_IDENTIFIED"
 assert ident["allocative_efficiency_dividend"]["point_identified"]=="NO_MACRO_OUTPUT_PERCENTAGE"
 assert ident["zero_rate_equals_full_abolition"]["status"]=="FALSE_BY_POLICY_DEFINITION"
@@ -154,6 +174,15 @@ for k in ("jcci2024_invoice_admin_burden_increase_share",
     assert ev[k]["unit"]=="ratio"
     assert ev[k]["evidence_type"]=="SURVEY_RESPONSE_SHARE"
 
+network_keys=[k for k in ev if k.startswith("jcci_network_")]
+assert len(network_keys)==37
+assert ev["jcci_network_2024_post_intro_exempt_supplier_reported_contraction_category_share"]["model_calibration_permission"]=="INCIDENCE_ONLY_NOT_CAUSAL_OUTPUT_LOSS"
+assert ev["jcci_network_2025_future_price_or_supplier_review_share"]["model_calibration_permission"]=="INTENTION_NOT_REALIZED_NETWORK_EFFECT"
+assert ev["jcci_network_2025_future_supplier_reduction_or_exit_share"]["model_calibration_permission"]=="INTENTION_NOT_REALIZED_NETWORK_EFFECT"
+assert ev["jcci_network_2025_continue_reason_no_alternative_supplier_share"]["model_calibration_permission"]=="SUBSTITUTION_FRICTION_CONTEXT_NOT_MACRO_OUTPUT_EFFECT"
+assert ev["jcci_network_2025_former_exempt_b2b_invoice_registration_share"]["model_calibration_permission"]=="REGISTRATION_RESPONSE_CONTEXT_ONLY"
+assert "not the same businesses" in ev["jcci_network_2025_former_exempt_b2b_invoice_registration_share"]["note"]
+
 subprocess.run([sys.executable,str(ROOT/"scripts/extract_vat_compliance_evidence.py"),"--check"],cwd=ROOT,check=True)
 assert ev["meti2021_vat_internal_hours_mean_lower_bound"]["unit"]=="hours_per_responding_corporation_reported_period"
 assert ev["meti2021_vat_internal_hours_mean_lower_bound"]["model_calibration_permission"]=="HOURS_BOUND_ONLY_NOT_C_VAT"
@@ -181,5 +210,5 @@ for k in ("rieti2021_threshold_bunching_1989_1991_delta_ratio","rieti2021_thresh
 for k in ("rieti2021_threshold_theta_1992_all","rieti2021_threshold_theta_1997_all","rieti2021_threshold_theta_1992_firms","rieti2021_threshold_theta_1997_firms","rieti2021_threshold_theta_1992_sole_proprietors","rieti2021_threshold_theta_1997_sole_proprietors"):
     assert ev[k]["unit"]=="share_of_value_added_in_study_model"
     assert ev[k]["model_calibration_permission"]=="LOCAL_THRESHOLD_STRUCTURAL_EVIDENCE_NOT_C_VAT_OR_MACRO_A_ALLOC"
-assert len(ev)==81 and len(ident)==23
-print("VAT compliance evidence tests: OK (81 evidence rows; 10m threshold mechanism sensitivity quantified; national c_VAT and macro a_alloc remain NOT_IDENTIFIED)")
+assert len(ev)==118 and len(ident)==29
+print("VAT compliance evidence tests: OK (118 evidence rows; post-2023 invoice-network adjustment incidence quantified; macro a_alloc remains NOT_IDENTIFIED)")
