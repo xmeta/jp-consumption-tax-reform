@@ -35,7 +35,7 @@ assert all(
 )
 assert all(
     r["joint_outcome_status"]
-    == "PARTIAL_E2E_REPORT_INSTITUTIONAL_AND_STATIC_FISCAL_REFERENCE_NUMERIC_OTHER_CHANNELS_EXPLICITLY_UNIDENTIFIED"
+    == "PARTIAL_E2E_REPORT_INSTITUTIONAL_STATIC_FISCAL_AND_HOUSEHOLD_RATE_ENVELOPE_NUMERIC_OTHER_CHANNELS_EXPLICITLY_UNIDENTIFIED"
     for r in rows
 )
 
@@ -56,8 +56,12 @@ blank_numeric = [
 for col in blank_numeric:
     assert all(r[col] == "" for r in rows), col
 distribution_status = (
-    "ANNUAL_INCOME_DECILE_EXPENDITURE_OBSERVED_"
-    "OBJECTIVE_RANK_BRIDGE_AND_VAT_INCIDENCE_REQUIRED"
+    "ANNUAL_INCOME_DECILE_RATE_ONLY_TAX_CONTENT_ENVELOPE_AVAILABLE_"
+    "OBJECTIVE_RANK_AND_ACTUAL_INCIDENCE_REQUIRED"
+)
+inflation_status = (
+    "RATE_ONLY_HOUSEHOLD_PRICE_RELIEF_ENVELOPE_AVAILABLE_"
+    "CPI_PASS_THROUGH_AND_MACRO_LINK_REQUIRED"
 )
 assert all(
     r["household_expenditure_diagnostic_rank"] == "HOUSEHOLD_ANNUAL_INCOME_DECILE"
@@ -74,6 +78,28 @@ for col in (
     "real_disposable_income_by_decile_effect_status",
 ):
     assert all(r[col] == distribution_status for r in rows), col
+assert all(r["inflation_effect_status"] == inflation_status for r in rows)
+assert all(r["household_tax_content_envelope_status"] == "ACCOUNTING_UPPER_BOUND_FROM_10_PERCENT_STATUTORY_RATE_CAP" for r in rows)
+assert all(
+    r["household_price_relief_envelope_status"]
+    == "STATIC_CURRENT_BASKET_FULL_PASS_THROUGH_NO_OVERSHIFT_ENVELOPE_NOT_ACTUAL_PRICE_EFFECT"
+    for r in rows
+)
+for r in rows:
+    assert r["annual_income_decile1_current_embedded_tax_upper_bound_yen_month"] == "11770"
+    assert r["annual_income_decile10_current_embedded_tax_upper_bound_yen_month"] == "39968"
+for r in rows:
+    sid = r["scenario_id"]
+    if sid == "current_8_10":
+        expected_relief = ("0", "0", "0")
+    elif sid == "reduced_5":
+        expected_relief = ("5885", "19984", "0.045454545455")
+    else:
+        expected_relief = ("11770", "39968", "0.090909090909")
+    assert r["annual_income_decile1_price_relief_upper_envelope_yen_month"] == expected_relief[0]
+    assert r["annual_income_decile10_price_relief_upper_envelope_yen_month"] == expected_relief[1]
+    assert r["price_relief_share_current_spending_envelope"] == expected_relief[2]
+
 assert all(r["fy2024_consumption_tax_receipts_reference_yen"] == "25021206715000" for r in rows)
 assert all(r["fy2024_nominal_gdp_reference_yen"] == "642414700000000" for r in rows)
 assert all(
@@ -121,6 +147,15 @@ assert all(
     summary[sid]["real_disposable_income_by_decile_status"] == distribution_status
     for sid in expected
 )
+assert all(summary[sid]["inflation_status"] == inflation_status for sid in expected)
+assert summary["current_8_10"]["annual_income_decile1_price_relief_upper_envelope_yen_month"] == "0"
+assert summary["current_8_10"]["annual_income_decile10_price_relief_upper_envelope_yen_month"] == "0"
+assert summary["reduced_5"]["annual_income_decile1_price_relief_upper_envelope_yen_month"] == "5885"
+assert summary["reduced_5"]["annual_income_decile10_price_relief_upper_envelope_yen_month"] == "19984"
+assert summary["zero_rate_admin_retained"]["annual_income_decile1_price_relief_upper_envelope_yen_month"] == "11770"
+assert summary["zero_rate_admin_retained"]["annual_income_decile10_price_relief_upper_envelope_yen_month"] == "39968"
+assert summary["full_abolition"]["price_relief_share_current_spending_envelope"] == "0.090909090909"
+assert all(summary[sid]["household_tax_content_envelope_status"] == "ACCOUNTING_UPPER_BOUND_FROM_10_PERCENT_STATUTORY_RATE_CAP" for sid in expected)
 assert summary["current_8_10"]["static_consumption_tax_receipt_effect_yen"] == "0"
 assert summary["reduced_5"]["static_consumption_tax_receipt_effect_yen"] == ""
 assert summary["reduced_5"]["fiscal_reference_status"] == "NOT_IDENTIFIED_RATE_BASE_MIX_AND_BEHAVIOR_REQUIRED"
@@ -172,5 +207,5 @@ subprocess.run(
 print(
     "VAT policy scenario matrix tests: OK "
     "(8 requested scenarios; 2400 rows; joint GDP/growth/Gini/FGT2/fiscal/debt "
-    "reporting with static FY2024 VAT fiscal replacement reference, observed annual-income-decile expenditure diagnostic, and no unmodeled-channel imputation)"
+    "reporting with static FY2024 VAT fiscal replacement reference, observed annual-income-decile expenditure plus statutory-rate tax-content/price-relief envelopes, and no unmodeled-channel imputation)"
 )

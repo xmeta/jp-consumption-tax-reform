@@ -17,6 +17,14 @@ SPECS = [
         "Ten annual-household-income deciles with monthly total consumption expenditure, ten major expenditure groups and household characteristics; rank is explicitly not mapped to OECD-new equivalized-disposable-income deciles and broad food is not treated as the reduced-rate VAT base",
     ),
     (
+        "VAT-HOUSEHOLD-TAX-CONTENT-ENVELOPE",
+        "vat_household_tax_content_envelope.csv",
+        "scripts/build_vat_household_tax_content_envelope.py",
+        "ESTAT-NSFCW-2024-T1-21-ANNUAL-INCOME-DECILE-EXPENDITURE;NTA-CONSUMPTION-TAX-BASIC",
+        "DERIVED_STATUTORY_RATE_HOUSEHOLD_TAX_CONTENT_AND_PRICE_RELIEF_ENVELOPE",
+        "Eight policy scenarios x ten annual-household-income deciles. Current embedded consumption-tax accounting cap uses the statutory 10 percent maximum; 5/0 percent policy relief is a static current-basket full-pass-through no-overshift envelope, not actual incidence, Gini, FGT2 or CPI effect",
+    ),
+    (
         "ESTAT-71411-MAIN-INCOME-BY-DISPOSABLE-DECILE",
         "estat_71411_main_income_by_disposable_decile_2024.csv",
         "scripts/extract_estat_rank_bridge_diagnostics.py",
@@ -456,7 +464,7 @@ SPECS = [
         "research/vat_policy_integration/run_vat_policy_scenario_matrix.py",
         "ESTAT-NSFCW-2024-T1-21-ANNUAL-INCOME-DECILE-EXPENDITURE;ESRI-SNA-2024-NOMINAL-GDP-FISCAL-YEAR;MOF-FY2024-TREASURY-REVENUE-2025-07;JCCI-2024-INVOICE-BACKOFFICE-SURVEY;JCCI-2025-INVOICE-SURVEY;SMEA-FY2025-INVOICE-TRANSACTION-SURVEY-ARCHIVED;ICHIKAWA-ARUDCHELVAN-ONJI-2019-VAT-10M-BUNCHING;RIETI-2019-VAT-COMPLIANCE-FIRM-GROWTH;RIETI-2021-SME-VAT-COMPLIANCE;RIETI-2021-QUANT-TAX-COMPLIANCE-COST;MOF-CONSUMPTION-TAX-SME-EXEMPTION-THRESHOLD;NTA-CONSUMPTION-TAX-BASIC;NTA-INVOICE-SYSTEM-OVERVIEW",
         "MODEL_CONTINGENT_PARTIAL_E2E_POLICY_MATRIX",
-        "Eight requested policy scenarios x 300 institutional stress points; carries the VAT institutional GDP/growth stress component, static FY2024 central-government VAT receipt-removal/replacement reference, and a full-JGB financing amount equal to 3.894868333 percent of FY2024 nominal GDP while recording an observed annual-income-decile household-expenditure diagnostic and preserving non-identified objective-rank distribution, full GDP, fiscal-balance, dynamic debt and JGB-market outcomes",
+        "Eight requested policy scenarios x 300 institutional stress points; carries the VAT institutional GDP/growth stress component, static FY2024 central-government VAT receipt-removal/replacement reference, and a full-JGB financing amount equal to 3.894868333 percent of FY2024 nominal GDP while recording an observed annual-income-decile household-expenditure diagnostic plus statutory-rate tax-content/price-relief envelopes and preserving non-identified objective-rank distribution, full GDP, fiscal-balance, dynamic debt and JGB-market outcomes",
     ),
     (
         "VAT-POLICY-SCENARIO-SUMMARY",
@@ -464,7 +472,7 @@ SPECS = [
         "research/vat_policy_integration/run_vat_policy_scenario_matrix.py",
         "ESTAT-NSFCW-2024-T1-21-ANNUAL-INCOME-DECILE-EXPENDITURE;ESRI-SNA-2024-NOMINAL-GDP-FISCAL-YEAR;MOF-FY2024-TREASURY-REVENUE-2025-07;JCCI-2024-INVOICE-BACKOFFICE-SURVEY;JCCI-2025-INVOICE-SURVEY;SMEA-FY2025-INVOICE-TRANSACTION-SURVEY-ARCHIVED;ICHIKAWA-ARUDCHELVAN-ONJI-2019-VAT-10M-BUNCHING;RIETI-2019-VAT-COMPLIANCE-FIRM-GROWTH;RIETI-2021-SME-VAT-COMPLIANCE;RIETI-2021-QUANT-TAX-COMPLIANCE-COST;MOF-CONSUMPTION-TAX-SME-EXEMPTION-THRESHOLD;NTA-CONSUMPTION-TAX-BASIC;NTA-INVOICE-SYSTEM-OVERVIEW",
         "MODEL_CONTINGENT_PARTIAL_E2E_POLICY_SUMMARY",
-        "One row per Issue-26 scenario with institutional GDP/growth stress range, static FY2024 VAT receipt-removal/replacement references and full-JGB financing share of FY2024 nominal GDP where defined, plus the annual-income-decile expenditure diagnostic status and joint unresolved-outcome status vector",
+        "One row per Issue-26 scenario with institutional GDP/growth stress range, static FY2024 VAT receipt-removal/replacement references and full-JGB financing share of FY2024 nominal GDP where defined, plus annual-income-decile expenditure/tax-content envelope diagnostics and the joint unresolved-outcome status vector",
     ),
     (
         "VAT-COMPLIANCE-PRODUCTIVITY-SENSITIVITY",

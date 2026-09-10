@@ -48,6 +48,8 @@ jobs:
           python research/vat_policy_integration/test_jgb_debt_gdp_reference.py
           python scripts/build_estat_2024_annual_income_decile_expenditure_diagnostic.py
           python scripts/test_estat_2024_annual_income_decile_expenditure_diagnostic.py
+          python scripts/build_vat_household_tax_content_envelope.py
+          python scripts/test_vat_household_tax_content_envelope.py
           python research/vat_policy_integration/run_vat_policy_scenario_matrix.py
           python research/vat_policy_integration/test_vat_policy_scenario_matrix.py
           python scripts/extract_estat_income_tax_tables.py
