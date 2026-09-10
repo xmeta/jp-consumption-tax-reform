@@ -17,6 +17,7 @@ Observed Japan evidence is generated separately by
 +scripts/build_rieti_vat_threshold_structural_bridge.py+,
 +scripts/build_ichikawa_2019_vat_10m_threshold_bridge.py+,
 +scripts/build_jcci_invoice_network_distortion_bridge.py+,
++scripts/build_smea_fy2025_invoice_transaction_bridge.py+,
 +scripts/build_bsws_2019_industry_hourly_wage_bridge.py+,
 +scripts/build_meti_vat_internal_labor_cost_bridge.py+, and
 +scripts/extract_vat_compliance_evidence.py+.
@@ -113,6 +114,28 @@ productivity loss, or a population-weighted GDP effect.  Future plans are not
 realized behavior, multiple-response shares are not mutually exclusive firm
 fractions, and the 2024/2025 respondents are not the same businesses.  Therefore
 no simple cross-year registration trend is inferred and macro +a_alloc+ remains
++NOT_IDENTIFIED+.
+
+The official SME Agency FY2025 invoice-transaction survey adds a larger, more
+direct realized-transaction layer.  Its TSR frame targeted 50,000 small
+businesses and received 15,425 responses (30.9%).  For the largest customer
+relationship, 3.8% of n=14,732 report that the transaction price was reduced or
+the transaction stopped after invoice introduction; the published one-decimal
+share is compatible with 553--567 responses.  Separately, 14.3% of n=15,321
+report that a customer required invoice registration as a condition for
+continuing transactions (2,184--2,198 compatible responses), and 12.8% of
+n=14,690 report that no price-negotiation opportunity was provided
+(1,873--1,887 compatible responses).  The adverse price/stop share ranges from
+3.2% to 7.9% across the seven published industry groups, with transport/postal
+highest at 7.9%.
+
+This materially strengthens the post-2023 evidence because the price/stop item
+is a reported realized outcome rather than a future intention.  It still does
+not identify the yen value of the loss, separate price reduction from complete
+transaction stop, establish the counterfactual without the invoice system, or
+provide population weights.  The report also compares 3.6% in December 2023
+with 3.8% in July 2025, but these are different cross-sectional waves and are
+not treated as a panel or causal trend.  Macro +a_alloc+ therefore remains
 +NOT_IDENTIFIED+.
 
 The wage bridge adds 2019 MHLW Basic Survey on Wage Structure components for

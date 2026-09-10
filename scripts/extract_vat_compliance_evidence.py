@@ -11,6 +11,7 @@ from build_vat_transition_system_subsidy_bounds import build as build_transition
 from build_rieti_vat_threshold_structural_bridge import build as build_rieti_threshold_structural
 from build_ichikawa_2019_vat_10m_threshold_bridge import build as build_ichikawa_10m_threshold
 from build_jcci_invoice_network_distortion_bridge import build as build_jcci_invoice_network
+from build_smea_fy2025_invoice_transaction_bridge import build as build_smea_invoice_transaction
 
 ROOT = Path(__file__).resolve().parents[1]
 CATALOG = ROOT / "data/source_catalog.csv"
@@ -60,6 +61,7 @@ def build():
       "ESTAT-BSWS-2019-INDUSTRY-WAGE-DB-SNAPSHOT",
       "JCCI-2024-INVOICE-BACKOFFICE-SURVEY",
       "JCCI-2025-INVOICE-SURVEY",
+      "SMEA-FY2025-INVOICE-TRANSACTION-SURVEY-ARCHIVED",
       "ICHIKAWA-ARUDCHELVAN-ONJI-2019-VAT-10M-BUNCHING",
       "RIETI-2019-VAT-COMPLIANCE-FIRM-GROWTH",
       "RIETI-2021-SME-VAT-COMPLIANCE",
@@ -126,6 +128,8 @@ def build():
     ichikawa_n_rows, ichikawa_prepost_rows = build_ichikawa_10m_threshold()
     ichikawa_n={r["metric_id"]:r for r in ichikawa_n_rows}
     jcci_network_rows = build_jcci_invoice_network()
+    smea_overall_rows, smea_industry_rows = build_smea_invoice_transaction()
+    smea_overall={r["metric_id"]:r for r in smea_overall_rows}
 
     rows=[]
     rows += [
@@ -441,6 +445,34 @@ def build():
           jr["source_id"], jr["source_locator"], jr["identification_status"],
           jr["model_use"], jr["note"]))
 
+    # SME Agency FY2025 targeted-small-business invoice transaction survey.
+    # Overall rows include realized largest-customer price/transaction outcomes and
+    # rounded-count-compatible response ranges; industry rows preserve heterogeneity.
+    for sr in smea_overall_rows:
+        count_note = ""
+        if sr["rounded_count_lower"]:
+            count_note = f" One-decimal published share is compatible with {sr['rounded_count_lower']}--{sr['rounded_count_upper']} integer responses under the recorded denominator."
+        rows.append(evidence(
+          f"smea2025_{sr['metric_id']}", sr["value"], sr["unit"],
+          sr["identification_status"],
+          "SME Agency FY2025 targeted small-business invoice-transaction survey frame",
+          sr["denominator_n"], sr["source_id"], sr["source_locator"],
+          sr["identification_status"], sr["model_use"], sr["note"] + count_note))
+    industry_fields=[
+      ("invoice_start_became_taxable_share","tax_status_n"),
+      ("invoice_registered_share","registration_n"),
+      ("customer_required_registration_for_continuation_share","registration_request_n"),
+      ("post_invoice_price_reduced_or_transaction_stopped_share","largest_customer_price_outcome_n"),
+      ("invoice_price_negotiation_no_opportunity_share","price_negotiation_n"),
+    ]
+    for ir in smea_industry_rows:
+        for field,nfield in industry_fields:
+            rows.append(evidence(
+              f"smea2025_industry_{ir['industry_code']}_{field}", ir[field], "ratio",
+              "INDUSTRY_SURVEY_RESPONSE_SHARE", ir["industry_label"], ir[nfield],
+              ir["source_id"], ir["source_locator"], ir["identification_status"],
+              ir["model_use"], ir["note"]))
+
     ident=[
       {"quantity":"invoice_burden_incidence","status":"OBSERVED_SURVEY_RESPONSE","point_identified":"NO_POPULATION_CAUSAL_POINT","model_use":"DESCRIPTIVE_EVIDENCE","note":"JCCI respondent shares establish widespread reported burden, not national resource-cost shares."},
       {"quantity":"invoice_era_exempt_supplier_network_contraction","status":"OBSERVED_POST_INTRODUCTION_NETWORK_STATUS","point_identified":"25.9_PERCENT_EXPLICIT_CONTRACTION_CATEGORIES_AMONG_N782","model_use":"INCIDENCE_ONLY_NOT_CAUSAL_OUTPUT_LOSS","note":"JCCI 2024 respondents that had purchased from exempt businesses before invoice introduction report 74.0% nearly-all continuation, 7.9% some-only continuation, 12.8% very-few-only continuation and 5.2% all transactions ended. The latter three rounded categories sum to 25.9%. This establishes reported supplier-network contraction incidence but not transaction value lost, causality, or GDP effect."},
@@ -448,6 +480,12 @@ def build():
       {"quantity":"invoice_era_future_supplier_reduction_or_exit","status":"OBSERVED_STATED_FUTURE_INTENTION","point_identified":"11.8_PERCENT_AMONG_N502","model_use":"INTENTION_NOT_REALIZED_NETWORK_EFFECT","note":"JCCI 2025 all-stop plus mostly-stop categories sum to 11.8% among n=502 respondents with exempt-supplier purchases. This is a future intention and cannot be read as realized supplier exit or macro output loss."},
       {"quantity":"invoice_era_supplier_substitution_friction","status":"OBSERVED_CONDITIONAL_SURVEY_RESPONSE","point_identified":"44.6_PERCENT_NO_ALTERNATIVE_39.1_PERCENT_SEARCH_COST_AMONG_N92","model_use":"SUBSTITUTION_FRICTION_CONTEXT_NOT_MACRO_OUTPUT_EFFECT","note":"Among n=92 JCCI 2025 respondents planning to continue exempt-supplier transactions at unchanged prices, 44.6% cite no alternative supplier, 39.1% say search effort is not worthwhile, and 38.0% cite labor-shortage/capacity needs. Multiple response. These indicate substitution frictions but do not quantify productivity or welfare loss."},
       {"quantity":"invoice_era_registration_customer_pressure","status":"OBSERVED_STATED_REGISTRATION_RESPONSE_AND_INTENTION","point_identified":"BTOB_REGISTRATION_73.3_PERCENT_2024_78.6_PERCENT_2025_CUSTOMER_REQUEST_CONSIDERATION_47.7_PERCENT_45.9_PERCENT","model_use":"REGISTRATION_AND_CUSTOMER_PRESSURE_CONTEXT_ONLY","note":"JCCI reports high qualified-invoice registration among formerly exempt BtoB respondents and substantial willingness among remaining nonregistrants to consider registration if requested by customers. The annual samples are not the same firms, so these values do not identify a panel transition rate."},
+      {"quantity":"smea_invoice_targeted_small_business_frame","status":"OBSERVED_OFFICIAL_TARGETED_SURVEY_FRAME","point_identified":"50000_TARGET_15425_RESPONSES_30.9_PERCENT","model_use":"FRAME_CONTEXT_NOT_POPULATION_WEIGHT","note":"SME Agency FY2025 survey drew 50,000 businesses from the TSR database using 2023 sales <=10m JPY or specified post-2023 startup/capital conditions and received 15,425 responses (30.9%). Question-specific N differs because nonresponses are excluded. The 30.9% response rate prevents treating sample shares as exact population shares."},
+      {"quantity":"invoice_era_customer_registration_condition_realized_report","status":"OBSERVED_CURRENT_INVOICE_ERA_TRANSACTION_CONDITION","point_identified":"14.3_PERCENT_N15321_COUNT_COMPATIBLE_2184_TO_2198","model_use":"REGISTRATION_PRESSURE_INCIDENCE_NOT_CAUSAL_OUTPUT_EFFECT","note":"In the SME Agency FY2025 survey, 14.3% of n=15,321 report that a customer required invoice registration as a condition for continuing transactions after invoice-system introduction. The one-decimal share is compatible with 2,184--2,198 responses. This identifies pressure incidence in the targeted respondent sample, not population incidence or output loss."},
+      {"quantity":"invoice_era_largest_customer_price_reduction_or_stop","status":"OBSERVED_REALIZED_CURRENT_INVOICE_ERA_ADVERSE_TRANSACTION_OUTCOME","point_identified":"3.8_PERCENT_N14732_COUNT_COMPATIBLE_553_TO_567","model_use":"REALIZED_ADVERSE_OUTCOME_INCIDENCE_NOT_VALUE_OR_GDP_LOSS","note":"For the largest customer relationship, 3.8% of n=14,732 SME Agency FY2025 respondents report that the transaction price was reduced or the transaction stopped after invoice introduction. The one-decimal share is compatible with 553--567 responses. The combined response does not separate price reduction from stop, identify yen value, or establish a causal counterfactual."},
+      {"quantity":"invoice_era_price_negotiation_access_failure","status":"OBSERVED_CURRENT_INVOICE_ERA_NEGOTIATION_FRICTION","point_identified":"12.8_PERCENT_N14690_COUNT_COMPATIBLE_1873_TO_1887","model_use":"NEGOTIATION_FRICTION_INCIDENCE_NOT_OUTPUT_EFFECT","note":"12.8% of n=14,690 SME Agency FY2025 respondents say no price-negotiation opportunity was provided in connection with invoice introduction; rounded share is compatible with 1,873--1,887 responses. This is negotiation-access incidence, not a monetary loss estimate."},
+      {"quantity":"invoice_era_adverse_transaction_industry_heterogeneity","status":"OBSERVED_INDUSTRY_HETEROGENEITY","point_identified":"3.2_TO_7.9_PERCENT_ACROSS_SEVEN_INDUSTRY_GROUPS","model_use":"HETEROGENEITY_CONTEXT_NOT_POPULATION_CAUSAL_EFFECT","note":"SME Agency FY2025 largest-customer price-reduction/transaction-stop shares range from 3.2% (other) and 3.3% (services) to 7.9% (transport/postal), with wholesale 6.4%, construction 5.9%, manufacturing 4.6% and retail 3.4%. Question-specific response denominators vary and these are not population-weighted causal effects."},
+      {"quantity":"smea_2023dec_to_2025jul_adverse_transaction_change","status":"NOT_IDENTIFIED_AS_PANEL_OR_CAUSAL_CHANGE","point_identified":"3.6_PERCENT_VS_3.8_PERCENT_CROSS_SECTIONS","model_use":"CROSS_SECTION_COMPARISON_ONLY","note":"The FY2025 report reproduces a 3.6% price-reduction/transaction-stop share for the December 2023 wave (n=3,674) and 3.8% for July 2025 (n=14,732). The survey waves have different samples/frame sizes; the 0.2-point difference is not treated as a panel or causal trend."},
       {"quantity":"jcci_cross_year_registration_change","status":"NOT_IDENTIFIED_AS_PANEL_CHANGE","point_identified":"NO","model_use":"PROHIBIT_SIMPLE_2024_TO_2025_DIFFERENCE_AS_TRANSITION","note":"JCCI 2025 explicitly states that its respondents are not the same businesses as in the prior-year survey. Therefore 73.3% in 2024 versus 78.6% in 2025 must not be interpreted as a 5.3-percentage-point registration transition."},
       {"quantity":"firm_size_backoffice_vulnerability","status":"OBSERVED_SURVEY_RESPONSE","point_identified":"NO_NATIONAL_CAUSAL_POINT","model_use":"HETEROGENEITY_MOTIVATION","note":"Small firms are much more likely to have one-person/no-dedicated accounting; not VAT-specific hours."},
       {"quantity":"all_tax_compliance_cost_sales_ratio","status":"OBSERVED_STUDY_ESTIMATE_ALL_TAX_TYPES","point_identified":"NO_VAT_COMPONENT","model_use":"SCALE_CONTEXT_ONLY","note":"0.06% large and 0.17% SME averages include multiple tax types and use study-specific imputation."},
@@ -465,8 +503,8 @@ def build():
       {"quantity":"vat_10m_threshold_tax_windfall","status":"MODEL_AND_EXTERNAL_STATS_NATIONALIZED_ESTIMATE","point_identified":"16.85_BILLION_YEN_PER_YEAR","model_use":"TAX_REVENUE_CONTEXT_NOT_WELFARE_LOSS","note":"The paper estimates 16.85 billion yen/year of tax windfall using the excess-buncher estimate, 41.3% value-added share, 8% VAT rate and 9m-JPY median sales. This is tax-revenue context, not a real-resource or GDP loss."},
       {"quantity":"vat_10m_threshold_lost_sales_mechanism_scenarios","status":"MECHANISM_SENSITIVE_SCENARIOS_NOT_IDENTIFICATION_BOUNDS","point_identified":"84.98_BILLION_ALL_REAL_ASSUMPTION_VS_3.14_BILLION_MISSING_MASS_SCENARIO","model_use":"DO_NOT_MAP_TO_GDP_OR_WELFARE_ONE_FOR_ONE","note":"The paper reports 84.98 billion yen if all excess bunchers are assumed to come from the 10m-11m region and lose 1.5m JPY of real sales each, versus 3.14 billion yen using observed missing mass with the same per-firm sales-loss assumption. The more-than-27-fold gap is mechanism sensitivity, not an empirical lower/upper bound."},
       {"quantity":"vat_10m_threshold_adjustment_mechanism","status":"NOT_IDENTIFIED_INDIRECT_EVIDENCE_AGAINST_WIDESPREAD_REAL_SUPPRESSION","point_identified":"NO","model_use":"REAL_ADJUSTMENT_VS_AVOIDANCE_MIX_UNKNOWN","note":"The paper finds small missing mass and only statistically weak growth-rate evidence near the threshold, which indirectly argues against widespread real sales suppression. It does not detect direct evidence of tax avoidance and explicitly states that the mechanism remains unresolved. Therefore neither all-real-adjustment nor all-avoidance can be treated as identified."},
-      {"quantity":"current_invoice_era_threshold_allocation_effect","status":"POST_2023_NETWORK_ADJUSTMENT_INCIDENCE_OBSERVED_MACRO_EFFECT_NOT_IDENTIFIED","point_identified":"SURVEY_INCIDENCE_ONLY_NO_OUTPUT_MAGNITUDE","model_use":"INVOICE_NETWORK_EVIDENCE_NOT_MACRO_A_ALLOC","note":"JCCI 2024/2025 now establish post-2023 supplier-network adjustment incidence, stated future price/supplier review, registration pressure and substitution frictions. However the surveys do not provide a causal counterfactual, transaction-value loss for adjusted relationships, productivity changes, or population weights sufficient for a national output effect. Current invoice-era macro allocation remains unidentified."},
-      {"quantity":"allocative_efficiency_dividend","status":"NOT_IDENTIFIED","point_identified":"NO_MACRO_OUTPUT_PERCENTAGE","model_use":"STRESS_TEST_PARAMETER_ONLY","note":"Evidence now includes historical 30m-JPY structural responses, a nationally scaled pre-invoice 10m-JPY bunching study, and post-2023 JCCI supplier-network adjustment incidence. The 10m lost-sales scenarios differ by more than 27-fold depending on unresolved real-adjustment versus avoidance mechanisms; JCCI observes network contraction/review intentions and substitution frictions but not causal transaction-value or productivity loss. Neither source identifies a national GDP percentage. Macro a_alloc therefore remains unidentified."},
+      {"quantity":"current_invoice_era_threshold_allocation_effect","status":"POST_2023_REALIZED_ADVERSE_TRANSACTION_INCIDENCE_OBSERVED_MACRO_EFFECT_NOT_IDENTIFIED","point_identified":"JCCI_NETWORK_STATUS_PLUS_SMEA_LARGEST_CUSTOMER_OUTCOME_NO_VALUE_MAGNITUDE","model_use":"INVOICE_NETWORK_AND_REALIZED_TRANSACTION_EVIDENCE_NOT_MACRO_A_ALLOC","note":"Evidence now includes JCCI 2024/2025 supplier-network contraction/review/substitution-friction incidence plus the much larger SME Agency FY2025 targeted survey, where 3.8% of n=14,732 report price reduction or transaction stop in the largest customer relationship and 14.3% of n=15,321 report customer registration requirements for transaction continuation. These are realized/current transaction frictions, but no causal counterfactual, transaction-value loss, productivity response, or population weights identify a national output effect."},
+      {"quantity":"allocative_efficiency_dividend","status":"NOT_IDENTIFIED","point_identified":"NO_MACRO_OUTPUT_PERCENTAGE","model_use":"STRESS_TEST_PARAMETER_ONLY","note":"The evidence base now spans historical structural bunching, nationally scaled pre-invoice 10m-JPY behavior, JCCI post-2023 supplier-network adjustment, and SME Agency FY2025 realized largest-customer adverse price/stop incidence. The pre-invoice real-output mechanism remains unresolved, and current surveys identify incidence rather than transaction-value/productivity loss with causal counterfactuals and population weights. No source identifies a national GDP percentage. Macro a_alloc remains unidentified."},
       {"quantity":"zero_rate_equals_full_abolition","status":"FALSE_BY_POLICY_DEFINITION","point_identified":"NOT_APPLICABLE","model_use":"PROHIBITED_EQUIVALENCE","note":"Policy state must separately encode VAT administrative/invoice obligations."},
       {"quantity":"compliance_savings_one_for_one_gdp","status":"PROHIBITED","point_identified":"NO","model_use":"DO_NOT_ASSUME","note":"Use explicit redeployment fraction and separate allocation term."},
       {"quantity":"income_gini_and_FGT2_effect","status":"NOT_MODELED_PHASE1","point_identified":"NO","model_use":"FUTURE_INCIDENCE_LINK_REQUIRED","note":"Firm-side resource release is not yet linked to households/deciles."},
