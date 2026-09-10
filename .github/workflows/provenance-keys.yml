@@ -1,0 +1,17 @@
+name: provenance-keys
+on:
+  push:
+  pull_request:
+
+jobs:
+  duplicate-key-regression:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.12"
+      - name: Validate authoritative registry keys
+        run: |
+          python scripts/validate_provenance.py
+          python scripts/test_validate_provenance_duplicate_keys.py

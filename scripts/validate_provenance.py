@@ -120,7 +120,14 @@ for r in official_rows:
         errors.append(f"{vid}: invalid extraction method")
 
 recovery_rows = read_csv("data/recovery/v6_recovered_values.csv")
-recovery = {r["value_id"]: r for r in recovery_rows}
+# Primary key: value_id. Reject duplicates before dictionary construction.
+recovery = {}
+for r in recovery_rows:
+    vid = r["value_id"]
+    if vid in recovery:
+        errors.append(f"duplicate recovery value_id: {vid}")
+        continue
+    recovery[vid] = r
 release_sha_file = ROOT / "releases/V6_RECOVERED_2026-09-08.sha256"
 release_sha_text = release_sha_file.read_text(encoding="utf-8")
 for r in recovery_rows:
@@ -201,7 +208,15 @@ for vid, inp in inputs.items():
             errors.append(f"{vid}: recovery provenance SHA not in release record")
 
 claims_rows = read_csv("paper1/data/claim_registry.csv")
-claims = {r["claim_id"]: r for r in claims_rows}
+# Primary key: claim_id. Keep provenance validation fail-closed even though
+# the Paper 1 claim validator independently checks this key as well.
+claims = {}
+for r in claims_rows:
+    cid = r["claim_id"]
+    if cid in claims:
+        errors.append(f"duplicate claim_id: {cid}")
+        continue
+    claims[cid] = r
 evidence_rows = read_csv("data/claim_evidence.csv")
 by_claim = {}
 known_values = set(prov) | set(recovery)

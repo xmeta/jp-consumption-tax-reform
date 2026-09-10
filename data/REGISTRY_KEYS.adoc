@@ -1,0 +1,40 @@
+= Authoritative registry keys
+
+This file documents row-identity semantics for the machine-readable registries checked by `scripts/validate_provenance.py`.
+
+[cols="2,2,4",options="header"]
+|===
+|Registry |Primary/unique key |Semantics
+
+|`data/source_catalog.csv`
+|`source_id`
+|One row per registered raw source.
+
+|`data/derived_catalog.csv`
+|`derived_file`
+|One row per registered derived artifact path.
+
+|`data/derived/stage1_official_inputs.csv`
+|`value_id`
+|One row per normalized official Stage-1 value.
+
+|`data/recovery/v6_recovered_values.csv`
+|`value_id`
+|One row per recovered value. Duplicate IDs are invalid even when the rows agree.
+
+|`research/stage1_filing_bound/inputs.csv`
+|`name`
+|One row per Stage-1 model input.
+
+|`data/input_provenance.csv`
+|`value_id`
+|One row per Stage-1 input provenance record.
+
+|`paper1/data/claim_registry.csv`
+|`claim_id`
+|One row per Paper 1 claim.
+
+|`data/claim_evidence.csv`
+|No single-column primary key declared
+|Relationship registry. `claim_id` is intentionally non-unique because a claim may have multiple evidence rows. Do not infer additional uniqueness without an explicit evidence-edge identity specification.
+|===
