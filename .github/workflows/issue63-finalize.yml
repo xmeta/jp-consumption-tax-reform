@@ -39,18 +39,11 @@ jobs:
 
           workflow = Path(".github/workflows/validate.yml")
           wtext = workflow.read_text(encoding="utf-8")
-          old = '''      - name: Validate source, derived-data, input and claim provenance
-                run: |
-                  python scripts/validate_provenance.py
-          '''
-          new = '''      - name: Validate source, derived-data, input and claim provenance
-                run: |
-                  python scripts/validate_provenance.py
-                  python scripts/test_validate_provenance_duplicate_keys.py
-          '''
-          if wtext.count(old) != 1:
-              raise SystemExit("unexpected provenance CI block; refusing edit")
-          workflow.write_text(wtext.replace(old, new), encoding="utf-8")
+          needle = "          python scripts/validate_provenance.py\n"
+          if wtext.count(needle) != 1:
+              raise SystemExit("unexpected provenance CI command count; refusing edit")
+          replacement = needle + "          python scripts/test_validate_provenance_duplicate_keys.py\n"
+          workflow.write_text(wtext.replace(needle, replacement), encoding="utf-8")
           PY
 
           cat > scripts/test_validate_provenance_duplicate_keys.py <<'PY'
