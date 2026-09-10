@@ -1,0 +1,88 @@
+= Research Prioritization: Expected Value of Information and Stop Rules
+:revdate: 2026-09-11
+
+== Authority and purpose
+
+`data/research_priority_backlog.csv` is the machine-readable queue for unresolved
+research gaps.  It does not replace `data/scientific_state.csv`: scientific
+status remains authoritative there.  The backlog answers a different question:
+which unresolved gap should receive the next unit of research effort?
+
+The queue deliberately does not use source count, file count, or stress-grid
+size as progress metrics.  More evidence is valuable only when it can plausibly
+shrink a decision-relevant admissible set, establish a missing linkage, or
+complete a model required for comparing policy scenarios.
+
+== Qualitative VoI rubric
+
+No pseudo-precise expected-value number is assigned when probabilities and loss
+functions are not identified.  Each gap is ranked using four explicit judgments:
+
+* `decision_impact`: whether resolving the gap can change a policy ranking or a
+  material manuscript claim;
+* `expected_identification_gain`: whether the proposed evidence/method can
+  plausibly turn an unlinked quantity into a direct estimate/bound or materially
+  shrink the current admissible set;
+* `expected_effort` and `access_delay`: implementation/access cost that reduces
+  the value of working on the gap now;
+* `expected_voi`: the resulting qualitative ordering (`HIGH`, `MEDIUM`, `LOW`).
+
+`priority_rank` is the operational order, not a claim that the categories are
+cardinal utilities.  Within a VoI class, reversible judgment is allowed and the
+CSV should be updated when new evidence changes feasibility or decision impact.
+
+== Identification gain versus evidence accumulation
+
+`identification_gain_type` separates `DIRECT_OR_BOUND_SHRINKAGE`,
+`BOUND_SHRINKAGE`, and `MODEL_COMPLETION` from mere evidence accumulation.
+A new survey, paper, or descriptive statistic that does not change a linkage,
+bound, counterfactual, or model-required state is not automatically progress.
+
+The `evidence_accumulation_only` flag must be explicit.  A candidate classified
+as evidence accumulation only cannot receive `HIGH` expected identification
+gain or `HIGH` expected VoI.
+
+== Stop rules
+
+Every row has a `stop_rule`.  Public-data searches marked
+`STOP_PUBLIC_SEARCH_ESCALATE_RESTRICTED` are closed as public-source dead ends
+unless a new source satisfies the exact missing-link condition in that row.
+`STOP_UNLINKED_EVIDENCE_ACCUMULATION` prohibits adding more disconnected
+burden/incidence sources that do not tighten the target parameter or bound.
+
+Stopping public search is not equivalent to setting the unknown quantity to
+zero.  The row must instead name an escalation path: restricted/admin data,
+secure/custom tabulation, formal sensitivity analysis, or retention of the
+current `NOT_IDENTIFIED`/partial-identification state.
+
+== Current ordering
+
+The current first action is the firm-level VAT compliance-to-output bridge in
+Issues #26/#47.  It directly targets the three national parameters currently
+left as stress-grid inputs (`c_VAT`, `rho`, `a_alloc`).  The objective-rank
+household bridge is second because it blocks Gini, FGT2, and real-disposable-
+income comparisons.  Rate-cut/abolition pass-through is third because it blocks
+price, demand, inflation, and distributional responses.
+
+Issue #56 is deliberately below those identification gaps: a dynamic fiscal
+module is needed, but it is primarily model completion and can be implemented
+from existing official stock/flow data without pretending to identify market
+responses.  Issue #25 is retained in the queue as the restricted-data route for
+the income-tax same-person bridge, but its access delay and weaker immediate
+M2 VAT impact put it below the current VAT gaps.  Issue #2 remains a lower-VoI
+tightening task because the generic `C_U*(A)` robustness frontier is already
+valid without a point estimate of `C_U`.
+
+== Validation
+
+Run:
+
+----
+python scripts/validate_research_priority.py
+python scripts/test_research_priority.py
+python scripts/validate_repo.py
+----
+
+The validator checks schema, unique consecutive priority ranks, allowed ordinal
+values, Issue #25/#26 coverage, stop-rule/escalation discipline, and the
+separation between identification improvement and evidence-only accumulation.

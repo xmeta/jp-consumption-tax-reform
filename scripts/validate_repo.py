@@ -4,6 +4,7 @@ import sys
 
 from validate_claim_graph import validate as validate_claim_graph
 from validate_scientific_state import validate as validate_scientific_state
+from validate_research_priority import validate as validate_research_priority
 
 ROOT = Path(__file__).resolve().parents[1]
 required = [
@@ -13,6 +14,8 @@ required = [
     ROOT / "data/scientific_state.csv",
     ROOT / "data/claim_graph.csv",
     ROOT / "data/claim_evidence.csv",
+    ROOT / "data/research_priority_backlog.csv",
+    ROOT / "docs/research_prioritization.adoc",
     ROOT / "docs/objective_function.adoc",
     ROOT / "docs/identification.adoc",
     ROOT / "docs/reproducibility.adoc",
@@ -30,6 +33,7 @@ if missing:
 else:
     errors.extend(validate_scientific_state(ROOT))
     errors.extend(validate_claim_graph(ROOT))
+    errors.extend(validate_research_priority(ROOT))
 
 for token in [
     "Income-tax behavioral response |NOT_READY",
