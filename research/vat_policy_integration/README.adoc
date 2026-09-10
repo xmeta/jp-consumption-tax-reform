@@ -1,0 +1,70 @@
+= VAT policy scenario integration matrix
+:revdate: 2026-09-10
+
+== Purpose
+
+This adapter satisfies the integration step of Issue #26 without inventing
+unidentified macro effects. It maps the existing VAT institutional
+compliance/allocation stress module into all eight requested policy scenarios
+and reports GDP, growth, distribution, poverty, inflation, fiscal and debt
+outcome statuses in the same rows.
+
+It is deliberately an *integration layer*, not a replacement macro model.
+
+== Scenarios
+
+[%header,format=csv]
+|===
+include::scenarios.csv[]
+|===
+
+The first three scenarios retain VAT administration. The last five use the same
+full-abolition institutional stress grid and differ only by financing strategy.
+Financing labels must not alter the compliance/allocation component.
+
+== Numeric versus unresolved outputs
+
+The adapter numerically carries only:
+
+* the model-contingent institutional GDP level component
+  stem:[m(\rho c_{VAT}+a_{alloc})]; and
+* its annualized transition-growth contribution.
+The stress range remains *not an empirical bound*. Current evidence does not
+identify national stem:[c_{VAT}], stem:[\rho], or stem:[a_{alloc}].
+
+The matrix also contains explicit fields for overall real GDP, annual real
+growth, growth-decline penalty, income Gini, wealth Gini, intergenerational gap,
+FGT2, real disposable income by decile, inflation, fiscal balance, debt/GDP and
+interest-rate/JGB-market effects.
+
+Until the corresponding demand, household-incidence and financing modules are
+integrated, their numeric cells remain empty and adjacent status fields identify
+the missing link. This is preferable to assigning zero: zero would be an
+economic claim, whereas an empty value plus a status is a scientific-state
+statement.
+
+== Outputs
+
+* +data/derived/vat_policy_scenario_matrix.csv+: 8 scenarios x 300
+  institutional stress points = 2,400 rows.
+* +data/derived/vat_policy_scenario_summary.csv+: one row per policy scenario
+  with the institutional range and joint outcome-status vector.
+
+== Reproduction
+
+[source,shell]
+----
+python research/vat_compliance_productivity/run_vat_compliance_productivity.py
+python research/vat_policy_integration/run_vat_policy_scenario_matrix.py
+python research/vat_policy_integration/test_vat_policy_scenario_matrix.py
+----
+== Scientific status
+
+----
+PARTIAL_E2E_POLICY_MATRIX_COMPLETE_UNMODELED_MACRO_CHANNELS_EXPLICIT
+----
+
+The matrix is operational end-to-end, but it is not yet a policy forecast or a
+joint welfare optimization. The next completion step is to replace explicit
+unmodeled statuses with validated demand/distribution/financing outputs as those
+modules become reproducible in this repository.
