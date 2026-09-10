@@ -94,7 +94,6 @@ INCOME_TAX = (
     ("scripts/test_nta_salary_filing_bridge_source_matrix.py",),
     ("scripts/extract_nta_salary_source_system_coverage.py",),
     ("scripts/test_nta_salary_source_system_coverage.py",),
-    ("scripts/test_filed_processed_terminology.py",),
     ("scripts/extract_public_sector_person_coverage.py",),
     ("scripts/test_public_sector_person_coverage.py",),
     ("scripts/extract_nta_withholding_person_series.py",),
@@ -120,6 +119,7 @@ PROVENANCE = (
     ("scripts/build_input_provenance.py",),
     ("scripts/build_stage1_inputs.py",),
     ("scripts/validate_provenance.py",),
+    ("scripts/test_filed_processed_terminology.py",),
 )
 
 STAGE1 = (
@@ -216,6 +216,12 @@ CLEAN_ROOM_GLOBS = (
     "paper1/data/rank_one_sided_v5_overall_table.csv",
 )
 
+# Manual verified inputs may live beside generated artifacts for historical reasons,
+# but clean-room must never delete inputs that no reproduction command regenerates.
+CLEAN_ROOM_KEEP = frozenset({
+    "data/derived/stage1_official_inputs.csv",
+})
+
 
 def _display(argv: list[str]) -> str:
     return shlex.join(argv)
@@ -282,7 +288,8 @@ def _clean_room_outputs(root: Path, dry_run: bool) -> list[str]:
     selected = sorted(
         rel
         for rel in _tracked_paths(root)
-        if any(fnmatch.fnmatchcase(rel, pattern) for pattern in CLEAN_ROOM_GLOBS)
+        if rel not in CLEAN_ROOM_KEEP
+        and any(fnmatch.fnmatchcase(rel, pattern) for pattern in CLEAN_ROOM_GLOBS)
     )
     if not selected:
         raise SystemExit("clean-room output set is empty")
