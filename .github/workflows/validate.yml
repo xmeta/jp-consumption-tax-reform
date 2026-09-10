@@ -83,6 +83,8 @@ jobs:
           python-version: "3.12"
       - name: Test machine-readable scientific state
         run: python scripts/test_scientific_state.py
+      - name: Test scientific semantic invariants
+        run: python scripts/test_scientific_semantics.py
       - name: Validate repository integrity
         run: python scripts/reproduce.py integrity
 

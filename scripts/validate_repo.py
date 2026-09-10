@@ -1,6 +1,5 @@
 #!/usr/bin/env python3
 from pathlib import Path
-import re
 import sys
 
 from validate_scientific_state import validate as validate_scientific_state
@@ -11,10 +10,12 @@ required = [
     ROOT / "STATUS.adoc",
     ROOT / "PACKAGE_INTEGRITY.adoc",
     ROOT / "data/scientific_state.csv",
+    ROOT / "data/claim_evidence.csv",
     ROOT / "docs/objective_function.adoc",
     ROOT / "docs/identification.adoc",
     ROOT / "docs/reproducibility.adoc",
     ROOT / "docs/scientific_state.adoc",
+    ROOT / "paper1/data/claim_registry.csv",
 ]
 missing = [str(p.relative_to(ROOT)) for p in required if not p.exists()]
 status_path = ROOT / "STATUS.adoc"
@@ -32,9 +33,6 @@ for token in [
 ]:
     if token not in status:
         errors.append("required status marker missing: " + token)
-
-if re.search(r"true statutory MTR distribution.*identified", status, re.I):
-    errors.append("forbidden overclaim detected")
 
 if errors:
     print("\n".join("ERROR: " + e for e in errors))

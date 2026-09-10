@@ -63,8 +63,8 @@ input.
 |Semicolon-separated repository output paths that must exist.
 
 |`blockers`
-|Semicolon-separated unresolved conditions. Active modules must list at least
-one blocker until they are genuinely ready.
+|Semicolon-separated unresolved conditions. Active modules below `READY` must
+list at least one blocker; a `READY` component must have no unresolved blocker.
 
 |`supersedes` / `superseded_by`
 |Semicolon-separated component IDs for explicit scientific-state supersession.
@@ -90,8 +90,71 @@ new evidence invalidates a stronger interpretation.
 be complete while its scientific maturity remains `SENSITIVITY_ONLY`.
 
 Detailed `status` tokens remain domain-specific and may be more precise than
-the coarse maturity class. A later semantic validator can impose stronger
-cross-field restrictions without changing this authority format.
+the coarse maturity class. The validator enforces explicit mappings for status
+families whose semantics are unambiguous: sensitivity statuses map to
+`SENSITIVITY_ONLY`, `NOT_READY`/`NOT_IDENTIFIED` to `NOT_IDENTIFIED`,
+`ROBUSTNESS_FRONTIER` and `PARTIAL_*` to `PARTIALLY_IDENTIFIED`, and `READY*`
+to `READY`.
+
+== Semantic invariants
+
+The repository-integrity gate consumes the machine-readable authority and
+applies cross-field scientific invariants in addition to schema checks.
+
+=== Identification state
+
+* `policy_usable=true` requires `maturity=READY`.
+* `CAUSAL_IDENTIFIED` is invalid for `NOT_IDENTIFIED` or `SENSITIVITY_ONLY`
+  components.
+* Every active non-`READY` component must retain an explicit blocker list.
+* A `READY` component must not retain unresolved blockers.
+* The structured status-family mappings above are machine-enforced.
+
+These checks intentionally do not equate implementation phase with scientific
+identification. `PHASE1_COMPLETE` can coexist with `SENSITIVITY_ONLY`.
+
+=== Claim semantics
+
+Paper 1's existing `paper1/data/claim_registry.csv` is used as the current
+claim-level semantic registry. A claim whose `source` lies below a registered
+`research/<module>` inherits that component's authority row for semantic
+checks.
+
+The gate enforces:
+
+* `NOT_READY` claims and claims mapped to a `NOT_IDENTIFIED` component cannot
+  expose a numeric headline point estimate.
+* Claims mapped to `SENSITIVITY_ONLY` cannot call their allowed result an
+  empirical bound, identified effect, confidence interval/region, causal bound,
+  sharp identified set, or point-identified result.
+* Claims mapped to a component without `CAUSAL_IDENTIFIED` cannot make an
+  allowed causal-effect, causal-impact, causal-estimate, or causal-bound claim.
+* Claims mapped to `policy_usable=false` cannot describe themselves as an
+  optimal policy, policy optimum, optimizer input, or welfare-maximizing
+  conclusion.
+* High-risk vocabulary already attached to each `claim_id` in
+  `forbidden_claim` cannot simultaneously appear in that claim's
+  `allowed_claim`.
+* An active reproduced claim cannot be supported only by
+  `RECOVERY_ONLY`/`RECOVERY_GAP` evidence.
+
+The per-claim `forbidden_claim` field is therefore used as ID-attached semantic
+guard data rather than relying on the former repository-wide one-off regex.
+Generalizing this registry to every research product remains a separate claim-
+graph concern.
+
+=== Failure categories
+
+Validator diagnostics are prefixed so CI failures identify the layer that
+failed:
+
+* `schema:` -- malformed or contradictory registry structure;
+* `provenance:` -- missing evidence/output paths or recovery-only active support;
+* `identification:` -- impossible maturity/causal/policy/state combinations;
+* `claim:` -- claim text or claim-to-component semantic contradictions.
+
+Coverage and human-facing synchronization retain their more specific
+`coverage:` and `sync:` prefixes.
 
 == Validation
 
@@ -99,11 +162,23 @@ Run:
 
 ----
 python scripts/test_scientific_state.py
+python scripts/test_scientific_semantics.py
 python scripts/validate_scientific_state.py
 python scripts/reproduce.py integrity
 ----
 
 The checks cover schema shape, enum values, unique primary identifiers,
 conflicting active module declarations, active-module coverage, blocker
-presence, evidence/output path existence, supersession reciprocity, and
-`STATUS.adoc` status-token synchronization.
+semantics, evidence/output path existence, supersession reciprocity,
+`STATUS.adoc` status-token synchronization, cross-field identification
+invariants, per-claim semantic guards, and recovery-only evidence exclusion for
+active reproduced claims.
+
+A successful repository gate ends with:
+
+----
+repository scientific-state validation: OK
+----
+
+That success line therefore means the documented semantic invariants passed, not
+merely that status tokens were present.
