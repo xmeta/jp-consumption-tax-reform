@@ -9,6 +9,8 @@ Issue #26 Phase 1 separates VAT institutional abolition from a 0% statutory rate
 * +sensitivity_axes.csv+ — non-identified stress-test axes.
 * +run_vat_compliance_productivity.py+ — deterministic 1,200-row sensitivity generator.
 * +test_vat_compliance_productivity.py+ — architecture and numeric regression tests.
+* +firm_level_identification_bridge.adoc+ — firm-level `c_VAT` / `rho` / `a_alloc` estimands, linkage designs, causal assumptions and stop rules.
+* +firm_level_identification_design.csv+ — machine-readable candidate-design and identification-set reduction matrix.
 
 Observed Japan evidence is generated separately by
 +scripts/extract_meti_vat_internal_hours.py+,
@@ -163,3 +165,10 @@ leaving unavailable macro channels explicitly unmodeled rather than assigning
 zero.  This is a partial end-to-end integration, not a policy forecast.
 
 The ordinary VAT demand channel and financing choices remain separate.
+
+Issue #47 now provides a firm-level identification bridge.  No currently
+advertised Japanese data route jointly identifies national `c_VAT`, `rho`, and
+`a_alloc`: the strongest existing-data routes shrink at most one dimension
+directly, while a prospective burden/redeployment panel can target two.  This
+design result does not change the current `NOT_IDENTIFIED` national parameter
+status.
