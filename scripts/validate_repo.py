@@ -3,14 +3,18 @@ from pathlib import Path
 import re
 import sys
 
+from validate_scientific_state import validate as validate_scientific_state
+
 ROOT = Path(__file__).resolve().parents[1]
 required = [
     ROOT / "README.adoc",
     ROOT / "STATUS.adoc",
     ROOT / "PACKAGE_INTEGRITY.adoc",
+    ROOT / "data/scientific_state.csv",
     ROOT / "docs/objective_function.adoc",
     ROOT / "docs/identification.adoc",
     ROOT / "docs/reproducibility.adoc",
+    ROOT / "docs/scientific_state.adoc",
 ]
 missing = [str(p.relative_to(ROOT)) for p in required if not p.exists()]
 status_path = ROOT / "STATUS.adoc"
@@ -18,6 +22,9 @@ status = status_path.read_text(encoding="utf-8") if status_path.exists() else ""
 errors = []
 if missing:
     errors.append("missing required files: " + ", ".join(missing))
+else:
+    errors.extend(validate_scientific_state(ROOT))
+
 for token in [
     "Income-tax behavioral response |NOT_READY",
     "Pseudo-filer statutory MTR |SENSITIVITY_ONLY",
