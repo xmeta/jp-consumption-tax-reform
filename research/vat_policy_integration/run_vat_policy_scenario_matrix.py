@@ -50,43 +50,55 @@ def fmt(x):
 
 def build():
     scenarios = read(SCENARIOS)
-    assert len(scenarios) == 8
-    assert {r["scenario_id"] for r in scenarios} == EXPECTED_SCENARIOS
+    if not (len(scenarios) == 8):
+        raise RuntimeError('scientific runtime invariant failed: research/vat_policy_integration/run_vat_policy_scenario_matrix.py:53')
+    if not ({r['scenario_id'] for r in scenarios} == EXPECTED_SCENARIOS):
+        raise RuntimeError('scientific runtime invariant failed: research/vat_policy_integration/run_vat_policy_scenario_matrix.py:54')
     fiscal = {r["scenario_id"]: r for r in read(FISCAL)}
     jgb_gdp = {r["scenario_id"]: r for r in read(JGB_GDP)}
     household_exp = read(HOUSEHOLD_EXP)
     household_tax = read(HOUSEHOLD_TAX)
-    assert set(fiscal) == EXPECTED_SCENARIOS
-    assert set(jgb_gdp) == EXPECTED_SCENARIOS
-    assert len(household_exp) == 10
-    assert {int(r["annual_income_decile"]) for r in household_exp} == set(range(1, 11))
-    assert all(r["rank_bridge_status"] == "NOT_LINKED_DO_NOT_TREAT_AS_OBJECTIVE_DECILE" for r in household_exp)
-    assert len(household_tax) == 80
+    if not (set(fiscal) == EXPECTED_SCENARIOS):
+        raise RuntimeError('scientific runtime invariant failed: research/vat_policy_integration/run_vat_policy_scenario_matrix.py:59')
+    if not (set(jgb_gdp) == EXPECTED_SCENARIOS):
+        raise RuntimeError('scientific runtime invariant failed: research/vat_policy_integration/run_vat_policy_scenario_matrix.py:60')
+    if not (len(household_exp) == 10):
+        raise RuntimeError('scientific runtime invariant failed: research/vat_policy_integration/run_vat_policy_scenario_matrix.py:61')
+    if not ({int(r['annual_income_decile']) for r in household_exp} == set(range(1, 11))):
+        raise RuntimeError('scientific runtime invariant failed: research/vat_policy_integration/run_vat_policy_scenario_matrix.py:62')
+    if not (all((r['rank_bridge_status'] == 'NOT_LINKED_DO_NOT_TREAT_AS_OBJECTIVE_DECILE' for r in household_exp))):
+        raise RuntimeError('scientific runtime invariant failed: research/vat_policy_integration/run_vat_policy_scenario_matrix.py:63')
+    if not (len(household_tax) == 80):
+        raise RuntimeError('scientific runtime invariant failed: research/vat_policy_integration/run_vat_policy_scenario_matrix.py:64')
     tax_by_scenario = {}
     for r in household_tax:
         tax_by_scenario.setdefault(r["scenario_id"], []).append(r)
-    assert set(tax_by_scenario) == EXPECTED_SCENARIOS
-    assert all(len(v) == 10 for v in tax_by_scenario.values())
+    if not (set(tax_by_scenario) == EXPECTED_SCENARIOS):
+        raise RuntimeError('scientific runtime invariant failed: research/vat_policy_integration/run_vat_policy_scenario_matrix.py:68')
+    if not (all((len(v) == 10 for v in tax_by_scenario.values()))):
+        raise RuntimeError('scientific runtime invariant failed: research/vat_policy_integration/run_vat_policy_scenario_matrix.py:69')
     distribution_status = "ANNUAL_INCOME_DECILE_RATE_ONLY_TAX_CONTENT_ENVELOPE_AVAILABLE_OBJECTIVE_RANK_AND_ACTUAL_INCIDENCE_REQUIRED"
     inflation_status = "RATE_ONLY_HOUSEHOLD_PRICE_RELIEF_ENVELOPE_AVAILABLE_CPI_PASS_THROUGH_AND_MACRO_LINK_REQUIRED"
 
     sens = read(SENS)
-    assert len(sens) == 1200
+    if not (len(sens) == 1200):
+        raise RuntimeError('scientific runtime invariant failed: research/vat_policy_integration/run_vat_policy_scenario_matrix.py:74')
     by_regime = {}
     for row in sens:
         by_regime.setdefault(row["regime_id"], []).append(row)
-    assert {k: len(v) for k, v in by_regime.items()} == {
-        "current_8_10_admin_retained": 300,
-        "reduced_5_admin_retained": 300,
-        "zero_rate_admin_retained": 300,
-        "full_vat_abolition": 300,
-    }
+    if not ({k: len(v) for k, v in by_regime.items()} == {'current_8_10_admin_retained': 300, 'reduced_5_admin_retained': 300, 'zero_rate_admin_retained': 300, 'full_vat_abolition': 300}):
+        raise RuntimeError('scientific runtime invariant failed: research/vat_policy_integration/run_vat_policy_scenario_matrix.py:78')
     ident = {r["quantity"]: r for r in read(IDENT)}
-    assert ident["vat_specific_real_resource_cost_share_of_output"]["status"] == "NOT_IDENTIFIED"
-    assert ident["productive_redeployment_fraction_rho"]["status"] == "NOT_IDENTIFIED"
-    assert ident["allocative_efficiency_dividend"]["status"] == "NOT_IDENTIFIED"
-    assert ident["income_gini_and_FGT2_effect"]["status"] == "NOT_MODELED_PHASE1"
-    assert ident["fiscal_debt_effect"]["model_use"] == "FINANCING_CHANNEL_SEPARATE"
+    if not (ident['vat_specific_real_resource_cost_share_of_output']['status'] == 'NOT_IDENTIFIED'):
+        raise RuntimeError('scientific runtime invariant failed: research/vat_policy_integration/run_vat_policy_scenario_matrix.py:85')
+    if not (ident['productive_redeployment_fraction_rho']['status'] == 'NOT_IDENTIFIED'):
+        raise RuntimeError('scientific runtime invariant failed: research/vat_policy_integration/run_vat_policy_scenario_matrix.py:86')
+    if not (ident['allocative_efficiency_dividend']['status'] == 'NOT_IDENTIFIED'):
+        raise RuntimeError('scientific runtime invariant failed: research/vat_policy_integration/run_vat_policy_scenario_matrix.py:87')
+    if not (ident['income_gini_and_FGT2_effect']['status'] == 'NOT_MODELED_PHASE1'):
+        raise RuntimeError('scientific runtime invariant failed: research/vat_policy_integration/run_vat_policy_scenario_matrix.py:88')
+    if not (ident['fiscal_debt_effect']['model_use'] == 'FINANCING_CHANNEL_SEPARATE'):
+        raise RuntimeError('scientific runtime invariant failed: research/vat_policy_integration/run_vat_policy_scenario_matrix.py:89')
 
     rows = []
     for scenario in scenarios:
@@ -95,7 +107,8 @@ def build():
         tax_rows = sorted(tax_by_scenario[scenario["scenario_id"]], key=lambda r: int(r["annual_income_decile"]))
         tax_d1 = tax_rows[0]
         tax_d10 = tax_rows[-1]
-        assert tax_d1["annual_income_decile"] == "1" and tax_d10["annual_income_decile"] == "10"
+        if not (tax_d1['annual_income_decile'] == '1' and tax_d10['annual_income_decile'] == '10'):
+            raise RuntimeError('scientific runtime invariant failed: research/vat_policy_integration/run_vat_policy_scenario_matrix.py:98')
         for idx, source in enumerate(by_regime[scenario["vat_regime_id"]], 1):
             institutional = float(source["total_institutional_level_effect"])
             transition = float(source["annualized_transition_growth_contribution"])
@@ -178,7 +191,8 @@ def build():
                 "joint_outcome_status": "PARTIAL_E2E_REPORT_INSTITUTIONAL_STATIC_FISCAL_AND_HOUSEHOLD_RATE_ENVELOPE_NUMERIC_OTHER_CHANNELS_EXPLICITLY_UNIDENTIFIED",
                 "identification_status": "MODEL_CONTINGENT_SCENARIO_MATRIX_NOT_POLICY_FORECAST",
             })
-    assert len(rows) == 2400
+    if not (len(rows) == 2400):
+        raise RuntimeError('scientific runtime invariant failed: research/vat_policy_integration/run_vat_policy_scenario_matrix.py:181')
 
     def key(row):
         return (
@@ -200,12 +214,15 @@ def build():
         for sid in ABOLITION_SCENARIOS
     }
     base = abolition["full_abolition"]
-    assert all(value == base for value in abolition.values())
+    if not (all((value == base for value in abolition.values()))):
+        raise RuntimeError('scientific runtime invariant failed: research/vat_policy_integration/run_vat_policy_scenario_matrix.py:203')
 
     zero = [r for r in rows if r["scenario_id"] == "zero_rate_admin_retained"]
     abol = [r for r in rows if r["scenario_id"] == "full_abolition"]
-    assert all(float(r["institutional_gdp_level_effect"]) == 0 for r in zero)
-    assert max(float(r["institutional_gdp_level_effect"]) for r in abol) == 0.006
+    if not (all((float(r['institutional_gdp_level_effect']) == 0 for r in zero))):
+        raise RuntimeError('scientific runtime invariant failed: research/vat_policy_integration/run_vat_policy_scenario_matrix.py:207')
+    if not (max((float(r['institutional_gdp_level_effect']) for r in abol)) == 0.006):
+        raise RuntimeError('scientific runtime invariant failed: research/vat_policy_integration/run_vat_policy_scenario_matrix.py:208')
 
     summary = []
     for scenario in scenarios:

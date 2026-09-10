@@ -148,47 +148,62 @@ def build():
         taxpayer = totals[(duration, "taxpayer")]
         nontax = totals[(duration, "nontaxpayer")]
         all_status = totals[(duration, "all")]
-        assert int(t16[all_scope]["not_year_end_adjusted_taxpayer_persons"]) == taxpayer["counts"][3]
-        assert int(t16[all_scope]["not_year_end_adjusted_nontaxpayer_persons"]) == nontax["counts"][3]
-        assert int(t16[all_scope]["not_year_end_adjusted_total_persons"]) == all_status["counts"][3]
-        assert int(t16[all_scope]["not_year_end_adjusted_tax_million_yen"]) == taxpayer["tax"][3]
+        if not (int(t16[all_scope]['not_year_end_adjusted_taxpayer_persons']) == taxpayer['counts'][3]):
+            raise RuntimeError('scientific runtime invariant failed: scripts/extract_nta_salary_return_overlap.py:151')
+        if not (int(t16[all_scope]['not_year_end_adjusted_nontaxpayer_persons']) == nontax['counts'][3]):
+            raise RuntimeError('scientific runtime invariant failed: scripts/extract_nta_salary_return_overlap.py:152')
+        if not (int(t16[all_scope]['not_year_end_adjusted_total_persons']) == all_status['counts'][3]):
+            raise RuntimeError('scientific runtime invariant failed: scripts/extract_nta_salary_return_overlap.py:153')
+        if not (int(t16[all_scope]['not_year_end_adjusted_tax_million_yen']) == taxpayer['tax'][3]):
+            raise RuntimeError('scientific runtime invariant failed: scripts/extract_nta_salary_return_overlap.py:154')
         nonsecondary_taxpayer = taxpayer["counts"][1] + taxpayer["counts"][2]
         nonsecondary_nontax = nontax["counts"][1] + nontax["counts"][2]
-        assert int(t16[excl_scope]["not_year_end_adjusted_taxpayer_persons"]) == nonsecondary_taxpayer
-        assert int(t16[excl_scope]["not_year_end_adjusted_nontaxpayer_persons"]) == nonsecondary_nontax
-        assert abs(int(t16[excl_scope]["not_year_end_adjusted_tax_million_yen"]) - (
-            taxpayer["tax"][1] + taxpayer["tax"][2]
-        )) <= 1
+        if not (int(t16[excl_scope]['not_year_end_adjusted_taxpayer_persons']) == nonsecondary_taxpayer):
+            raise RuntimeError('scientific runtime invariant failed: scripts/extract_nta_salary_return_overlap.py:157')
+        if not (int(t16[excl_scope]['not_year_end_adjusted_nontaxpayer_persons']) == nonsecondary_nontax):
+            raise RuntimeError('scientific runtime invariant failed: scripts/extract_nta_salary_return_overlap.py:158')
+        if not (abs(int(t16[excl_scope]['not_year_end_adjusted_tax_million_yen']) - (taxpayer['tax'][1] + taxpayer['tax'][2])) <= 1):
+            raise RuntimeError('scientific runtime invariant failed: scripts/extract_nta_salary_return_overlap.py:159')
 
     gt20_persons = integer_cell(high_total.get("D"))
     gt20_salary = integer_cell(high_total.get("E"))
     gt20_tax = integer_cell(high_total.get("F"))
     full_year_taxpayer = [r for r in class_rows if r["employment_duration_group"] == "full_year"
                          and r["tax_status"] == "taxpayer"]
-    assert gt20_persons == sum(int(r["other_reason_persons"]) for r in full_year_taxpayer[-2:])
-    assert gt20_persons == 320_983
-    assert gt20_salary == 10_403_325
-    assert gt20_tax == 2_858_384
+    if not (gt20_persons == sum((int(r['other_reason_persons']) for r in full_year_taxpayer[-2:]))):
+        raise RuntimeError('scientific runtime invariant failed: scripts/extract_nta_salary_return_overlap.py:168')
+    if not (gt20_persons == 320983):
+        raise RuntimeError('scientific runtime invariant failed: scripts/extract_nta_salary_return_overlap.py:169')
+    if not (gt20_salary == 10403325):
+        raise RuntimeError('scientific runtime invariant failed: scripts/extract_nta_salary_return_overlap.py:170')
+    if not (gt20_tax == 2858384):
+        raise RuntimeError('scientific runtime invariant failed: scripts/extract_nta_salary_return_overlap.py:171')
     salary_return = [r for r in read_csv(FINAL_RETURN) if r["primary_income_type"] == "salary"]
     fr_total = sum(int(r["table22_population_persons"]) for r in salary_return)
     fr_positive = sum(int(r["positive_self_assessed_balance_persons"]) for r in salary_return)
     fr_refund = sum(int(r["refund_persons"]) for r in salary_return)
     fr_residual = sum(int(r["neither_positive_nor_refund_residual"]) for r in salary_return)
-    assert fr_total == fr_positive + fr_refund + fr_residual
+    if not (fr_total == fr_positive + fr_refund + fr_residual):
+        raise RuntimeError('scientific runtime invariant failed: scripts/extract_nta_salary_return_overlap.py:177')
 
     processing = {r["metric_id"]: r for r in read_csv(PROCESSING_AUDIT)}
     processed_total = int(processing["salary_table22_filed_or_processed_population"]["value"])
     pure_final_return = int(processing["salary_final_return_row_population"]["value"])
-    assert processed_total == fr_total == 11_423_587
-    assert pure_final_return == 11_293_442
-    assert processed_total != pure_final_return
+    if not (processed_total == fr_total == 11423587):
+        raise RuntimeError('scientific runtime invariant failed: scripts/extract_nta_salary_return_overlap.py:182')
+    if not (pure_final_return == 11293442):
+        raise RuntimeError('scientific runtime invariant failed: scripts/extract_nta_salary_return_overlap.py:183')
+    if not (processed_total != pure_final_return):
+        raise RuntimeError('scientific runtime invariant failed: scripts/extract_nta_salary_return_overlap.py:184')
 
     salary_flow = [r for r in read_csv(TAX_FLOW) if r["primary_income_type"] == "salary"]
     flow_positive = sum(int(r["positive_self_assessed_balance_persons_estimated"]) for r in salary_flow)
     any_withholding = sum(int(r["source_withholding_persons_estimated"]) for r in salary_flow)
     salary_withholding = sum(int(r["salary_withholding_persons_estimated"]) for r in salary_flow)
-    assert flow_positive == fr_positive
-    assert salary_withholding <= any_withholding <= fr_positive
+    if not (flow_positive == fr_positive):
+        raise RuntimeError('scientific runtime invariant failed: scripts/extract_nta_salary_return_overlap.py:190')
+    if not (salary_withholding <= any_withholding <= fr_positive):
+        raise RuntimeError('scientific runtime invariant failed: scripts/extract_nta_salary_return_overlap.py:191')
 
     metrics = [
         metric("private_salary_full_year_no_year_end_adjustment_taxpayers",

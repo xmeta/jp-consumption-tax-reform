@@ -5,6 +5,9 @@ Stage-1 intentionally uses the pure Final return row (23,090,075) and is not
 part of this migration.  This test covers the partial-identification artifacts
 whose underlying NTA populations include later processing categories.
 """
+
+if not __debug__:
+    raise RuntimeError('optimized Python is not supported for executable tests; assertions must remain active')
 from pathlib import Path
 import csv
 

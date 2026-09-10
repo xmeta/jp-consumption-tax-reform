@@ -59,11 +59,15 @@ def scenario_target_rate(sid):
 
 def validate_nta_rate_source(catalog):
     src = catalog[NTA_SOURCE]
-    assert src["sha256"] == NTA_SHA
+    if not (src['sha256'] == NTA_SHA):
+        raise RuntimeError('scientific runtime invariant failed: scripts/build_vat_household_tax_content_envelope.py:62')
     raw = (ROOT / src["raw_file"]).read_text(encoding="utf-8")
-    assert "標準税率10パーセント" in raw
-    assert "軽減税率8パーセント" in raw
-    assert "うち2.2パーセントは地方消費税" in raw
+    if not ('標準税率10パーセント' in raw):
+        raise RuntimeError('scientific runtime invariant failed: scripts/build_vat_household_tax_content_envelope.py:64')
+    if not ('軽減税率8パーセント' in raw):
+        raise RuntimeError('scientific runtime invariant failed: scripts/build_vat_household_tax_content_envelope.py:65')
+    if not ('うち2.2パーセントは地方消費税' in raw):
+        raise RuntimeError('scientific runtime invariant failed: scripts/build_vat_household_tax_content_envelope.py:66')
 
 
 def build():
@@ -71,13 +75,14 @@ def build():
     validate_nta_rate_source(catalog)
     households = read_csv(HOUSEHOLD)
     scenarios = read_csv(SCENARIOS)
-    assert len(households) == 10
-    assert len(scenarios) == 8
-    assert {int(r["annual_income_decile"]) for r in households} == set(range(1, 11))
-    assert all(
-        r["rank_bridge_status"] == "NOT_LINKED_DO_NOT_TREAT_AS_OBJECTIVE_DECILE"
-        for r in households
-    )
+    if not (len(households) == 10):
+        raise RuntimeError('scientific runtime invariant failed: scripts/build_vat_household_tax_content_envelope.py:74')
+    if not (len(scenarios) == 8):
+        raise RuntimeError('scientific runtime invariant failed: scripts/build_vat_household_tax_content_envelope.py:75')
+    if not ({int(r['annual_income_decile']) for r in households} == set(range(1, 11))):
+        raise RuntimeError('scientific runtime invariant failed: scripts/build_vat_household_tax_content_envelope.py:76')
+    if not (all((r['rank_bridge_status'] == 'NOT_LINKED_DO_NOT_TREAT_AS_OBJECTIVE_DECILE' for r in households))):
+        raise RuntimeError('scientific runtime invariant failed: scripts/build_vat_household_tax_content_envelope.py:77')
 
     rows = []
     for scenario in scenarios:
@@ -118,7 +123,8 @@ def build():
                 "note": "Current embedded tax upper bound assigns the 10% statutory maximum to all observed consumption; exempt/reduced-rate items make actual tax content weakly smaller. Policy relief is a rate-only current-basket envelope, not an empirical price, welfare, Gini or FGT2 effect.",
             })
 
-    assert len(rows) == 80
+    if not (len(rows) == 80):
+        raise RuntimeError('scientific runtime invariant failed: scripts/build_vat_household_tax_content_envelope.py:121')
     return rows
 
 

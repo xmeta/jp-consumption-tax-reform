@@ -340,11 +340,13 @@ def link_inequalities(
         for ki in range(K):
             a[model.x_index[(di, ki)]] = -data.r[ki]
         if model.include_epsilon:
-            assert model.epsilon_index is not None
+            if not (model.epsilon_index is not None):
+                raise RuntimeError('scientific runtime invariant failed: research/income_tax_partial_identification/run_replacement_transport_lp.py:343')
             a[model.epsilon_index] = -model.weights[di]
             b = 0.0
         else:
-            assert epsilon is not None
+            if not (epsilon is not None):
+                raise RuntimeError('scientific runtime invariant failed: research/income_tax_partial_identification/run_replacement_transport_lp.py:347')
             b = epsilon * model.weights[di]
         rows.append(a)
         rhs.append(b)
@@ -354,7 +356,8 @@ def link_inequalities(
         if model.include_epsilon:
             # Negating the previous row would make epsilon coefficient positive.
             # Restore the required -epsilon*w term explicitly.
-            assert model.epsilon_index is not None
+            if not (model.epsilon_index is not None):
+                raise RuntimeError('scientific runtime invariant failed: research/income_tax_partial_identification/run_replacement_transport_lp.py:357')
             a[model.epsilon_index] = -model.weights[di]
         rows.append(a)
         rhs.append(b)
@@ -365,7 +368,8 @@ def link_inequalities(
 def bounds_for(model: MatrixModel):
     bounds = [(0.0, None)] * model.nvars
     if model.include_epsilon:
-        assert model.epsilon_index is not None
+        if not (model.epsilon_index is not None):
+            raise RuntimeError('scientific runtime invariant failed: research/income_tax_partial_identification/run_replacement_transport_lp.py:368')
         bounds[model.epsilon_index] = (0.0, 1.0)
     return bounds
 
@@ -488,7 +492,8 @@ def objective_vector(
                     model.weights[di] * values[di, si]
                 )
     else:
-        assert decile_index is not None
+        if not (decile_index is not None):
+            raise RuntimeError('scientific runtime invariant failed: research/income_tax_partial_identification/run_replacement_transport_lp.py:491')
         di = decile_index
         for si in range(len(data.scenarios)):
             c[model.lambda_index[(di, si)]] = values[di, si]
@@ -527,7 +532,8 @@ def minimum_relaxation(
 ):
     model = make_model(data, scheme, include_epsilon=True)
     c = np.zeros(model.nvars)
-    assert model.epsilon_index is not None
+    if not (model.epsilon_index is not None):
+        raise RuntimeError('scientific runtime invariant failed: research/income_tax_partial_identification/run_replacement_transport_lp.py:530')
     c[model.epsilon_index] = 1.0
     res = solve_lp(model, c)
     if not res.success:

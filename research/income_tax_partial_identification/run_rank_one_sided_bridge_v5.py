@@ -197,11 +197,13 @@ def inequalities(
         if model.include_epsilon:
             # v3.Model names this generic scalar slot epsilon_index.  In v5 it
             # is semantically eta and is never exposed as epsilon in outputs.
-            assert model.epsilon_index is not None
+            if not (model.epsilon_index is not None):
+                raise RuntimeError('scientific runtime invariant failed: research/income_tax_partial_identification/run_rank_one_sided_bridge_v5.py:200')
             a[model.epsilon_index] = -1.0
             b = 0.0
         else:
-            assert eta is not None
+            if not (eta is not None):
+                raise RuntimeError('scientific runtime invariant failed: research/income_tax_partial_identification/run_rank_one_sided_bridge_v5.py:204')
             b = float(eta)
         rows.append(a)
         rhs.append(b)
@@ -324,7 +326,8 @@ def solve_minimum_at_delta(
 ):
     model = v3.make_model(data, include_epsilon=True)
     c = np.zeros(model.nvars)
-    assert model.epsilon_index is not None
+    if not (model.epsilon_index is not None):
+        raise RuntimeError('scientific runtime invariant failed: research/income_tax_partial_identification/run_rank_one_sided_bridge_v5.py:327')
     c[model.epsilon_index] = 1.0
     res = solve_lp(model, c, delta=delta, method=method)
     if not res.success:
@@ -618,8 +621,10 @@ def zero_row_and_plan(data, cfg: dict[str, str]):
         }
         return row, []
 
-    assert delta_star is not None and diag is not None
-    assert delta_cross is not None and diag_cross is not None
+    if not (delta_star is not None and diag is not None):
+        raise RuntimeError('scientific runtime invariant failed: research/income_tax_partial_identification/run_rank_one_sided_bridge_v5.py:621')
+    if not (delta_cross is not None and diag_cross is not None):
+        raise RuntimeError('scientific runtime invariant failed: research/income_tax_partial_identification/run_rank_one_sided_bridge_v5.py:622')
     if abs(delta_star - delta_cross) > cross_tol:
         raise RuntimeError(
             f"v5 zero-violation threshold mismatch: {delta_star} vs {delta_cross}"

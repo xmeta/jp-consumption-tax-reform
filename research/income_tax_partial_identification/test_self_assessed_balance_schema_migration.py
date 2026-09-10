@@ -2,6 +2,9 @@
 """Verify semantic schema migration preserves all pre-migration numeric payloads."""
 from __future__ import annotations
 
+if not __debug__:
+    raise RuntimeError('optimized Python is not supported for executable tests; assertions must remain active')
+
 from pathlib import Path
 import csv
 import hashlib

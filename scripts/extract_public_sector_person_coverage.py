@@ -123,7 +123,8 @@ def build():
         raise RuntimeError("NTA Public Offices amount anchors changed")
 
     observed_external_subtotal = national + local_total
-    assert observed_external_subtotal == 3_064_373
+    if not (observed_external_subtotal == 3064373):
+        raise RuntimeError('scientific runtime invariant failed: scripts/extract_public_sector_person_coverage.py:126')
     rows = [
         metric(
             "national_public_salary_survey_covered_persons",

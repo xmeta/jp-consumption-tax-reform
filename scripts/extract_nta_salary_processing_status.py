@@ -132,10 +132,14 @@ def build():
     t22_refund = sum(int(r["refund_persons"]) for r in table22_salary)
     t22_residual = sum(int(r["neither_positive_nor_refund_residual"]) for r in table22_salary)
 
-    assert t22_total == total[0] == 11_423_587
-    assert t22_positive == total[1] == 2_385_726
-    assert t22_refund == total[2] == 7_697_018
-    assert t22_residual == total[0] - total[1] - total[2] == 1_340_843
+    if not (t22_total == total[0] == 11423587):
+        raise RuntimeError('scientific runtime invariant failed: scripts/extract_nta_salary_processing_status.py:135')
+    if not (t22_positive == total[1] == 2385726):
+        raise RuntimeError('scientific runtime invariant failed: scripts/extract_nta_salary_processing_status.py:136')
+    if not (t22_refund == total[2] == 7697018):
+        raise RuntimeError('scientific runtime invariant failed: scripts/extract_nta_salary_processing_status.py:137')
+    if not (t22_residual == total[0] - total[1] - total[2] == 1340843):
+        raise RuntimeError('scientific runtime invariant failed: scripts/extract_nta_salary_processing_status.py:138')
 
     final = parsed["final_return"]
     post_persons = total[0] - final[0]
@@ -144,13 +148,20 @@ def build():
     final_residual = final[0] - final[1] - final[2]
     post_residual = t22_residual - final_residual
 
-    assert final[0] == 11_293_442
-    assert post_persons == 130_145
-    assert post_positive == 32_947
-    assert post_refund == 84_057
-    assert final_residual == 1_327_702
-    assert post_residual == 13_141
-    assert post_positive + post_refund + post_residual == post_persons
+    if not (final[0] == 11293442):
+        raise RuntimeError('scientific runtime invariant failed: scripts/extract_nta_salary_processing_status.py:147')
+    if not (post_persons == 130145):
+        raise RuntimeError('scientific runtime invariant failed: scripts/extract_nta_salary_processing_status.py:148')
+    if not (post_positive == 32947):
+        raise RuntimeError('scientific runtime invariant failed: scripts/extract_nta_salary_processing_status.py:149')
+    if not (post_refund == 84057):
+        raise RuntimeError('scientific runtime invariant failed: scripts/extract_nta_salary_processing_status.py:150')
+    if not (final_residual == 1327702):
+        raise RuntimeError('scientific runtime invariant failed: scripts/extract_nta_salary_processing_status.py:151')
+    if not (post_residual == 13141):
+        raise RuntimeError('scientific runtime invariant failed: scripts/extract_nta_salary_processing_status.py:152')
+    if not (post_positive + post_refund + post_residual == post_persons):
+        raise RuntimeError('scientific runtime invariant failed: scripts/extract_nta_salary_processing_status.py:153')
     audit = [
         row_metric(
             "salary_table22_filed_or_processed_population",

@@ -117,7 +117,8 @@ def decile_values(row):
 def build():
     catalog = {r["source_id"]: r for r in read_csv(CAT)}
     source = catalog[SOURCE_ID]
-    assert source["sha256"] == EXPECTED_SHA
+    if not (source['sha256'] == EXPECTED_SHA):
+        raise RuntimeError('scientific runtime invariant failed: scripts/build_estat_2024_annual_income_decile_expenditure_diagnostic.py:120')
     raw_path = ROOT / source["raw_file"]
     rows = load_cells(raw_path)
     block = target_block(rows)
@@ -137,7 +138,8 @@ def build():
     consumption = decile_values(consumption_row)
     rn, values = consumption_row
     overall_consumption = clean_decimal(values[f"BE{rn}"])
-    assert overall_consumption == "251242"
+    if not (overall_consumption == '251242'):
+        raise RuntimeError('scientific runtime invariant failed: scripts/build_estat_2024_annual_income_decile_expenditure_diagnostic.py:140')
 
     major_values = {}
     for key, label in MAJOR:
@@ -211,7 +213,8 @@ def build():
         }
         out.append(row)
 
-    assert {int(r["population_households"]) for r in out} == {5355441}
+    if not ({int(r['population_households']) for r in out} == {5355441}):
+        raise RuntimeError('scientific runtime invariant failed: scripts/build_estat_2024_annual_income_decile_expenditure_diagnostic.py:214')
     return out
 def main():
     parser = argparse.ArgumentParser()

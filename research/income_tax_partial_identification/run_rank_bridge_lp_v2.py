@@ -388,7 +388,8 @@ def make_model(data: Data, include_epsilon: bool) -> Model:
             )
 
     if include_epsilon:
-        assert eps_idx is not None
+        if not (eps_idx is not None):
+            raise RuntimeError('scientific runtime invariant failed: research/income_tax_partial_identification/run_rank_bridge_lp_v2.py:391')
         bounds[eps_idx] = (0.0, 1.0)
 
     return Model(
@@ -425,11 +426,13 @@ def bridge_inequalities(
             a[model.y_index[(ji, di)]] = -10.0
 
         if model.include_epsilon:
-            assert model.epsilon_index is not None
+            if not (model.epsilon_index is not None):
+                raise RuntimeError('scientific runtime invariant failed: research/income_tax_partial_identification/run_rank_bridge_lp_v2.py:428')
             a[model.epsilon_index] = -1.0
             b = 0.0
         else:
-            assert epsilon is not None
+            if not (epsilon is not None):
+                raise RuntimeError('scientific runtime invariant failed: research/income_tax_partial_identification/run_rank_bridge_lp_v2.py:432')
             b = epsilon
 
         rows.append(a)
@@ -438,7 +441,8 @@ def bridge_inequalities(
         # NTA - pseudo <= epsilon
         bvec = -a
         if model.include_epsilon:
-            assert model.epsilon_index is not None
+            if not (model.epsilon_index is not None):
+                raise RuntimeError('scientific runtime invariant failed: research/income_tax_partial_identification/run_rank_bridge_lp_v2.py:441')
             bvec[model.epsilon_index] = -1.0
         rows.append(bvec)
         rhs.append(b)
@@ -549,7 +553,8 @@ def objective_vector(
     elif metric == "nta_rank_positive_self_assessed_balance_rate":
         if overall:
             raise ValueError("overall NTA-rank rate endpoint not pre-specified")
-        assert decile_index is not None
+        if not (decile_index is not None):
+            raise RuntimeError('scientific runtime invariant failed: research/income_tax_partial_identification/run_rank_bridge_lp_v2.py:552')
         for ji in range(len(data.class_index)):
             c[model.y_index[(ji, decile_index)]] = 10.0
         return c
@@ -565,7 +570,8 @@ def objective_vector(
                     0.1 * values[di, si]
                 )
     else:
-        assert decile_index is not None
+        if not (decile_index is not None):
+            raise RuntimeError('scientific runtime invariant failed: research/income_tax_partial_identification/run_rank_bridge_lp_v2.py:568')
         for si in range(len(data.scenarios)):
             c[model.lambda_index[(decile_index, si)]] = (
                 values[decile_index, si]
@@ -577,7 +583,8 @@ def objective_vector(
 def solve_minimum(data: Data, eq_tol: float, ineq_tol: float):
     model = make_model(data, include_epsilon=True)
     c = np.zeros(model.nvars)
-    assert model.epsilon_index is not None
+    if not (model.epsilon_index is not None):
+        raise RuntimeError('scientific runtime invariant failed: research/income_tax_partial_identification/run_rank_bridge_lp_v2.py:580')
     c[model.epsilon_index] = 1.0
     res = solve_lp(model, c)
     if not res.success:
@@ -841,7 +848,8 @@ def build_outputs():
                 "v2 fixed epsilon-star infeasible even after sub-tolerance nudge"
             )
 
-    assert diag is not None
+    if not (diag is not None):
+        raise RuntimeError('scientific runtime invariant failed: research/income_tax_partial_identification/run_rank_bridge_lp_v2.py:844')
     feasibility_rows.append({
         "spec_version": SPEC_VERSION,
         "bridge_scheme": "same_rank_decile",

@@ -56,21 +56,29 @@ def xlsx_cells(path):
 def build():
     catalog = {r["source_id"]: r for r in read_csv(CAT)}
     source = catalog[SOURCE_ID]
-    assert source["sha256"] == EXPECTED_SHA
+    if not (source['sha256'] == EXPECTED_SHA):
+        raise RuntimeError('scientific runtime invariant failed: research/vat_policy_integration/build_jgb_debt_gdp_reference.py:59')
     cells = xlsx_cells(ROOT / source["raw_file"])
 
-    assert cells["A1"] == "1. Gross Domestic Product (Expenditure approach: at current prices)"
-    assert cells["A3"] == "Fiscal Year"
-    assert cells["A4"] == "(Billion Yen)"
-    assert cells["AF6"] == "2024"
-    assert cells["A48"] == "5.  Gross domestic product (expenditure approach) (1+2+3+4)"
+    if not (cells['A1'] == '1. Gross Domestic Product (Expenditure approach: at current prices)'):
+        raise RuntimeError('scientific runtime invariant failed: research/vat_policy_integration/build_jgb_debt_gdp_reference.py:62')
+    if not (cells['A3'] == 'Fiscal Year'):
+        raise RuntimeError('scientific runtime invariant failed: research/vat_policy_integration/build_jgb_debt_gdp_reference.py:63')
+    if not (cells['A4'] == '(Billion Yen)'):
+        raise RuntimeError('scientific runtime invariant failed: research/vat_policy_integration/build_jgb_debt_gdp_reference.py:64')
+    if not (cells['AF6'] == '2024'):
+        raise RuntimeError('scientific runtime invariant failed: research/vat_policy_integration/build_jgb_debt_gdp_reference.py:65')
+    if not (cells['A48'] == '5.  Gross domestic product (expenditure approach) (1+2+3+4)'):
+        raise RuntimeError('scientific runtime invariant failed: research/vat_policy_integration/build_jgb_debt_gdp_reference.py:66')
     nominal_gdp_billion_yen = Decimal(cells["AF48"])
-    assert nominal_gdp_billion_yen == Decimal("642414.69999999995")
+    if not (nominal_gdp_billion_yen == Decimal('642414.69999999995')):
+        raise RuntimeError('scientific runtime invariant failed: research/vat_policy_integration/build_jgb_debt_gdp_reference.py:68')
     nominal_gdp_yen = Decimal("642414.7") * Decimal("1000000000")
 
     fiscal = {r["scenario_id"]: r for r in read_csv(FISCAL)}
     jgb_yen = Decimal(fiscal["full_abolition_jgb"]["full_jgb_financing_reference_yen"])
-    assert jgb_yen == Decimal("25021206715000")
+    if not (jgb_yen == Decimal('25021206715000')):
+        raise RuntimeError('scientific runtime invariant failed: research/vat_policy_integration/build_jgb_debt_gdp_reference.py:73')
     ratio = jgb_yen / nominal_gdp_yen
     pct = ratio * Decimal("100")
     rows = []
@@ -100,7 +108,8 @@ def build():
                 "redemptions, other borrowing, financial assets, GDP feedback, interest and time dynamics."
             ),
         })
-    assert len(rows) == 8
+    if not (len(rows) == 8):
+        raise RuntimeError('scientific runtime invariant failed: research/vat_policy_integration/build_jgb_debt_gdp_reference.py:103')
     return rows
 
 

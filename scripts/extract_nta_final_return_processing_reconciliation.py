@@ -135,8 +135,10 @@ def build():
     }
     for category in PAGE_BY_CATEGORY:
         p = proc[category]
-        assert (p["processed_total_persons"], p["processed_positive_persons"], p["processed_refund_persons"]) == expected_processed[category]
-        assert (p["final_row_persons"], p["final_row_positive_persons"], p["final_row_refund_persons"]) == expected_final[category]
+        if not ((p['processed_total_persons'], p['processed_positive_persons'], p['processed_refund_persons']) == expected_processed[category]):
+            raise RuntimeError('scientific runtime invariant failed: scripts/extract_nta_final_return_processing_reconciliation.py:138')
+        if not ((p['final_row_persons'], p['final_row_positive_persons'], p['final_row_refund_persons']) == expected_final[category]):
+            raise RuntimeError('scientific runtime invariant failed: scripts/extract_nta_final_return_processing_reconciliation.py:139')
 
     rows = []
     for category in PAGE_BY_CATEGORY:
