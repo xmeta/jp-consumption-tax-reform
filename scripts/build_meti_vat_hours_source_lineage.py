@@ -14,6 +14,7 @@ L2019='METI-2019-REPORT-LISTING-20210213-ARCHIVED'
 S2020='METI-2020-SME-TAX-REPORT-ARCHIVED'
 L2020='METI-2020-REPORT-LISTING-20211202-ARCHIVED'
 S2021='METI-2021-SME-TAX-SURVEY'
+L2021='METI-2021-REPORT-LISTING-20220718-ARCHIVED'
 RIETI='RIETI-2021-QUANT-TAX-COMPLIANCE-COST'
 
 
@@ -44,7 +45,7 @@ def listing_no_attachment(reader,page_no,current_id,next_id,expected_url,label):
 
 def build():
     cat={r['source_id']:r for r in read_csv(CAT)}
-    for sid in [S2019,L2019,S2020,L2020,S2021,RIETI]:
+    for sid in [S2019,L2019,S2020,L2020,S2021,L2021,RIETI]:
         if sid not in cat: raise RuntimeError(f'missing source catalog row: {sid}')
         if not (ROOT/cat[sid]['raw_file']).exists(): raise RuntimeError(f'missing raw source: {sid}')
 
@@ -53,9 +54,10 @@ def build():
     r20=PdfReader(ROOT/cat[S2020]['raw_file'])
     l20=PdfReader(ROOT/cat[L2020]['raw_file'])
     r21=PdfReader(ROOT/cat[S2021]['raw_file'])
+    l21=PdfReader(ROOT/cat[L2021]['raw_file'])
     rr=PdfReader(ROOT/cat[RIETI]['raw_file'])
-    expected_pages={S2019:210,L2019:19,S2020:168,L2020:21,S2021:117,RIETI:14}
-    for sid,r in [(S2019,r19),(L2019,l19),(S2020,r20),(L2020,l20),(S2021,r21),(RIETI,rr)]:
+    expected_pages={S2019:210,L2019:19,S2020:168,L2020:21,S2021:117,L2021:10,RIETI:14}
+    for sid,r in [(S2019,r19),(L2019,l19),(S2020,r20),(L2020,l20),(S2021,r21),(L2021,l21),(RIETI,rr)]:
         if len(r.pages)!=expected_pages[sid]: raise RuntimeError(f'{sid}: unexpected pages {len(r.pages)}')
 
     # 2019 corporate equipment survey: public design has an explicit fiscal-year scope.
@@ -98,6 +100,7 @@ def build():
     require(p21_65,['(ｎ＝3,965)','はい','17.0%','いいえ','83.0%'],'METI2021 p65')
     require(p21_66,['回答対象：（１）で「はい」'],'METI2021 p66')
     require(p21_67,['・消費税','(ｎ＝1,514)','100時間以上','6.7%'],'METI2021 p67')
+    listing_no_attachment(l21,3,'000139','000140','https://www.meti.go.jp/meti_lib/report/2021FY/000139.pdf','METI2021 listing')
     _, bounds=build_meti_2021_hours()
     lower={r['bound_id']:r for r in bounds}['no_top_code_cap']['mean_hours_lower_bound']
 
@@ -125,9 +128,9 @@ def build():
         'target_n':'20000','response_n':'4410','vat_hours_question':'Q8-3','respondent_selector':'QUESTIONNAIRE_Q8-1_NO_RESULTS_PAGE_SAYS_YES_AND_COUNTS_CONFLICT',
         'period_definition_status':'TAX_ITEM_PERIOD_NOT_EXPLICIT','period_definition':'reported_Q8-3_period_not_identified_as_annual',
         'vat_internal_hours_collected':'YES','process_granularity':'VAT_TAX_TYPE_TOTAL_DISTRIBUTION','published_numeric_vat_hours':'YES',
-        'published_vat_hours_item_n':'1514','public_microdata_attachment':'NOT_AUDITED','numeric_lower_bound_hours':lower,
+        'published_vat_hours_item_n':'1514','public_microdata_attachment':'NO_LISTED_ATTACHMENT','numeric_lower_bound_hours':lower,
         'analytic_linkage':'PUBLIC_ROUNDED_DISTRIBUTION_PARTIALLY_IDENTIFIES_RESPONDENT_SUBSET_LOWER_BOUND','model_use':'PUBLIC_NUMERIC_HOURS_BOUND_PERIOD_UNRESOLVED',
-        'note':'Published VAT distribution n=1,514 yields a rounding-compatible mean lower bound, but Q8-3 does not explicitly identify an annual period; results-page selector conflicts with questionnaire routing and is also incompatible with the published Q8-1 yes count.'
+        'note':'Published VAT distribution n=1,514 yields a rounding-compatible mean lower bound, but Q8-3 does not explicitly identify an annual period; results-page selector conflicts with questionnaire routing and is also incompatible with the published Q8-1 yes count. Archived METI listing row 000139 has no data attachment.'
       }
     ]
     complete=[r for r in rows if r['period_definition_status']=='EXPLICIT_TARGET_FISCAL_YEAR' and r['published_numeric_vat_hours']=='YES' and 'CONFLICT' not in r['respondent_selector']]

@@ -13,6 +13,7 @@ Issue #26 Phase 1 separates VAT institutional abolition from a 0% statutory rate
 Observed Japan evidence is generated separately by
 +scripts/extract_meti_vat_internal_hours.py+,
 +scripts/build_meti_vat_hours_source_lineage.py+,
++scripts/build_vat_transition_system_subsidy_bounds.py+,
 +scripts/build_bsws_2019_industry_hourly_wage_bridge.py+,
 +scripts/build_meti_vat_internal_labor_cost_bridge.py+, and
 +scripts/extract_vat_compliance_evidence.py+.
@@ -36,7 +37,21 @@ publication listing has no attached data file.  The 2021 survey is the opposite:
 it publishes an n=1,514 VAT-hours distribution but leaves the tax-item period
 non-explicit and has conflicting selector metadata.  No public year therefore
 jointly supplies an explicit fiscal period, numeric VAT hours, and unambiguous
-selection.  Historical designs must not be used to annualize the 2021 bound.
+selection.  Historical designs must not be used to annualize the 2021 bound.  The archived
+FY2021 METI publication list also shows no data attachment for report 000139,
+so the public publication channel does not provide the missing microdata.
+
+A separate transition-cost layer now uses SMRJ FY2019 program-performance data
+for the consumption-tax reduced-rate support program.  The program subsidized
+part of eligible expenses for multi-rate registers, ordering-system
+modifications, invoice-management-system modifications, and related
+implementation.  FY2019 records show 94,875 grants totaling 22,914,612,620 yen;
+cumulative records through FY2019 show 174,781 grants totaling 44,659,886,587
+yen.  Because the subsidy covers only part of eligible expense, these flows
+imply selected grant-record transition-expenditure lower bounds of about
+241,524 yen/grant in FY2019 and 255,519 yen/grant cumulatively.  These are not
+unique-firm means, population estimates, recurring annual costs, or additions
+to +c_VAT+.
 
 The wage bridge adds 2019 MHLW Basic Survey on Wage Structure components for
 17 industry-total/major-industry rows. Two transparent hourly-wage formulas are

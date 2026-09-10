@@ -36,6 +36,7 @@ assert r['period_definition_status']=='TAX_ITEM_PERIOD_NOT_EXPLICIT'
 assert 'CONFLICT' in r['respondent_selector']
 assert r['published_numeric_vat_hours']=='YES'
 assert r['published_vat_hours_item_n']=='1514'
+assert r['public_microdata_attachment']=='NO_LISTED_ATTACHMENT'
 assert r['numeric_lower_bound_hours']=='15.126155878468'
 assert r['model_use']=='PUBLIC_NUMERIC_HOURS_BOUND_PERIOD_UNRESOLVED'
 
@@ -49,6 +50,7 @@ hashes={
  'METI-2020-SME-TAX-REPORT-ARCHIVED':'66c0af8b84c6b35a2396da67bb1add2d30c5eea4cba51f1bfad7f5cf62166763',
  'METI-2019-REPORT-LISTING-20210213-ARCHIVED':'413ebf3d9f9b431e5ddfbcf902cc2a526689a0d0667b40389bfaf0d85af0568d',
  'METI-2020-REPORT-LISTING-20211202-ARCHIVED':'9cb8d5dc819522da8a9eac75fa84f61037d8edba0e4d12257bfbb08981c2392e',
+ 'METI-2021-REPORT-LISTING-20220718-ARCHIVED':'ae840c57ce054e48209b2b721a19d533d36d36f5c8f79efa3df79e54a59a7c1e',
 }
 for sid,h in hashes.items():
     assert cat[sid]['sha256']==h,(sid,cat[sid]['sha256'])

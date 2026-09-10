@@ -23,6 +23,13 @@ anchors={
  "meti2020_vat_hours_public_numeric_result":"0",
  "meti2020_public_microdata_attachment_listed":"0",
  "rieti2021_sme_survey_answers_fy2019_scope":"1",
+ "meti2021_public_microdata_attachment_listed":"0",
+ "smrj_fy2019_light_rate_subsidy_grant_count":"94875",
+ "smrj_fy2019_light_rate_subsidy_amount_yen":"22914612620",
+ "smrj_fy2019_light_rate_subsidy_lower_bound_per_grant_record":"241524.243689064559",
+ "smrj_cumulative_light_rate_subsidy_grant_count":"174781",
+ "smrj_cumulative_light_rate_subsidy_amount_yen":"44659886587",
+ "smrj_cumulative_light_rate_subsidy_lower_bound_per_grant_record":"255519.11584783243",
  "meti2021_corporate_survey_target_n":"20000",
  "meti2021_corporate_survey_valid_response_n":"4410",
  "meti2021_vat_internal_hours_sample_n":"1514",
@@ -65,6 +72,10 @@ assert ident["rieti_exact_bsws_hourly_wage_formula"]["status"]=="NOT_IDENTIFIED_
 assert ident["rieti_exact_bsws_hourly_wage_formula"]["model_use"]=="TRANSPARENT_ALTERNATIVE_FORMULAS_ONLY"
 assert ident["vat_specific_internal_labor_cost_respondent_reported_period"]["status"]=="MECHANICAL_WAGE_CONVERSION_ONLY"
 assert ident["vat_specific_internal_labor_cost_respondent_reported_period"]["point_identified"]=="NO_ANNUAL_OR_POPULATION_POINT"
+assert ident["vat_transition_system_implementation_cost_selected_grant_records"]["status"]=="PARTIALLY_BOUNDED_FROM_BELOW_BY_SUBSIDY_FLOW"
+assert ident["vat_transition_system_implementation_cost_selected_grant_records"]["model_use"]=="TRANSITION_COST_ONLY_NOT_PERSISTENT_C_VAT"
+assert ident["vat_specific_persistent_external_software_adviser_cost"]["status"]=="NOT_IDENTIFIED"
+assert ident["vat_specific_persistent_external_software_adviser_cost"]["model_use"]=="REQUIRES_RECURRING_VAT_SPECIFIC_MONETARY_EVIDENCE"
 assert ident["vat_specific_real_resource_cost_share_of_output"]["status"]=="NOT_IDENTIFIED"
 assert ident["vat_specific_real_resource_cost_share_of_output"]["model_use"]=="STRESS_TEST_PARAMETER_ONLY"
 assert ident["productive_redeployment_fraction_rho"]["status"]=="NOT_IDENTIFIED"
@@ -78,6 +89,8 @@ hashes={
  "METI-2019-REPORT-LISTING-20210213-ARCHIVED":"413ebf3d9f9b431e5ddfbcf902cc2a526689a0d0667b40389bfaf0d85af0568d",
  "METI-2020-SME-TAX-REPORT-ARCHIVED":"66c0af8b84c6b35a2396da67bb1add2d30c5eea4cba51f1bfad7f5cf62166763",
  "METI-2020-REPORT-LISTING-20211202-ARCHIVED":"9cb8d5dc819522da8a9eac75fa84f61037d8edba0e4d12257bfbb08981c2392e",
+ "METI-2021-REPORT-LISTING-20220718-ARCHIVED":"ae840c57ce054e48209b2b721a19d533d36d36f5c8f79efa3df79e54a59a7c1e",
+ "SMRJ-FY2019-LIGHT-RATE-SUBSIDY-PERFORMANCE":"7b30ebbb9dc0da5b94e56c0e8df1d935672bfb4f0729564bc76390bcf033d4c3",
  "ESTAT-BSWS-2019-INDUSTRY-WAGE-T1":"9583495007287b89e163a3202c4d3f6e757dfcfc355076dcde0321e0276ac811",
  "ESTAT-BSWS-2019-INDUSTRY-WAGE-DB-SNAPSHOT":"510b65c6a47d54d4074594fe376458920e5a74edc105acc7aa14aea49993a8a1",
  "METI-2021-SME-TAX-SURVEY":"e6a5767910f2c1e024ec0b281e6f300949e735cdc6c9b052e164b6890948e563",
@@ -117,5 +130,8 @@ assert ev["meti2019_vat_hours_explicit_fiscal_period_design"]["model_calibration
 assert ev["meti2019_public_microdata_attachment_listed"]["model_calibration_permission"]=="NO_PUBLIC_MICRODATA_CALIBRATION"
 assert ev["meti2020_vat_hours_public_numeric_result"]["model_calibration_permission"]=="DO_NOT_IMPUTE_FROM_RIETI_ALL_TAX_RESULTS"
 assert ev["rieti2021_sme_survey_answers_fy2019_scope"]["model_calibration_permission"]=="SCOPE_LINKAGE_ONLY_NOT_PUBLIC_VAT_MICRODATA"
-assert len(ev)==53 and len(ident)==14
-print("VAT compliance evidence tests: OK (53 observed-evidence rows; historical survey-lineage gap audited; national VAT resource share remains NOT_IDENTIFIED)")
+assert ev["meti2021_public_microdata_attachment_listed"]["model_calibration_permission"]=="NO_PUBLIC_MICRODATA_CALIBRATION"
+assert ev["smrj_fy2019_light_rate_subsidy_amount_yen"]["model_calibration_permission"]=="LOWER_BOUND_ON_SELECTED_TRANSITION_EXPENDITURE_ONLY"
+assert ev["smrj_cumulative_light_rate_subsidy_lower_bound_per_grant_record"]["model_calibration_permission"]=="DO_NOT_GENERALIZE_TO_FIRMS_OR_PERSISTENT_C_VAT"
+assert len(ev)==60 and len(ident)==16
+print("VAT compliance evidence tests: OK (60 evidence rows; transition implementation cost separated from persistent c_VAT; national VAT resource share remains NOT_IDENTIFIED)")
