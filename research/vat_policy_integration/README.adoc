@@ -57,6 +57,21 @@ change in observed debt/GDP: baseline debt stock, redemptions, other borrowing,
 financial assets, nominal-GDP feedback, interest costs and time dynamics are not
 modeled.
 
+On the household side, 2024 NSFCW Table 1-21 now supplies an observed
+*annual-household-income-decile expenditure diagnostic*. Monthly consumption
+expenditure rises from 129,460 yen in annual-income decile 1 to 439,645 yen in
+decile 10; the broad food subtotal is 39,658 to 114,333 yen, corresponding to
+about 30.63% and 26.01% of consumption at the two endpoints. The source also
+provides ten major expenditure groups and household composition. These are
+observed descriptive gradients, not VAT-incidence estimates.
+
+The source rank is +HOUSEHOLD_ANNUAL_INCOME_DECILE+, whereas the distributional
+objective uses +OECD_NEW_EQUIVALIZED_DISPOSABLE_INCOME_DECILE+. They are not
+interchanged. Table 1-21 also reports broad food including alcohol and eating
+out, so the food subtotal is not treated as the 8% reduced-rate VAT base. Until
+a valid rank bridge and VAT-base/pass-through incidence model exist, income Gini,
+FGT2 and real-disposable-income-by-decile policy effects remain empty.
+
 The matrix also contains explicit fields for overall real GDP, annual real
 growth, growth-decline penalty, income Gini, wealth Gini, intergenerational gap,
 FGT2, real disposable income by decile, inflation, fiscal balance, debt/GDP and
@@ -76,6 +91,8 @@ statement.
   scenario receipt-removal/financing references.
 * +data/derived/vat_jgb_debt_gdp_reference.csv+: FY2024 nominal-GDP denominator
   and full-JGB static financing-share reference.
+* +data/derived/estat_2024_annual_income_decile_expenditure_diagnostic.csv+:
+  observed annual-income-decile household expenditure and composition diagnostic.
 * +data/derived/vat_policy_scenario_matrix.csv+: 8 scenarios x 300
   institutional stress points = 2,400 rows.
 * +data/derived/vat_policy_scenario_summary.csv+: one row per policy scenario
@@ -90,16 +107,18 @@ python research/vat_policy_integration/build_vat_fiscal_replacement_reference.py
 python research/vat_policy_integration/test_vat_fiscal_replacement_reference.py
 python research/vat_policy_integration/build_jgb_debt_gdp_reference.py
 python research/vat_policy_integration/test_jgb_debt_gdp_reference.py
+python scripts/build_estat_2024_annual_income_decile_expenditure_diagnostic.py
+python scripts/test_estat_2024_annual_income_decile_expenditure_diagnostic.py
 python research/vat_policy_integration/run_vat_policy_scenario_matrix.py
 python research/vat_policy_integration/test_vat_policy_scenario_matrix.py
 ----
 == Scientific status
 
 ----
-PARTIAL_E2E_POLICY_MATRIX_WITH_STATIC_FISCAL_REFERENCE
+PARTIAL_E2E_POLICY_MATRIX_WITH_STATIC_FISCAL_AND_HOUSEHOLD_EXPENDITURE_DIAGNOSTIC
 ----
 
 The matrix is operational end-to-end, but it is not yet a policy forecast or a
-joint welfare optimization. The next completion step is to replace explicit
-unmodeled statuses with validated demand/distribution/financing outputs as those
-modules become reproducible in this repository.
+joint welfare optimization. The next completion step is to build a defensible bridge from observed household
+expenditure to the objective-rank distribution and VAT-incidence channels, or to
+advance another currently explicit unresolved channel with official inputs.

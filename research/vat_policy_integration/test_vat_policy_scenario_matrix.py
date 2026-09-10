@@ -55,6 +55,25 @@ blank_numeric = [
 ]
 for col in blank_numeric:
     assert all(r[col] == "" for r in rows), col
+distribution_status = (
+    "ANNUAL_INCOME_DECILE_EXPENDITURE_OBSERVED_"
+    "OBJECTIVE_RANK_BRIDGE_AND_VAT_INCIDENCE_REQUIRED"
+)
+assert all(
+    r["household_expenditure_diagnostic_rank"] == "HOUSEHOLD_ANNUAL_INCOME_DECILE"
+    for r in rows
+)
+assert all(
+    r["distribution_objective_rank"] == "OECD_NEW_EQUIVALIZED_DISPOSABLE_INCOME_DECILE"
+    for r in rows
+)
+assert all(r["household_expenditure_diagnostic_status"] == distribution_status for r in rows)
+for col in (
+    "income_gini_effect_status",
+    "fgt2_effect_status",
+    "real_disposable_income_by_decile_effect_status",
+):
+    assert all(r[col] == distribution_status for r in rows), col
 assert all(r["fy2024_consumption_tax_receipts_reference_yen"] == "25021206715000" for r in rows)
 assert all(r["fy2024_nominal_gdp_reference_yen"] == "642414700000000" for r in rows)
 assert all(
@@ -92,6 +111,16 @@ for sid in (
     assert summary[sid]["institutional_gdp_level_effect_max"] == "0.006"
 
 assert summary["zero_rate_admin_retained"]["institutional_gdp_level_effect_max"] == "0"
+assert all(
+    summary[sid]["household_expenditure_diagnostic_status"] == distribution_status
+    for sid in expected
+)
+assert all(summary[sid]["income_gini_status"] == distribution_status for sid in expected)
+assert all(summary[sid]["fgt2_status"] == distribution_status for sid in expected)
+assert all(
+    summary[sid]["real_disposable_income_by_decile_status"] == distribution_status
+    for sid in expected
+)
 assert summary["current_8_10"]["static_consumption_tax_receipt_effect_yen"] == "0"
 assert summary["reduced_5"]["static_consumption_tax_receipt_effect_yen"] == ""
 assert summary["reduced_5"]["fiscal_reference_status"] == "NOT_IDENTIFIED_RATE_BASE_MIX_AND_BEHAVIOR_REQUIRED"
@@ -143,5 +172,5 @@ subprocess.run(
 print(
     "VAT policy scenario matrix tests: OK "
     "(8 requested scenarios; 2400 rows; joint GDP/growth/Gini/FGT2/fiscal/debt "
-    "reporting with static FY2024 VAT fiscal replacement reference and no unmodeled-channel imputation)"
+    "reporting with static FY2024 VAT fiscal replacement reference, observed annual-income-decile expenditure diagnostic, and no unmodeled-channel imputation)"
 )
