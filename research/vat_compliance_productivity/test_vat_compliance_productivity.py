@@ -3,7 +3,7 @@
 if not __debug__:
     raise RuntimeError('optimized Python is not supported for executable tests; assertions must remain active')
 from pathlib import Path
-import csv, subprocess, sys, math
+import csv, subprocess, sys, math, re
 from zipfile import ZipFile
 
 ROOT=Path(__file__).resolve().parents[2]
@@ -13,6 +13,7 @@ REG=ROOT/"research/vat_compliance_productivity/regimes.csv"
 AX=ROOT/"research/vat_compliance_productivity/sensitivity_axes.csv"
 DESIGN=ROOT/"research/vat_compliance_productivity/firm_level_identification_design.csv"
 SOURCE_CATALOG=ROOT/"data/source_catalog.csv"
+ACCESS_AUDIT=ROOT/"research/vat_compliance_productivity/firm_level_linkage_access_audit.csv"
 
 def read(p):
     with p.open(encoding="utf-8",newline="") as f: return list(csv.DictReader(f))
@@ -26,11 +27,19 @@ def xlsx_xml_text(path):
             if name.endswith(".xml")
         )
 
+
+def emicro_result_count(path):
+    text = path.read_text(encoding="utf-8", errors="ignore")
+    match = re.search(r'<span style="padding-inline: var\(--gap-1\);">\s*(\d+)\s*件', text)
+    assert match, path
+    return int(match.group(1)), text
+
 rows=read(S); summary={r["regime_id"]:r for r in read(R)}
 regimes={r["regime_id"]:r for r in read(REG)}
 axes={r["parameter_id"]:r for r in read(AX)}
 designs=read(DESIGN)
 sources={r["source_id"] for r in read(SOURCE_CATALOG)}
+access_audit={r["audit_item"]:r for r in read(ACCESS_AUDIT)}
 
 assert len(rows)==1200
 assert all(r["identification_status"]=="MODEL_CONTINGENT_STRESS_TEST_ONLY" for r in rows)
@@ -131,8 +140,31 @@ assert max(int(r["national_dimensions_identified_count_if_success"]) for r in de
 assert all(int(r["national_dimensions_identified_count_if_success"]) < 3 for r in designs)
 assert next(r for r in designs if r["design_id"] == "NTA_THEME5_2_CORP_VAT_PANEL")["c_vat_after_success"].startswith("UNCHANGED_NOT_IDENTIFIED")
 assert next(r for r in designs if r["design_id"] == "NTA_THEME5_2_CORP_VAT_PANEL")["rho_after_success"].startswith("UNCHANGED_NOT_IDENTIFIED")
-assert next(r for r in designs if r["design_id"] == "METI_BURDEN_X_BSBSA_SECURE_LINK")["feasibility"] == "BLOCKED_ON_HISTORIC_BURDEN_MICRODATA_LINK_KEY"
+historic = next(r for r in designs if r["design_id"] == "METI_BURDEN_X_BSBSA_SECURE_LINK")
+assert historic["feasibility"] == "STOP_STANDARD_EMICRO_RETROSPECTIVE_LINKAGE"
+assert "NOT_ESTABLISHED_FROM_PUBLIC_MATERIALS" in historic["linkage_key"]
 assert next(r for r in designs if r["design_id"] == "INVOICE_REGISTRY_X_BSBSA")["feasibility"] == "TECHNICAL_LINK_KEY_CONFIRMED_MICRODATA_IDENTIFIER_APPROVAL_PENDING"
+
+# Issue #82 access-route resolution.  Zero-result historic-survey queries are
+# paired with a positive control on the same official catalog surfaces.
+query_cases = [
+    ("emicro_2026_remote_sme_tax_survey_query.html", "中小企業税制に関するアンケート調査", 0),
+    ("emicro_2026_onsite_sme_tax_survey_query.html", "中小企業税制に関するアンケート調査", 0),
+    ("emicro_2026_remote_bsbsa_query.html", "企業活動基本調査", 32),
+    ("emicro_2026_onsite_bsbsa_query.html", "企業活動基本調査", 32),
+]
+for name, keyword, expected in query_cases:
+    count, html = emicro_result_count(ROOT / "data/raw/vat_linkage" / name)
+    assert count == expected, (name, count)
+    assert f'value="{keyword}"' in html
+assert access_audit["remote_catalog_eligibility"]["status"] == "NOT_LISTED_STANDARD_EMICRO_REMOTE"
+assert access_audit["onsite_catalog_eligibility"]["status"] == "NOT_LISTED_STANDARD_EMICRO_ONSITE"
+assert access_audit["remote_positive_control"]["observed_value"] == "32 records"
+assert access_audit["onsite_positive_control"]["observed_value"] == "32 records"
+assert access_audit["stable_firm_link_key"]["status"] == "NOT_ESTABLISHED_FROM_PUBLIC_MATERIALS"
+assert access_audit["cross_survey_linkage_permission"]["status"] == "NOT_ESTABLISHED"
+assert access_audit["route_decision"]["status"] == "STOP_STANDARD_EMICRO_RETROSPECTIVE_LINKAGE"
+assert access_audit["national_parameter_status"]["status"] == "NOT_IDENTIFIED"
 for r in designs:
     ids = [x for x in r["source_ids"].split(";") if x]
     assert ids and set(ids) <= sources, (r["design_id"], set(ids) - sources)
@@ -142,4 +174,4 @@ subprocess.run([
  str(ROOT/"research/vat_compliance_productivity/run_vat_compliance_productivity.py"),
  "--check"],cwd=ROOT,check=True)
 
-print("VAT compliance-productivity tests: OK (4 regimes x 300 stress points; Issue #47 linkage design guarded; no national identification promotion)")
+print("VAT compliance-productivity tests: OK (4 regimes x 300 stress points; Issues #47/#82 linkage design/access stop guarded; no national identification promotion)")
