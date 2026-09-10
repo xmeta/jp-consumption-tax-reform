@@ -6,6 +6,7 @@ from decimal import Decimal
 from pypdf import PdfReader
 from extract_meti_vat_internal_hours import build as build_meti_hours
 from build_bsws_2019_industry_hourly_wage_bridge import build as build_bsws_wages
+from build_meti_vat_hours_source_lineage import build as build_meti_lineage
 
 ROOT = Path(__file__).resolve().parents[1]
 CATALOG = ROOT / "data/source_catalog.csv"
@@ -44,6 +45,10 @@ def require_tokens(text, tokens, label):
 def build():
     cat={r["source_id"]:r for r in read_csv(CATALOG)}
     required=[
+      "METI-2019-SME-TAX-REPORT-ARCHIVED",
+      "METI-2019-REPORT-LISTING-20210213-ARCHIVED",
+      "METI-2020-SME-TAX-REPORT-ARCHIVED",
+      "METI-2020-REPORT-LISTING-20211202-ARCHIVED",
       "METI-2021-SME-TAX-SURVEY",
       "ESTAT-BSWS-2019-INDUSTRY-WAGE-T1",
       "ESTAT-BSWS-2019-INDUSTRY-WAGE-DB-SNAPSHOT",
@@ -106,8 +111,51 @@ def build():
     h_lb=Decimal(meti_bound["no_top_code_cap"]["mean_hours_lower_bound"])
     w_sched=Decimal(wage_total["scheduled_hour_rate_yen"])
     w_eff=Decimal(wage_total["regular_cash_effective_hour_rate_yen"])
+    lineage={r["survey_year"]:r for r in build_meti_lineage()}
 
     rows=[]
+    rows += [
+      evidence("meti2019_vat_hours_explicit_fiscal_period_design","1","boolean",
+        "OFFICIAL_SURVEY_DESIGN","2019 corporate equipment survey respondents","1113",
+        "METI-2019-SME-TAX-REPORT-ARCHIVED","PDF pp.153-154 / printed pp.151-152 Q6-1",
+        "OBSERVED_SURVEY_DESIGN","PERIOD_DESIGN_EVIDENCE_NOT_NUMERIC_CALIBRATION",
+        "Q6-1 explicitly requests VAT internal hours for a target fiscal year ending between 2018-04-01 and 2019-03-31. Its first process column also includes accounting-purpose work, so the design is not a pure removable-VAT-resource measure."),
+      evidence("meti2019_vat_hours_public_numeric_result","0","boolean",
+        "PUBLICATION_AVAILABILITY_AUDIT","2019 corporate equipment survey","1113",
+        "METI-2019-SME-TAX-REPORT-ARCHIVED","PDF pp.6-30 corporate-equipment results versus pp.153-154 questionnaire",
+        "PUBLIC_NUMERIC_VAT_HOURS_NOT_PUBLISHED","DO_NOT_IMPUTE_FROM_QUESTIONNAIRE",
+        "The public results section does not publish Q6-1 VAT-hour values even though the questionnaire collected them."),
+      evidence("meti2019_public_microdata_attachment_listed","0","boolean",
+        "OFFICIAL_PUBLICATION_LIST_AUDIT","METI commissioned-report row 000249","",
+        "METI-2019-REPORT-LISTING-20210213-ARCHIVED","PDF p.9 row 000249",
+        "NO_LISTED_PUBLIC_DATA_ATTACHMENT","NO_PUBLIC_MICRODATA_CALIBRATION",
+        "Archived official METI listing gives the 000249 report URL but no HP data-address attachment for the report."),
+      evidence("meti2020_corporate_survey_target_n",lineage["2020"]["target_n"],"corporations",
+        "OFFICIAL_SURVEY_DESIGN_COUNT","nationwide corporate survey targets","18000",
+        "METI-2020-SME-TAX-REPORT-ARCHIVED","PDF p.4 / printed p.4",
+        "OBSERVED_SURVEY_FRAME","FRAME_CONTEXT_NOT_POPULATION_WEIGHT",
+        "FY2020 METI report states a nationwide August 2020 corporate survey with 18,000 targets."),
+      evidence("meti2020_corporate_survey_response_n",lineage["2020"]["response_n"],"corporations",
+        "OFFICIAL_SURVEY_RESPONSE_COUNT","corporate survey responses","3255",
+        "METI-2020-SME-TAX-REPORT-ARCHIVED","PDF p.4 / printed p.4",
+        "OBSERVED_SURVEY_FRAME","FRAME_CONTEXT_NOT_VAT_ITEM_RESPONSE_RATE",
+        "FY2020 METI report publishes 3,255 corporate responses (18.1%); the VAT-hour Q11-3 item-specific response count is not publicly reported."),
+      evidence("meti2020_vat_hours_public_numeric_result","0","boolean",
+        "PUBLICATION_AVAILABILITY_AUDIT","2020 corporate survey","3255",
+        "METI-2020-SME-TAX-REPORT-ARCHIVED","PDF pp.6-52 corporate results versus pp.136-137 questionnaire",
+        "PUBLIC_NUMERIC_VAT_HOURS_NOT_PUBLISHED","DO_NOT_IMPUTE_FROM_RIETI_ALL_TAX_RESULTS",
+        "Corporate Q11-3 collects VAT-specific post-financial-statement internal hours, but the public METI results do not publish those values."),
+      evidence("meti2020_public_microdata_attachment_listed","0","boolean",
+        "OFFICIAL_PUBLICATION_LIST_AUDIT","METI commissioned-report row 000409","",
+        "METI-2020-REPORT-LISTING-20211202-ARCHIVED","PDF p.2 row 000409",
+        "NO_LISTED_PUBLIC_DATA_ATTACHMENT","NO_PUBLIC_MICRODATA_CALIBRATION",
+        "Archived official METI listing gives the 000409 report URL but no HP data-address attachment for the report."),
+      evidence("rieti2021_sme_survey_answers_fy2019_scope","1","boolean",
+        "STUDY_METHOD_DEFINITION","RIETI SME tax-compliance-cost survey sample","3255",
+        "RIETI-2021-QUANT-TAX-COMPLIANCE-COST","PDF p.4 / printed p.2",
+        "OBSERVED_STUDY_METHOD","SCOPE_LINKAGE_ONLY_NOT_PUBLIC_VAT_MICRODATA",
+        "RIETI identifies the 18,000-target/3,255-response SME survey and states that both surveys concern FY2019 corporate behavior; its published estimates pool multiple tax types rather than releasing VAT-specific Q11-3 values."),
+    ]
     # METI directly measures VAT-specific internal tax-procedure hours for a
     # respondent subset.  It does not identify a national c_VAT.
     rows += [
@@ -292,10 +340,11 @@ def build():
       {"quantity":"invoice_burden_incidence","status":"OBSERVED_SURVEY_RESPONSE","point_identified":"NO_POPULATION_CAUSAL_POINT","model_use":"DESCRIPTIVE_EVIDENCE","note":"JCCI respondent shares establish widespread reported burden, not national resource-cost shares."},
       {"quantity":"firm_size_backoffice_vulnerability","status":"OBSERVED_SURVEY_RESPONSE","point_identified":"NO_NATIONAL_CAUSAL_POINT","model_use":"HETEROGENEITY_MOTIVATION","note":"Small firms are much more likely to have one-person/no-dedicated accounting; not VAT-specific hours."},
       {"quantity":"all_tax_compliance_cost_sales_ratio","status":"OBSERVED_STUDY_ESTIMATE_ALL_TAX_TYPES","point_identified":"NO_VAT_COMPONENT","model_use":"SCALE_CONTEXT_ONLY","note":"0.06% large and 0.17% SME averages include multiple tax types and use study-specific imputation."},
-      {"quantity":"vat_specific_internal_hours_respondent_subset","status":"PARTIALLY_IDENTIFIED_CONDITIONAL_ON_RESPONDENT_SUBSET","point_identified":"LOWER_BOUND_ONLY_TOP_CODED","model_use":"HOURS_EVIDENCE_NOT_NATIONAL_C_VAT","note":"METI n=1,514 directly measures VAT-specific internal hours for the reported Q8-3 response period. Published one-decimal shares plus integer counts imply a 15.126155878468 h/respondent lower bound; Q8-3 does not explicitly label tax-item hours as annual, 100+ top coding leaves the uncapped upper bound open, and results-page selector conflicts with the questionnaire and counts."},
+      {"quantity":"historical_vat_hours_survey_lineage","status":"DESIGN_SCOPE_OBSERVED_NUMERIC_PUBLICATION_GAP","point_identified":"NO_COMMON_PUBLIC_ANNUAL_NUMERIC_SERIES","model_use":"DO_NOT_ANNUALIZE_2021_BOUND_FROM_LINEAGE","note":"2019 explicitly scopes VAT hours to a target fiscal year but does not publish the numeric VAT-hour responses and includes accounting-purpose work in one process column; 2020 collects post-financial-statement VAT hours and RIETI scopes survey behavior to FY2019, but METI publishes neither the Q11-3 values nor a data attachment; 2021 publishes VAT-hour percentages but its tax-item period is not explicitly annual and selector metadata conflict. No public year supplies all required pieces jointly."},
+      {"quantity":"vat_specific_internal_hours_respondent_subset","status":"PARTIALLY_IDENTIFIED_CONDITIONAL_ON_RESPONDENT_SUBSET","point_identified":"LOWER_BOUND_ONLY_TOP_CODED","model_use":"HOURS_EVIDENCE_NOT_NATIONAL_C_VAT","note":"METI n=1,514 directly measures VAT-specific internal hours for the reported Q8-3 response period. Published one-decimal shares plus integer counts imply a 15.126155878468 h/respondent lower bound; Q8-3 does not explicitly label tax-item hours as annual, 100+ top coding leaves the uncapped upper bound open, and results-page selector conflicts with the questionnaire and counts. Historical 2019/2020 survey designs do not license annualizing this 2021 bound."},
       {"quantity":"rieti_exact_bsws_hourly_wage_formula","status":"NOT_IDENTIFIED_FROM_PAPER","point_identified":"NO","model_use":"TRANSPARENT_ALTERNATIVE_FORMULAS_ONLY","note":"RIETI 21-P-018 identifies the MHLW Basic Survey on Wage Structure as the industry-hourly-wage source but does not identify the exact table/formula. The repository therefore carries two transparent official-component ratios rather than claiming exact replication."},
       {"quantity":"vat_specific_internal_labor_cost_respondent_reported_period","status":"MECHANICAL_WAGE_CONVERSION_ONLY","point_identified":"NO_ANNUAL_OR_POPULATION_POINT","model_use":"SENSITIVITY_ONLY_NOT_C_VAT","note":"The METI conditional hours lower bound can be multiplied by official BSWS wage candidates, giving about 29.1-29.6k yen/respondent at the industry-total candidates for the reported Q8-3 period. The period is not explicitly annual and respondent industry composition, selection, temporal alignment, and VAT-specific outsourcing remain unresolved."},
-      {"quantity":"vat_specific_real_resource_cost_share_of_output","status":"NOT_IDENTIFIED","point_identified":"NO","model_use":"STRESS_TEST_PARAMETER_ONLY","note":"METI partially identifies VAT-specific internal hours and the repository now supplies transparent official wage-conversion candidates, but Q8-3 period is not explicitly annual; national population reweighting/selection, respondent industry mix, temporal alignment, and VAT-specific external expenditure remain unavailable. Therefore Japan-wide c_VAT is not identified."},
+      {"quantity":"vat_specific_real_resource_cost_share_of_output","status":"NOT_IDENTIFIED","point_identified":"NO","model_use":"STRESS_TEST_PARAMETER_ONLY","note":"METI partially identifies 2021 VAT-specific internal hours and the repository supplies transparent wage-conversion candidates. Historical 2019/2020 questionnaires confirm that VAT hours were collected, but their public reports do not release the needed VAT-hour values/data attachments and cannot fill the 2021 period/selection gap. National reweighting, respondent industry mix, temporal alignment, and VAT-specific external expenditure also remain unavailable. Therefore Japan-wide c_VAT is not identified."},
       {"quantity":"productive_redeployment_fraction_rho","status":"NOT_IDENTIFIED","point_identified":"NO","model_use":"STRESS_TEST_PARAMETER_ONLY","note":"Saved compliance resources need not convert one-for-one into measured output."},
       {"quantity":"allocative_efficiency_dividend","status":"NOT_IDENTIFIED","point_identified":"NO","model_use":"STRESS_TEST_PARAMETER_ONLY","note":"Bunching evidence motivates a separate allocation channel but does not identify a macro output percentage."},
       {"quantity":"zero_rate_equals_full_abolition","status":"FALSE_BY_POLICY_DEFINITION","point_identified":"NOT_APPLICABLE","model_use":"PROHIBITED_EQUIVALENCE","note":"Policy state must separately encode VAT administrative/invoice obligations."},

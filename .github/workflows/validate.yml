@@ -23,6 +23,8 @@ jobs:
           python scripts/build_source_catalog.py
           python scripts/extract_meti_vat_internal_hours.py
           python scripts/test_meti_vat_internal_hours.py
+          python scripts/build_meti_vat_hours_source_lineage.py
+          python scripts/test_meti_vat_hours_source_lineage.py
           python scripts/build_bsws_2019_industry_hourly_wage_bridge.py
           python scripts/build_meti_vat_internal_labor_cost_bridge.py
           python scripts/test_bsws_vat_wage_bridge.py
