@@ -1,5 +1,5 @@
 = Research Status
-:revdate: 2026-09-10
+:revdate: 2026-09-11
 
 == Migration
 
@@ -16,8 +16,8 @@
 |===
 |Component |Status |Permitted interpretation
 |Income-tax behavioral response |NOT_READY |政策最適化の確定入力にしない
-|Income-tax liability / surtax |READY_STATIC_ONLY |静学的税額・帰着の範囲のみ
-|Pseudo-filer statutory MTR |SENSITIVITY_ONLY_REPRODUCED |公式raw/derived dataから再生成可能な感度分析モデル。F71561の`X`は0とせず、世帯数`X`行を明示的drop sensitivityとして除外する。count shareは公式秘匿規則で上限管理するが、金額`X`の影響は未識別。ETI等の感度分析入力のみに用い、真の申告者MTR分布や点識別された政策入力とは扱わない
+|Income-tax liability / surtax |READY_STATIC_ONLY |F71561所得税は直接観測ではなく統計局の公表推計値。静学的・記述的な会計感度分析の範囲のみで用い、2026 ordinary-tax概念との同一性は仮定しない
+|Pseudo-filer statutory MTR |SENSITIVITY_ONLY_REPRODUCED |2024 F71561公表推計所得税を異なる2026 ordinary-tax概念へmoment-matchするnamed cross-concept sensitivity。差額の数値変換は未識別。公式raw/derived dataから再生成可能な感度分析モデル。F71561の`X`は0とせず、世帯数`X`行を明示的drop sensitivityとして除外する。count shareは公式秘匿規則で上限管理するが、金額`X`の影響は未識別。ETI等の感度分析入力のみに用い、真の申告者MTR分布や点識別された政策入力とは扱わない
 |F71561 stage-1 population bridge |ROBUSTNESS_FRONTIER |任意の外部閾値 stem:[A] に対するbreak-even総未追跡mismatch budget stem:[C_U^*(A)] を再現可能に計算する。実際の stem:[C_U] や申告率は未識別
 |NTA primary-income-type stage-2 diagnostic |EXTERNAL_STAGE2_DIAGNOSTIC_REPRODUCED |国税庁の5所得区分について正確人員からpositive-self-assessed-balance率を再生成。F71561世帯→申告者selectionの識別とは扱わない
 |Restricted-LP decile MTR endpoints |DOCUMENTED_PRIOR_RUN_NOT_REPRODUCED |旧40–42の制約集合・endpoint生成鎖は未回収。再現済みstage-2をLP endpointの識別へ読み替えない

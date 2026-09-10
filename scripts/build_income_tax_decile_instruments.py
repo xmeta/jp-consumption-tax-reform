@@ -10,6 +10,20 @@ LONG31 = ROOT / "data/derived/estat_71531_deciles_long.csv"
 LEAF = ROOT / "data/derived/income_tax_household_type_leaf_deciles_2024.csv"
 OUT_INST = ROOT / "data/derived/income_tax_decile_tax_social_instruments_2024.csv"
 OUT_AUDIT = ROOT / "data/derived/estat_71561_leaf_aggregation_audit.csv"
+OUT_TARGET_AUDIT = ROOT / "data/derived/estat_71561_income_tax_target_definition_audit_2024.csv"
+
+TARGET_METHOD_SOURCE = "STAT-NSFCW-2024-ANNUAL-NONCONSUMPTION-METHOD"
+CALIBRATION_POLICY = "RETAIN_PUBLISHED_IMPUTED_TARGET_AS_NAMED_CROSS_CONCEPT_SENSITIVITY"
+
+TARGET_DEFINITION_AUDIT = [
+    ("collection_status", "estimated per household because annual non-consumption expenditure is not surveyed on the annual-income/assets questionnaire", "synthetic pseudo tax units built from published aggregates", "PUBLISHED_IMPUTED_NOT_DIRECT_OBSERVATION", "NOT_APPLICABLE", "PDF p.1 opening paragraph"),
+    ("tax_rule_vintage", "2024 Statistics Bureau tax construction", "2026 ordinary national income-tax statutory parameters", "DIFFERENT_RULE_VINTAGE", "NOT_IDENTIFIED_FROM_PUBLISHED_AGGREGATES", "PDF p.1 tax steps 1-5"),
+    ("reconstruction_special_income_tax", "added to estimated income tax", "excluded from ordinary_national_income_tax_2026", "TARGET_INCLUDES_MODEL_EXCLUDES", "NOT_IDENTIFIED_FROM_PUBLISHED_AGGREGATES", "PDF p.1 tax step 4"),
+    ("fixed_2024_tax_reduction", "deducted from estimated income tax", "not a 2026 model component", "TARGET_INCLUDES_2024_CREDIT_MODEL_DOES_NOT", "NOT_IDENTIFIED_FROM_PUBLISHED_AGGREGATES", "PDF p.1 tax step 4"),
+    ("interest_dividend_tax", "tax amount added under a uniform withholding/separate-tax assumption", "interest_dividend_kY is not consumed by the pseudo-tax-unit calculation", "TARGET_INCLUDES_MODEL_EXCLUDES", "NOT_IDENTIFIED_FROM_PUBLISHED_AGGREGATES", "PDF p.1 tax step 5"),
+    ("deduction_scope", "medical, disability, donation and other unavailable/low-frequency deductions are omitted from the official imputation", "selected 2026 deductions are modeled under explicit pseudo-filer scenarios/nuisance calibration", "CONSTRUCTION_SCOPES_DIFFER", "NOT_IDENTIFIED_FROM_PUBLISHED_AGGREGATES", "PDF p.1 paragraph after tax step 5"),
+    ("calibration_decision", "published imputed F71561 income-tax amount retained unchanged", "continuous 2026 ordinary-tax proxy is moment-matched to that different concept", "NAMED_CROSS_CONCEPT_SENSITIVITY", "NO_NUMERIC_TRANSFORM; CONCEPT_DIFFERENCE_NOT_IDENTIFIED", "repository calibration policy"),
+]
 
 COMPONENTS = {
     "811": ("income_tax_kY", "income_tax_yen"),
@@ -47,6 +61,22 @@ def leaf_num(row, field):
     if value == "":
         raise ValueError(f"unmarked blank F71561 value: {field}")
     return float(value)
+
+
+def target_definition_rows():
+    return [
+        {
+            "audit_item": item,
+            "published_imputed_2024_treatment": target,
+            "modeled_2026_ordinary_tax_treatment": model,
+            "alignment_status": alignment,
+            "numeric_reconciliation_status": numeric,
+            "source_id": TARGET_METHOD_SOURCE,
+            "source_locator": locator,
+            "calibration_policy": CALIBRATION_POLICY,
+        }
+        for item, target, model, alignment, numeric, locator in TARGET_DEFINITION_AUDIT
+    ]
 
 
 def build():
@@ -143,25 +173,28 @@ def build():
                 "ESTAT-7153-1-2024;ESTAT-7156-1-2024;STAT-NSFCW-2024-USAGE-NOTES",
         })
 
-    return inst_rows, audit_rows
+    return inst_rows, audit_rows, target_definition_rows()
 
 
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--check", action="store_true")
     args = ap.parse_args()
-    inst, audit = build()
+    inst, audit, target_audit = build()
 
     inst_fields = list(inst[0])
     audit_fields = list(audit[0])
+    target_audit_fields = list(target_audit[0])
     expected_inst = render(inst_fields, inst)
     expected_audit = render(audit_fields, audit)
+    expected_target_audit = render(target_audit_fields, target_audit)
 
     if args.check:
         stale = []
         for path, expected in [
             (OUT_INST, expected_inst),
             (OUT_AUDIT, expected_audit),
+            (OUT_TARGET_AUDIT, expected_target_audit),
         ]:
             actual = path.read_text(encoding="utf-8") if path.exists() else ""
             if actual != expected:
@@ -174,8 +207,10 @@ def main():
 
     OUT_INST.write_text(expected_inst, encoding="utf-8")
     OUT_AUDIT.write_text(expected_audit, encoding="utf-8")
+    OUT_TARGET_AUDIT.write_text(expected_target_audit, encoding="utf-8")
     print(f"wrote {OUT_INST.relative_to(ROOT)}: {len(inst)} rows")
     print(f"wrote {OUT_AUDIT.relative_to(ROOT)}: {len(audit)} rows")
+    print(f"wrote {OUT_TARGET_AUDIT.relative_to(ROOT)}: {len(target_audit)} rows")
 
 
 if __name__ == "__main__":

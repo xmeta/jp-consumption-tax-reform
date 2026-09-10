@@ -18,8 +18,10 @@ and SHA-256 values are retained in the repository.
 For each decile and sensitivity scenario, the construction allocates aggregate
 income components to pseudo tax units, applies the statutory income
 transformations and tax brackets, and chooses a nuisance income scale to match
-the observed aggregate income-tax liability moment or, at statutory
-discontinuities, the nearest achievable moment.
+the published/imputed F71561 income-tax construction moment or, at statutory
+discontinuities, the nearest achievable moment.  This is a named cross-concept
+sensitivity because the 2024 published imputation and modeled 2026 ordinary-tax
+concept are not definitionally identical.
 
 The nuisance scale is a calibration device.  It is not a behavioral,
 structural, or causal parameter.
@@ -385,9 +387,12 @@ distinct results, and P1-C06 remains unreproduced.
 
 === Static liability versus behavioral incidence
 
-Observed F71561 income-tax liability moments can support static,
-first-order liability calculations under explicitly stated accounting
-assumptions.  This is the meaning of `READY_STATIC_ONLY`.
+Published/imputed F71561 income-tax construction moments can support
+static descriptive accounting sensitivities under explicitly stated official
+imputation and accounting assumptions.  They are not directly observed
+household tax liabilities.  This limited descriptive use is the meaning of
+`READY_STATIC_ONLY`; it does not establish tax-concept identity with the 2026
+pseudo-filer calculation.
 
 Static liability incidence does not identify:
 

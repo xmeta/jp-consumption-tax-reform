@@ -8,8 +8,9 @@ Identification status:
     SENSITIVITY_ONLY_NOT_IDENTIFIED
 
 The model constructs pseudo tax units from aggregate household-type cells,
-calibrates one nuisance income scale per decile/scenario to the observed
-F71561 income-tax liability moment, and reports statutory-bracket diagnostics.
+calibrates one nuisance income scale per decile/scenario to the published/imputed
+F71561 income-tax construction moment under a named cross-concept sensitivity,
+and reports statutory-bracket diagnostics.
 It does not identify the true filer MTR distribution.
 """
 from __future__ import annotations
@@ -53,9 +54,14 @@ INPUT_SOURCE_IDS = (
     "NTA-SALARY-DEDUCTION-1410;NTA-INCOME-TAX-RATE-2260;"
     "NTA-2026-PENSION-TAX;NTA-2026-PENSION-DETAIL;"
     "NTA-MINKAN-2024-T17;NTA-2026-DEPENDENT-DEDUCTION;"
-    "ESTAT-7155-1-2024"
+    "ESTAT-7155-1-2024;STAT-NSFCW-2024-ANNUAL-NONCONSUMPTION-METHOD"
 )
 STATUTORY_ARTIFACT = "data/derived/income_tax_2026_statutory_parameters.csv"
+CALIBRATION_TARGET_CONCEPT = "STATISTICS_BUREAU_PUBLISHED_IMPUTED_2024_INCOME_TAX"
+CALIBRATION_TARGET_SOURCE_ID = "STAT-NSFCW-2024-ANNUAL-NONCONSUMPTION-METHOD"
+MODELED_TAX_CONCEPT = "2026_ORDINARY_NATIONAL_INCOME_TAX_EXCLUDING_RECONSTRUCTION_SPECIAL_INCOME_TAX"
+TARGET_MODEL_ALIGNMENT = "NAMED_CROSS_CONCEPT_SENSITIVITY"
+TARGET_NUMERIC_RECONCILIATION = "NO_NUMERIC_TRANSFORM; CONCEPT_DIFFERENCE_NOT_IDENTIFIED"
 
 SIZE_BOUNDS = {
     "011": (1.0, 1.0),
@@ -494,7 +500,7 @@ def household_tax(row, size, nuisance_scale, scenario, contrib_eq_yen,
     return eq_tax_kY
 
 
-def observed_decile_tax(rows):
+def published_imputed_decile_tax(rows):
     return weighted_mean([
         (leaf_num(r, "income_tax_kY"), leaf_num(r, "household_count_approx"))
         for r in rows
@@ -608,7 +614,7 @@ def build_outputs():
         rows, suppressed_rows = modeled_leaf_rows(all_rows)
         suppression = suppression_metadata(rows, suppressed_rows)
         suppression_by_decile[d] = suppression
-        target_tax = observed_decile_tax(rows)
+        target_tax = published_imputed_decile_tax(rows)
         total_count = sum(leaf_num(r, "household_count_approx") for r in rows)
 
         for group in [
@@ -633,7 +639,7 @@ def build_outputs():
                 "household_count_approx": count,
                 "household_share_within_leaf_partition":
                     count / total_count if total_count else 0.0,
-                "observed_income_tax_liability_share":
+                "published_imputed_income_tax_share":
                     tax_num / all_tax_num if all_tax_num else 0.0,
                 "source_id": "ESTAT-7156-1-2024",
                 "model_status": STATUS,
@@ -676,7 +682,7 @@ def build_outputs():
                 "decile": d,
                 "scenario": scenario,
                 "nuisance_income_scale": nuisance,
-                "observed_leaf_weighted_income_tax_kY": target_tax,
+                "published_imputed_leaf_weighted_income_tax_kY": target_tax,
                 "reconstructed_continuous_proxy_income_tax_kY": fit,
                 "continuous_proxy_fit_error_kY": abs(fit - target_tax),
                 "reconstructed_exact_statutory_income_tax_kY": exact_fit,
@@ -701,6 +707,11 @@ def build_outputs():
                 "model_status": STATUS,
                 "input_source_ids": INPUT_SOURCE_IDS,
                 "statutory_parameter_artifact": STATUTORY_ARTIFACT,
+                "calibration_target_concept": CALIBRATION_TARGET_CONCEPT,
+                "calibration_target_source_id": CALIBRATION_TARGET_SOURCE_ID,
+                "modeled_tax_concept": MODELED_TAX_CONCEPT,
+                "target_model_alignment_status": TARGET_MODEL_ALIGNMENT,
+                "target_numeric_reconciliation_status": TARGET_NUMERIC_RECONCILIATION,
             })
 
             tax_units = []
@@ -810,6 +821,11 @@ def build_outputs():
             "scenario_count": len(rows),
             "input_source_ids": INPUT_SOURCE_IDS,
             "statutory_parameter_artifact": STATUTORY_ARTIFACT,
+            "calibration_target_concept": CALIBRATION_TARGET_CONCEPT,
+            "calibration_target_source_id": CALIBRATION_TARGET_SOURCE_ID,
+            "modeled_tax_concept": MODELED_TAX_CONCEPT,
+            "target_model_alignment_status": TARGET_MODEL_ALIGNMENT,
+            "target_numeric_reconciliation_status": TARGET_NUMERIC_RECONCILIATION,
         })
     return calibration, scenarios_out, summary, groups
 

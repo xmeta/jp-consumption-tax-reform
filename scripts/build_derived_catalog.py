@@ -126,9 +126,9 @@ SPECS = [
         "ESTAT-71531-TAX-SOCIAL-INSTRUMENTS",
         "income_tax_decile_tax_social_instruments_2024.csv",
         "scripts/build_income_tax_decile_instruments.py",
-        "ESTAT-7153-1-2024",
+        "ESTAT-7153-1-2024;STAT-NSFCW-2024-ANNUAL-NONCONSUMPTION-METHOD",
         "DERIVED_REPRODUCED",
-        "Decile income tax, resident tax and social-insurance contribution moments",
+        "Published/imputed decile income tax, resident tax and social-insurance contribution moments; interpretation follows the official 2024 annual non-consumption-expenditure estimation method",
     ),
     (
         "ESTAT-71561-LEAF-AUDIT",
@@ -137,6 +137,14 @@ SPECS = [
         "ESTAT-7153-1-2024;ESTAT-7156-1-2024;STAT-NSFCW-2024-USAGE-NOTES",
         "DERIVED_REPRODUCED",
         "Leaf aggregation versus total-table rounding diagnostic with explicit suppression-row drop sensitivity and count-share upper bound",
+    ),
+    (
+        "ESTAT-71561-INCOME-TAX-TARGET-DEFINITION-AUDIT-2024",
+        "estat_71561_income_tax_target_definition_audit_2024.csv",
+        "scripts/build_income_tax_decile_instruments.py",
+        "ESTAT-7156-1-2024;STAT-NSFCW-2024-ANNUAL-NONCONSUMPTION-METHOD",
+        "DERIVED_REPRODUCED_TARGET_SEMANTICS_AUDIT",
+        "Seven-row audit distinguishing the published/imputed 2024 F71561 income-tax construction from the pseudo-filer 2026 ordinary-tax concept; no unidentified numeric transform is applied",
     ),
     (
         "ESTAT-71911-SIZE-AGE-BRIDGE",
