@@ -176,9 +176,84 @@ def nta_salary_dependent_proxy(gross_wage_yen):
 
 
 def num(x):
-    if x in ("", None, "-", "X"):
+    if x in ("", None, "-"):
         return 0.0
+    if x == "X":
+        raise ValueError("suppressed value X must not be coerced to zero")
     return float(x)
+
+
+def leaf_num(row, field):
+    marker = row[field + "_missing_marker"]
+    value = row[field]
+    if marker == "X":
+        raise ValueError(
+            f"suppressed F71561 value must not enter pseudo-filer: {field}"
+        )
+    if marker == "-":
+        if value != "":
+            raise ValueError(f"structural-missing marker has numeric value: {field}")
+        return 0.0
+    if marker != "":
+        raise ValueError(f"unsupported F71561 missing marker {marker!r}: {field}")
+    if value == "":
+        raise ValueError(f"unmarked blank F71561 value: {field}")
+    return float(value)
+
+
+def modeled_leaf_rows(rows):
+    modeled = []
+    suppressed = []
+    for row in rows:
+        marker = row["household_count_approx_missing_marker"]
+        if marker == "X":
+            suppressed.append(row)
+            continue
+        for field, value in row.items():
+            if field.endswith("_missing_marker") and value == "X":
+                raise ValueError(
+                    "monetary X with non-suppressed household count must not be imputed: "
+                    + field
+                )
+        modeled.append(row)
+    return modeled, suppressed
+
+
+def suppression_metadata(modeled, suppressed):
+    numeric_counts = [
+        leaf_num(row, "household_count_approx")
+        for row in modeled
+        if row["household_count_approx_missing_marker"] == ""
+    ]
+    numeric_count_lower = sum(max(5.0, x - 5.0) for x in numeric_counts)
+    suppressed_upper = 5.0 * len(suppressed)
+    share_upper = (
+        suppressed_upper / (numeric_count_lower + suppressed_upper)
+        if suppressed_upper else 0.0
+    )
+    monetary_x = sum(
+        1
+        for row in suppressed
+        for field, value in row.items()
+        if field.endswith("_missing_marker")
+        and field != "household_count_approx_missing_marker"
+        and value == "X"
+    )
+    return {
+        "suppression_assumption":
+            "DROP_F71561_ROWS_WITH_SUPPRESSED_HOUSEHOLD_COUNT",
+        "suppressed_leaf_rows_omitted": len(suppressed),
+        "suppressed_household_count_upper_exclusive": suppressed_upper,
+        "suppressed_count_share_upper_bound_exclusive": share_upper,
+        "suppressed_monetary_x_cells_without_numeric_bound": monetary_x,
+        "suppression_residual_status": (
+            "MONETARY_X_IMPACT_NOT_IDENTIFIED"
+            if monetary_x else
+            "COUNT_ONLY_X_BOUNDED_BY_OFFICIAL_DISCLOSURE_RULE"
+            if suppressed else
+            "NO_SUPPRESSED_LEAF_COUNT"
+        ),
+    }
 
 
 def fmt(x):
@@ -204,7 +279,7 @@ def weighted_mean(pairs):
 
 
 def calibrated_size_map(rows, bridge_row, target_col):
-    weights = [num(r["household_count_approx"]) for r in rows]
+    weights = [leaf_num(r, "household_count_approx") for r in rows]
     lo = weighted_mean([
         (size_bounds(r["household_type"])[0], w)
         for r, w in zip(rows, weights)
@@ -245,7 +320,7 @@ def scenario_size_map(rows, bridge_row, scenario):
         out[r["household_type"]] = lo if size_mode == "lower" else hi
     meta = dict(meta)
     meta["calibrated_weighted_size"] = weighted_mean([
-        (out[r["household_type"]], num(r["household_count_approx"]))
+        (out[r["household_type"]], leaf_num(r, "household_count_approx"))
         for r in rows
     ])
     return out, meta
@@ -264,9 +339,9 @@ def build_units(row, size, scenario, contrib_eq_yen, senior_share):
     _, _, business_mode, other_split, social_mode, pension_mode = SCENARIOS[scenario]
     scale = math.sqrt(size)
 
-    head_w = num(row["head_wage_kY"]) * 1000.0 * scale
-    spouse_w = num(row["spouse_wage_kY"]) * 1000.0 * scale
-    other_total = num(row["other_member_wage_kY"]) * 1000.0 * scale
+    head_w = leaf_num(row, "head_wage_kY") * 1000.0 * scale
+    spouse_w = leaf_num(row, "spouse_wage_kY") * 1000.0 * scale
+    other_total = leaf_num(row, "other_member_wage_kY") * 1000.0 * scale
 
     units = [
         new_unit("head", head_w, employment_income_2026(head_w)),
@@ -280,7 +355,7 @@ def build_units(row, size, scenario, contrib_eq_yen, senior_share):
                 f"other_{i+1}", w, employment_income_2026(w)
             ))
 
-    business = num(row["business_kY"]) * 1000.0 * scale
+    business = leaf_num(row, "business_kY") * 1000.0 * scale
     if business > 0:
         if business_mode == "head":
             units[0]["pre_basic"] += business
@@ -294,7 +369,7 @@ def build_units(row, size, scenario, contrib_eq_yen, senior_share):
         else:
             raise ValueError(business_mode)
 
-    pension_total = num(row["public_pension_kY"]) * 1000.0 * scale
+    pension_total = leaf_num(row, "public_pension_kY") * 1000.0 * scale
     if pension_mode == "absorbed_in_nuisance":
         pass
     elif pension_mode == "merge_to_head_by_household_head_age":
@@ -324,9 +399,9 @@ def build_units(row, size, scenario, contrib_eq_yen, senior_share):
         "member_split_by_F71551_age_share",
     }:
         if pension_total > 0:
-            head_p = num(row["head_public_pension_kY"]) * 1000.0 * scale
-            spouse_p = num(row["spouse_public_pension_kY"]) * 1000.0 * scale
-            other_p = num(row["other_member_public_pension_kY"]) * 1000.0 * scale
+            head_p = leaf_num(row, "head_public_pension_kY") * 1000.0 * scale
+            spouse_p = leaf_num(row, "spouse_public_pension_kY") * 1000.0 * scale
+            other_p = leaf_num(row, "other_member_public_pension_kY") * 1000.0 * scale
             residual = max(pension_total - head_p - spouse_p - other_p, 0.0)
 
             if head_p > 0:
@@ -421,7 +496,7 @@ def household_tax(row, size, nuisance_scale, scenario, contrib_eq_yen,
 
 def observed_decile_tax(rows):
     return weighted_mean([
-        (num(r["income_tax_kY"]), num(r["household_count_approx"]))
+        (leaf_num(r, "income_tax_kY"), leaf_num(r, "household_count_approx"))
         for r in rows
     ])
 
@@ -433,16 +508,16 @@ def predicted_decile_tax(rows, size_map, nuisance, scenario, contrib, senior):
                 r, size_map[r["household_type"]], nuisance,
                 scenario, contrib, senior
             ),
-            num(r["household_count_approx"]),
+            leaf_num(r, "household_count_approx"),
         )
-        for r in rows if num(r["household_count_approx"]) > 0
+        for r in rows if leaf_num(r, "household_count_approx") > 0
     ])
 
 
 def predicted_decile_exact_tax(rows, size_map, nuisance, scenario, contrib, senior):
     pairs = []
     for r in rows:
-        weight = num(r["household_count_approx"])
+        weight = leaf_num(r, "household_count_approx")
         if weight <= 0:
             continue
         size = size_map[r["household_type"]]
@@ -526,11 +601,15 @@ def build_outputs():
     calibration = []
     scenarios_out = []
     groups = []
+    suppression_by_decile = {}
 
     for d in range(1, 11):
-        rows = [r for r in leaf if int(r["decile"]) == d]
+        all_rows = [r for r in leaf if int(r["decile"]) == d]
+        rows, suppressed_rows = modeled_leaf_rows(all_rows)
+        suppression = suppression_metadata(rows, suppressed_rows)
+        suppression_by_decile[d] = suppression
         target_tax = observed_decile_tax(rows)
-        total_count = sum(num(r["household_count_approx"]) for r in rows)
+        total_count = sum(leaf_num(r, "household_count_approx") for r in rows)
 
         for group in [
             "zero_worker_label",
@@ -539,13 +618,13 @@ def build_outputs():
             "one_plus_unspecified_label",
         ]:
             sub = [r for r in rows if worker_group(r["household_type"]) == group]
-            count = sum(num(r["household_count_approx"]) for r in sub)
+            count = sum(leaf_num(r, "household_count_approx") for r in sub)
             tax_num = sum(
-                num(r["household_count_approx"]) * num(r["income_tax_kY"])
+                leaf_num(r, "household_count_approx") * leaf_num(r, "income_tax_kY")
                 for r in sub
             )
             all_tax_num = sum(
-                num(r["household_count_approx"]) * num(r["income_tax_kY"])
+                leaf_num(r, "household_count_approx") * leaf_num(r, "income_tax_kY")
                 for r in rows
             )
             groups.append({
@@ -626,7 +705,7 @@ def build_outputs():
 
             tax_units = []
             for r in rows:
-                count = num(r["household_count_approx"])
+                count = leaf_num(r, "household_count_approx")
                 if count <= 0:
                     continue
                 _, units = household_tax(
@@ -693,6 +772,7 @@ def build_outputs():
     for d in range(1, 11):
         rows = [r for r in scenarios_out if int(r["decile"]) == d]
         central = next(r for r in rows if r["scenario"] == "central")
+        suppression = suppression_by_decile[d]
         summary.append({
             "decile": d,
             "central_taxable_income_weighted_MTR":
@@ -714,6 +794,15 @@ def build_outputs():
                 max(r["continuous_proxy_fit_error_kY"] for r in rows),
             "max_absolute_exact_statutory_rounding_gap_kY":
                 max(abs(r["exact_statutory_rounding_gap_kY"]) for r in rows),
+            "suppression_assumption": suppression["suppression_assumption"],
+            "suppressed_leaf_rows_omitted": suppression["suppressed_leaf_rows_omitted"],
+            "suppressed_household_count_upper_exclusive":
+                suppression["suppressed_household_count_upper_exclusive"],
+            "suppressed_count_share_upper_bound_exclusive":
+                suppression["suppressed_count_share_upper_bound_exclusive"],
+            "suppressed_monetary_x_cells_without_numeric_bound":
+                suppression["suppressed_monetary_x_cells_without_numeric_bound"],
+            "suppression_residual_status": suppression["suppression_residual_status"],
             "structural_MTR_identified": False,
             "recommended_use":
                 "sensitivity/ETI input only; not point input for optimal policy",

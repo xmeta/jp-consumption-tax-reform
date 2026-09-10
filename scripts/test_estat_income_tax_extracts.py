@@ -27,11 +27,13 @@ long31 = read("data/derived/estat_71531_deciles_long.csv")
 meta61 = read("data/derived/estat_71561_household_types.csv")
 long61 = read("data/derived/estat_71561_deciles_long.csv")
 leaf = read("data/derived/income_tax_household_type_leaf_deciles_2024.csv")
+suppression = read("data/derived/estat_71561_leaf_suppressed_cells.csv")
 
 assert len(long31) == 430, len(long31)
 assert len(meta61) == 49, len(meta61)
 assert len(long61) == 21_070, len(long61)
 assert len(leaf) == 140, len(leaf)
+assert len(suppression) == 137, len(suppression)
 
 assert {int(r["decile"]) for r in long31} == set(range(1, 11))
 assert {int(r["decile"]) for r in long61} == set(range(1, 11))
@@ -116,12 +118,30 @@ for r in leaf:
     for field in required_fields:
         assert r[field + "_source_cell"], (r["decile"], r["household_type"], field)
 
+count_x = [r for r in suppression if r["field"] == "household_count_approx"]
+assert len(count_x) == 11
+assert {r["value_kind"] for r in count_x} == {"HOUSEHOLD_COUNT"}
+assert {r["count_lower_bound"] for r in count_x} == {"0"}
+assert {r["count_lower_bound_inclusive"] for r in count_x} == {"False"}
+assert {r["count_upper_bound"] for r in count_x} == {"5"}
+assert {r["count_upper_bound_inclusive"] for r in count_x} == {"False"}
+assert {r["rule_source_id"] for r in suppression} == {"STAT-NSFCW-2024-USAGE-NOTES"}
+count_x_keys = {(r["decile"], r["household_type"]) for r in count_x}
+assert all((r["decile"], r["household_type"]) in count_x_keys for r in suppression)
+assert sum(r["value_kind"] == "MONETARY_AMOUNT" for r in suppression) == 126
+
 # Approximate household counts are published rounded. Their leaf partition
 # should stay close to the total-household count, but exact equality is not
 # required because the source labels them approximate.
 for decile in range(1, 11):
     sub = [r for r in leaf if int(r["decile"]) == decile]
-    leaf_count = sum(float(r["household_count_approx"] or 0) for r in sub)
+    markers = {r["household_count_approx_missing_marker"] for r in sub}
+    assert markers <= {"", "-", "X"}
+    leaf_count = sum(
+        float(r["household_count_approx"])
+        for r in sub
+        if r["household_count_approx_missing_marker"] == ""
+    )
     total_count = float(
         next(
             r["numeric_value"]
@@ -136,5 +156,5 @@ for decile in range(1, 11):
 
 print(
     "e-Stat income-tax extract tests: OK "
-    "(430 cross-table cells exact; 14 leaves; 140 leaf-decile rows)"
+    "(430 cross-table cells exact; 14 leaves; 140 leaf-decile rows; 137 X cells audited)"
 )

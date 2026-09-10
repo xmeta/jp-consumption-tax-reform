@@ -11,6 +11,9 @@ import sys
 
 HERE = Path(__file__).resolve().parent
 ROOT = HERE.parents[1]
+sys.path.insert(0, str(HERE))
+
+from run_replacement_transport_lp import f71561_count_under_drop_sensitivity
 
 WEIGHTS = HERE / "replacement_transport_lp_decile_weights.csv"
 MINIMUM = HERE / "replacement_transport_lp_minimum_relaxation.csv"
@@ -42,6 +45,19 @@ def as_bool(s):
     assert s in {"True", "False"}
     return s == "True"
 
+
+assert f71561_count_under_drop_sensitivity({
+    "household_count_approx": "",
+    "household_count_approx_missing_marker": "X",
+}) is None
+assert f71561_count_under_drop_sensitivity({
+    "household_count_approx": "",
+    "household_count_approx_missing_marker": "-",
+}) == 0.0
+assert f71561_count_under_drop_sensitivity({
+    "household_count_approx": "10",
+    "household_count_approx_missing_marker": "",
+}) == 10.0
 
 weights = read(WEIGHTS)
 minimum = read(MINIMUM)
@@ -75,6 +91,12 @@ for scheme in SCHEMES:
     assert all(v > 0 for v in vals)
     if scheme == "equal_decile":
         assert all(math.isclose(v, 0.1, abs_tol=1e-12) for v in vals)
+        assert {r["suppression_assumption"] for r in q} == {"NONE"}
+    else:
+        assert {r["suppression_assumption"] for r in q} == {
+            "DROP_F71561_ROWS_WITH_SUPPRESSED_HOUSEHOLD_COUNT"
+        }
+        assert all("suppressed X rows dropped" in r["source_definition"] for r in q)
 
 min_by_scheme = {r["weight_scheme"]: r for r in minimum}
 for scheme, expected in EXPECTED_EPS.items():

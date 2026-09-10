@@ -8,6 +8,8 @@ import math
 import subprocess
 import sys
 
+from run_pseudofiler_core import leaf_num, modeled_leaf_rows, num
+
 HERE = Path(__file__).resolve().parent
 ROOT = HERE.parents[1]
 
@@ -40,6 +42,34 @@ cal = read("pseudofiler_calibration.csv")
 scen = read("pseudofiler_mtr_scenarios.csv")
 summ = read("pseudofiler_mtr_summary.csv")
 groups = read("household_worker_groups.csv")
+
+try:
+    num("X")
+except ValueError:
+    pass
+else:
+    raise AssertionError("suppressed X must not be numerically coerced")
+
+fixture = {
+    "household_count_approx": "",
+    "household_count_approx_missing_marker": "X",
+    "income_tax_kY": "123",
+    "income_tax_kY_missing_marker": "",
+}
+modeled, suppressed = modeled_leaf_rows([fixture])
+assert modeled == [] and suppressed == [fixture]
+assert leaf_num({"v": "", "v_missing_marker": "-"}, "v") == 0.0
+try:
+    modeled_leaf_rows([{
+        "household_count_approx": "10",
+        "household_count_approx_missing_marker": "",
+        "income_tax_kY": "",
+        "income_tax_kY_missing_marker": "X",
+    }])
+except ValueError:
+    pass
+else:
+    raise AssertionError("monetary X with usable count must fail closed")
 
 assert len(cal) == 130
 assert len(scen) == 130
@@ -84,6 +114,15 @@ for r in summ:
     assert r["model_status"] == "SENSITIVITY_ONLY_NOT_IDENTIFIED"
     assert int(r["scenario_count"]) == 13
     assert "not point input" in r["recommended_use"]
+    assert r["suppression_assumption"] == (
+        "DROP_F71561_ROWS_WITH_SUPPRESSED_HOUSEHOLD_COUNT"
+    )
+    assert float(r["suppressed_count_share_upper_bound_exclusive"]) < 0.002
+
+assert sum(int(r["suppressed_leaf_rows_omitted"]) for r in summ) == 11
+assert sum(int(r["suppressed_monetary_x_cells_without_numeric_bound"]) for r in summ) == 126
+assert max(float(r["suppressed_count_share_upper_bound_exclusive"]) for r in summ) < 0.0016
+assert any(r["suppression_residual_status"] == "MONETARY_X_IMPACT_NOT_IDENTIFIED" for r in summ)
 
 # Deterministic generator check.
 subprocess.run(
@@ -94,5 +133,5 @@ subprocess.run(
 
 print(
     "pseudo-filer core tests: OK "
-    "(13 scenarios x 10 deciles; central moments matched; external sensitivities coherent)"
+    "(13 scenarios x 10 deciles; suppressed X rows explicit; central moments matched)"
 )

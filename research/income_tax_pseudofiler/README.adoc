@@ -24,6 +24,9 @@ The core uses only repository-tracked inputs:
 
 * `data/derived/income_tax_household_type_leaf_deciles_2024.csv`
   -- 14 structural F71561 household-type leaves by 10 income deciles;
+* `data/derived/estat_71561_leaf_suppressed_cells.csv`
+  -- cell-level audit of all F71561 `X` markers used by the leaf compatibility
+  layer, with the official disclosure-rule source attached;
 * `data/derived/income_tax_bridge_deciles_2024.csv`
   -- F71911 household-size top-code sensitivity and age-65+ bridge;
 * `data/derived/income_tax_decile_tax_social_instruments_2024.csv`
@@ -42,7 +45,34 @@ The core uses only repository-tracked inputs:
   filer/person age allocation.
 
 The underlying official XLSX, PDF, and HTML snapshots are stored under
-`data/raw/` and registered in `data/source_catalog.csv`.
+`data/raw/` and registered in `data/source_catalog.csv`.  In particular,
+`STAT-NSFCW-2024-USAGE-NOTES` preserves the Statistics Bureau's 2024 symbol
+and confidentiality rules.
+
+== Suppression handling
+
+The official 2024 usage notes distinguish `-` (no applicable value), numeric
+zero, and `X` (suppressed).  Aggregate household counts below 5 are displayed
+as `X`; counts of at least 5 are rounded to the nearest 10.  Amounts are
+suppressed when the aggregate household count is below 2.5.
+
+The current 14-leaf compatibility layer contains 11 suppressed household-count
+cells and 126 suppressed monetary cells, all enumerated in
+`data/derived/estat_71561_leaf_suppressed_cells.csv`.  The pseudo-filer uses the
+named sensitivity assumption
+`DROP_F71561_ROWS_WITH_SUPPRESSED_HOUSEHOLD_COUNT`: the entire leaf row is
+omitted when its household count is `X`.  `X` is never treated as an exact
+zero.  A monetary `X` on a row with a usable count is a fail-closed error.
+
+Using the official count-display rule, the omitted-count share is bounded
+within each displayed leaf partition.  The largest strict upper bound in the
+current data is below 0.16%.  This is a bound on the suppressed share of the
+leaf aggregation count, not a population weight or filer share.  In deciles
+where monetary values are also `X`, their effect on calibration and MTR outputs
+remains `MONETARY_X_IMPACT_NOT_IDENTIFIED`; the repository does not invent a
+monetary bound.  Existing numerical pseudo-filer results are unchanged under
+the explicit drop sensitivity because the previous implementation had
+implicitly assigned those rows zero weight.
 
 == Construction
 
