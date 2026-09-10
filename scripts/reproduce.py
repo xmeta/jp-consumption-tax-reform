@@ -167,8 +167,8 @@ TARGETS = {
 }
 ALL_ORDER = (
     "source-integrity",
-    "vat",
     "income-tax",
+    "vat",
     "provenance",
     "paper1",
     "docs",
