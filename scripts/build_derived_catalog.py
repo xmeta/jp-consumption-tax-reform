@@ -9,6 +9,22 @@ OUT = ROOT / "data/derived_catalog.csv"
 
 SPECS = [
     (
+        "ESTAT-OBJECTIVE-RANK-HOUSEHOLD-MARGIN-SOURCE-MATRIX-2024",
+        "estat_objective_rank_household_margin_source_matrix_2024.csv",
+        "scripts/build_estat_objective_rank_household_margin_audit.py",
+        "ESTAT-NSFCW-2024-T1-21-ANNUAL-INCOME-DECILE-EXPENDITURE;ESTAT-7141-1-2024;ESTAT-7153-1-2024;ESTAT-7156-1-2024;ESTAT-7142-1-2-2024-DBVIEW;ESTAT-7145-1-2024-DBVIEW;ESTAT-762-1-2024-DBVIEW",
+        "DERIVED_REPRODUCED_BOUNDED_OBJECTIVE_RANK_MARGIN_SOURCE_AUDIT",
+        "Seven official 2024 NSFCW source families mapped by rank concept, statistical unit, population-household margin, population-person margin and approximate sample-household margin; annual-income household margins exist, but no examined objective-rank source exposes a population household margin",
+    ),
+    (
+        "ESTAT-OBJECTIVE-RANK-HOUSEHOLD-MARGIN-IDENTIFICATION-AUDIT-2024",
+        "estat_objective_rank_household_margin_identification_audit_2024.csv",
+        "scripts/build_estat_objective_rank_household_margin_audit.py",
+        "ESTAT-NSFCW-2024-T1-21-ANNUAL-INCOME-DECILE-EXPENDITURE;ESTAT-7141-1-2024;ESTAT-7153-1-2024;ESTAT-7156-1-2024;ESTAT-7142-1-2-2024-DBVIEW;ESTAT-7145-1-2024-DBVIEW;ESTAT-762-1-2024-DBVIEW",
+        "DERIVED_REPRODUCED_BOUNDED_NEGATIVE_RANK_MARGIN_AUDIT",
+        "Bounded negative-source result: household-unit annual-income to OECD-new equivalized-disposable-income Fréchet transport is not identified from the examined public aggregate tables because the objective-rank population household margin is absent; person deciles, sample counts, same-rank and independence substitutions are explicitly prohibited",
+    ),
+    (
         "ESTAT-NSFCW-2024-ANNUAL-INCOME-DECILE-EXPENDITURE-DIAGNOSTIC",
         "estat_2024_annual_income_decile_expenditure_diagnostic.csv",
         "scripts/build_estat_2024_annual_income_decile_expenditure_diagnostic.py",
