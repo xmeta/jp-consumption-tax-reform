@@ -283,6 +283,87 @@ channel, but they are not mapped one-for-one to either stem:[c_{VAT}] or
 stem:[a_{alloc}].  The current 10-million-yen, invoice-era aggregate allocation
 effect remains +NOT_IDENTIFIED_FROM_HISTORICAL_STRUCTURAL_ESTIMATES+.
 
+=== Ten-million-yen threshold: nationalized scale and mechanism uncertainty
+
+Ichikawa, Arudchelvan and Onji (2019) provide complementary evidence directly
+at the 10-million-yen VAT exemption threshold.  Their Teikoku Databank bunching
+estimates are combined with 2016 Economic Census aggregates to obtain a
+nationalized scale for the distorted region.  Table 4 reports:
+
+[cols="1,1,2",options="header"]
+|===
+|Quantity |Estimate |Interpretation in this repository
+
+|Firms with sales from 8 million to below 10 million yen
+|308,435
+|Nationalization denominator constructed by the authors from the Economic Census
+
+|Estimated excess-bunching firms
+|56,651
+|Behavioral-distortion scale; not firms proven to reduce real output
+
+|Estimated tax windfall
+|16.85 billion yen/year
+|Revenue context; not welfare or GDP loss
+
+|Lost sales: all-excess-bunchers-real-adjustment scenario
+|84.98 billion yen
+|Assumes every excess buncher came from the 10--11 million yen region and lost 1.5 million yen of real sales
+
+|Lost sales: missing-mass scenario
+|3.14 billion yen
+|Uses observed missing mass and the same 1.5-million-yen per-firm adjustment assumption
+|===
+
+The two lost-sales figures differ by more than a factor of 27.  They are *not*
+a lower and upper identification bound.  They answer different behavioral
+scenario questions.  The authors explicitly warn that the all-real-adjustment
+calculation can overstate the loss when bunching reflects tax avoidance, while
+the missing-mass calculation is itself conditional on the assumed 1.5-million-
+yen per-firm sales displacement.  Moreover, the paper notes that competing
+firms may replace sales forgone by an individual buncher, so firm-level lost
+sales cannot be translated one-for-one into aggregate GDP or welfare loss.
+
+The mechanism evidence is informative but not decisive.  The paper finds that
+the 8-million-yen sales bin has roughly 30% lower mean sales growth than the
+11-million-yen bin, but calls the difference statistically weak.  Small missing
+mass indirectly weighs against widespread real sales suppression.  At the same
+time, the authors do not find direct evidence of tax avoidance and state that
+the adjustment mechanism remains unresolved.  Accordingly:
+
+----
+real-adjustment share versus tax-avoidance share = NOT_IDENTIFIED
+----
+
+The study also treats the 2014 VAT increase from 5% to 8% as a quasi-
+experimental opportunity.  Table 5 compares relative excess bunching before
+(2004--2013) and after (2014--2018) for the same four bunching-window widths:
+
+[cols="1,1,1,1",options="header"]
+|===
+|Window below threshold (million yen) |Pre stem:[b] |Post stem:[b] |Post - pre
+
+|1.0 |0.721 |0.684 |-0.037
+|1.5 |0.871 |0.712 |-0.159
+|2.0 |0.900 |0.933 |0.033
+|2.5 |1.104 |1.085 |-0.019
+|===
+
+For each same-window comparison the published 95% confidence intervals overlap.
+Using the paper's stated decision rule, no increase in bunching is detected
+after the three-percentage-point rate increase.  This is evidence against a
+simple story in which the larger exemption windfall mechanically increases
+bunching, and is consistent with an important compliance-burden motive.  It is
+not a tax-rate elasticity estimate and does not identify the causal share of
+bunching attributable to compliance cost.
+
+This study substantially narrows the evidence gap because it uses the same
+10-million-yen threshold that remains in current law.  However, its sample
+predates the qualified-invoice system introduced in October 2023.  The
+repository therefore records the pre-invoice 10-million-yen behavioral scale
+but keeps the current invoice-era aggregate allocation effect and macro
+stem:[a_{alloc}] +NOT_IDENTIFIED+.
+
 === BSWS wage-conversion bridge
 
 RIETI 21-P-018 states that tax-procedure labor time was valued using
@@ -493,8 +574,8 @@ Before policy optimization, additional work is required to identify or bound:
 * the exact RIETI BSWS hourly-wage construction, or a justified replacement;
 * the fraction of saved owner/worker time that becomes productive activity;
 * recurring VAT-specific software/adviser costs and their duration; transition implementation cost is now partially bounded only for selected subsidy grant records;
-* population/current-regime mapping from historical local threshold responses to any macro +a_alloc+ bound;
-* allocative effects from current exemption-threshold and invoice-network distortions;
+* identification of the real-adjustment versus tax-avoidance mixture needed to translate 10-million-yen bunching into real resource/output effects;
+* current invoice-era mapping of the pre-2023 10-million-yen evidence and invoice-network distortions to any macro +a_alloc+ bound;
 * household incidence by income/wealth/age group;
 * demand and pass-through effects;
 * revenue and financing effects under JGB, income-tax, asset-tax and mixed
@@ -517,6 +598,8 @@ python scripts/build_vat_transition_system_subsidy_bounds.py
 python scripts/test_vat_transition_system_subsidy_bounds.py
 python scripts/build_rieti_vat_threshold_structural_bridge.py
 python scripts/test_rieti_vat_threshold_structural_bridge.py
+python scripts/build_ichikawa_2019_vat_10m_threshold_bridge.py
+python scripts/test_ichikawa_2019_vat_10m_threshold_bridge.py
 python scripts/build_bsws_2019_industry_hourly_wage_bridge.py
 python scripts/build_meti_vat_internal_labor_cost_bridge.py
 python scripts/test_bsws_vat_wage_bridge.py
@@ -534,6 +617,8 @@ Generated artifacts:
 * +data/derived/vat_transition_system_subsidy_bounds.csv+
 * +data/derived/rieti_vat_threshold_bunching_response.csv+
 * +data/derived/rieti_vat_threshold_structural_estimates.csv+
+* +data/derived/ichikawa_2019_vat_10m_threshold_nationalized_estimates.csv+
+* +data/derived/ichikawa_2019_vat_10m_threshold_prepost_bunching.csv+
 * +data/derived/bsws_2019_industry_hourly_wage_bridge.csv+
 * +data/derived/meti_vat_internal_labor_cost_wage_sensitivity.csv+
 * +data/derived/vat_compliance_observed_evidence.csv+

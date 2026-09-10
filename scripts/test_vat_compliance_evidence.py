@@ -23,6 +23,18 @@ anchors={
  "meti2020_vat_hours_public_numeric_result":"0",
  "meti2020_public_microdata_attachment_listed":"0",
  "rieti2021_sme_survey_answers_fy2019_scope":"1",
+ "ichikawa2019_10m_vat_exemption_threshold_yen":"10000000",
+ "ichikawa2019_10m_national_bunching_region_firm_count":"308435",
+ "ichikawa2019_10m_national_bunching_region_value_added_share":"0.413",
+ "ichikawa2019_10m_vat_rate_table4":"0.08",
+ "ichikawa2019_10m_estimated_excess_buncher_firm_count":"56651",
+ "ichikawa2019_10m_estimated_tax_windfall_yen_per_year":"16850000000",
+ "ichikawa2019_10m_lost_sales_all_excess_real_adjustment_scenario_yen":"84980000000",
+ "ichikawa2019_10m_lost_sales_missing_mass_scenario_yen":"3140000000",
+ "ichikawa2019_2014_hike_bunching_post_minus_pre_window_1m":"-0.037",
+ "ichikawa2019_2014_hike_bunching_post_minus_pre_window_1p5m":"-0.159",
+ "ichikawa2019_2014_hike_bunching_post_minus_pre_window_2m":"0.033",
+ "ichikawa2019_2014_hike_bunching_post_minus_pre_window_2p5m":"-0.019",
  "rieti2021_threshold_bunching_1989_1991_delta_ratio":"0.550",
  "rieti2021_threshold_bunching_1992_1994_delta_ratio":"0.543",
  "rieti2021_threshold_bunching_1997_1999_delta_ratio":"0.542",
@@ -92,7 +104,16 @@ assert ident["vat_threshold_local_marginal_buncher_sales_response"]["status"]=="
 assert ident["vat_threshold_local_marginal_buncher_sales_response"]["model_use"]=="LOCAL_DISTORTION_EVIDENCE_NOT_MACRO_A_ALLOC"
 assert ident["vat_threshold_structural_compliance_cost_theta"]["status"]=="MODEL_CONTINGENT_LOCAL_PARAMETER_ESTIMATED"
 assert ident["vat_threshold_structural_compliance_cost_theta"]["model_use"]=="DO_NOT_EQUATE_WITH_REAL_RESOURCE_C_VAT_OR_MACRO_A_ALLOC"
-assert ident["current_invoice_era_threshold_allocation_effect"]["status"]=="NOT_IDENTIFIED_FROM_HISTORICAL_STRUCTURAL_ESTIMATES"
+assert ident["vat_10m_threshold_excess_buncher_scale"]["status"]=="MODEL_AND_EXTERNAL_STATS_NATIONALIZED_ESTIMATE"
+assert ident["vat_10m_threshold_excess_buncher_scale"]["model_use"]=="BEHAVIORAL_DISTORTION_SCALE_NOT_OUTPUT_LOSS"
+assert ident["vat_10m_threshold_tax_windfall"]["point_identified"]=="16.85_BILLION_YEN_PER_YEAR"
+assert ident["vat_10m_threshold_tax_windfall"]["model_use"]=="TAX_REVENUE_CONTEXT_NOT_WELFARE_LOSS"
+assert ident["vat_10m_threshold_lost_sales_mechanism_scenarios"]["status"]=="MECHANISM_SENSITIVE_SCENARIOS_NOT_IDENTIFICATION_BOUNDS"
+assert ident["vat_10m_threshold_lost_sales_mechanism_scenarios"]["model_use"]=="DO_NOT_MAP_TO_GDP_OR_WELFARE_ONE_FOR_ONE"
+assert ident["vat_10m_threshold_adjustment_mechanism"]["status"]=="NOT_IDENTIFIED_INDIRECT_EVIDENCE_AGAINST_WIDESPREAD_REAL_SUPPRESSION"
+assert ident["vat_10m_threshold_adjustment_mechanism"]["model_use"]=="REAL_ADJUSTMENT_VS_AVOIDANCE_MIX_UNKNOWN"
+assert ident["current_invoice_era_threshold_allocation_effect"]["status"]=="PRE_INVOICE_10M_THRESHOLD_BEHAVIOR_OBSERVED_CURRENT_INVOICE_ERA_NOT_IDENTIFIED"
+assert ident["current_invoice_era_threshold_allocation_effect"]["point_identified"]=="NO_CURRENT_INVOICE_ERA_MACRO_EFFECT"
 assert ident["allocative_efficiency_dividend"]["status"]=="NOT_IDENTIFIED"
 assert ident["allocative_efficiency_dividend"]["point_identified"]=="NO_MACRO_OUTPUT_PERCENTAGE"
 assert ident["zero_rate_equals_full_abolition"]["status"]=="FALSE_BY_POLICY_DEFINITION"
@@ -111,6 +132,7 @@ hashes={
  "METI-2021-SME-TAX-SURVEY":"e6a5767910f2c1e024ec0b281e6f300949e735cdc6c9b052e164b6890948e563",
  "JCCI-2024-INVOICE-BACKOFFICE-SURVEY":"7ab80915efa7659e6f25cc152b7b5d2eef3c70038333eb6bc043642759d56126",
  "JCCI-2025-INVOICE-SURVEY":"d89a599e900146c7c8ec5e1f4b0702b9dd7d292b47042e9e57186dda4525605e",
+ "ICHIKAWA-ARUDCHELVAN-ONJI-2019-VAT-10M-BUNCHING":"93f68057104b6a4bb693c5fafbea8386ad830f6f3714291968d9937784517b28",
  "RIETI-2019-VAT-COMPLIANCE-FIRM-GROWTH":"458d092bddb5a49af25f2f36cd202c5b96876df710aefa651187851dbdb75eca",
  "RIETI-2021-SME-VAT-COMPLIANCE":"397ef1b7202d6aec440e422587aa3ab09a1144ce0108db79fbc61166e64fe49b",
  "RIETI-2021-QUANT-TAX-COMPLIANCE-COST":"69f2dab66a34d0765f019f4590a8ca423a4226ff665d689f6d117a71cb210fc4",
@@ -148,10 +170,16 @@ assert ev["rieti2021_sme_survey_answers_fy2019_scope"]["model_calibration_permis
 assert ev["meti2021_public_microdata_attachment_listed"]["model_calibration_permission"]=="NO_PUBLIC_MICRODATA_CALIBRATION"
 assert ev["smrj_fy2019_light_rate_subsidy_amount_yen"]["model_calibration_permission"]=="LOWER_BOUND_ON_SELECTED_TRANSITION_EXPENDITURE_ONLY"
 assert ev["smrj_cumulative_light_rate_subsidy_lower_bound_per_grant_record"]["model_calibration_permission"]=="DO_NOT_GENERALIZE_TO_FIRMS_OR_PERSISTENT_C_VAT"
+for k in ("ichikawa2019_10m_lost_sales_all_excess_real_adjustment_scenario_yen","ichikawa2019_10m_lost_sales_missing_mass_scenario_yen"):
+    assert ev[k]["identification_status"]=="MECHANISM_SENSITIVE_SCENARIO_ESTIMATE"
+    assert ev[k]["model_calibration_permission"]=="DO_NOT_TREAT_AS_EMPIRICAL_BOUND_OR_GDP_LOSS"
+assert ev["ichikawa2019_10m_estimated_tax_windfall_yen_per_year"]["model_calibration_permission"]=="TAX_REVENUE_CONTEXT_NOT_WELFARE_LOSS"
+for k in ("ichikawa2019_2014_hike_bunching_post_minus_pre_window_1m","ichikawa2019_2014_hike_bunching_post_minus_pre_window_1p5m","ichikawa2019_2014_hike_bunching_post_minus_pre_window_2m","ichikawa2019_2014_hike_bunching_post_minus_pre_window_2p5m"):
+    assert ev[k]["model_calibration_permission"]=="COMPLIANCE_MOTIVE_EVIDENCE_NOT_TAX_RATE_ELASTICITY_OR_MACRO_A_ALLOC"
 for k in ("rieti2021_threshold_bunching_1989_1991_delta_ratio","rieti2021_threshold_bunching_1992_1994_delta_ratio","rieti2021_threshold_bunching_1997_1999_delta_ratio"):
     assert ev[k]["model_calibration_permission"]=="THRESHOLD_DISTORTION_EVIDENCE_NOT_MACRO_A_ALLOC"
 for k in ("rieti2021_threshold_theta_1992_all","rieti2021_threshold_theta_1997_all","rieti2021_threshold_theta_1992_firms","rieti2021_threshold_theta_1997_firms","rieti2021_threshold_theta_1992_sole_proprietors","rieti2021_threshold_theta_1997_sole_proprietors"):
     assert ev[k]["unit"]=="share_of_value_added_in_study_model"
     assert ev[k]["model_calibration_permission"]=="LOCAL_THRESHOLD_STRUCTURAL_EVIDENCE_NOT_C_VAT_OR_MACRO_A_ALLOC"
-assert len(ev)==69 and len(ident)==19
-print("VAT compliance evidence tests: OK (69 evidence rows; RIETI local threshold distortion quantified; national c_VAT and macro a_alloc remain NOT_IDENTIFIED)")
+assert len(ev)==81 and len(ident)==23
+print("VAT compliance evidence tests: OK (81 evidence rows; 10m threshold mechanism sensitivity quantified; national c_VAT and macro a_alloc remain NOT_IDENTIFIED)")

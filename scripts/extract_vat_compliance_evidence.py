@@ -9,6 +9,7 @@ from build_bsws_2019_industry_hourly_wage_bridge import build as build_bsws_wage
 from build_meti_vat_hours_source_lineage import build as build_meti_lineage
 from build_vat_transition_system_subsidy_bounds import build as build_transition_subsidy_bounds
 from build_rieti_vat_threshold_structural_bridge import build as build_rieti_threshold_structural
+from build_ichikawa_2019_vat_10m_threshold_bridge import build as build_ichikawa_10m_threshold
 
 ROOT = Path(__file__).resolve().parents[1]
 CATALOG = ROOT / "data/source_catalog.csv"
@@ -58,6 +59,7 @@ def build():
       "ESTAT-BSWS-2019-INDUSTRY-WAGE-DB-SNAPSHOT",
       "JCCI-2024-INVOICE-BACKOFFICE-SURVEY",
       "JCCI-2025-INVOICE-SURVEY",
+      "ICHIKAWA-ARUDCHELVAN-ONJI-2019-VAT-10M-BUNCHING",
       "RIETI-2019-VAT-COMPLIANCE-FIRM-GROWTH",
       "RIETI-2021-SME-VAT-COMPLIANCE",
       "RIETI-2021-QUANT-TAX-COMPLIANCE-COST",
@@ -120,6 +122,8 @@ def build():
     threshold_bunch_rows, threshold_struct_rows = build_rieti_threshold_structural()
     threshold_bunch={r["sample_id"]:r for r in threshold_bunch_rows}
     threshold_struct={(r["reform_id"],r["population_group"]):r for r in threshold_struct_rows}
+    ichikawa_n_rows, ichikawa_prepost_rows = build_ichikawa_10m_threshold()
+    ichikawa_n={r["metric_id"]:r for r in ichikawa_n_rows}
 
     rows=[]
     rows += [
@@ -203,6 +207,26 @@ def build():
         "SELECTED_GRANT_RECORD_TRANSITION_EXPENDITURE_LOWER_BOUND","DO_NOT_GENERALIZE_TO_FIRMS_OR_PERSISTENT_C_VAT",
         "Cumulative average eligible transition expenditure per grant record is bounded below by cumulative average subsidy; this is not a population mean or recurring VAT cost."),
     ]
+    # Ichikawa-Arudchelvan-Onji (2019) directly studies the 10m-JPY threshold.
+    # Preserve nationalized behavior scale and mechanism-sensitive lost-sales scenarios without
+    # treating either lost-sales scenario as an empirical GDP/welfare bound.
+    for m in ichikawa_n_rows:
+        rows.append(evidence(
+          "ichikawa2019_10m_" + m["metric_id"], m["value"], m["unit"],
+          "STUDY_DERIVED_OR_NATIONALIZED_THRESHOLD_METRIC",
+          "Japanese firms around the 10m-JPY VAT exemption threshold", "",
+          "ICHIKAWA-ARUDCHELVAN-ONJI-2019-VAT-10M-BUNCHING", m["source_locator"],
+          m["identification_status"], m["model_use"], m["note"]))
+    for pr in ichikawa_prepost_rows:
+        window=pr["bunching_window_below_threshold_million_yen"].replace(".","p")
+        rows.append(evidence(
+          f"ichikawa2019_2014_hike_bunching_post_minus_pre_window_{window}m", pr["post_minus_pre"],
+          "relative_excess_bunching_difference", "QUASI_EXPERIMENT_PREPOST_COMPARISON",
+          "TDB firms around the 10m-JPY VAT threshold", "",
+          "ICHIKAWA-ARUDCHELVAN-ONJI-2019-VAT-10M-BUNCHING", pr["source_locator"],
+          pr["identification_status"], pr["model_use"],
+          "Same-window post-2014 minus pre-2014 relative excess bunching. All four 95% confidence intervals overlap under the paper's stated decision rule, so the study does not detect an increase after the 3-percentage-point VAT-rate hike."))
+
     # RIETI 21-E-090 supplies local historical threshold-distortion estimates.
     # Preserve them as local/model-contingent evidence; never promote to national c_VAT or macro a_alloc.
     for sid in ["1989_1991","1992_1994","1997_1999"]:
@@ -420,8 +444,12 @@ def build():
       {"quantity":"productive_redeployment_fraction_rho","status":"NOT_IDENTIFIED","point_identified":"NO","model_use":"STRESS_TEST_PARAMETER_ONLY","note":"Saved compliance resources need not convert one-for-one into measured output."},
       {"quantity":"vat_threshold_local_marginal_buncher_sales_response","status":"STUDY_ESTIMATED_UPPER_BOUND_LOCAL_HISTORICAL","point_identified":"THREE_HISTORICAL_30M_THRESHOLD_REGIME_INPUTS","model_use":"LOCAL_DISTORTION_EVIDENCE_NOT_MACRO_A_ALLOC","note":"RIETI 21-E-090 reports convergence-method marginal-buncher sales-response upper bounds corresponding to Delta-y/threshold 55.0%, 54.3%, and 54.2% for the 1989-1991, 1992-1994, and 1997-1999 structural-estimation periods. These are local historical manufacturing responses around the 30m-JPY threshold, not aggregate output losses."},
       {"quantity":"vat_threshold_structural_compliance_cost_theta","status":"MODEL_CONTINGENT_LOCAL_PARAMETER_ESTIMATED","point_identified":"STUDY_TABLE5_LOCAL_ESTIMATES","model_use":"DO_NOT_EQUATE_WITH_REAL_RESOURCE_C_VAT_OR_MACRO_A_ALLOC","note":"RIETI 21-E-090 estimates theta, defined as broad compliance cost relative to value added, around 0.13-0.14 for the all-enterprise sample, 0.091-0.111 for firms, and 0.116-0.130 for sole proprietors in historical 1992/1997-reform comparisons. The concept includes monetary, time, operational and psychological burden and rests on model assumptions including no VAT pass-through and omission of the simplified tax system near the threshold."},
-      {"quantity":"current_invoice_era_threshold_allocation_effect","status":"NOT_IDENTIFIED_FROM_HISTORICAL_STRUCTURAL_ESTIMATES","point_identified":"NO","model_use":"REQUIRES_CURRENT_INSTITUTIONAL_MAPPING_OR_NEW_DATA","note":"The RIETI structural estimates use historical manufacturing data and 30m-JPY threshold regimes before the current 10m-JPY/invoice-system environment. They establish a strong local threshold response but do not identify the current invoice-era aggregate allocation effect."},
-      {"quantity":"allocative_efficiency_dividend","status":"NOT_IDENTIFIED","point_identified":"NO_MACRO_OUTPUT_PERCENTAGE","model_use":"STRESS_TEST_PARAMETER_ONLY","note":"Historical bunching evidence now quantitatively identifies strong local marginal-buncher responses and local structural compliance-cost parameters, but the public study does not provide an aggregate affected-firm mass/population reweighting/current-institution mapping sufficient to convert them into a national macro output percentage. a_alloc therefore remains a stress-test parameter."},
+      {"quantity":"vat_10m_threshold_excess_buncher_scale","status":"MODEL_AND_EXTERNAL_STATS_NATIONALIZED_ESTIMATE","point_identified":"56651_FIRMS","model_use":"BEHAVIORAL_DISTORTION_SCALE_NOT_OUTPUT_LOSS","note":"Ichikawa et al. combine TDB bunching estimates with the 2016 Economic Census and estimate 56,651 excess-bunching firms around the 10m-JPY threshold. The paper notes TDB undercoverage of small firms may bias bunching downward. Excess bunching does not establish that all affected firms reduce real output."},
+      {"quantity":"vat_10m_threshold_tax_windfall","status":"MODEL_AND_EXTERNAL_STATS_NATIONALIZED_ESTIMATE","point_identified":"16.85_BILLION_YEN_PER_YEAR","model_use":"TAX_REVENUE_CONTEXT_NOT_WELFARE_LOSS","note":"The paper estimates 16.85 billion yen/year of tax windfall using the excess-buncher estimate, 41.3% value-added share, 8% VAT rate and 9m-JPY median sales. This is tax-revenue context, not a real-resource or GDP loss."},
+      {"quantity":"vat_10m_threshold_lost_sales_mechanism_scenarios","status":"MECHANISM_SENSITIVE_SCENARIOS_NOT_IDENTIFICATION_BOUNDS","point_identified":"84.98_BILLION_ALL_REAL_ASSUMPTION_VS_3.14_BILLION_MISSING_MASS_SCENARIO","model_use":"DO_NOT_MAP_TO_GDP_OR_WELFARE_ONE_FOR_ONE","note":"The paper reports 84.98 billion yen if all excess bunchers are assumed to come from the 10m-11m region and lose 1.5m JPY of real sales each, versus 3.14 billion yen using observed missing mass with the same per-firm sales-loss assumption. The more-than-27-fold gap is mechanism sensitivity, not an empirical lower/upper bound."},
+      {"quantity":"vat_10m_threshold_adjustment_mechanism","status":"NOT_IDENTIFIED_INDIRECT_EVIDENCE_AGAINST_WIDESPREAD_REAL_SUPPRESSION","point_identified":"NO","model_use":"REAL_ADJUSTMENT_VS_AVOIDANCE_MIX_UNKNOWN","note":"The paper finds small missing mass and only statistically weak growth-rate evidence near the threshold, which indirectly argues against widespread real sales suppression. It does not detect direct evidence of tax avoidance and explicitly states that the mechanism remains unresolved. Therefore neither all-real-adjustment nor all-avoidance can be treated as identified."},
+      {"quantity":"current_invoice_era_threshold_allocation_effect","status":"PRE_INVOICE_10M_THRESHOLD_BEHAVIOR_OBSERVED_CURRENT_INVOICE_ERA_NOT_IDENTIFIED","point_identified":"NO_CURRENT_INVOICE_ERA_MACRO_EFFECT","model_use":"HISTORICAL_10M_THRESHOLD_CONTEXT_ONLY","note":"Ichikawa et al. provide nationally scaled pre-invoice evidence at the current 10m-JPY threshold and find no detectable increase in bunching after the 2014 3-percentage-point VAT hike under their CI-overlap rule. However the study predates the October 2023 qualified-invoice system, so current invoice-era allocation effects remain unidentified."},
+      {"quantity":"allocative_efficiency_dividend","status":"NOT_IDENTIFIED","point_identified":"NO_MACRO_OUTPUT_PERCENTAGE","model_use":"STRESS_TEST_PARAMETER_ONLY","note":"Evidence now includes local historical 30m-JPY structural responses and a nationally scaled 10m-JPY bunching study. The 10m study estimates 56,651 excess bunchers but its real-output-loss scenarios differ by more than 27-fold (84.98bn versus 3.14bn yen) depending on behavioral mechanism, and the paper does not identify the real-adjustment/avoidance mix. Lost sales are also not one-for-one GDP or welfare loss because competitors may substitute supply. Current invoice-era mapping is absent. Macro a_alloc therefore remains unidentified."},
       {"quantity":"zero_rate_equals_full_abolition","status":"FALSE_BY_POLICY_DEFINITION","point_identified":"NOT_APPLICABLE","model_use":"PROHIBITED_EQUIVALENCE","note":"Policy state must separately encode VAT administrative/invoice obligations."},
       {"quantity":"compliance_savings_one_for_one_gdp","status":"PROHIBITED","point_identified":"NO","model_use":"DO_NOT_ASSUME","note":"Use explicit redeployment fraction and separate allocation term."},
       {"quantity":"income_gini_and_FGT2_effect","status":"NOT_MODELED_PHASE1","point_identified":"NO","model_use":"FUTURE_INCIDENCE_LINK_REQUIRED","note":"Firm-side resource release is not yet linked to households/deciles."},
