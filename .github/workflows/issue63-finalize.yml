@@ -1,0 +1,147 @@
+name: issue63-finalize
+
+on:
+  push:
+    branches:
+      - fix/provenance-duplicate-primary-keys
+
+permissions:
+  contents: write
+
+jobs:
+  finalize:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+
+      - name: Document registry keys and add durable regression test
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+
+          path = Path("scripts/validate_provenance.py")
+          text = path.read_text(encoding="utf-8")
+          replacements = [
+              ('catalog_rows = read_csv("data/source_catalog.csv")\n', '# Primary key: source_id.\ncatalog_rows = read_csv("data/source_catalog.csv")\n'),
+              ('derived_rows = read_csv("data/derived_catalog.csv")\n', '# Primary key: derived_file.\nderived_rows = read_csv("data/derived_catalog.csv")\n'),
+              ('official_rows = read_csv("data/derived/stage1_official_inputs.csv")\n', '# Primary key: value_id.\nofficial_rows = read_csv("data/derived/stage1_official_inputs.csv")\n'),
+              ('inputs_rows = read_csv("research/stage1_filing_bound/inputs.csv")\n', '# Primary key: name.\ninputs_rows = read_csv("research/stage1_filing_bound/inputs.csv")\n'),
+              ('prov_rows = read_csv("data/input_provenance.csv")\n', '# Primary key: value_id.\nprov_rows = read_csv("data/input_provenance.csv")\n'),
+              ('evidence_rows = read_csv("data/claim_evidence.csv")\n', '# Relationship registry: claim_id is intentionally non-unique; no single-row primary key is declared.\nevidence_rows = read_csv("data/claim_evidence.csv")\n'),
+          ]
+          for old, new in replacements:
+              if text.count(old) != 1:
+                  raise SystemExit(f"unexpected registry block; refusing edit: {old.strip()}")
+              text = text.replace(old, new)
+          path.write_text(text, encoding="utf-8")
+
+          workflow = Path(".github/workflows/validate.yml")
+          wtext = workflow.read_text(encoding="utf-8")
+          old = '''      - name: Validate source, derived-data, input and claim provenance
+                run: |
+                  python scripts/validate_provenance.py
+          '''
+          new = '''      - name: Validate source, derived-data, input and claim provenance
+                run: |
+                  python scripts/validate_provenance.py
+                  python scripts/test_validate_provenance_duplicate_keys.py
+          '''
+          if wtext.count(old) != 1:
+              raise SystemExit("unexpected provenance CI block; refusing edit")
+          workflow.write_text(wtext.replace(old, new), encoding="utf-8")
+          PY
+
+          cat > scripts/test_validate_provenance_duplicate_keys.py <<'PY'
+          #!/usr/bin/env python3
+          """Negative regression tests for authoritative provenance-registry primary keys."""
+          from pathlib import Path
+          import subprocess
+          import sys
+
+          ROOT = Path(__file__).resolve().parents[1]
+          VALIDATOR = ROOT / "scripts/validate_provenance.py"
+
+
+          def run_validator():
+              return subprocess.run(
+                  [sys.executable, str(VALIDATOR)],
+                  cwd=ROOT,
+                  capture_output=True,
+                  text=True,
+              )
+
+
+          def verify_duplicate(rel, expected):
+              path = ROOT / rel
+              original = path.read_bytes()
+              rows = original.splitlines()
+              if len(rows) < 2:
+                  raise RuntimeError(f"registry has no data row: {rel}")
+              newline = b"\r\n" if b"\r\n" in original else b"\n"
+              mutated = original
+              if not mutated.endswith((b"\n", b"\r")):
+                  mutated += newline
+              mutated += rows[1] + newline
+              try:
+                  path.write_bytes(mutated)
+                  result = run_validator()
+                  output = result.stdout + result.stderr
+                  if result.returncode == 0:
+                      raise RuntimeError(f"duplicate key unexpectedly accepted: {rel}")
+                  if expected not in output:
+                      raise RuntimeError(f"missing expected duplicate error {expected!r}: {output!r}")
+              finally:
+                  path.write_bytes(original)
+
+
+          baseline = run_validator()
+          if baseline.returncode != 0:
+              raise RuntimeError(f"baseline provenance validation failed: {baseline.stdout}{baseline.stderr}")
+
+          cases = [
+              ("data/source_catalog.csv", "duplicate source_id:"),
+              ("data/derived_catalog.csv", "duplicate derived_file:"),
+              ("data/derived/stage1_official_inputs.csv", "duplicate official value_id:"),
+              ("data/recovery/v6_recovered_values.csv", "duplicate recovery value_id:"),
+              ("research/stage1_filing_bound/inputs.csv", "duplicate stage1 input:"),
+              ("data/input_provenance.csv", "duplicate provenance value_id:"),
+              ("paper1/data/claim_registry.csv", "duplicate claim_id:"),
+          ]
+          for rel, expected in cases:
+              verify_duplicate(rel, expected)
+
+          subprocess.run(
+              ["git", "-C", str(ROOT), "diff", "--exit-code", "--"] + [rel for rel, _ in cases],
+              check=True,
+          )
+          print(f"provenance duplicate-key regression tests: OK ({len(cases)} registries)")
+          PY
+
+          chmod +x scripts/test_validate_provenance_duplicate_keys.py
+          git add scripts/validate_provenance.py scripts/test_validate_provenance_duplicate_keys.py .github/workflows/validate.yml
+          git rm .github/workflows/issue63-finalize.yml
+          git diff --cached --check
+
+      - name: Verify duplicate-key regression coverage
+        run: |
+          python scripts/validate_provenance.py
+          python scripts/test_validate_provenance_duplicate_keys.py
+
+      - name: Regenerate manifest and validate final tree
+        run: |
+          python scripts/generate_manifest.py
+          git add MANIFEST.sha256
+          python scripts/check_manifest.py
+          python scripts/validate_provenance.py
+          python scripts/validate_repo.py
+          git diff --cached --check
+
+      - name: Commit final branch state
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git commit -m "Add duplicate-key regression coverage"
+          python scripts/check_clean_tree.py
+          git push origin HEAD:fix/provenance-duplicate-primary-keys
