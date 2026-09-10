@@ -16,7 +16,7 @@ jobs:
           ref: feature/issue-45-reproduction-entrypoints
       - name: Finalize manifest and remove bootstrap workflow
         run: |
-          rm .github/workflows/issue-45-manifest-refresh.yml
+          git rm .github/workflows/issue-45-manifest-refresh.yml
           python scripts/generate_manifest.py
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
