@@ -1,0 +1,13 @@
+metric_id,value,identification_status,note
+examined_official_source_families,7,BOUNDED_OFFICIAL_SOURCE_AUDIT,Enumerated source families only; not a claim about unpublished microdata.
+annual_income_household_population_margin_available,YES_5355441_PER_DECILE,OBSERVED_PUBLIC,Table 1-21 household annual-income deciles provide equal population-household margins.
+objective_rank_population_person_margin_available,YES_11390017_PER_DECILE,OBSERVED_PUBLIC,Table 7-141-1 publishes equal household-member/person totals across objective-rank deciles.
+objective_rank_approx_sample_household_count_available,YES_SUM_74150,OBSERVED_PUBLIC_SAMPLE_AGGREGATION_COUNT,Tables 7-153-1 and 7-156-1 expose approximate aggregation-household counts; these are not population weights.
+objective_rank_population_household_margin_available,NO_IN_EXAMINED_OFFICIAL_SOURCE_FAMILIES,PUBLIC_AGGREGATE_HOUSEHOLD_MARGIN_NOT_IDENTIFIED,No examined objective-rank table publishes a population household margin. This bounded negative audit does not claim absence from unpublished microdata.
+same_unit_household_transport_margins_identified,NO,NOT_IDENTIFIED,"Annual-income rank has household population margins; objective rank has person population margins and sample-household counts, not household population margins."
+direct_annual_income_x_objective_rank_joint_table_available,NO_IN_EXAMINED_OFFICIAL_SOURCE_FAMILIES,PUBLIC_AGGREGATE_JOINT_RANK_LINK_NOT_IDENTIFIED,No examined source jointly cross-tabulates household annual-income decile and OECD-new equivalized-disposable-income decile.
+frechet_household_rank_transport_status,BLOCKED_NO_OBJECTIVE_RANK_HOUSEHOLD_POPULATION_MARGIN,DO_NOT_BUILD_TRANSPORT_LP,A household-unit Fréchet transport requires household margins on both ranks; substituting person deciles or sample counts would change the estimand/unit.
+same_rank_mapping_status,PROHIBITED_WITHOUT_EVIDENCE,ASSUMPTION_NOT_ADOPTED,Annual household income and equivalized disposable income are distinct rank concepts.
+person_decile_as_household_margin_status,PROHIBITED,UNIT_MISMATCH,"The 11,390,017 objective-decile totals are household members, not households."
+independent_rank_coupling_status,NOT_ADOPTED,UNSUPPORTED_IDENTIFYING_ASSUMPTION,Independence is not introduced merely to manufacture a bridge.
+vat_gini_fgt2_objective_rank_effect_status,NOT_IDENTIFIED,PENDING_VALID_RANK_BRIDGE_AND_VAT_INCIDENCE_MODEL,The household tax-content envelope remains an annual-income-rank accounting diagnostic and is not propagated to objective-rank Gini/FGT2.
