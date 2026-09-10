@@ -419,6 +419,22 @@ SPECS = [
         "Separates observed burden evidence from non-identified VAT-specific macro resource cost, productive redeployment, and allocative-efficiency parameters; prohibits zero-rate/abolition equivalence and one-for-one GDP conversion",
     ),
     (
+        "VAT-POLICY-SCENARIO-MATRIX",
+        "vat_policy_scenario_matrix.csv",
+        "research/vat_policy_integration/run_vat_policy_scenario_matrix.py",
+        "JCCI-2024-INVOICE-BACKOFFICE-SURVEY;JCCI-2025-INVOICE-SURVEY;SMEA-FY2025-INVOICE-TRANSACTION-SURVEY-ARCHIVED;ICHIKAWA-ARUDCHELVAN-ONJI-2019-VAT-10M-BUNCHING;RIETI-2019-VAT-COMPLIANCE-FIRM-GROWTH;RIETI-2021-SME-VAT-COMPLIANCE;RIETI-2021-QUANT-TAX-COMPLIANCE-COST;MOF-CONSUMPTION-TAX-SME-EXEMPTION-THRESHOLD;NTA-CONSUMPTION-TAX-BASIC;NTA-INVOICE-SYSTEM-OVERVIEW",
+        "MODEL_CONTINGENT_PARTIAL_E2E_POLICY_MATRIX",
+        "Eight requested policy scenarios x 300 institutional stress points; numerically carries only the VAT institutional GDP/growth component while jointly reporting explicit non-identified statuses for overall GDP, growth, Gini, FGT2, inflation, fiscal, debt and JGB-market outcomes",
+    ),
+    (
+        "VAT-POLICY-SCENARIO-SUMMARY",
+        "vat_policy_scenario_summary.csv",
+        "research/vat_policy_integration/run_vat_policy_scenario_matrix.py",
+        "JCCI-2024-INVOICE-BACKOFFICE-SURVEY;JCCI-2025-INVOICE-SURVEY;SMEA-FY2025-INVOICE-TRANSACTION-SURVEY-ARCHIVED;ICHIKAWA-ARUDCHELVAN-ONJI-2019-VAT-10M-BUNCHING;RIETI-2019-VAT-COMPLIANCE-FIRM-GROWTH;RIETI-2021-SME-VAT-COMPLIANCE;RIETI-2021-QUANT-TAX-COMPLIANCE-COST;MOF-CONSUMPTION-TAX-SME-EXEMPTION-THRESHOLD;NTA-CONSUMPTION-TAX-BASIC;NTA-INVOICE-SYSTEM-OVERVIEW",
+        "MODEL_CONTINGENT_PARTIAL_E2E_POLICY_SUMMARY",
+        "One row per Issue-26 scenario with institutional GDP/growth stress range plus joint outcome-status vector; financing strategies are defined but not numerically quantified",
+    ),
+    (
         "VAT-COMPLIANCE-PRODUCTIVITY-SENSITIVITY",
         "vat_compliance_productivity_sensitivity.csv",
         "research/vat_compliance_productivity/run_vat_compliance_productivity.py",

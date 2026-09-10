@@ -42,6 +42,8 @@ jobs:
           python scripts/test_vat_compliance_evidence.py
           python research/vat_compliance_productivity/run_vat_compliance_productivity.py
           python research/vat_compliance_productivity/test_vat_compliance_productivity.py
+          python research/vat_policy_integration/run_vat_policy_scenario_matrix.py
+          python research/vat_policy_integration/test_vat_policy_scenario_matrix.py
           python scripts/extract_estat_income_tax_tables.py
           python scripts/test_estat_income_tax_extracts.py
           python scripts/build_income_tax_decile_instruments.py

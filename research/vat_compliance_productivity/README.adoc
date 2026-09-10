@@ -155,4 +155,11 @@ MODEL_CONTINGENT_COMPLIANCE_PRODUCTIVITY_SENSITIVITY_PHASE1_COMPLETE
 This module does not identify the optimal VAT rate and does not supply a
 macro GDP forecast, Gini effect, FGT2 effect, fiscal effect or debt path.
 
+The compliance-only outputs are now consumed by
++research/vat_policy_integration/run_vat_policy_scenario_matrix.py+, which maps
+them into the eight Issue #26 policy scenarios.  That adapter jointly reports
+the status of GDP, growth, Gini, FGT2, inflation, fiscal and debt outcomes while
+leaving unavailable macro channels explicitly unmodeled rather than assigning
+zero.  This is a partial end-to-end integration, not a policy forecast.
+
 The ordinary VAT demand channel and financing choices remain separate.
