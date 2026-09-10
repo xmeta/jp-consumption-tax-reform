@@ -17,6 +17,7 @@ SENS = ROOT / "data/derived/vat_compliance_productivity_sensitivity.csv"
 IDENT = ROOT / "data/derived/vat_compliance_identification_status.csv"
 FISCAL = ROOT / "data/derived/vat_policy_fiscal_replacement_reference.csv"
 JGB_GDP = ROOT / "data/derived/vat_jgb_debt_gdp_reference.csv"
+HOUSEHOLD_EXP = ROOT / "data/derived/estat_2024_annual_income_decile_expenditure_diagnostic.csv"
 OUT = ROOT / "data/derived/vat_policy_scenario_matrix.csv"
 SUMMARY = ROOT / "data/derived/vat_policy_scenario_summary.csv"
 
@@ -52,8 +53,13 @@ def build():
     assert {r["scenario_id"] for r in scenarios} == EXPECTED_SCENARIOS
     fiscal = {r["scenario_id"]: r for r in read(FISCAL)}
     jgb_gdp = {r["scenario_id"]: r for r in read(JGB_GDP)}
+    household_exp = read(HOUSEHOLD_EXP)
     assert set(fiscal) == EXPECTED_SCENARIOS
     assert set(jgb_gdp) == EXPECTED_SCENARIOS
+    assert len(household_exp) == 10
+    assert {int(r["annual_income_decile"]) for r in household_exp} == set(range(1, 11))
+    assert all(r["rank_bridge_status"] == "NOT_LINKED_DO_NOT_TREAT_AS_OBJECTIVE_DECILE" for r in household_exp)
+    distribution_status = "ANNUAL_INCOME_DECILE_EXPENDITURE_OBSERVED_OBJECTIVE_RANK_BRIDGE_AND_VAT_INCIDENCE_REQUIRED"
 
     sens = read(SENS)
     assert len(sens) == 1200
@@ -128,16 +134,19 @@ def build():
                 "annual_real_growth_rate_effect_status": "NOT_IDENTIFIED_FULL_POLICY_OUTCOME_INSTITUTIONAL_COMPONENT_ONLY",
                 "growth_decline_penalty_effect": "",
                 "growth_decline_penalty_effect_status": "NOT_EVALUABLE_WITHOUT_FULL_GROWTH_PATH",
+                "household_expenditure_diagnostic_rank": "HOUSEHOLD_ANNUAL_INCOME_DECILE",
+                "distribution_objective_rank": "OECD_NEW_EQUIVALIZED_DISPOSABLE_INCOME_DECILE",
+                "household_expenditure_diagnostic_status": distribution_status,
                 "income_gini_effect": "",
-                "income_gini_effect_status": "NOT_MODELED_HOUSEHOLD_INCIDENCE_LINK_REQUIRED",
+                "income_gini_effect_status": distribution_status,
                 "wealth_gini_effect": "",
                 "wealth_gini_effect_status": "NOT_MODELED_HOUSEHOLD_WEALTH_LINK_REQUIRED",
                 "intergenerational_gap_effect": "",
                 "intergenerational_gap_effect_status": "NOT_MODELED_AGE_INCIDENCE_LINK_REQUIRED",
                 "fgt2_effect": "",
-                "fgt2_effect_status": "NOT_MODELED_HOUSEHOLD_INCIDENCE_LINK_REQUIRED",
+                "fgt2_effect_status": distribution_status,
                 "real_disposable_income_by_decile_effect": "",
-                "real_disposable_income_by_decile_effect_status": "NOT_MODELED_DECILE_INCIDENCE_LINK_REQUIRED",
+                "real_disposable_income_by_decile_effect_status": distribution_status,
                 "inflation_effect": "",
                 "inflation_effect_status": "NOT_MODELED_DEMAND_PASS_THROUGH_AND_MACRO_LINK_REQUIRED",
                 "fiscal_balance_effect": "",
@@ -207,6 +216,7 @@ def build():
             "overall_real_gdp_status": first["overall_real_gdp_level_effect_status"],
             "annual_real_growth_status": first["annual_real_growth_rate_effect_status"],
             "growth_decline_penalty_status": first["growth_decline_penalty_effect_status"],
+            "household_expenditure_diagnostic_status": first["household_expenditure_diagnostic_status"],
             "income_gini_status": first["income_gini_effect_status"],
             "wealth_gini_status": first["wealth_gini_effect_status"],
             "intergenerational_gap_status": first["intergenerational_gap_effect_status"],
