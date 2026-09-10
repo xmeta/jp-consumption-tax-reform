@@ -103,8 +103,11 @@ Two weight schemes are pre-specified and reported separately:
 
 `equal_decile`:: stem:[w_d=0.1].
 
-`f71561_leaf_count_normalized`:: the sum of F71561 14-leaf approximate
-household counts in decile stem:[d], divided by the sum over all ten deciles.
+`f71561_leaf_count_normalized`:: the sum of published-numeric F71561
+14-leaf approximate household counts in decile stem:[d], divided by the sum
+over all ten deciles.  Rows whose household count is suppressed as `X` are
+explicitly dropped under `DROP_F71561_ROWS_WITH_SUPPRESSED_HOUSEHOLD_COUNT`;
+`X` is not interpreted as zero.
 
 Neither scheme is asserted to be the true distribution of NTA filers across
 F71561 deciles.

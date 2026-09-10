@@ -33,6 +33,22 @@ def render(fields, rows):
     return b.getvalue()
 
 
+def leaf_num(row, field):
+    marker = row[field + "_missing_marker"]
+    value = row[field]
+    if marker == "X":
+        raise ValueError(f"suppressed F71561 value must not be coerced: {field}")
+    if marker == "-":
+        if value != "":
+            raise ValueError(f"structural-missing marker has numeric value: {field}")
+        return 0.0
+    if marker != "":
+        raise ValueError(f"unsupported F71561 missing marker {marker!r}: {field}")
+    if value == "":
+        raise ValueError(f"unmarked blank F71561 value: {field}")
+    return float(value)
+
+
 def build():
     l31 = read(LONG31)
     leaf = read(LEAF)
@@ -68,16 +84,36 @@ def build():
     audit_rows = []
     for d in range(1, 11):
         sub = [r for r in leaf if int(r["decile"]) == d]
-        leaf_count = sum(
-            float(r["household_count_approx"] or 0)
-            for r in sub
+        suppressed = [
+            r for r in sub
+            if r["household_count_approx_missing_marker"] == "X"
+        ]
+        published = [r for r in sub if r not in suppressed]
+        leaf_count = sum(leaf_num(r, "household_count_approx") for r in published)
+        numeric_counts = [
+            leaf_num(r, "household_count_approx")
+            for r in published
+            if r["household_count_approx_missing_marker"] == ""
+        ]
+        numeric_count_lower = sum(max(5.0, x - 5.0) for x in numeric_counts)
+        suppressed_upper = 5.0 * len(suppressed)
+        suppressed_share_upper = (
+            suppressed_upper / (numeric_count_lower + suppressed_upper)
+            if suppressed_upper else 0.0
+        )
+        monetary_x_cells = sum(
+            1
+            for r in suppressed
+            for field in r
+            if field.endswith("_missing_marker")
+            and field != "household_count_approx_missing_marker"
+            and r[field] == "X"
         )
         total_count = float(by_decile[d]["household_count_approx"] or 0)
         tax_total = float(by_decile[d]["income_tax_kY"] or 0)
         tax_num = sum(
-            float(r["household_count_approx"] or 0)
-            * float(r["income_tax_kY"] or 0)
-            for r in sub
+            leaf_num(r, "household_count_approx") * leaf_num(r, "income_tax_kY")
+            for r in published
         )
         tax_leaf = tax_num / leaf_count if leaf_count else 0.0
         audit_rows.append({
@@ -85,15 +121,26 @@ def build():
             "aggregate_household_count_71531": f"{total_count:.10g}",
             "leaf_household_count_sum_71561": f"{leaf_count:.10g}",
             "household_count_difference": f"{leaf_count-total_count:.10g}",
+            "suppressed_leaf_count_cells": len(suppressed),
+            "suppressed_household_count_upper_exclusive": f"{suppressed_upper:.10g}",
+            "suppressed_count_share_upper_bound_exclusive": f"{suppressed_share_upper:.12g}",
+            "suppressed_monetary_x_cells": monetary_x_cells,
             "aggregate_income_tax_kY_71531": f"{tax_total:.10g}",
             "leaf_weighted_income_tax_kY_71561": f"{tax_leaf:.12g}",
             "income_tax_difference_kY": f"{tax_leaf-tax_total:.12g}",
+            "suppression_assumption":
+                "DROP_F71561_ROWS_WITH_SUPPRESSED_HOUSEHOLD_COUNT",
+            "suppression_status": (
+                "COUNT_SHARE_BOUNDED_MONETARY_IMPACT_NOT_IDENTIFIED"
+                if suppressed else "NO_SUPPRESSED_LEAF_COUNT"
+            ),
             "interpretation":
-                "rounding diagnostic only; leaf counts are published approximate counts",
+                "rounding diagnostic; X rows are explicitly dropped, not zero-imputed",
             "aggregate_count_source_cell": by_decile[d]["household_count_source_cell"],
             "aggregate_income_tax_source_cell":
                 by_decile[d]["income_tax_kY_source_cell"],
-            "source_ids": "ESTAT-7153-1-2024;ESTAT-7156-1-2024",
+            "source_ids":
+                "ESTAT-7153-1-2024;ESTAT-7156-1-2024;STAT-NSFCW-2024-USAGE-NOTES",
         })
 
     return inst_rows, audit_rows

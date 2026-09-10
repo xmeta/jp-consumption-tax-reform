@@ -389,10 +389,51 @@ def build_leaf_compat(long_rows: list[dict], meta_rows: list[dict]):
     return rows
 
 
+def build_leaf_suppression_audit(compat_rows: list[dict]):
+    marker_fields = [
+        field[:-len("_missing_marker")]
+        for field in compat_rows[0]
+        if field.endswith("_missing_marker")
+    ]
+    rows = []
+    for source in compat_rows:
+        for field in marker_fields:
+            if source[field + "_missing_marker"] != "X":
+                continue
+            is_count = field == "household_count_approx"
+            rows.append({
+                "decile": source["decile"],
+                "household_type": source["household_type"],
+                "field": field,
+                "value_kind": "HOUSEHOLD_COUNT" if is_count else "MONETARY_AMOUNT",
+                "numeric_value": source[field],
+                "missing_marker": "X",
+                "source_cell": source[field + "_source_cell"],
+                "count_lower_bound": "0" if is_count else "",
+                "count_lower_bound_inclusive": "False" if is_count else "",
+                "count_upper_bound": "5" if is_count else "",
+                "count_upper_bound_inclusive": "False" if is_count else "",
+                "suppression_rule": (
+                    "aggregate household count < 5"
+                    if is_count
+                    else "amount suppressed when aggregate household count < 2.5"
+                ),
+                "model_treatment": (
+                    "DROP_ENTIRE_LEAF_ROW_UNDER_NAMED_SENSITIVITY"
+                    if is_count
+                    else "NOT_IMPUTED; ROW_DROPPED_BECAUSE_COUNT_IS_SUPPRESSED"
+                ),
+                "rule_source_id": "STAT-NSFCW-2024-USAGE-NOTES",
+                "data_source_id": source["source_id"],
+            })
+    return rows
+
+
 def output_specs():
     long31 = extract_71531()
     long61, meta = extract_71561()
     compat = build_leaf_compat(long61, meta)
+    suppression = build_leaf_suppression_audit(compat)
     return [
         (
             DERIVED / "estat_71531_deciles_long.csv",
@@ -413,6 +454,11 @@ def output_specs():
             DERIVED / "income_tax_household_type_leaf_deciles_2024.csv",
             list(compat[0]),
             compat,
+        ),
+        (
+            DERIVED / "estat_71561_leaf_suppressed_cells.csv",
+            list(suppression[0]),
+            suppression,
         ),
     ]
 

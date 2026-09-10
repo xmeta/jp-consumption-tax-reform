@@ -115,6 +115,14 @@ SPECS = [
         "14 structural leaf household types x 10 deciles; compatibility layer for income-tax research",
     ),
     (
+        "ESTAT-71561-LEAF-SUPPRESSION-AUDIT",
+        "estat_71561_leaf_suppressed_cells.csv",
+        "scripts/extract_estat_income_tax_tables.py",
+        "ESTAT-7156-1-2024;STAT-NSFCW-2024-USAGE-NOTES",
+        "DERIVED_REPRODUCED_SUPPRESSION_AUDIT",
+        "All X-marked cells in the 14-leaf x 10-decile compatibility layer; household-count X is bounded by the official <5 disclosure rule while monetary X is not numerically imputed",
+    ),
+    (
         "ESTAT-71531-TAX-SOCIAL-INSTRUMENTS",
         "income_tax_decile_tax_social_instruments_2024.csv",
         "scripts/build_income_tax_decile_instruments.py",
@@ -126,9 +134,9 @@ SPECS = [
         "ESTAT-71561-LEAF-AUDIT",
         "estat_71561_leaf_aggregation_audit.csv",
         "scripts/build_income_tax_decile_instruments.py",
-        "ESTAT-7153-1-2024;ESTAT-7156-1-2024",
+        "ESTAT-7153-1-2024;ESTAT-7156-1-2024;STAT-NSFCW-2024-USAGE-NOTES",
         "DERIVED_REPRODUCED",
-        "Leaf aggregation versus total-table rounding diagnostic",
+        "Leaf aggregation versus total-table rounding diagnostic with explicit suppression-row drop sensitivity and count-share upper bound",
     ),
     (
         "ESTAT-71911-SIZE-AGE-BRIDGE",

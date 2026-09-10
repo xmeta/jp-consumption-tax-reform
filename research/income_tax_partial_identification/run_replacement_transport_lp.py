@@ -115,6 +115,22 @@ def f(x: str | float | int) -> float:
     return float(x)
 
 
+def f71561_count_under_drop_sensitivity(row: dict[str, str]) -> float | None:
+    marker = row["household_count_approx_missing_marker"]
+    value = row["household_count_approx"]
+    if marker == "X":
+        return None
+    if marker == "-":
+        if value != "":
+            raise RuntimeError("F71561 structural-missing count has numeric value")
+        return 0.0
+    if marker != "":
+        raise RuntimeError(f"unsupported F71561 count marker: {marker!r}")
+    if value == "":
+        raise RuntimeError("unmarked blank F71561 household count")
+    return f(value)
+
+
 def fmt(x) -> str:
     if isinstance(x, bool):
         return "True" if x else "False"
@@ -227,7 +243,10 @@ def load_model_data(cfg: dict[str, str]) -> ModelData:
     counts = np.zeros(len(deciles), dtype=float)
     for row in leaf_rows:
         d = int(row["decile"])
-        counts[d - 1] += f(row["household_count_approx"] or 0)
+        count = f71561_count_under_drop_sensitivity(row)
+        if count is None:
+            continue
+        counts[d - 1] += count
     if np.any(counts <= 0):
         raise RuntimeError("non-positive F71561 decile leaf count")
 
@@ -713,7 +732,15 @@ def build_outputs():
                 "source_definition": (
                     "fixed 0.1 per decile"
                     if scheme == "equal_decile"
-                    else "normalized sum of F71561 14-leaf approximate household counts"
+                    else (
+                        "normalized sum of published-numeric F71561 14-leaf "
+                        "approximate household counts; suppressed X rows dropped"
+                    )
+                ),
+                "suppression_assumption": (
+                    "NONE"
+                    if scheme == "equal_decile"
+                    else "DROP_F71561_ROWS_WITH_SUPPRESSED_HOUSEHOLD_COUNT"
                 ),
                 "scientific_status": STATUS,
             })
