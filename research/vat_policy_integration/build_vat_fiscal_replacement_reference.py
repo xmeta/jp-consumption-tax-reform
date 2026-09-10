@@ -55,7 +55,13 @@ class TableParser(HTMLParser):
 
 
 def parse_int(text):
-    return int(text.replace(",", "").replace("△", "").strip())
+    value = text.replace(",", "").strip()
+    negative = value.startswith("△")
+    if negative:
+        value = value[1:].strip()
+    if not value.isdigit():
+        raise ValueError(f"unsupported MOF integer notation: {text!r}")
+    return -int(value) if negative else int(value)
 
 
 def build():
