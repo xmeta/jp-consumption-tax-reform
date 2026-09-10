@@ -1,0 +1,167 @@
+= Firm-level VAT compliance-to-output identification bridge
+:revdate: 2026-09-11
+
+== Purpose
+
+This design answers a narrower question than the existing stress grid: what
+firm-level evidence would actually reduce uncertainty in `c_VAT`, `rho`, or
+`a_alloc`?  It does not convert the existing METI/JCCI/SMEA burden and invoice
+incidence evidence into a GDP effect.
+
+The current national parameters remain `NOT_IDENTIFIED`.  The design matrix is
+`firm_level_identification_design.csv`.
+
+== Estimands
+
+Let `i` index firms in a stated target population, `w_i` be population weights,
+`R_i` be recurring VAT-specific real resources used for compliance, and `Y_0`
+be baseline output on the same population/accounting basis.
+
+=== Real-resource cost: `c_VAT`
+
+[stem]
+++++
+c_{VAT}=\frac{\sum_i w_i R_i}{Y_0}.
+++++
+
+`R_i` must measure real inputs: internal staff time valued at an opportunity
+cost plus recurring purchased accounting/adviser/software resources on a
+consistent basis.  Tax remittances are transfers, not compliance resource cost.
+A response-time distribution without population weights or a clear period does
+not identify national `c_VAT`.
+
+=== Productive redeployment: `rho`
+
+For the existing policy model, `rho` is the fraction of released VAT-compliance
+resources that becomes productive input during the specified transition:
+
+[stem]
+++++
+\rho=\frac{\sum_i w_i P_i^{released}}{\sum_i w_i R_i^{released}},
+\qquad 0\leq\rho\leq1.
+++++
+
+It requires observing actual resource release and subsequent reassignment (or a
+credible causal proxy).  Cross-sectional correlation between burden and sales
+does not identify `rho`.
+
+=== Allocative effect: `a_alloc`
+
+`a_alloc` is the output-equivalent gain from removing VAT-induced allocation
+distortions *excluding* the direct `c_VAT × rho` resource-redeployment channel.
+Empirical threshold, registration, transaction-network, entry/exit, or
+investment designs can identify local responses.  Mapping them to a national
+abolition `a_alloc` requires explicit population weights, treatment transport,
+and general-equilibrium assumptions; local bunching or transaction incidence is
+not itself national `a_alloc`.
+
+== No double counting
+
+A firm outcome response can contain both released administrative resources and
+allocation changes.  A reduced-form sales/value-added coefficient must not be
+added to `c_VAT × rho` unless the design decomposes the direct resource channel
+from the residual allocation channel.  Otherwise the reduced form is reported
+as a combined local effect only.
+
+== Candidate Japanese linkage routes
+
+=== Preferred existing-data route for resource cost
+
+The first route to test is a secure linkage between the existing METI
+2019--2021 tax-procedure burden microdata and the METI Basic Survey of Japanese
+Business Structure and Activities (BSBSA).  BSBSA explicitly collects
+corporation number, employees, sales, costs, assets and investment, and METI has
+a formal questionnaire-microdata secondary-use process.  The public materials
+do *not* establish that the historic tax-burden survey microdata are available
+for secondary use or retain a stable corporation identifier.  Therefore this
+route is `BLOCKED_ON_HISTORIC_BURDEN_MICRODATA_LINK_KEY`, not assumed feasible.
+
+Its stop rule is deliberately short: ask the official METI/e-Micro channel once
+whether those microdata and a stable firm key can be used.  If not, stop trying
+to reconstruct the link from public aggregates and use the prospective-panel
+fallback.
+
+=== Prospective burden/redeployment panel
+
+If the historic link is unavailable, the minimum useful new survey is not
+another burden-incidence cross-section.  It must record VAT-specific internal
+hours and recurring external resources, stable firm identifiers, population
+weights, pre/post firm outcomes, and a defensible source of burden variation.
+Only then can it estimate national `c_VAT` and a local `rho`; without an actual
+or quasi-exogenous burden reduction it would merely reproduce the current
+identification gap.
+
+=== NTA Theme 5(ii): corporation tax + consumption tax
+
+The National Tax College sixth-call materials explicitly allow combined Theme 2
+corporation-tax and Theme 4 consumption-tax microdata.  The official synthetic
+schemas expose hashed corporation identifiers.  Theme 2 contains principal
+industry, capital, sales and corporation-tax income/tax fields; Theme 4 contains
+VAT taxable standard, VAT amount, input-tax credits, payment/refund fields,
+general/simplified regime status and taxable-sales measures.
+
+This is the strongest currently advertised tax-microdata route for local
+`a_alloc` work around thresholds, regimes and reforms.  It does not contain
+VAT-compliance hours or released-resource reassignment, so it does not identify
+`c_VAT` or `rho`.  The sixth-call application window closed on 2026-04-30; the
+repository therefore keeps a future-call design ready rather than pretending
+that access is currently open.
+
+=== Invoice registry + BSBSA
+
+For a taxable corporation with a corporation number, the NTA registration rule
+constructs the qualified-invoice registration number as `T` plus the 13-digit
+corporation number.  BSBSA collects corporation number.  This gives a
+technically deterministic corporate linkage between public invoice registration
+history and firm outcomes *if* the approved BSBSA microdata environment permits
+a linkable privacy-preserving corporation key.
+
+Registration is endogenous and the invoice system was a broad national reform.
+An event study or DiD therefore needs a defensible comparison group/timing,
+parallel trends, and controls/design for endogenous registration.  Even a valid
+local effect would shrink `a_alloc` uncertainty only locally; registration
+status is not a measure of `c_VAT` or `rho`.
+
+=== Cross-ministry NTA + METI linkage
+
+Combining NTA Theme 5(ii) with BSBSA/Business Register outcomes would be useful,
+but the current NTA joint-research call does not advertise such cross-ministry
+linkage.  It remains `INSTITUTIONAL_LINKAGE_NOT_AVAILABLE_NOW`.  The design must
+not bypass agency access controls or infer a confidential join from names and
+addresses.
+
+== Quantified uncertainty reduction
+
+The matrix quantifies the immediate identification gain as the number of the
+three model dimensions whose admissible set would shrink if the design succeeds.
+This is intentionally a count, not a fabricated numerical confidence width.
+
+* historic METI burden × BSBSA secure link: `1/3` (`c_VAT` on the overlap
+  population; national transport still required);
+* prospective burden/redeployment panel: `2/3` (`c_VAT` and local `rho`), with
+  only `c_VAT` potentially national under a valid probability/reweighting frame;
+* NTA Theme 5(ii): `1/3` (local `a_alloc`-relevant response);
+* invoice registry × BSBSA: `1/3` (local `a_alloc`-relevant response);
+* NTA × external firm statistics cross-ministry extension: `1/3` under a future
+  approved linkage.
+
+No current candidate identifies all three national parameters.  Consequently
+`c_VAT`, `rho`, and national `a_alloc` remain stress/sensitivity inputs until an
+executed design produces evidence that satisfies the stated selection,
+representativeness, and causal conditions.
+
+== Decision
+
+The execution order is:
+
+. verify the historic METI burden-microdata linkage key and access route;
+. if blocked, stop retrospective public-data accumulation and specify the
+  prospective burden/redeployment panel;
+. independently retain NTA Theme 5(ii) as the best existing route to local
+  allocation-response evidence when a compatible future call opens;
+. test invoice-registry × BSBSA deterministic linkage only inside an approved
+  microdata environment;
+. do not spend current effort on unadvertised cross-ministry NTA/METI linkage.
+
+This closes the design problem.  It does not close the empirical identification
+problem.
