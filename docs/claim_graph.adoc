@@ -1,0 +1,74 @@
+= Repository-wide claim graph
+:revdate: 2026-09-11
+
+== Authority
+
+`data/claim_graph.csv` is the repository-wide claim authority.
+`claim_id` is unique across every product. `product_id` selects a publication or
+analysis surface without creating a second scientific truth.
+
+The graph records, per claim:
+
+* empirical status;
+* identification status;
+* causal status;
+* policy usability;
+* optional linkage to an active `data/scientific_state.csv` component;
+* evidence scope and evidence artifacts;
+* allowed and forbidden interpretations;
+* supersession relationships; and
+* whether the claim is active.
+
+`data/claim_evidence.csv` is the evidence-edge table. Multiple evidence rows may
+support one claim. Evidence rows whose `claim_id` is absent from the claim graph
+are invalid.
+
+== Product projections
+
+`scripts/generate_claim_registries.py` deterministically projects the authority
+into:
+
+* `paper1/data/claim_registry.csv`; and
+* `research/vat_claim_registry.csv`.
+
+The Paper 1 projection preserves the existing seven-column public contract:
+`claim_id,topic,status,evidence_scope,allowed_claim,forbidden_claim,source`.
+The Issue #44 migration requires all P1-C01 through P1-C17 rows to reproduce
+without semantic loss.
+
+== Semantic ordering
+
+Claim-level identification may be more conservative than its linked component,
+but it may not be stronger. The enforced order is:
+
+----
+NOT_IDENTIFIED < SENSITIVITY_ONLY < PARTIALLY_IDENTIFIED < READY
+----
+
+`RECOVERY_ONLY` is outside that promotion chain. A recovery-only claim must have
+recovery evidence and cannot satisfy an active reproduced claim.
+
+Likewise a linked claim may not claim stronger causal identification than its
+component, and `POLICY_USABLE` is forbidden when the linked component has
+`policy_usable=false`.
+
+== CI invariants
+
+`scripts/validate_claim_graph.py` and `scripts/test_claim_graph.py` make CI fail
+for at least the following classes:
+
+* duplicate repository-wide claim IDs;
+* orphan evidence edges;
+* active claims without active evidence;
+* active claims supported only by recovery evidence;
+* declared evidence artifacts without matching evidence edges;
+* missing source/evidence paths;
+* claim/component identification, causal or policy contradictions;
+* stale product-specific generated registries; and
+* missing VAT coverage for the compliance-productivity and policy-integration
+  components.
+
+The claim graph does not upgrade scientific status. In particular, the VAT
+institutional GDP channel remains model-contingent sensitivity, and the VAT
+policy matrix remains a partial integration rather than a policy forecast or
+joint welfare optimum.

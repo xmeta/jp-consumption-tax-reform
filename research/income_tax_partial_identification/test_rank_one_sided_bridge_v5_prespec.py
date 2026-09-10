@@ -18,7 +18,7 @@ ROOT = Path(__file__).resolve().parents[2]
 HERE = Path(__file__).resolve().parent
 CONFIG = HERE / "rank_one_sided_bridge_v5_config.csv"
 SPEC = HERE / "rank_one_sided_bridge_v5_spec.adoc"
-CLAIMS = ROOT / "paper1/data/claim_registry.csv"
+CLAIMS = ROOT / "data/claim_graph.csv"
 
 PRESPEC_COMMIT = "fef477667816e1f95b6c532add770ac85675204b"
 SPEC_SHA256 = "8c9459cafcc0c18c68666da0492c13fa4b70e68868fd8585a703709f798254f0"
@@ -54,10 +54,10 @@ assert cfg["solver_crosscheck_method"] == "highs-ipm"
 assert cfg["paper1_claim_before_ci"] == "false"
 assert cfg["paper1_claim_before_separate_promotion"] == "false"
 
-claims = read_csv(CLAIMS)
+claims = [r for r in read_csv(CLAIMS) if r["product_id"] == "paper1"]
 assert len(claims) == 17
 by_id = {r["claim_id"]: r for r in claims}
-assert by_id["P1-C17"]["status"] == (
+assert by_id["P1-C17"]["empirical_status"] == (
     "MODEL_CONTINGENT_RANK_ONE_SIDED_BRIDGE_REPRODUCED"
 )
 assert by_id["P1-C17"]["source"] == (
