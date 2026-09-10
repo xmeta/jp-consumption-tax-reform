@@ -7,6 +7,8 @@ import csv
 import subprocess
 import sys
 
+from build_vat_fiscal_replacement_reference import parse_int
+
 ROOT = Path(__file__).resolve().parents[2]
 M = ROOT / "data/derived/vat_fiscal_receipt_reference.csv"
 S = ROOT / "data/derived/vat_policy_fiscal_replacement_reference.csv"
@@ -21,6 +23,16 @@ def read(path):
 metrics = {r["metric_id"]: r for r in read(M)}
 scenarios = {r["scenario_id"]: r for r in read(S)}
 catalog = {r["source_id"]: r for r in read(C)}
+
+assert parse_int("678,206,715") == 678206715
+assert parse_int("0") == 0
+assert parse_int("△ 143,814,640") == -143814640
+try:
+    parse_int("▲ 143,814,640")
+except ValueError:
+    pass
+else:
+    raise AssertionError("unexpected MOF numeric notation must fail explicitly")
 
 assert len(metrics) == 5
 assert len(scenarios) == 8
