@@ -1,0 +1,26 @@
+name: issue-45-manifest-refresh
+on:
+  push:
+    branches:
+      - feature/issue-45-reproduction-entrypoints
+
+permissions:
+  contents: write
+
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          ref: feature/issue-45-reproduction-entrypoints
+      - name: Finalize manifest and remove bootstrap workflow
+        run: |
+          git rm .github/workflows/issue-45-manifest-refresh.yml
+          python scripts/generate_manifest.py
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git diff --cached --quiet && exit 0
+          git commit -m "Refresh manifest after clean-room dependency fix"
+          git push origin HEAD:feature/issue-45-reproduction-entrypoints
