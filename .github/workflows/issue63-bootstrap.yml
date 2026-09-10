@@ -64,7 +64,7 @@ jobs:
           PY
 
           # This workflow is bootstrap-only and must not survive into the PR payload.
-          rm .github/workflows/issue63-bootstrap.yml
+          git rm .github/workflows/issue63-bootstrap.yml
           git diff --check
 
       - name: Verify valid repository baseline
