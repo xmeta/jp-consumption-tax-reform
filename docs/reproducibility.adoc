@@ -41,7 +41,8 @@ python scripts/reproduce.py all
 
 各targetは順序固定・fail-fastである。
 個別targetは生成・検証後にworking treeがcleanであることまで確認する。
-`all` は source integrity → VAT → income tax → provenance → Paper 1 → docs → repository integrity の順に実行し、最後にprovenance、manifest、生成物、working treeの整合性を検証する。
+`all` は source integrity → income tax → VAT → provenance → Paper 1 → docs → repository integrity の順に実行し、最後にprovenance、manifest、生成物、working treeの整合性を検証する。
+この順序は依存関係を反映している。VAT household-margin audit が使用する objective-rank income table は income-tax extraction が再生成するため、clean-roomでは income tax を VAT より先に実行する。
 
 実行せずに順序だけ確認する場合は `--dry-run` を使う。
 
