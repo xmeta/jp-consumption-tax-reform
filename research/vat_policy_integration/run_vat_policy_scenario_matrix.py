@@ -15,6 +15,7 @@ HERE = Path(__file__).resolve().parent
 SCENARIOS = HERE / "scenarios.csv"
 SENS = ROOT / "data/derived/vat_compliance_productivity_sensitivity.csv"
 IDENT = ROOT / "data/derived/vat_compliance_identification_status.csv"
+FISCAL = ROOT / "data/derived/vat_policy_fiscal_replacement_reference.csv"
 OUT = ROOT / "data/derived/vat_policy_scenario_matrix.csv"
 SUMMARY = ROOT / "data/derived/vat_policy_scenario_summary.csv"
 
@@ -48,6 +49,8 @@ def build():
     scenarios = read(SCENARIOS)
     assert len(scenarios) == 8
     assert {r["scenario_id"] for r in scenarios} == EXPECTED_SCENARIOS
+    fiscal = {r["scenario_id"]: r for r in read(FISCAL)}
+    assert set(fiscal) == EXPECTED_SCENARIOS
 
     sens = read(SENS)
     assert len(sens) == 1200
@@ -69,9 +72,22 @@ def build():
 
     rows = []
     for scenario in scenarios:
+        fiscal_ref = fiscal[scenario["scenario_id"]]
         for idx, source in enumerate(by_regime[scenario["vat_regime_id"]], 1):
             institutional = float(source["total_institutional_level_effect"])
             transition = float(source["annualized_transition_growth_contribution"])
+            if scenario["scenario_id"] == "current_8_10":
+                fiscal_status = "BASELINE_ZERO_STATIC_RECEIPT_CHANGE"
+            elif scenario["scenario_id"] == "reduced_5":
+                fiscal_status = "NOT_IDENTIFIED_RATE_BASE_MIX_AND_BEHAVIOR_REQUIRED"
+            else:
+                fiscal_status = "STATIC_CENTRAL_REVENUE_REFERENCE_AVAILABLE_FULL_FISCAL_BALANCE_NOT_MODELED"
+            if scenario["scenario_id"] == "full_abolition_jgb":
+                debt_status = "STATIC_JGB_AMOUNT_REFERENCE_AVAILABLE_DEBT_GDP_AND_DYNAMIC_PATH_NOT_MODELED"
+            elif scenario["financing_strategy"] == "baseline":
+                debt_status = "BASELINE_NO_POLICY_DEBT_CHANGE"
+            else:
+                debt_status = "NOT_MODELED_FINANCING_AND_GROWTH_PATH_REQUIRED"
             rows.append({
                 "scenario_id": scenario["scenario_id"],
                 "scenario_label": scenario["scenario_label"],
@@ -84,6 +100,12 @@ def build():
                 "invoice_system_state": source["invoice_system_state"],
                 "financing_strategy": scenario["financing_strategy"],
                 "financing_status": scenario["financing_status"],
+                "fy2024_consumption_tax_receipts_reference_yen": fiscal_ref["fy2024_consumption_tax_receipts_reference_yen"],
+                "static_consumption_tax_receipt_effect_yen": fiscal_ref["static_consumption_tax_receipt_effect_yen"],
+                "gross_replacement_requirement_reference_yen": fiscal_ref["gross_replacement_requirement_reference_yen"],
+                "full_jgb_financing_reference_yen": fiscal_ref["full_jgb_financing_reference_yen"],
+                "replacement_tax_target_reference_yen": fiscal_ref["replacement_tax_target_reference_yen"],
+                "fiscal_reference_status": fiscal_ref["fiscal_reference_status"],
                 "vat_admin_resource_share_of_baseline_output": source["vat_admin_resource_share_of_baseline_output"],
                 "productive_redeployment_fraction": source["productive_redeployment_fraction"],
                 "allocative_efficiency_dividend_share": source["allocative_efficiency_dividend_share"],
@@ -111,12 +133,12 @@ def build():
                 "inflation_effect": "",
                 "inflation_effect_status": "NOT_MODELED_DEMAND_PASS_THROUGH_AND_MACRO_LINK_REQUIRED",
                 "fiscal_balance_effect": "",
-                "fiscal_balance_effect_status": scenario["financing_status"],
+                "fiscal_balance_effect_status": fiscal_status,
                 "debt_gdp_effect": "",
-                "debt_gdp_effect_status": "BASELINE_NO_POLICY_DEBT_CHANGE" if scenario["financing_strategy"] == "baseline" else "NOT_MODELED_FINANCING_AND_GROWTH_PATH_REQUIRED",
+                "debt_gdp_effect_status": debt_status,
                 "interest_rate_jgb_market_effect": "",
                 "interest_rate_jgb_market_effect_status": "BASELINE_NO_POLICY_CHANGE" if scenario["financing_strategy"] == "baseline" else "NOT_MODELED_FINANCING_AND_MARKET_FEEDBACK_REQUIRED",
-                "joint_outcome_status": "PARTIAL_E2E_REPORT_INSTITUTIONAL_COMPONENT_NUMERIC_OTHER_CHANNELS_EXPLICITLY_UNIDENTIFIED",
+                "joint_outcome_status": "PARTIAL_E2E_REPORT_INSTITUTIONAL_AND_STATIC_FISCAL_REFERENCE_NUMERIC_OTHER_CHANNELS_EXPLICITLY_UNIDENTIFIED",
                 "identification_status": "MODEL_CONTINGENT_SCENARIO_MATRIX_NOT_POLICY_FORECAST",
             })
     assert len(rows) == 2400
@@ -164,6 +186,12 @@ def build():
             "institutional_gdp_level_effect_max": fmt(max(levels)),
             "institutional_transition_growth_contribution_min": fmt(min(growth)),
             "institutional_transition_growth_contribution_max": fmt(max(growth)),
+            "fy2024_consumption_tax_receipts_reference_yen": first["fy2024_consumption_tax_receipts_reference_yen"],
+            "static_consumption_tax_receipt_effect_yen": first["static_consumption_tax_receipt_effect_yen"],
+            "gross_replacement_requirement_reference_yen": first["gross_replacement_requirement_reference_yen"],
+            "full_jgb_financing_reference_yen": first["full_jgb_financing_reference_yen"],
+            "replacement_tax_target_reference_yen": first["replacement_tax_target_reference_yen"],
+            "fiscal_reference_status": first["fiscal_reference_status"],
             "overall_real_gdp_status": first["overall_real_gdp_level_effect_status"],
             "annual_real_growth_status": first["annual_real_growth_rate_effect_status"],
             "growth_decline_penalty_status": first["growth_decline_penalty_effect_status"],

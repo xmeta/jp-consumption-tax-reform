@@ -24,13 +24,30 @@ Financing labels must not alter the compliance/allocation component.
 
 == Numeric versus unresolved outputs
 
-The adapter numerically carries only:
+The adapter numerically carries:
 
 * the model-contingent institutional GDP level component
-  stem:[m(\rho c_{VAT}+a_{alloc})]; and
-* its annualized transition-growth contribution.
+  stem:[m(\rho c_{VAT}+a_{alloc})];
+* its annualized transition-growth contribution; and
+* a static FY2024 central-government VAT cash-receipt replacement reference.
 The stress range remains *not an empirical bound*. Current evidence does not
 identify national stem:[c_{VAT}], stem:[\rho], or stem:[a_{alloc}].
+
+The fiscal reference is parsed from the Ministry of Finance FY2024 treasury
+revenue table.  Consumption-tax cash receipts are 25,021,206,715 thousand yen,
+or 25.021206715 trillion yen.  Total tax receipts are 74.187865765 trillion yen,
+so consumption tax represents about 33.73% of the recorded central tax receipts.
+For the 0% and full-abolition scenarios this amount is carried as a *static gross
+receipt-removal/replacement reference*.  For the JGB scenario the same amount is
+shown as a one-for-one gross JGB financing reference.  Income-tax, asset-tax and
+mixed-financing scenarios carry it only as a replacement target.
+
+This is not a behavioral tax-revenue forecast or a complete fiscal-balance
+effect.  It excludes changes in tax bases, timing, imports, local consumption
+tax, other tax receipts, expenditure, interest, macro feedback and general-
+government consolidation.  The 5% VAT scenario is deliberately left unquantified
+because the 10%/8% rate mix and taxable bases cannot be recovered by simple
+linear scaling of aggregate receipts.
 
 The matrix also contains explicit fields for overall real GDP, annual real
 growth, growth-decline penalty, income Gini, wealth Gini, intergenerational gap,
@@ -45,6 +62,10 @@ statement.
 
 == Outputs
 
+* +data/derived/vat_fiscal_receipt_reference.csv+: observed FY2024 central
+  tax-receipt metrics.
+* +data/derived/vat_policy_fiscal_replacement_reference.csv+: static eight-
+  scenario receipt-removal/financing references.
 * +data/derived/vat_policy_scenario_matrix.csv+: 8 scenarios x 300
   institutional stress points = 2,400 rows.
 * +data/derived/vat_policy_scenario_summary.csv+: one row per policy scenario
@@ -55,13 +76,15 @@ statement.
 [source,shell]
 ----
 python research/vat_compliance_productivity/run_vat_compliance_productivity.py
+python research/vat_policy_integration/build_vat_fiscal_replacement_reference.py
+python research/vat_policy_integration/test_vat_fiscal_replacement_reference.py
 python research/vat_policy_integration/run_vat_policy_scenario_matrix.py
 python research/vat_policy_integration/test_vat_policy_scenario_matrix.py
 ----
 == Scientific status
 
 ----
-PARTIAL_E2E_POLICY_MATRIX_COMPLETE_UNMODELED_MACRO_CHANNELS_EXPLICIT
+PARTIAL_E2E_POLICY_MATRIX_WITH_STATIC_FISCAL_REFERENCE
 ----
 
 The matrix is operational end-to-end, but it is not yet a policy forecast or a

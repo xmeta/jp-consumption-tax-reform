@@ -35,7 +35,7 @@ assert all(
 )
 assert all(
     r["joint_outcome_status"]
-    == "PARTIAL_E2E_REPORT_INSTITUTIONAL_COMPONENT_NUMERIC_OTHER_CHANNELS_EXPLICITLY_UNIDENTIFIED"
+    == "PARTIAL_E2E_REPORT_INSTITUTIONAL_AND_STATIC_FISCAL_REFERENCE_NUMERIC_OTHER_CHANNELS_EXPLICITLY_UNIDENTIFIED"
     for r in rows
 )
 
@@ -55,6 +55,17 @@ blank_numeric = [
 ]
 for col in blank_numeric:
     assert all(r[col] == "" for r in rows), col
+assert all(r["fy2024_consumption_tax_receipts_reference_yen"] == "25021206715000" for r in rows)
+assert all(r["static_consumption_tax_receipt_effect_yen"] == "" for r in rows if r["scenario_id"] == "reduced_5")
+assert all(r["static_consumption_tax_receipt_effect_yen"] == "0" for r in rows if r["scenario_id"] == "current_8_10")
+assert all(
+    r["static_consumption_tax_receipt_effect_yen"] == "-25021206715000"
+    for r in rows if r["scenario_id"] in {
+        "zero_rate_admin_retained", "full_abolition", "full_abolition_jgb",
+        "full_abolition_income_tax", "full_abolition_asset_tax", "full_abolition_mixed",
+    }
+)
+assert all(r["full_jgb_financing_reference_yen"] == "25021206715000" for r in rows if r["scenario_id"] == "full_abolition_jgb")
 for sid in ("current_8_10", "reduced_5", "zero_rate_admin_retained"):
     rr = [r for r in rows if r["scenario_id"] == sid]
     assert all(float(r["institutional_gdp_level_effect"]) == 0 for r in rr)
@@ -68,22 +79,21 @@ for sid in (
     assert summary[sid]["institutional_gdp_level_effect_max"] == "0.006"
 
 assert summary["zero_rate_admin_retained"]["institutional_gdp_level_effect_max"] == "0"
-assert (
-    summary["full_abolition_jgb"]["fiscal_balance_status"]
-    == "JGB_FINANCING_DEFINED_NOT_QUANTIFIED"
-)
-assert (
-    summary["full_abolition_income_tax"]["fiscal_balance_status"]
-    == "INCOME_TAX_FINANCING_DEFINED_NOT_QUANTIFIED"
-)
-assert (
-    summary["full_abolition_asset_tax"]["fiscal_balance_status"]
-    == "WEALTH_ASSET_TAX_FINANCING_DEFINED_NOT_QUANTIFIED"
-)
-assert (
-    summary["full_abolition_mixed"]["fiscal_balance_status"]
-    == "MIXED_FINANCING_DEFINED_NOT_QUANTIFIED"
-)
+assert summary["current_8_10"]["static_consumption_tax_receipt_effect_yen"] == "0"
+assert summary["reduced_5"]["static_consumption_tax_receipt_effect_yen"] == ""
+assert summary["reduced_5"]["fiscal_reference_status"] == "NOT_IDENTIFIED_RATE_BASE_MIX_AND_BEHAVIOR_REQUIRED"
+for sid in (
+    "zero_rate_admin_retained", "full_abolition", "full_abolition_jgb",
+    "full_abolition_income_tax", "full_abolition_asset_tax", "full_abolition_mixed",
+):
+    assert summary[sid]["fy2024_consumption_tax_receipts_reference_yen"] == "25021206715000"
+    assert summary[sid]["static_consumption_tax_receipt_effect_yen"] == "-25021206715000"
+    assert summary[sid]["gross_replacement_requirement_reference_yen"] == "25021206715000"
+    assert summary[sid]["fiscal_balance_status"] == "STATIC_CENTRAL_REVENUE_REFERENCE_AVAILABLE_FULL_FISCAL_BALANCE_NOT_MODELED"
+assert summary["full_abolition_jgb"]["full_jgb_financing_reference_yen"] == "25021206715000"
+assert summary["full_abolition_jgb"]["debt_gdp_status"] == "STATIC_JGB_AMOUNT_REFERENCE_AVAILABLE_DEBT_GDP_AND_DYNAMIC_PATH_NOT_MODELED"
+for sid in ("full_abolition_income_tax", "full_abolition_asset_tax", "full_abolition_mixed"):
+    assert summary[sid]["replacement_tax_target_reference_yen"] == "25021206715000"
 
 
 def signature(sid):
@@ -116,5 +126,5 @@ subprocess.run(
 print(
     "VAT policy scenario matrix tests: OK "
     "(8 requested scenarios; 2400 rows; joint GDP/growth/Gini/FGT2/fiscal/debt "
-    "reporting with no unmodeled-channel imputation)"
+    "reporting with static FY2024 VAT fiscal replacement reference and no unmodeled-channel imputation)"
 )
