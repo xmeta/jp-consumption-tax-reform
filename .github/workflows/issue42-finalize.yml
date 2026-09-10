@@ -1,0 +1,36 @@
+name: issue42-finalize
+on:
+  push:
+    branches:
+      - feature/issue-42-scientific-state-authority
+
+permissions:
+  contents: write
+
+jobs:
+  finalize:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          ref: feature/issue-42-scientific-state-authority
+          fetch-depth: 0
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.12"
+      - name: Validate scientific-state authority
+        run: |
+          python scripts/test_scientific_state.py
+          python scripts/validate_scientific_state.py
+          python scripts/validate_repo.py
+      - name: Finalize manifest and remove temporary workflow
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git rm .github/workflows/issue42-finalize.yml
+          python scripts/generate_manifest.py
+          python scripts/check_manifest.py
+          git add MANIFEST.sha256
+          git commit -m "Finalize machine-readable scientific-state authority"
+          git push origin HEAD:feature/issue-42-scientific-state-authority
