@@ -27,7 +27,7 @@ jobs:
           python scripts/validate_repo.py
       - name: Finalize manifest and remove temporary workflow
         run: |
-          rm .github/workflows/issue43-finalize.yml
+          git rm .github/workflows/issue43-finalize.yml
           python scripts/generate_manifest.py
           python scripts/check_manifest.py
           git diff --check
