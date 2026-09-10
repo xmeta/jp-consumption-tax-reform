@@ -72,6 +72,33 @@ out, so the food subtotal is not treated as the 8% reduced-rate VAT base. Until
 a valid rank bridge and VAT-base/pass-through incidence model exist, income Gini,
 FGT2 and real-disposable-income-by-decile policy effects remain empty.
 
+A statutory-rate accounting envelope is additionally reported without assigning
+items to VAT classes.  The NTA source states a maximum current consumption-tax
+rate of 10% (including the local-consumption-tax component) and a reduced rate
+of 8%.  Therefore, for an observed tax-inclusive expenditure amount stem:[E],
+the tax content can be bounded mechanically by
+
+[stem]
+++++
+0 \le T(E) \le E\frac{0.10}{1.10}.
+++++
+
+Under a static current basket, unchanged tax-exclusive prices, full pass-through
+and no overshifting, the corresponding *maximum* price-relief envelope is
+stem:[E(0.10-r')/1.10] for target rate stem:[r'].  Thus the 5% scenario has a
+4.5454545% expenditure envelope and the 0%/abolition scenarios a 9.0909091%
+envelope.  Annual-income decile 1 has endpoint envelopes of 5,885 yen/month at
+5% and 11,770 yen/month at 0%; decile 10 has 19,984 and 39,968 yen/month.
+
+These are deliberately loose accounting envelopes.  Actual expenditure contains
+8%-rate and non-taxed/exempt components, the source categories do not identify
+the VAT base, and actual pass-through, substitution and quantity responses are
+unknown.  The 10% statutory rate includes local consumption tax, whereas the
+25.021-trillion-yen fiscal reference above is a central-government cash-receipt
+series; the two quantities are not equated.  The envelope is not an estimate of
+actual household VAT burden, CPI change, welfare, Gini, FGT2 or disposable-income
+effect.
+
 The matrix also contains explicit fields for overall real GDP, annual real
 growth, growth-decline penalty, income Gini, wealth Gini, intergenerational gap,
 FGT2, real disposable income by decile, inflation, fiscal balance, debt/GDP and
@@ -93,6 +120,8 @@ statement.
   and full-JGB static financing-share reference.
 * +data/derived/estat_2024_annual_income_decile_expenditure_diagnostic.csv+:
   observed annual-income-decile household expenditure and composition diagnostic.
+* +data/derived/vat_household_tax_content_envelope.csv+: eight scenarios x ten
+  annual-income deciles of statutory-rate tax-content/price-relief envelopes.
 * +data/derived/vat_policy_scenario_matrix.csv+: 8 scenarios x 300
   institutional stress points = 2,400 rows.
 * +data/derived/vat_policy_scenario_summary.csv+: one row per policy scenario
@@ -109,13 +138,15 @@ python research/vat_policy_integration/build_jgb_debt_gdp_reference.py
 python research/vat_policy_integration/test_jgb_debt_gdp_reference.py
 python scripts/build_estat_2024_annual_income_decile_expenditure_diagnostic.py
 python scripts/test_estat_2024_annual_income_decile_expenditure_diagnostic.py
+python scripts/build_vat_household_tax_content_envelope.py
+python scripts/test_vat_household_tax_content_envelope.py
 python research/vat_policy_integration/run_vat_policy_scenario_matrix.py
 python research/vat_policy_integration/test_vat_policy_scenario_matrix.py
 ----
 == Scientific status
 
 ----
-PARTIAL_E2E_POLICY_MATRIX_WITH_STATIC_FISCAL_AND_HOUSEHOLD_EXPENDITURE_DIAGNOSTIC
+PARTIAL_E2E_POLICY_MATRIX_WITH_STATIC_FISCAL_AND_HOUSEHOLD_RATE_ENVELOPES
 ----
 
 The matrix is operational end-to-end, but it is not yet a policy forecast or a

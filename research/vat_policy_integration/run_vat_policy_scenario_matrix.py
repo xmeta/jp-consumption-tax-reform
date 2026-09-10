@@ -18,6 +18,7 @@ IDENT = ROOT / "data/derived/vat_compliance_identification_status.csv"
 FISCAL = ROOT / "data/derived/vat_policy_fiscal_replacement_reference.csv"
 JGB_GDP = ROOT / "data/derived/vat_jgb_debt_gdp_reference.csv"
 HOUSEHOLD_EXP = ROOT / "data/derived/estat_2024_annual_income_decile_expenditure_diagnostic.csv"
+HOUSEHOLD_TAX = ROOT / "data/derived/vat_household_tax_content_envelope.csv"
 OUT = ROOT / "data/derived/vat_policy_scenario_matrix.csv"
 SUMMARY = ROOT / "data/derived/vat_policy_scenario_summary.csv"
 
@@ -54,12 +55,20 @@ def build():
     fiscal = {r["scenario_id"]: r for r in read(FISCAL)}
     jgb_gdp = {r["scenario_id"]: r for r in read(JGB_GDP)}
     household_exp = read(HOUSEHOLD_EXP)
+    household_tax = read(HOUSEHOLD_TAX)
     assert set(fiscal) == EXPECTED_SCENARIOS
     assert set(jgb_gdp) == EXPECTED_SCENARIOS
     assert len(household_exp) == 10
     assert {int(r["annual_income_decile"]) for r in household_exp} == set(range(1, 11))
     assert all(r["rank_bridge_status"] == "NOT_LINKED_DO_NOT_TREAT_AS_OBJECTIVE_DECILE" for r in household_exp)
-    distribution_status = "ANNUAL_INCOME_DECILE_EXPENDITURE_OBSERVED_OBJECTIVE_RANK_BRIDGE_AND_VAT_INCIDENCE_REQUIRED"
+    assert len(household_tax) == 80
+    tax_by_scenario = {}
+    for r in household_tax:
+        tax_by_scenario.setdefault(r["scenario_id"], []).append(r)
+    assert set(tax_by_scenario) == EXPECTED_SCENARIOS
+    assert all(len(v) == 10 for v in tax_by_scenario.values())
+    distribution_status = "ANNUAL_INCOME_DECILE_RATE_ONLY_TAX_CONTENT_ENVELOPE_AVAILABLE_OBJECTIVE_RANK_AND_ACTUAL_INCIDENCE_REQUIRED"
+    inflation_status = "RATE_ONLY_HOUSEHOLD_PRICE_RELIEF_ENVELOPE_AVAILABLE_CPI_PASS_THROUGH_AND_MACRO_LINK_REQUIRED"
 
     sens = read(SENS)
     assert len(sens) == 1200
@@ -83,6 +92,10 @@ def build():
     for scenario in scenarios:
         fiscal_ref = fiscal[scenario["scenario_id"]]
         jgb_ref = jgb_gdp[scenario["scenario_id"]]
+        tax_rows = sorted(tax_by_scenario[scenario["scenario_id"]], key=lambda r: int(r["annual_income_decile"]))
+        tax_d1 = tax_rows[0]
+        tax_d10 = tax_rows[-1]
+        assert tax_d1["annual_income_decile"] == "1" and tax_d10["annual_income_decile"] == "10"
         for idx, source in enumerate(by_regime[scenario["vat_regime_id"]], 1):
             institutional = float(source["total_institutional_level_effect"])
             transition = float(source["annualized_transition_growth_contribution"])
@@ -137,6 +150,13 @@ def build():
                 "household_expenditure_diagnostic_rank": "HOUSEHOLD_ANNUAL_INCOME_DECILE",
                 "distribution_objective_rank": "OECD_NEW_EQUIVALIZED_DISPOSABLE_INCOME_DECILE",
                 "household_expenditure_diagnostic_status": distribution_status,
+                "annual_income_decile1_current_embedded_tax_upper_bound_yen_month": tax_d1["current_embedded_consumption_tax_upper_bound_yen_month_ceiling"],
+                "annual_income_decile10_current_embedded_tax_upper_bound_yen_month": tax_d10["current_embedded_consumption_tax_upper_bound_yen_month_ceiling"],
+                "annual_income_decile1_price_relief_upper_envelope_yen_month": tax_d1["mechanical_price_relief_upper_envelope_yen_month_ceiling"],
+                "annual_income_decile10_price_relief_upper_envelope_yen_month": tax_d10["mechanical_price_relief_upper_envelope_yen_month_ceiling"],
+                "price_relief_share_current_spending_envelope": tax_d1["mechanical_price_relief_share_current_spending_envelope"],
+                "household_tax_content_envelope_status": tax_d1["tax_content_bound_status"],
+                "household_price_relief_envelope_status": tax_d1["price_relief_envelope_status"],
                 "income_gini_effect": "",
                 "income_gini_effect_status": distribution_status,
                 "wealth_gini_effect": "",
@@ -148,14 +168,14 @@ def build():
                 "real_disposable_income_by_decile_effect": "",
                 "real_disposable_income_by_decile_effect_status": distribution_status,
                 "inflation_effect": "",
-                "inflation_effect_status": "NOT_MODELED_DEMAND_PASS_THROUGH_AND_MACRO_LINK_REQUIRED",
+                "inflation_effect_status": inflation_status,
                 "fiscal_balance_effect": "",
                 "fiscal_balance_effect_status": fiscal_status,
                 "debt_gdp_effect": "",
                 "debt_gdp_effect_status": debt_status,
                 "interest_rate_jgb_market_effect": "",
                 "interest_rate_jgb_market_effect_status": "BASELINE_NO_POLICY_CHANGE" if scenario["financing_strategy"] == "baseline" else "NOT_MODELED_FINANCING_AND_MARKET_FEEDBACK_REQUIRED",
-                "joint_outcome_status": "PARTIAL_E2E_REPORT_INSTITUTIONAL_AND_STATIC_FISCAL_REFERENCE_NUMERIC_OTHER_CHANNELS_EXPLICITLY_UNIDENTIFIED",
+                "joint_outcome_status": "PARTIAL_E2E_REPORT_INSTITUTIONAL_STATIC_FISCAL_AND_HOUSEHOLD_RATE_ENVELOPE_NUMERIC_OTHER_CHANNELS_EXPLICITLY_UNIDENTIFIED",
                 "identification_status": "MODEL_CONTINGENT_SCENARIO_MATRIX_NOT_POLICY_FORECAST",
             })
     assert len(rows) == 2400
@@ -217,6 +237,13 @@ def build():
             "annual_real_growth_status": first["annual_real_growth_rate_effect_status"],
             "growth_decline_penalty_status": first["growth_decline_penalty_effect_status"],
             "household_expenditure_diagnostic_status": first["household_expenditure_diagnostic_status"],
+            "annual_income_decile1_current_embedded_tax_upper_bound_yen_month": first["annual_income_decile1_current_embedded_tax_upper_bound_yen_month"],
+            "annual_income_decile10_current_embedded_tax_upper_bound_yen_month": first["annual_income_decile10_current_embedded_tax_upper_bound_yen_month"],
+            "annual_income_decile1_price_relief_upper_envelope_yen_month": first["annual_income_decile1_price_relief_upper_envelope_yen_month"],
+            "annual_income_decile10_price_relief_upper_envelope_yen_month": first["annual_income_decile10_price_relief_upper_envelope_yen_month"],
+            "price_relief_share_current_spending_envelope": first["price_relief_share_current_spending_envelope"],
+            "household_tax_content_envelope_status": first["household_tax_content_envelope_status"],
+            "household_price_relief_envelope_status": first["household_price_relief_envelope_status"],
             "income_gini_status": first["income_gini_effect_status"],
             "wealth_gini_status": first["wealth_gini_effect_status"],
             "intergenerational_gap_status": first["intergenerational_gap_effect_status"],
