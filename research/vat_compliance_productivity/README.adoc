@@ -15,6 +15,7 @@ Observed Japan evidence is generated separately by
 +scripts/build_meti_vat_hours_source_lineage.py+,
 +scripts/build_vat_transition_system_subsidy_bounds.py+,
 +scripts/build_rieti_vat_threshold_structural_bridge.py+,
++scripts/build_ichikawa_2019_vat_10m_threshold_bridge.py+,
 +scripts/build_bsws_2019_industry_hourly_wage_bridge.py+,
 +scripts/build_meti_vat_internal_labor_cost_bridge.py+, and
 +scripts/extract_vat_compliance_evidence.py+.
@@ -69,6 +70,28 @@ omits the simplified tax system near the threshold.  Therefore neither +theta+
 nor the marginal-buncher response is used directly as +c_VAT+ or +a_alloc+.
 The current 10-million-yen, invoice-era aggregate allocation effect remains
 +NOT_IDENTIFIED+.
+
+A second threshold study moves the evidence closer to the present exemption
+threshold.  Ichikawa, Arudchelvan and Onji (2019) study the 10-million-yen
+threshold using Teikoku Databank data and nationalize selected quantities with
+the 2016 Economic Census.  They estimate 56,651 excess-bunching firms and
+16.85 billion yen/year of tax windfall.  Their Table 4 gives two sharply
+different *mechanism-sensitive* lost-sales calculations: 84.98 billion yen if
+all excess bunchers are assumed to make a 1.5-million-yen real sales adjustment,
+versus 3.14 billion yen using the observed missing mass with the same per-firm
+adjustment assumption.  The more-than-27-fold gap is not interpreted as a formal
+identification interval.  The paper itself treats the real-adjustment versus
+tax-avoidance mechanism as unresolved; lost sales are also not one-for-one GDP
+or welfare loss because displaced sales may be supplied by competitors.
+
+The same study uses the 2014 three-percentage-point VAT-rate increase as a
+quasi-experimental comparison.  For all four same-window specifications, the
+pre/post 95% confidence intervals overlap under the paper's stated decision
+rule, so it does not detect an increase in bunching despite the larger monetary
+benefit of exemption.  This supports a compliance-burden motive but does not
+prove it.  Crucially, the study predates the October 2023 qualified-invoice
+system.  The current invoice-era aggregate allocation effect and macro
++a_alloc+ therefore remain +NOT_IDENTIFIED+.
 
 The wage bridge adds 2019 MHLW Basic Survey on Wage Structure components for
 17 industry-total/major-industry rows. Two transparent hourly-wage formulas are

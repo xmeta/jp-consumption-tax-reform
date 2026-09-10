@@ -29,6 +29,8 @@ jobs:
           python scripts/test_vat_transition_system_subsidy_bounds.py
           python scripts/build_rieti_vat_threshold_structural_bridge.py
           python scripts/test_rieti_vat_threshold_structural_bridge.py
+          python scripts/build_ichikawa_2019_vat_10m_threshold_bridge.py
+          python scripts/test_ichikawa_2019_vat_10m_threshold_bridge.py
           python scripts/build_bsws_2019_industry_hourly_wage_bridge.py
           python scripts/build_meti_vat_internal_labor_cost_bridge.py
           python scripts/test_bsws_vat_wage_bridge.py
