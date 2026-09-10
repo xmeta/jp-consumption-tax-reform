@@ -115,6 +115,8 @@ INCOME_TAX = (
 )
 
 PROVENANCE = (
+    ("scripts/generate_claim_registries.py",),
+    ("scripts/generate_claim_registries.py", "--check"),
     ("scripts/build_derived_catalog.py",),
     ("scripts/build_input_provenance.py",),
     ("scripts/build_stage1_inputs.py",),
@@ -146,6 +148,7 @@ PAPER1_GENERATORS = (
 PAPER1 = (
     *STAGE1,
     *PAPER1_GENERATORS,
+    ("scripts/generate_claim_registries.py", "--check"),
     *((path, "--check") for (path,) in PAPER1_GENERATORS),
     ("paper1/scripts/validate_claim_registry.py",),
 )
@@ -214,6 +217,8 @@ CLEAN_ROOM_GLOBS = (
     "paper1/data/rank_bridge_v3_frontier_table.csv",
     "paper1/data/rank_epsilon_v4_overall_table.csv",
     "paper1/data/rank_one_sided_v5_overall_table.csv",
+    "paper1/data/claim_registry.csv",
+    "research/vat_claim_registry.csv",
 )
 
 # Manual verified inputs may live beside generated artifacts for historical reasons,

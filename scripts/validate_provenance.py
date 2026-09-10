@@ -207,9 +207,8 @@ for vid, inp in inputs.items():
         if p["source_sha256"] not in release_sha_text:
             errors.append(f"{vid}: recovery provenance SHA not in release record")
 
-claims_rows = read_csv("paper1/data/claim_registry.csv")
-# Primary key: claim_id. Keep provenance validation fail-closed even though
-# the Paper 1 claim validator independently checks this key as well.
+claims_rows = read_csv("data/claim_graph.csv")
+# Repository-wide primary key: claim_id.
 claims = {}
 for r in claims_rows:
     cid = r["claim_id"]
@@ -240,42 +239,14 @@ if set(by_claim) != set(claims):
         f"orphan={sorted(set(by_claim)-set(claims))}"
     )
 
-active_required = {
-    "OBSERVED_PUBLIC",
-    "ROBUSTNESS_FRONTIER_REPRODUCED",
-    "READY_STATIC_ONLY",
-    "SENSITIVITY_ONLY_REPRODUCED",
-    "EXTERNAL_STAGE2_DIAGNOSTIC_REPRODUCED",
-    "CROSS_PUBLICATION_POINT_CHECK_REPRODUCED",
-    "MODEL_CONTINGENT_TRANSPORT_RELAXATION_REPRODUCED",
-    "MODEL_CONTINGENT_RANK_BRIDGE_RELAXATION_REPRODUCED",
-    "MODEL_CONTINGENT_RANK_TRANSPORT_BUDGET_REPRODUCED",
-    "MODEL_CONTINGENT_RANK_EPSILON_SURFACE_REPRODUCED",
-    "MODEL_CONTINGENT_RANK_ONE_SIDED_BRIDGE_REPRODUCED",
-}
 for cid, claim in claims.items():
     ev_statuses = {r["evidence_status"] for r in by_claim.get(cid, [])}
-    if claim["status"] in active_required:
-        if not ev_statuses & {
-            "ACTIVE_OFFICIAL",
-            "ACTIVE_REPRODUCED",
-            "ACTIVE_REPRODUCED_SENSITIVITY",
-            "ACTIVE_REPRODUCED_EXTERNAL_DIAGNOSTIC",
-            "ACTIVE_REPRODUCED_POINT_CHECK",
-            "ACTIVE_REPRODUCED_MODEL_CONTINGENT",
-            "ACTIVE_REPRODUCED_MODEL_CONTINGENT_RANK_BRIDGE",
-            "ACTIVE_REPRODUCED_MODEL_CONTINGENT_RANK_TRANSPORT",
-            "ACTIVE_REPRODUCED_MODEL_CONTINGENT_RANK_EPSILON_SURFACE",
-            "ACTIVE_REPRODUCED_MODEL_CONTINGENT_RANK_ONE_SIDED",
-            "ACTIVE_STATE",
-        }:
+    if claim["active"].strip().lower() == "true":
+        if not any(status.startswith("ACTIVE_") for status in ev_statuses):
             errors.append(f"{cid}: active claim lacks active evidence")
-        if ev_statuses <= {"RECOVERY_ONLY", "RECOVERY_GAP"}:
+        if ev_statuses and ev_statuses <= {"RECOVERY_ONLY", "RECOVERY_GAP"}:
             errors.append(f"{cid}: active claim relies only on recovery evidence")
-    if claim["status"] in {
-        "DOCUMENTED_PRIOR_RUN_NOT_REPRODUCED",
-        "SENSITIVITY_ONLY_RECOVERABLE",
-    }:
+    if claim["identification_status"] == "RECOVERY_ONLY":
         if not ev_statuses & {"RECOVERY_ONLY", "RECOVERY_GAP"}:
             errors.append(f"{cid}: recovery claim lacks recovery evidence")
 

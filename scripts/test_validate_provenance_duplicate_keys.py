@@ -53,7 +53,7 @@ cases = [
     ("data/recovery/v6_recovered_values.csv", "duplicate recovery value_id:"),
     ("research/stage1_filing_bound/inputs.csv", "duplicate stage1 input:"),
     ("data/input_provenance.csv", "duplicate provenance value_id:"),
-    ("paper1/data/claim_registry.csv", "duplicate claim_id:"),
+    ("data/claim_graph.csv", "duplicate claim_id:"),
 ]
 for rel, expected in cases:
     verify_duplicate(rel, expected)
