@@ -16,6 +16,7 @@ SCENARIOS = HERE / "scenarios.csv"
 SENS = ROOT / "data/derived/vat_compliance_productivity_sensitivity.csv"
 IDENT = ROOT / "data/derived/vat_compliance_identification_status.csv"
 FISCAL = ROOT / "data/derived/vat_policy_fiscal_replacement_reference.csv"
+JGB_GDP = ROOT / "data/derived/vat_jgb_debt_gdp_reference.csv"
 OUT = ROOT / "data/derived/vat_policy_scenario_matrix.csv"
 SUMMARY = ROOT / "data/derived/vat_policy_scenario_summary.csv"
 
@@ -50,7 +51,9 @@ def build():
     assert len(scenarios) == 8
     assert {r["scenario_id"] for r in scenarios} == EXPECTED_SCENARIOS
     fiscal = {r["scenario_id"]: r for r in read(FISCAL)}
+    jgb_gdp = {r["scenario_id"]: r for r in read(JGB_GDP)}
     assert set(fiscal) == EXPECTED_SCENARIOS
+    assert set(jgb_gdp) == EXPECTED_SCENARIOS
 
     sens = read(SENS)
     assert len(sens) == 1200
@@ -73,6 +76,7 @@ def build():
     rows = []
     for scenario in scenarios:
         fiscal_ref = fiscal[scenario["scenario_id"]]
+        jgb_ref = jgb_gdp[scenario["scenario_id"]]
         for idx, source in enumerate(by_regime[scenario["vat_regime_id"]], 1):
             institutional = float(source["total_institutional_level_effect"])
             transition = float(source["annualized_transition_growth_contribution"])
@@ -106,6 +110,10 @@ def build():
                 "full_jgb_financing_reference_yen": fiscal_ref["full_jgb_financing_reference_yen"],
                 "replacement_tax_target_reference_yen": fiscal_ref["replacement_tax_target_reference_yen"],
                 "fiscal_reference_status": fiscal_ref["fiscal_reference_status"],
+                "fy2024_nominal_gdp_reference_yen": jgb_ref["fy2024_nominal_gdp_yen"],
+                "static_incremental_jgb_financing_share_of_fy2024_nominal_gdp": jgb_ref["static_incremental_jgb_financing_share_of_fy2024_nominal_gdp"],
+                "static_incremental_jgb_financing_pct_of_fy2024_nominal_gdp": jgb_ref["static_incremental_jgb_financing_pct_of_fy2024_nominal_gdp"],
+                "debt_gdp_reference_status": jgb_ref["debt_gdp_reference_status"],
                 "vat_admin_resource_share_of_baseline_output": source["vat_admin_resource_share_of_baseline_output"],
                 "productive_redeployment_fraction": source["productive_redeployment_fraction"],
                 "allocative_efficiency_dividend_share": source["allocative_efficiency_dividend_share"],
@@ -192,6 +200,10 @@ def build():
             "full_jgb_financing_reference_yen": first["full_jgb_financing_reference_yen"],
             "replacement_tax_target_reference_yen": first["replacement_tax_target_reference_yen"],
             "fiscal_reference_status": first["fiscal_reference_status"],
+            "fy2024_nominal_gdp_reference_yen": first["fy2024_nominal_gdp_reference_yen"],
+            "static_incremental_jgb_financing_share_of_fy2024_nominal_gdp": first["static_incremental_jgb_financing_share_of_fy2024_nominal_gdp"],
+            "static_incremental_jgb_financing_pct_of_fy2024_nominal_gdp": first["static_incremental_jgb_financing_pct_of_fy2024_nominal_gdp"],
+            "debt_gdp_reference_status": first["debt_gdp_reference_status"],
             "overall_real_gdp_status": first["overall_real_gdp_level_effect_status"],
             "annual_real_growth_status": first["annual_real_growth_rate_effect_status"],
             "growth_decline_penalty_status": first["growth_decline_penalty_effect_status"],

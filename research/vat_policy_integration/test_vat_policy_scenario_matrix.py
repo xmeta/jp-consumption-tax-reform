@@ -56,6 +56,19 @@ blank_numeric = [
 for col in blank_numeric:
     assert all(r[col] == "" for r in rows), col
 assert all(r["fy2024_consumption_tax_receipts_reference_yen"] == "25021206715000" for r in rows)
+assert all(r["fy2024_nominal_gdp_reference_yen"] == "642414700000000" for r in rows)
+assert all(
+    r["static_incremental_jgb_financing_share_of_fy2024_nominal_gdp"] == "0.038948683327"
+    for r in rows if r["scenario_id"] == "full_abolition_jgb"
+)
+assert all(
+    r["static_incremental_jgb_financing_pct_of_fy2024_nominal_gdp"] == "3.894868333"
+    for r in rows if r["scenario_id"] == "full_abolition_jgb"
+)
+assert all(
+    r["static_incremental_jgb_financing_share_of_fy2024_nominal_gdp"] == ""
+    for r in rows if r["scenario_id"] != "full_abolition_jgb"
+)
 assert all(r["static_consumption_tax_receipt_effect_yen"] == "" for r in rows if r["scenario_id"] == "reduced_5")
 assert all(r["static_consumption_tax_receipt_effect_yen"] == "0" for r in rows if r["scenario_id"] == "current_8_10")
 assert all(
@@ -91,6 +104,10 @@ for sid in (
     assert summary[sid]["gross_replacement_requirement_reference_yen"] == "25021206715000"
     assert summary[sid]["fiscal_balance_status"] == "STATIC_CENTRAL_REVENUE_REFERENCE_AVAILABLE_FULL_FISCAL_BALANCE_NOT_MODELED"
 assert summary["full_abolition_jgb"]["full_jgb_financing_reference_yen"] == "25021206715000"
+assert summary["full_abolition_jgb"]["fy2024_nominal_gdp_reference_yen"] == "642414700000000"
+assert summary["full_abolition_jgb"]["static_incremental_jgb_financing_share_of_fy2024_nominal_gdp"] == "0.038948683327"
+assert summary["full_abolition_jgb"]["static_incremental_jgb_financing_pct_of_fy2024_nominal_gdp"] == "3.894868333"
+assert summary["full_abolition_jgb"]["debt_gdp_reference_status"] == "STATIC_INCREMENTAL_JGB_FINANCING_SHARE_OF_FY2024_NOMINAL_GDP"
 assert summary["full_abolition_jgb"]["debt_gdp_status"] == "STATIC_JGB_AMOUNT_REFERENCE_AVAILABLE_DEBT_GDP_AND_DYNAMIC_PATH_NOT_MODELED"
 for sid in ("full_abolition_income_tax", "full_abolition_asset_tax", "full_abolition_mixed"):
     assert summary[sid]["replacement_tax_target_reference_yen"] == "25021206715000"

@@ -49,6 +49,14 @@ government consolidation.  The 5% VAT scenario is deliberately left unquantified
 because the 10%/8% rate mix and taxable bases cannot be recovered by simple
 linear scaling of aggregate receipts.
 
+For the full-JGB financing scenario, the fiscal reference is also divided by
+the official ESRI FY2024 nominal GDP of 642.4147 trillion yen.  The resulting
+25.021206715 / 642.4147 = 0.038948683327 ratio, or 3.894868333% of FY2024 nominal
+GDP, is reported as a *static incremental JGB-financing share*.  It is not the
+change in observed debt/GDP: baseline debt stock, redemptions, other borrowing,
+financial assets, nominal-GDP feedback, interest costs and time dynamics are not
+modeled.
+
 The matrix also contains explicit fields for overall real GDP, annual real
 growth, growth-decline penalty, income Gini, wealth Gini, intergenerational gap,
 FGT2, real disposable income by decile, inflation, fiscal balance, debt/GDP and
@@ -66,6 +74,8 @@ statement.
   tax-receipt metrics.
 * +data/derived/vat_policy_fiscal_replacement_reference.csv+: static eight-
   scenario receipt-removal/financing references.
+* +data/derived/vat_jgb_debt_gdp_reference.csv+: FY2024 nominal-GDP denominator
+  and full-JGB static financing-share reference.
 * +data/derived/vat_policy_scenario_matrix.csv+: 8 scenarios x 300
   institutional stress points = 2,400 rows.
 * +data/derived/vat_policy_scenario_summary.csv+: one row per policy scenario
@@ -78,6 +88,8 @@ statement.
 python research/vat_compliance_productivity/run_vat_compliance_productivity.py
 python research/vat_policy_integration/build_vat_fiscal_replacement_reference.py
 python research/vat_policy_integration/test_vat_fiscal_replacement_reference.py
+python research/vat_policy_integration/build_jgb_debt_gdp_reference.py
+python research/vat_policy_integration/test_jgb_debt_gdp_reference.py
 python research/vat_policy_integration/run_vat_policy_scenario_matrix.py
 python research/vat_policy_integration/test_vat_policy_scenario_matrix.py
 ----
