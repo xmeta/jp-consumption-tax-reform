@@ -17,10 +17,34 @@
 直前パッケージでは44本の研究スクリプトとvalidatorが存在したが、新Gitリポジトリへの完全移植は未完了である。
 復元できていない成果物を存在するものとして扱わない。現在の科学的状態は link:STATUS.adoc[STATUS.adoc] を正本とする。
 
+== 再現
+
+研究者がローカルで使う再現経路とCIは `scripts/reproduce.py` に統一している。
+
+[source,shell]
+----
+python -m pip install -r requirements-research-lp.txt
+python -m pip install -r requirements-data-extraction.txt
+python scripts/reproduce.py --list
+python scripts/reproduce.py paper1
+python scripts/reproduce.py vat
+python scripts/reproduce.py all
+----
+
+release前のclean-room再現では、追跡済み生成物を一時worktree内で削除して再生成し、manifest・provenance・生成差分・clean treeまで検証する。
+
+[source,shell]
+----
+python scripts/reproduce.py clean-room
+----
+
+Ruby/Asciidoctorを含む前提環境、各target、CI契約の詳細は link:docs/reproducibility.adoc[再現性・完全性契約] を参照する。
+
 == 構成
 
 * `docs/objective_function.adoc` — 目的関数と政策手段の分離
 * `docs/identification.adoc` — 識別境界と許可される主張
 * `docs/reproducibility.adoc` — 再現性・完全性契約
+* `scripts/reproduce.py` — ローカル/CI共通のmaster reproduction entrypoint
 * `scripts/validate_repo.py` — 状態矛盾の検査
 * `research/vat_compliance_productivity/` — VAT税率0%と制度完全廃止を分離したコンプライアンス生産性感度分析

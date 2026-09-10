@@ -1,22 +1,82 @@
 = 再現性・完全性契約
-:revdate: 2026-09-08
+:revdate: 2026-09-10
 
-== 移行規則
-
-旧パッケージに存在したという記録だけでは、Git上の成果物の存在を保証しない。
-完全移植までは `repository_migration=PARTIAL` とする。
-
-== 完全移植の受入条件
-
-. 44本の研究スクリプトとvalidatorの実体をGitへ収容する。
-. 全入力データに出典・取得日・変換履歴を持たせる。
-. fresh cloneからheartbeat/full-runを実行する。
-. validatorが成功する。
-. file manifestを生成し、SHA-256を再計算する。
-. 再計算後にworking treeがcleanである。
-. 上記をCIでも検証する。
-
-== 科学的完全性
+== 原則
 
 出力ファイルだけが存在しても、その生成スクリプト・入力・バージョンが欠ける場合は再現済みと判定しない。
 外部検証のpoint agreementと統計的coverageを区別する。
+ローカル実行とCIは同じmaster reproduction entrypointを使用し、個別のワークフローへ研究コマンド列を複製しない。
+
+== 前提環境
+
+* Python 3.12
+* `requirements-research-lp.txt`
+* `requirements-data-extraction.txt`
+* Paper 1文書をビルドする場合はRuby 3.3とAsciidoctor
+
+依存関係は次のように導入する。
+
+[source,shell]
+----
+python -m pip install -r requirements-research-lp.txt
+python -m pip install -r requirements-data-extraction.txt
+gem install asciidoctor --no-document
+----
+
+== Master reproduction entrypoint
+
+fresh cloneのrepository rootから、すべての再現操作を `scripts/reproduce.py` 経由で行う。
+
+[source,shell]
+----
+python scripts/reproduce.py --list
+python scripts/reproduce.py source-integrity
+python scripts/reproduce.py vat
+python scripts/reproduce.py income-tax
+python scripts/reproduce.py provenance
+python scripts/reproduce.py paper1
+python scripts/reproduce.py docs
+python scripts/reproduce.py all
+----
+
+各targetは順序固定・fail-fastである。
+個別targetは生成・検証後にworking treeがcleanであることまで確認する。
+`all` は source integrity → income tax → VAT → provenance → Paper 1 → docs → repository integrity の順に実行し、最後にprovenance、manifest、生成物、working treeの整合性を検証する。
+この順序は依存関係を反映している。VAT household-margin audit が使用する objective-rank income table は income-tax extraction が再生成するため、clean-roomでは income tax を VAT より先に実行する。
+
+実行せずに順序だけ確認する場合は `--dry-run` を使う。
+
+[source,shell]
+----
+python scripts/reproduce.py all --dry-run
+----
+
+== Clean-room release gate
+
+release前の強い再現性検証には次を使う。
+
+[source,shell]
+----
+python scripts/reproduce.py clean-room
+----
+
+このgateは現在のcleanなHEADから一時Git worktreeを作成し、追跡済みのderived outputsを削除してから `all` を再実行する。
+raw/recovery/config/spec入力は削除しない。
+再生成後に `git diff --exit-code`、manifest、provenance、repository validator、clean-tree gateがすべて成功しなければ失敗する。
+元のworking treeは変更しない。
+
+== CI契約
+
+`.github/workflows/validate.yml` は研究コマンドを直接列挙せず、上記entrypointへ委譲する。
+CIは source integrity、VAT、income tax、provenance、Paper 1、repository integrity、docs を独立jobとして実行し、最後にclean-room full reproductionを実行する。
+これにより失敗箇所をproduct単位で局所化しつつ、local/CIの再現経路を同一に保つ。
+
+== 完全性の受入条件
+
+. 全入力データに出典・取得日・変換履歴を持たせる。
+. fresh cloneから各productを単一のdocumented commandで再現できる。
+. validatorとproduct testが成功する。
+. file manifestのSHA-256が一致する。
+. full reproduction後にworking treeがcleanである。
+. clean-room gateで追跡済みderived outputsを削除・再生成しても差分が生じない。
+. 上記をCIでも検証する。
