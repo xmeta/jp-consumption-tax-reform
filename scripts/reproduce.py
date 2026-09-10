@@ -50,6 +50,8 @@ VAT = (
     ("research/vat_policy_integration/test_jgb_debt_gdp_reference.py",),
     ("scripts/build_estat_2024_annual_income_decile_expenditure_diagnostic.py",),
     ("scripts/test_estat_2024_annual_income_decile_expenditure_diagnostic.py",),
+    ("scripts/build_estat_2024_annual_income_decile_vat_rate_scope_diagnostic.py",),
+    ("scripts/test_estat_2024_annual_income_decile_vat_rate_scope_diagnostic.py",),
     ("scripts/build_estat_objective_rank_household_margin_audit.py",),
     ("scripts/test_estat_objective_rank_household_margin_audit.py",),
     ("scripts/build_vat_pass_through_evidence.py",),
