@@ -1,0 +1,109 @@
+= Machine-readable Scientific State
+:revdate: 2026-09-11
+
+== Authority
+
+`data/scientific_state.csv` is the repository authority for the current
+scientific state of active research modules.
+
+`STATUS.adoc`, module README files, Issues, Pull Requests, and comments are
+human-facing mirrors or work records. They do not override the CSV authority.
+
+The integrity gate mechanically checks that every active module declared in the
+authority has its current detailed status token represented in `STATUS.adoc`.
+
+== Active-module rule
+
+An active research module is currently defined as a direct child directory of
+`research/` that contains both:
+
+* `README.adoc`; and
+* at least one Python file.
+
+Every discovered active module must have exactly one active row in
+`data/scientific_state.csv`. A missing row, duplicate active `module_path`, or
+duplicate `component_id` fails CI.
+
+== Schema
+
+[cols="1,3"]
+|===
+|Field |Meaning
+
+|`component_id`
+|Stable repository identifier for the scientific component/module.
+
+|`module_path`
+|Repository-relative active module directory.
+
+|`display_name`
+|Human-readable component name.
+
+|`status`
+|Detailed scientific-status token already used by repository status documents.
+
+|`phase`
+|Execution phase, separated from scientific identification status.
+
+|`maturity`
+|Coarse identification maturity: `NOT_IDENTIFIED`, `SENSITIVITY_ONLY`,
+`PARTIALLY_IDENTIFIED`, or `READY`.
+
+|`causal_status`
+|`NOT_CAUSAL`, `DESCRIPTIVE_ONLY`, or `CAUSAL_IDENTIFIED`.
+
+|`policy_usable`
+|Whether the component is currently admissible as a direct policy-optimization
+input.
+
+|`evidence_paths`
+|Semicolon-separated repository evidence paths that must exist.
+
+|`output_paths`
+|Semicolon-separated repository output paths that must exist.
+
+|`blockers`
+|Semicolon-separated unresolved conditions. Active modules must list at least
+one blocker until they are genuinely ready.
+
+|`supersedes` / `superseded_by`
+|Semicolon-separated component IDs for explicit scientific-state supersession.
+Links must be reciprocal.
+
+|`active`
+|Whether this row participates in active-module coverage.
+|===
+
+== State transitions
+
+The coarse maturity ladder is:
+
+----
+NOT_IDENTIFIED -> SENSITIVITY_ONLY -> PARTIALLY_IDENTIFIED -> READY
+----
+
+Promotion requires new evidence or a validated model change; it must not be
+inferred from Issue/PR prose. Regression to a weaker state is allowed whenever
+new evidence invalidates a stronger interpretation.
+
+`phase` is orthogonal to this ladder. For example, a Phase-1 implementation can
+be complete while its scientific maturity remains `SENSITIVITY_ONLY`.
+
+Detailed `status` tokens remain domain-specific and may be more precise than
+the coarse maturity class. A later semantic validator can impose stronger
+cross-field restrictions without changing this authority format.
+
+== Validation
+
+Run:
+
+----
+python scripts/test_scientific_state.py
+python scripts/validate_scientific_state.py
+python scripts/reproduce.py integrity
+----
+
+The checks cover schema shape, enum values, unique primary identifiers,
+conflicting active module declarations, active-module coverage, blocker
+presence, evidence/output path existence, supersession reciprocity, and
+`STATUS.adoc` status-token synchronization.
