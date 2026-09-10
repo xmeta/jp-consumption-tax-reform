@@ -142,7 +142,10 @@ with tempfile.TemporaryDirectory() as tmp:
     mutate_csv(fixture, lambda rows: rows[0].__setitem__("blockers", ""))
     blocker = run_validator(fixture)
     check(blocker.returncode != 0, "empty blocker list unexpectedly passed")
-    check("active module must list blockers" in blocker.stdout, "blocker diagnostic missing")
+    check(
+        "non-READY active component must list blockers" in blocker.stdout,
+        "blocker diagnostic missing",
+    )
 
     write_fixture(fixture := Path(tmp) / "sync")
     (fixture / "STATUS.adoc").write_text("STATUS_B\n", encoding="utf-8")
