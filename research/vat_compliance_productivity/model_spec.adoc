@@ -364,6 +364,81 @@ repository therefore records the pre-invoice 10-million-yen behavioral scale
 but keeps the current invoice-era aggregate allocation effect and macro
 stem:[a_{alloc}] +NOT_IDENTIFIED+.
 
+=== Post-2023 invoice-era supplier-network adjustment
+
+JCCI 2024 and 2025 provide direct post-introduction survey evidence on the
+interaction between general-taxation businesses and exempt suppliers.  This is
+the closest currently registered evidence to the invoice-network component of
+stem:[a_{alloc}], but it identifies *incidence*, not a macro output effect.
+
+For 2024, among n=782 respondents that had purchases from exempt businesses
+before invoice introduction, reported post-introduction supplier status was:
+
+[cols="2,1",options="header"]
+|===
+|Status |Share
+|Nearly all transactions continued |74.0%
+|Only some continued |7.9%
+|Only very few continued |12.8%
+|All transactions ended |5.2%
+|===
+
+The three explicit contraction categories sum to 25.9%.  This is a rounded
+category sum, not a causal effect or a lower bound on lost transaction value.
+Even the ``nearly all'' category may contain some reduction, while the survey
+does not measure the value, productivity, or aggregate output consequence of
+the relationships that changed.
+
+The 2024 survey also asks n=732 respondents that still purchase from exempt
+businesses about future policy.  47.1% plan to continue, while 3.8% plan to stop
+all purchases, 10.7% plan to conduct purchases only in limited cases, 12.7% plan
+to review when the transitional input-credit rate falls, and 2.2% plan to review
+when the transition ends.  The stop-or-review categories sum to 29.4%, but remain
+stated intentions rather than realized reallocation.
+
+The 2025 survey provides a more detailed contemporaneous picture.  Among
+n=1,151 registered general-taxation respondents, 43.7% currently purchase from
+exempt businesses.  Among n=503 exposed respondents, 57.6% report annual exempt-
+supplier purchases of at least 1 million yen.  Current responses are multiple
+choice: 87.5% report maintaining prices and absorbing the burden themselves,
+9.3% pass it to downstream sales prices, 5.4% lower purchase prices by all or
+part of the denied credit, and 2.2% lower prices by the full consumption-tax
+equivalent.  These shares must not be summed as unique-firm fractions.
+
+For future policy, among n=502 exposed respondents, JCCI reports 42.3% planning
+to review transaction prices or suppliers: 30.5% plan price review, 9.8% plan to
+avoid most exempt-supplier purchases, and 2.0% plan to stop them entirely.  The
+last two categories imply an 11.8% stated supplier-reduction/exit intention.
+Again, this is not realized exit.
+
+Substitution is not frictionless.  Among n=92 respondents planning to continue
+with unchanged prices, multiple-response reasons include no alternative supplier
+(44.6%), search effort not worth the cost (39.1%), and labor-shortage/capacity
+needs requiring continued exempt-supplier transactions (38.0%).  These responses
+support an economically meaningful network-friction channel, but do not measure
+its welfare or productivity cost.
+
+The surveys also show substantial registration pressure among formerly exempt
+BtoB businesses.  Registration shares are 73.3% in the 2024 sample and 78.6% in
+the 2025 sample; among remaining nonregistrants, 47.7% and 45.9%, respectively,
+say they would consider registration if a customer requests it.  JCCI explicitly
+notes that the 2024 and 2025 respondents are not the same businesses.  Therefore
+the 5.3-percentage-point cross-year difference is *not* interpreted as a panel
+registration transition.
+
+The identification status is therefore upgraded from absence of current evidence
+to:
+
+----
+POST_2023_NETWORK_ADJUSTMENT_INCIDENCE_OBSERVED_MACRO_EFFECT_NOT_IDENTIFIED
+----
+
+To map this evidence into stem:[a_{alloc}], the repository still needs at least
+one of: transaction-value changes for adjusted relationships with a credible
+counterfactual; firm-level output/productivity responses tied to supplier
+registration status; population weights for the exposed network; or an explicit
+structural network model identified by current data.
+
 === BSWS wage-conversion bridge
 
 RIETI 21-P-018 states that tax-procedure labor time was valued using
@@ -575,7 +650,7 @@ Before policy optimization, additional work is required to identify or bound:
 * the fraction of saved owner/worker time that becomes productive activity;
 * recurring VAT-specific software/adviser costs and their duration; transition implementation cost is now partially bounded only for selected subsidy grant records;
 * identification of the real-adjustment versus tax-avoidance mixture needed to translate 10-million-yen bunching into real resource/output effects;
-* current invoice-era mapping of the pre-2023 10-million-yen evidence and invoice-network distortions to any macro +a_alloc+ bound;
+* causal transaction-value/output mapping for the now-observed post-2023 invoice-network adjustment incidence, with population weights or an identified structural network model, before any macro +a_alloc+ bound;
 * household incidence by income/wealth/age group;
 * demand and pass-through effects;
 * revenue and financing effects under JGB, income-tax, asset-tax and mixed
@@ -600,6 +675,8 @@ python scripts/build_rieti_vat_threshold_structural_bridge.py
 python scripts/test_rieti_vat_threshold_structural_bridge.py
 python scripts/build_ichikawa_2019_vat_10m_threshold_bridge.py
 python scripts/test_ichikawa_2019_vat_10m_threshold_bridge.py
+python scripts/build_jcci_invoice_network_distortion_bridge.py
+python scripts/test_jcci_invoice_network_distortion_bridge.py
 python scripts/build_bsws_2019_industry_hourly_wage_bridge.py
 python scripts/build_meti_vat_internal_labor_cost_bridge.py
 python scripts/test_bsws_vat_wage_bridge.py
@@ -619,6 +696,7 @@ Generated artifacts:
 * +data/derived/rieti_vat_threshold_structural_estimates.csv+
 * +data/derived/ichikawa_2019_vat_10m_threshold_nationalized_estimates.csv+
 * +data/derived/ichikawa_2019_vat_10m_threshold_prepost_bunching.csv+
+* +data/derived/jcci_invoice_network_distortion_bridge.csv+
 * +data/derived/bsws_2019_industry_hourly_wage_bridge.csv+
 * +data/derived/meti_vat_internal_labor_cost_wage_sensitivity.csv+
 * +data/derived/vat_compliance_observed_evidence.csv+
