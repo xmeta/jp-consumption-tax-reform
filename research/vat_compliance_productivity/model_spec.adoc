@@ -439,6 +439,73 @@ counterfactual; firm-level output/productivity responses tied to supplier
 registration status; population weights for the exposed network; or an explicit
 structural network model identified by current data.
 
+=== SME Agency FY2025: realized largest-customer transaction outcomes
+
+The SME Agency FY2025 ``Invoice-System Transaction Survey'' provides a larger
+official post-introduction sample and asks respondents to characterize their
+*largest customer relationship*.  The survey used a Tokyo Shoko Research frame
+of 50,000 businesses meeting small-business/startup criteria and obtained
+15,425 responses (30.9%).  Nonresponses are excluded question by question, so
+valid denominators differ.  The sample is targeted and subject to nonresponse;
+its response shares are therefore not automatically population shares.
+
+Three overall quantities materially sharpen the current invoice-era evidence:
+
+[cols="2,1,1,2",options="header"]
+|===
+|Question |Published share |Rounded-count-compatible responses |Interpretation
+
+|Customer required invoice registration as a condition for continued transactions (n=15,321)
+|14.3%
+|2,184--2,198
+|Observed registration-pressure incidence
+
+|Largest-customer transaction price reduced *or transaction stopped* after invoice introduction (n=14,732)
+|3.8%
+|553--567
+|Realized adverse transaction-outcome incidence
+
+|No invoice-related price-negotiation opportunity was provided (n=14,690)
+|12.8%
+|1,873--1,887
+|Observed negotiation-access friction
+|===
+
+The integer ranges invert the report's one-decimal published percentages under
+the recorded denominators.  They are not confidence intervals; they only show
+which integer response counts are compatible with the rounded shares.
+
+The 3.8% outcome is stronger evidence than a stated future intention, but it is
+not yet a macro allocation-loss estimate.  The questionnaire combines price
+reduction and full transaction stop in one category, does not report the yen
+value of the affected relationship, and does not identify what would have
+happened absent the invoice system.  Even a stopped relationship need not imply
+one-for-one aggregate output loss if customers substitute toward another
+supplier.
+
+Industry heterogeneity is substantial within the survey.  The largest-customer
+price-reduction/stop shares are 4.6% in manufacturing, 5.9% in construction,
+7.9% in transport/postal, 6.4% in wholesale, 3.4% in retail, 3.3% in services,
+and 3.2% in the residual group.  Customer registration requirements also range
+widely, from 8.8% in the residual group to 32.7% in construction.  These values
+identify heterogeneity inside the targeted respondent sample, not population-
+weighted causal effects.
+
+The final report reproduces a 3.6% price-reduction/transaction-stop share for
+the December 2023 survey (n=3,674) and 3.8% for July 2025 (n=14,732).  The
+survey frame expanded and the waves are not a panel; therefore the 0.2-point
+difference is explicitly *not* interpreted as a causal change over time.
+
+Together with the JCCI evidence, the current identification status becomes:
+
+----
+POST_2023_REALIZED_ADVERSE_TRANSACTION_INCIDENCE_OBSERVED_MACRO_EFFECT_NOT_IDENTIFIED
+----
+
+A defensible mapping into stem:[a_{alloc}] still requires transaction-value
+magnitudes and either a credible counterfactual or an identified structural
+model, plus population weights and treatment of substitution/reallocation.
+
 === BSWS wage-conversion bridge
 
 RIETI 21-P-018 states that tax-procedure labor time was valued using
@@ -650,7 +717,7 @@ Before policy optimization, additional work is required to identify or bound:
 * the fraction of saved owner/worker time that becomes productive activity;
 * recurring VAT-specific software/adviser costs and their duration; transition implementation cost is now partially bounded only for selected subsidy grant records;
 * identification of the real-adjustment versus tax-avoidance mixture needed to translate 10-million-yen bunching into real resource/output effects;
-* causal transaction-value/output mapping for the now-observed post-2023 invoice-network adjustment incidence, with population weights or an identified structural network model, before any macro +a_alloc+ bound;
+* transaction-value magnitudes and a credible counterfactual/structural mapping for the now-observed post-2023 realized adverse transaction and network-adjustment incidence, with population weights and substitution treatment, before any macro +a_alloc+ bound;
 * household incidence by income/wealth/age group;
 * demand and pass-through effects;
 * revenue and financing effects under JGB, income-tax, asset-tax and mixed
@@ -677,6 +744,8 @@ python scripts/build_ichikawa_2019_vat_10m_threshold_bridge.py
 python scripts/test_ichikawa_2019_vat_10m_threshold_bridge.py
 python scripts/build_jcci_invoice_network_distortion_bridge.py
 python scripts/test_jcci_invoice_network_distortion_bridge.py
+python scripts/build_smea_fy2025_invoice_transaction_bridge.py
+python scripts/test_smea_fy2025_invoice_transaction_bridge.py
 python scripts/build_bsws_2019_industry_hourly_wage_bridge.py
 python scripts/build_meti_vat_internal_labor_cost_bridge.py
 python scripts/test_bsws_vat_wage_bridge.py
@@ -697,6 +766,8 @@ Generated artifacts:
 * +data/derived/ichikawa_2019_vat_10m_threshold_nationalized_estimates.csv+
 * +data/derived/ichikawa_2019_vat_10m_threshold_prepost_bunching.csv+
 * +data/derived/jcci_invoice_network_distortion_bridge.csv+
+* +data/derived/smea_fy2025_invoice_transaction_overall.csv+
+* +data/derived/smea_fy2025_invoice_transaction_industry.csv+
 * +data/derived/bsws_2019_industry_hourly_wage_bridge.csv+
 * +data/derived/meti_vat_internal_labor_cost_wage_sensitivity.csv+
 * +data/derived/vat_compliance_observed_evidence.csv+
