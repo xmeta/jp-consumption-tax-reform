@@ -331,6 +331,22 @@ SPECS = [
         "FY2019 and cumulative reduced-rate transition support: observed subsidy flows imply selected grant-record eligible expenditure of at least the subsidy amount; explicitly transition-only, nonrepresentative, and not persistent c_VAT",
     ),
     (
+        "RIETI-VAT-THRESHOLD-BUNCHING-RESPONSE",
+        "rieti_vat_threshold_bunching_response.csv",
+        "scripts/build_rieti_vat_threshold_structural_bridge.py",
+        "RIETI-2021-SME-VAT-COMPLIANCE",
+        "DERIVED_LOCAL_HISTORICAL_MARGINAL_BUNCHER_RESPONSE",
+        "Three historical 30m-JPY threshold-period rows used by RIETI structural estimation; preserves excess-bunching estimates and convergence-method marginal-buncher sales-response upper bounds without treating them as aggregate output loss",
+    ),
+    (
+        "RIETI-VAT-THRESHOLD-STRUCTURAL-ESTIMATES",
+        "rieti_vat_threshold_structural_estimates.csv",
+        "scripts/build_rieti_vat_threshold_structural_bridge.py",
+        "RIETI-2021-SME-VAT-COMPLIANCE",
+        "DERIVED_MODEL_CONTINGENT_LOCAL_STRUCTURAL_PARAMETERS",
+        "Six Table-5 structural estimate rows for 1992/1997 reforms and all/firms/sole-proprietor groups; theta remains a broad model compliance-cost share of value added, not national real-resource c_VAT or macro a_alloc",
+    ),
+    (
         "BSWS-2019-INDUSTRY-HOURLY-WAGE-BRIDGE",
         "bsws_2019_industry_hourly_wage_bridge.csv",
         "scripts/build_bsws_2019_industry_hourly_wage_bridge.py",

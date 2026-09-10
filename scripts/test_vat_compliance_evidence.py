@@ -23,6 +23,15 @@ anchors={
  "meti2020_vat_hours_public_numeric_result":"0",
  "meti2020_public_microdata_attachment_listed":"0",
  "rieti2021_sme_survey_answers_fy2019_scope":"1",
+ "rieti2021_threshold_bunching_1989_1991_delta_ratio":"0.550",
+ "rieti2021_threshold_bunching_1992_1994_delta_ratio":"0.543",
+ "rieti2021_threshold_bunching_1997_1999_delta_ratio":"0.542",
+ "rieti2021_threshold_theta_1992_all":"0.130",
+ "rieti2021_threshold_theta_1997_all":"0.140",
+ "rieti2021_threshold_theta_1992_firms":"0.091",
+ "rieti2021_threshold_theta_1997_firms":"0.111",
+ "rieti2021_threshold_theta_1992_sole_proprietors":"0.116",
+ "rieti2021_threshold_theta_1997_sole_proprietors":"0.130",
  "meti2021_public_microdata_attachment_listed":"0",
  "smrj_fy2019_light_rate_subsidy_grant_count":"94875",
  "smrj_fy2019_light_rate_subsidy_amount_yen":"22914612620",
@@ -79,7 +88,13 @@ assert ident["vat_specific_persistent_external_software_adviser_cost"]["model_us
 assert ident["vat_specific_real_resource_cost_share_of_output"]["status"]=="NOT_IDENTIFIED"
 assert ident["vat_specific_real_resource_cost_share_of_output"]["model_use"]=="STRESS_TEST_PARAMETER_ONLY"
 assert ident["productive_redeployment_fraction_rho"]["status"]=="NOT_IDENTIFIED"
+assert ident["vat_threshold_local_marginal_buncher_sales_response"]["status"]=="STUDY_ESTIMATED_UPPER_BOUND_LOCAL_HISTORICAL"
+assert ident["vat_threshold_local_marginal_buncher_sales_response"]["model_use"]=="LOCAL_DISTORTION_EVIDENCE_NOT_MACRO_A_ALLOC"
+assert ident["vat_threshold_structural_compliance_cost_theta"]["status"]=="MODEL_CONTINGENT_LOCAL_PARAMETER_ESTIMATED"
+assert ident["vat_threshold_structural_compliance_cost_theta"]["model_use"]=="DO_NOT_EQUATE_WITH_REAL_RESOURCE_C_VAT_OR_MACRO_A_ALLOC"
+assert ident["current_invoice_era_threshold_allocation_effect"]["status"]=="NOT_IDENTIFIED_FROM_HISTORICAL_STRUCTURAL_ESTIMATES"
 assert ident["allocative_efficiency_dividend"]["status"]=="NOT_IDENTIFIED"
+assert ident["allocative_efficiency_dividend"]["point_identified"]=="NO_MACRO_OUTPUT_PERCENTAGE"
 assert ident["zero_rate_equals_full_abolition"]["status"]=="FALSE_BY_POLICY_DEFINITION"
 assert ident["compliance_savings_one_for_one_gdp"]["status"]=="PROHIBITED"
 assert ident["income_gini_and_FGT2_effect"]["status"]=="NOT_MODELED_PHASE1"
@@ -133,5 +148,10 @@ assert ev["rieti2021_sme_survey_answers_fy2019_scope"]["model_calibration_permis
 assert ev["meti2021_public_microdata_attachment_listed"]["model_calibration_permission"]=="NO_PUBLIC_MICRODATA_CALIBRATION"
 assert ev["smrj_fy2019_light_rate_subsidy_amount_yen"]["model_calibration_permission"]=="LOWER_BOUND_ON_SELECTED_TRANSITION_EXPENDITURE_ONLY"
 assert ev["smrj_cumulative_light_rate_subsidy_lower_bound_per_grant_record"]["model_calibration_permission"]=="DO_NOT_GENERALIZE_TO_FIRMS_OR_PERSISTENT_C_VAT"
-assert len(ev)==60 and len(ident)==16
-print("VAT compliance evidence tests: OK (60 evidence rows; transition implementation cost separated from persistent c_VAT; national VAT resource share remains NOT_IDENTIFIED)")
+for k in ("rieti2021_threshold_bunching_1989_1991_delta_ratio","rieti2021_threshold_bunching_1992_1994_delta_ratio","rieti2021_threshold_bunching_1997_1999_delta_ratio"):
+    assert ev[k]["model_calibration_permission"]=="THRESHOLD_DISTORTION_EVIDENCE_NOT_MACRO_A_ALLOC"
+for k in ("rieti2021_threshold_theta_1992_all","rieti2021_threshold_theta_1997_all","rieti2021_threshold_theta_1992_firms","rieti2021_threshold_theta_1997_firms","rieti2021_threshold_theta_1992_sole_proprietors","rieti2021_threshold_theta_1997_sole_proprietors"):
+    assert ev[k]["unit"]=="share_of_value_added_in_study_model"
+    assert ev[k]["model_calibration_permission"]=="LOCAL_THRESHOLD_STRUCTURAL_EVIDENCE_NOT_C_VAT_OR_MACRO_A_ALLOC"
+assert len(ev)==69 and len(ident)==19
+print("VAT compliance evidence tests: OK (69 evidence rows; RIETI local threshold distortion quantified; national c_VAT and macro a_alloc remain NOT_IDENTIFIED)")

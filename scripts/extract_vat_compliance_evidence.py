@@ -8,6 +8,7 @@ from extract_meti_vat_internal_hours import build as build_meti_hours
 from build_bsws_2019_industry_hourly_wage_bridge import build as build_bsws_wages
 from build_meti_vat_hours_source_lineage import build as build_meti_lineage
 from build_vat_transition_system_subsidy_bounds import build as build_transition_subsidy_bounds
+from build_rieti_vat_threshold_structural_bridge import build as build_rieti_threshold_structural
 
 ROOT = Path(__file__).resolve().parents[1]
 CATALOG = ROOT / "data/source_catalog.csv"
@@ -116,6 +117,9 @@ def build():
     w_eff=Decimal(wage_total["regular_cash_effective_hour_rate_yen"])
     lineage={r["survey_year"]:r for r in build_meti_lineage()}
     transition={r["scope_id"]:r for r in build_transition_subsidy_bounds()}
+    threshold_bunch_rows, threshold_struct_rows = build_rieti_threshold_structural()
+    threshold_bunch={r["sample_id"]:r for r in threshold_bunch_rows}
+    threshold_struct={(r["reform_id"],r["population_group"]):r for r in threshold_struct_rows}
 
     rows=[]
     rows += [
@@ -199,6 +203,29 @@ def build():
         "SELECTED_GRANT_RECORD_TRANSITION_EXPENDITURE_LOWER_BOUND","DO_NOT_GENERALIZE_TO_FIRMS_OR_PERSISTENT_C_VAT",
         "Cumulative average eligible transition expenditure per grant record is bounded below by cumulative average subsidy; this is not a population mean or recurring VAT cost."),
     ]
+    # RIETI 21-E-090 supplies local historical threshold-distortion estimates.
+    # Preserve them as local/model-contingent evidence; never promote to national c_VAT or macro a_alloc.
+    for sid in ["1989_1991","1992_1994","1997_1999"]:
+        rb=threshold_bunch[sid]
+        rows.append(evidence(
+          f"rieti2021_threshold_bunching_{sid}_delta_ratio", rb["published_delta_y_over_threshold"], "ratio",
+          "STUDY_LOCAL_STRUCTURAL_BUNCHING_INPUT",
+          "historical Japanese manufacturing establishments around the 30m-JPY VAT threshold", "",
+          "RIETI-2021-SME-VAT-COMPLIANCE", rb["source_locator"],
+          "LOCAL_HISTORICAL_MARGINAL_BUNCHER_RESPONSE_UPPER_BOUND",
+          "THRESHOLD_DISTORTION_EVIDENCE_NOT_MACRO_A_ALLOC",
+          "Published Delta-y/threshold input derived from convergence-method marginal-buncher sales-response upper bound; local historical manufacturing evidence, not aggregate output loss or a current invoice-era estimate."))
+    for reform,group in [("1992","all"),("1997","all"),("1992","firms"),("1997","firms"),("1992","sole_proprietors"),("1997","sole_proprietors")]:
+        rs=threshold_struct[(reform,group)]
+        rows.append(evidence(
+          f"rieti2021_threshold_theta_{reform}_{group}", rs["compliance_cost_theta"], "share_of_value_added_in_study_model",
+          "STUDY_MODEL_CONTINGENT_STRUCTURAL_PARAMETER",
+          f"historical Japanese manufacturing threshold sample: {group}", "",
+          "RIETI-2021-SME-VAT-COMPLIANCE", rs["source_locator"],
+          "MODEL_CONTINGENT_LOCAL_STRUCTURAL_COMPLIANCE_COST_PARAMETER",
+          "LOCAL_THRESHOLD_STRUCTURAL_EVIDENCE_NOT_C_VAT_OR_MACRO_A_ALLOC",
+          "Theta is defined by the paper as broad compliance cost divided by value added and includes monetary, time, operational and psychological burdens. It is not an observed real-resource expenditure share and must not be mapped directly to national c_VAT or macro a_alloc."))
+
     # METI directly measures VAT-specific internal tax-procedure hours for a
     # respondent subset.  It does not identify a national c_VAT.
     rows += [
@@ -391,7 +418,10 @@ def build():
       {"quantity":"vat_specific_persistent_external_software_adviser_cost","status":"NOT_IDENTIFIED","point_identified":"NO","model_use":"REQUIRES_RECURRING_VAT_SPECIFIC_MONETARY_EVIDENCE","note":"METI external outsourcing values are all-tax rather than VAT-specific. JCCI identifies invoice-related incidence of system modification, adviser-fee and staffing cost increases but does not publish monetary magnitudes. SMRJ subsidy evidence identifies transition implementation support, not persistent annual software/adviser cost."},
       {"quantity":"vat_specific_real_resource_cost_share_of_output","status":"NOT_IDENTIFIED","point_identified":"NO","model_use":"STRESS_TEST_PARAMETER_ONLY","note":"METI partially identifies 2021 VAT-specific internal hours and the repository supplies transparent wage-conversion candidates. Historical 2019/2020 questionnaires confirm that VAT hours were collected, but their public reports do not release the needed VAT-hour values/data attachments and cannot fill the 2021 period/selection gap; the 2021 official listing also has no data attachment. SMRJ subsidy flows establish nonzero selected transition implementation expenditure but not persistent annual VAT resource cost. National reweighting, respondent industry mix, temporal alignment, and VAT-specific recurring external expenditure remain unavailable. Therefore Japan-wide c_VAT is not identified."},
       {"quantity":"productive_redeployment_fraction_rho","status":"NOT_IDENTIFIED","point_identified":"NO","model_use":"STRESS_TEST_PARAMETER_ONLY","note":"Saved compliance resources need not convert one-for-one into measured output."},
-      {"quantity":"allocative_efficiency_dividend","status":"NOT_IDENTIFIED","point_identified":"NO","model_use":"STRESS_TEST_PARAMETER_ONLY","note":"Bunching evidence motivates a separate allocation channel but does not identify a macro output percentage."},
+      {"quantity":"vat_threshold_local_marginal_buncher_sales_response","status":"STUDY_ESTIMATED_UPPER_BOUND_LOCAL_HISTORICAL","point_identified":"THREE_HISTORICAL_30M_THRESHOLD_REGIME_INPUTS","model_use":"LOCAL_DISTORTION_EVIDENCE_NOT_MACRO_A_ALLOC","note":"RIETI 21-E-090 reports convergence-method marginal-buncher sales-response upper bounds corresponding to Delta-y/threshold 55.0%, 54.3%, and 54.2% for the 1989-1991, 1992-1994, and 1997-1999 structural-estimation periods. These are local historical manufacturing responses around the 30m-JPY threshold, not aggregate output losses."},
+      {"quantity":"vat_threshold_structural_compliance_cost_theta","status":"MODEL_CONTINGENT_LOCAL_PARAMETER_ESTIMATED","point_identified":"STUDY_TABLE5_LOCAL_ESTIMATES","model_use":"DO_NOT_EQUATE_WITH_REAL_RESOURCE_C_VAT_OR_MACRO_A_ALLOC","note":"RIETI 21-E-090 estimates theta, defined as broad compliance cost relative to value added, around 0.13-0.14 for the all-enterprise sample, 0.091-0.111 for firms, and 0.116-0.130 for sole proprietors in historical 1992/1997-reform comparisons. The concept includes monetary, time, operational and psychological burden and rests on model assumptions including no VAT pass-through and omission of the simplified tax system near the threshold."},
+      {"quantity":"current_invoice_era_threshold_allocation_effect","status":"NOT_IDENTIFIED_FROM_HISTORICAL_STRUCTURAL_ESTIMATES","point_identified":"NO","model_use":"REQUIRES_CURRENT_INSTITUTIONAL_MAPPING_OR_NEW_DATA","note":"The RIETI structural estimates use historical manufacturing data and 30m-JPY threshold regimes before the current 10m-JPY/invoice-system environment. They establish a strong local threshold response but do not identify the current invoice-era aggregate allocation effect."},
+      {"quantity":"allocative_efficiency_dividend","status":"NOT_IDENTIFIED","point_identified":"NO_MACRO_OUTPUT_PERCENTAGE","model_use":"STRESS_TEST_PARAMETER_ONLY","note":"Historical bunching evidence now quantitatively identifies strong local marginal-buncher responses and local structural compliance-cost parameters, but the public study does not provide an aggregate affected-firm mass/population reweighting/current-institution mapping sufficient to convert them into a national macro output percentage. a_alloc therefore remains a stress-test parameter."},
       {"quantity":"zero_rate_equals_full_abolition","status":"FALSE_BY_POLICY_DEFINITION","point_identified":"NOT_APPLICABLE","model_use":"PROHIBITED_EQUIVALENCE","note":"Policy state must separately encode VAT administrative/invoice obligations."},
       {"quantity":"compliance_savings_one_for_one_gdp","status":"PROHIBITED","point_identified":"NO","model_use":"DO_NOT_ASSUME","note":"Use explicit redeployment fraction and separate allocation term."},
       {"quantity":"income_gini_and_FGT2_effect","status":"NOT_MODELED_PHASE1","point_identified":"NO","model_use":"FUTURE_INCIDENCE_LINK_REQUIRED","note":"Firm-side resource release is not yet linked to households/deciles."},

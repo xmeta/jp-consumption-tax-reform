@@ -14,6 +14,7 @@ Observed Japan evidence is generated separately by
 +scripts/extract_meti_vat_internal_hours.py+,
 +scripts/build_meti_vat_hours_source_lineage.py+,
 +scripts/build_vat_transition_system_subsidy_bounds.py+,
++scripts/build_rieti_vat_threshold_structural_bridge.py+,
 +scripts/build_bsws_2019_industry_hourly_wage_bridge.py+,
 +scripts/build_meti_vat_internal_labor_cost_bridge.py+, and
 +scripts/extract_vat_compliance_evidence.py+.
@@ -52,6 +53,22 @@ imply selected grant-record transition-expenditure lower bounds of about
 241,524 yen/grant in FY2019 and 255,519 yen/grant cumulatively.  These are not
 unique-firm means, population estimates, recurring annual costs, or additions
 to +c_VAT+.
+
+Historical threshold-distortion evidence is now quantitative rather than purely
+qualitative.  RIETI 21-E-090 uses Japanese Census of Manufacture data and VAT
+reforms to estimate convergence-method marginal-buncher sales-response upper
+bounds.  For the three 30-million-yen threshold periods used in the structural
+estimation, the published +Delta y / y*+ inputs are 55.0%, 54.3%, and 54.2%.
+The same study estimates its broad compliance-cost parameter +theta+, defined
+as compliance cost relative to value added, at 0.130--0.140 for the all-enterprise
+sample, 0.091--0.111 for firms, and 0.116--0.130 for sole proprietors across the
+1992/1997 reform comparisons.  These are local historical structural estimates,
+not a national GDP-loss rate.  The paper's cost concept includes monetary, time,
+operational, and psychological burden; its model assumes no VAT pass-through and
+omits the simplified tax system near the threshold.  Therefore neither +theta+
+nor the marginal-buncher response is used directly as +c_VAT+ or +a_alloc+.
+The current 10-million-yen, invoice-era aggregate allocation effect remains
++NOT_IDENTIFIED+.
 
 The wage bridge adds 2019 MHLW Basic Survey on Wage Structure components for
 17 industry-total/major-industry rows. Two transparent hourly-wage formulas are
