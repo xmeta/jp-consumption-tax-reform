@@ -198,10 +198,13 @@ for delta in EXPECTED_DELTAS:
 # The implementation commit itself left Paper 1 unpromoted; Git history
 # preserves that gate.  The current state contains the later separate P1-C17
 # promotion and must keep it model-contingent.
-claims = read(ROOT / "paper1/data/claim_registry.csv")
+claims = [
+    r for r in read(ROOT / "data/claim_graph.csv")
+    if r["product_id"] == "paper1"
+]
 assert len(claims) == 17
 by_claim = {r["claim_id"]: r for r in claims}
-assert by_claim["P1-C17"]["status"] == (
+assert by_claim["P1-C17"]["empirical_status"] == (
     "MODEL_CONTINGENT_RANK_ONE_SIDED_BRIDGE_REPRODUCED"
 )
 assert "same-person or same-tax-unit linkage" in (
