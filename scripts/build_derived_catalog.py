@@ -33,6 +33,14 @@ SPECS = [
         "Ten annual-household-income deciles with monthly total consumption expenditure, ten major expenditure groups and household characteristics; rank is explicitly not mapped to OECD-new equivalized-disposable-income deciles and broad food is not treated as the reduced-rate VAT base",
     ),
     (
+        "VAT-PASS-THROUGH-EVIDENCE",
+        "vat_pass_through_evidence.csv",
+        "scripts/build_vat_pass_through_evidence.py",
+        "JSTAGE-SHIRAISHI-2016-VAT-PASS-THROUGH-POS;BOJ-OUTLOOK-2019-07-CONSUMPTION-TAX;CAO-2014-CONSUMPTION-TAX-DEMAND;MOF-2019-CONSUMPTION-TAX-HIKE",
+        "DERIVED_HISTORICAL_PASS_THROUGH_AND_QUANTITY_EVIDENCE_NOT_POLICY_PARAMETER",
+        "Five Japan evidence rows separating observed 2014 retail pass-through heterogeneity, BOJ mechanical full-pass-through CPI assumption, historical intertemporal quantity response, and statutory standard/reduced-rate scope; no rate-cut or abolition pass-through parameter is identified",
+    ),
+    (
         "VAT-HOUSEHOLD-TAX-CONTENT-ENVELOPE",
         "vat_household_tax_content_envelope.csv",
         "scripts/build_vat_household_tax_content_envelope.py",

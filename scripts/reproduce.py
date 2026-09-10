@@ -52,6 +52,8 @@ VAT = (
     ("scripts/test_estat_2024_annual_income_decile_expenditure_diagnostic.py",),
     ("scripts/build_estat_objective_rank_household_margin_audit.py",),
     ("scripts/test_estat_objective_rank_household_margin_audit.py",),
+    ("scripts/build_vat_pass_through_evidence.py",),
+    ("scripts/test_vat_pass_through_evidence.py",),
     ("scripts/build_vat_household_tax_content_envelope.py",),
     ("scripts/test_vat_household_tax_content_envelope.py",),
     ("research/vat_policy_integration/run_vat_policy_scenario_matrix.py",),
