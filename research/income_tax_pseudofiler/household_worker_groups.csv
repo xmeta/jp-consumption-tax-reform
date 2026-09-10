@@ -1,4 +1,4 @@
-decile,worker_group,household_count_approx,household_share_within_leaf_partition,observed_income_tax_liability_share,source_id,model_status
+decile,worker_group,household_count_approx,household_share_within_leaf_partition,published_imputed_income_tax_share,source_id,model_status
 1,zero_worker_label,5320,0.616454229432,0.631718646317,ESTAT-7156-1-2024,SENSITIVITY_ONLY_NOT_IDENTIFIED
 1,one_worker_label,1920,0.2224797219,0.27604512276,ESTAT-7156-1-2024,SENSITIVITY_ONLY_NOT_IDENTIFIED
 1,two_plus_worker_label,660,0.0764774044032,0.043795620438,ESTAT-7156-1-2024,SENSITIVITY_ONLY_NOT_IDENTIFIED

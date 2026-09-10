@@ -85,12 +85,33 @@ For each decile and scenario, the model:
 . applies 2026 statutory income transformations and national-income-tax
   brackets;
 . chooses one nuisance income scale per decile/scenario to match, or at
-  statutory discontinuities approximate as closely as possible, the observed
-  F71561 income-tax liability moment;
+  statutory discontinuities approximate as closely as possible, the published/imputed
+  F71561 income-tax construction moment under a named cross-concept sensitivity;
 . reports pseudo-unit statutory-bracket MTR diagnostics.
 
 The nuisance scale is a moment-matching parameter. It is not a behavioral
 elasticity, causal parameter, or latent-income estimate.
+
+== Calibration target semantics
+
+The F71561 `income_tax_kY` target is not a directly observed household tax
+liability.  The Statistics Bureau's 2024 annual non-consumption-expenditure
+method states that tax/social-insurance amounts are estimated household by
+household because they are not surveyed on the annual-income/assets
+questionnaire.  Its income-tax construction adds Reconstruction Special Income
+Tax, deducts the 2024 fixed tax reduction, and adds tax on interest/dividends
+under a uniform withholding/separate-tax assumption.
+
+The pseudo-filer tax function is a different object: 2026 ordinary national
+income tax before Reconstruction Special Income Tax, and the current pseudo-tax
+unit construction does not consume `interest_dividend_kY`.  The public
+aggregate target does not expose the component decomposition needed to transform
+it exactly to the modeled 2026 ordinary-tax concept.  The model therefore
+retains the published/imputed target unchanged only under
+`RETAIN_PUBLISHED_IMPUTED_TARGET_AS_NAMED_CROSS_CONCEPT_SENSITIVITY`.  No
+numeric correction is invented; the concept difference is
+`NOT_IDENTIFIED_FROM_PUBLISHED_AGGREGATES`.  The machine-readable audit is
+`data/derived/estat_71561_income_tax_target_definition_audit_2024.csv`.
 
 == Calibration basis
 

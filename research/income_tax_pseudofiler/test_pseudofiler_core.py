@@ -42,6 +42,10 @@ cal = read("pseudofiler_calibration.csv")
 scen = read("pseudofiler_mtr_scenarios.csv")
 summ = read("pseudofiler_mtr_summary.csv")
 groups = read("household_worker_groups.csv")
+with (ROOT / "data/derived/estat_71561_income_tax_target_definition_audit_2024.csv").open(
+    encoding="utf-8", newline=""
+) as f:
+    target_audit = list(csv.DictReader(f))
 
 try:
     num("X")
@@ -75,7 +79,19 @@ assert len(cal) == 130
 assert len(scen) == 130
 assert len(summ) == 10
 assert len(groups) == 40
+assert len(target_audit) == 7
 assert {int(r["decile"]) for r in summ} == set(range(1, 11))
+assert "observed_leaf_weighted_income_tax_kY" not in cal[0]
+assert "published_imputed_leaf_weighted_income_tax_kY" in cal[0]
+assert "observed_income_tax_liability_share" not in groups[0]
+assert "published_imputed_income_tax_share" in groups[0]
+
+audit = {r["audit_item"]: r for r in target_audit}
+assert audit["collection_status"]["alignment_status"] == "PUBLISHED_IMPUTED_NOT_DIRECT_OBSERVATION"
+assert audit["reconstruction_special_income_tax"]["alignment_status"] == "TARGET_INCLUDES_MODEL_EXCLUDES"
+assert audit["interest_dividend_tax"]["alignment_status"] == "TARGET_INCLUDES_MODEL_EXCLUDES"
+assert audit["fixed_2024_tax_reduction"]["alignment_status"] == "TARGET_INCLUDES_2024_CREDIT_MODEL_DOES_NOT"
+assert audit["calibration_decision"]["numeric_reconciliation_status"] == "NO_NUMERIC_TRANSFORM; CONCEPT_DIFFERENCE_NOT_IDENTIFIED"
 assert {r["scenario"] for r in scen} == SCENARIOS
 
 for d in range(1, 11):
@@ -86,6 +102,9 @@ for r in cal:
     assert r["target_inside_logical_bounds"] == "True"
     assert float(r["nuisance_income_scale"]) > 0
     assert float(r["continuous_proxy_fit_error_kY"]) >= 0
+    assert r["calibration_target_concept"] == "STATISTICS_BUREAU_PUBLISHED_IMPUTED_2024_INCOME_TAX"
+    assert r["target_model_alignment_status"] == "NAMED_CROSS_CONCEPT_SENSITIVITY"
+    assert r["target_numeric_reconciliation_status"] == "NO_NUMERIC_TRANSFORM; CONCEPT_DIFFERENCE_NOT_IDENTIFIED"
 
 # Central specification can continuously match the published tax moment in all
 # deciles.  Extreme sensitivity cases can hit statutory basic-deduction jumps;
@@ -118,6 +137,8 @@ for r in summ:
         "DROP_F71561_ROWS_WITH_SUPPRESSED_HOUSEHOLD_COUNT"
     )
     assert float(r["suppressed_count_share_upper_bound_exclusive"]) < 0.002
+    assert r["target_model_alignment_status"] == "NAMED_CROSS_CONCEPT_SENSITIVITY"
+    assert r["target_numeric_reconciliation_status"] == "NO_NUMERIC_TRANSFORM; CONCEPT_DIFFERENCE_NOT_IDENTIFIED"
 
 assert sum(int(r["suppressed_leaf_rows_omitted"]) for r in summ) == 11
 assert sum(int(r["suppressed_monetary_x_cells_without_numeric_bound"]) for r in summ) == 126
@@ -133,5 +154,5 @@ subprocess.run(
 
 print(
     "pseudo-filer core tests: OK "
-    "(13 scenarios x 10 deciles; suppressed X rows explicit; central moments matched)"
+    "(13 scenarios x 10 deciles; suppressed X rows explicit; published-imputed target semantics guarded)"
 )
