@@ -35,6 +35,10 @@ assert reproduce.ALL_ORDER == (
 )
 assert reproduce.ALL_ORDER.index("income-tax") < reproduce.ALL_ORDER.index("vat")
 
+terminology_guard = ("scripts/test_filed_processed_terminology.py",)
+assert terminology_guard not in reproduce.INCOME_TAX
+assert reproduce.PROVENANCE[-1] == terminology_guard
+
 generators = [row[0] for row in reproduce.PAPER1_GENERATORS]
 paper1 = list(reproduce.PAPER1)
 for path in generators:
@@ -44,6 +48,7 @@ for path in generators:
 assert "data/derived/*.csv" in reproduce.CLEAN_ROOM_GLOBS
 assert "data/source_catalog.csv" in reproduce.CLEAN_ROOM_GLOBS
 assert "paper1/data/stage1_frontier_table.csv" in reproduce.CLEAN_ROOM_GLOBS
+assert "data/derived/stage1_official_inputs.csv" in reproduce.CLEAN_ROOM_KEEP
 
 listed = subprocess.run(
     [sys.executable, str(MODULE_PATH), "--list"],
@@ -76,6 +81,7 @@ assert "research/vat_compliance_productivity/run_vat_compliance_productivity.py"
 assert "research/income_tax_pseudofiler/run_pseudofiler_core.py" in dry
 assert dry.index("scripts/extract_estat_income_tax_tables.py") < dry.index("scripts/build_estat_objective_rank_household_margin_audit.py")
 assert "scripts/validate_provenance.py" in dry
+assert dry.index("scripts/build_derived_catalog.py") < dry.index("scripts/test_filed_processed_terminology.py")
 assert "paper1/scripts/generate_frontier_table.py --check" in dry
 assert "paper1/index.adoc" in dry
 assert "scripts/check_manifest.py" in dry
