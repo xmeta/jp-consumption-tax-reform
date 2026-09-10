@@ -172,3 +172,13 @@ advertised Japanese data route jointly identifies national `c_VAT`, `rho`, and
 directly, while a prospective burden/redeployment panel can target two.  This
 design result does not change the current `NOT_IDENTIFIED` national parameter
 status.
+
+Issue #82 resolves the first Issue #47 access check.  The official e-Micro
+media/remote and onsite catalog queries both return zero records for the exact
+historic SME-tax-survey keyword, while the BSBSA positive-control query returns
+32 records on each surface.  No stable historic-survey firm key or cross-survey
+linkage permission is established by the public materials.  The standard
+historic e-Micro linkage route is therefore stopped; this does not prove that
+provider-internal archived microdata never existed.  The next executable
+resource-cost design is the prospective VAT burden/redeployment panel.  National
+`c_VAT`, `rho`, and `a_alloc` remain `NOT_IDENTIFIED`.

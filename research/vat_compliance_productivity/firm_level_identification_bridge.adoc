@@ -67,19 +67,28 @@ as a combined local effect only.
 
 === Preferred existing-data route for resource cost
 
-The first route to test is a secure linkage between the existing METI
+The first route tested was a secure linkage between the existing METI
 2019--2021 tax-procedure burden microdata and the METI Basic Survey of Japanese
 Business Structure and Activities (BSBSA).  BSBSA explicitly collects
 corporation number, employees, sales, costs, assets and investment, and METI has
-a formal questionnaire-microdata secondary-use process.  The public materials
-do *not* establish that the historic tax-burden survey microdata are available
-for secondary use or retain a stable corporation identifier.  Therefore this
-route is `BLOCKED_ON_HISTORIC_BURDEN_MICRODATA_LINK_KEY`, not assumed feasible.
+a formal questionnaire-microdata secondary-use process.
 
-Its stop rule is deliberately short: ask the official METI/e-Micro channel once
-whether those microdata and a stable firm key can be used.  If not, stop trying
-to reconstruct the link from public aggregates and use the prospective-panel
-fallback.
+Issue #82 resolves the *standard e-Micro route*.  Official e-Micro catalog
+queries captured on 2026-09-11 return zero records for the exact keyword
+`中小企業税制に関するアンケート調査` in both the media/remote and onsite
+catalogs.  As a positive control, the same two catalog surfaces return 32
+records for `企業活動基本調査`.  The public 2019--2021 reports also do not
+establish a corporation number or other stable cross-survey firm identifier,
+and no official evidence currently establishes permission to link those
+commissioned-survey microdata to BSBSA.
+
+The route is therefore `STOP_STANDARD_EMICRO_RETROSPECTIVE_LINKAGE`.  This is a
+stop decision for the standard catalog route, not a claim that archived
+microdata or an internal identifier never existed.  It may be reopened only if
+the provider explicitly confirms all three prerequisites: archived burden
+microdata availability, a stable firm key, and cross-survey linkage permission.
+The machine-readable decision is
+`firm_level_linkage_access_audit.csv`.
 
 === Prospective burden/redeployment panel
 
@@ -154,9 +163,10 @@ representativeness, and causal conditions.
 
 The execution order is:
 
-. verify the historic METI burden-microdata linkage key and access route;
-. if blocked, stop retrospective public-data accumulation and specify the
-  prospective burden/redeployment panel;
+. treat the standard e-Micro historic METI burden-microdata linkage route as
+  stopped under Issue #82;
+. specify the prospective burden/redeployment panel as the next executable
+  `c_VAT` / `rho` research design;
 . independently retain NTA Theme 5(ii) as the best existing route to local
   allocation-response evidence when a compatible future call opens;
 . test invoice-registry × BSBSA deterministic linkage only inside an approved
