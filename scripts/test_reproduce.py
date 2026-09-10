@@ -26,13 +26,14 @@ EXPECTED = {
 assert set(reproduce.TARGETS) == EXPECTED
 assert reproduce.ALL_ORDER == (
     "source-integrity",
-    "vat",
     "income-tax",
+    "vat",
     "provenance",
     "paper1",
     "docs",
     "integrity",
 )
+assert reproduce.ALL_ORDER.index("income-tax") < reproduce.ALL_ORDER.index("vat")
 
 generators = [row[0] for row in reproduce.PAPER1_GENERATORS]
 paper1 = list(reproduce.PAPER1)
@@ -73,6 +74,7 @@ dry = subprocess.run(
 assert "scripts/build_source_catalog.py" in dry
 assert "research/vat_compliance_productivity/run_vat_compliance_productivity.py" in dry
 assert "research/income_tax_pseudofiler/run_pseudofiler_core.py" in dry
+assert dry.index("scripts/extract_estat_income_tax_tables.py") < dry.index("scripts/build_estat_objective_rank_household_margin_audit.py")
 assert "scripts/validate_provenance.py" in dry
 assert "paper1/scripts/generate_frontier_table.py --check" in dry
 assert "paper1/index.adoc" in dry
