@@ -61,24 +61,29 @@ def parse_int(text):
 def build():
     catalog = {r["source_id"]: r for r in read_csv(CAT)}
     source = catalog[SOURCE_ID]
-    assert source["sha256"] == EXPECTED_SHA
+    if not (source['sha256'] == EXPECTED_SHA):
+        raise RuntimeError('scientific runtime invariant failed: research/vat_policy_integration/build_vat_fiscal_replacement_reference.py:64')
     raw = (ROOT / source["raw_file"]).read_text(encoding="utf-8")
 
     for token in ("令和6年度", "令和7年7月末", "単位", "千円"):
-        assert token in raw
+        if not (token in raw):
+            raise RuntimeError('scientific runtime invariant failed: research/vat_policy_integration/build_vat_fiscal_replacement_reference.py:68')
 
     parser = TableParser()
     parser.feed(raw)
     tax_row = next(r for r in parser.rows if "租税" in r and "消費税" not in r)
     vat_row = next(r for r in parser.rows if "消費税" in r)
 
-    assert tax_row[1] == "租税"
-    assert vat_row[0] == "消費税"
+    if not (tax_row[1] == '租税'):
+        raise RuntimeError('scientific runtime invariant failed: research/vat_policy_integration/build_vat_fiscal_replacement_reference.py:75')
+    if not (vat_row[0] == '消費税'):
+        raise RuntimeError('scientific runtime invariant failed: research/vat_policy_integration/build_vat_fiscal_replacement_reference.py:76')
     total_tax_k_yen = parse_int(tax_row[5])
     vat_k_yen = parse_int(vat_row[4])
     vat_budget_k_yen = parse_int(vat_row[1])
     vat_budget_gap_k_yen = parse_int(vat_row[5])
-    assert vat_row[6] == "102.7"
+    if not (vat_row[6] == '102.7'):
+        raise RuntimeError('scientific runtime invariant failed: research/vat_policy_integration/build_vat_fiscal_replacement_reference.py:81')
     total_tax_yen = total_tax_k_yen * 1000
     vat_yen = vat_k_yen * 1000
     metrics = [

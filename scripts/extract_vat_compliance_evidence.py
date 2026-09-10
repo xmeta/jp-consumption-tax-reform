@@ -322,8 +322,10 @@ def build():
         "MECHANICAL_WAGE_CONVERSION_NOT_ANNUAL_NOT_POPULATION_ESTIMATE","DO_NOT_USE_AS_NATIONAL_C_VAT",
         "Mechanical conversion only; Q8-3 period is not explicitly annual, respondent industry composition is unknown, wage year differs, and VAT-specific external outsourcing is missing."),
     ]
-    assert len(major_wages)==16
-    assert meti_bin["ge100"]["published_percent"] == "6.7"
+    if not (len(major_wages) == 16):
+        raise RuntimeError('scientific runtime invariant failed: scripts/extract_vat_compliance_evidence.py:325')
+    if not (meti_bin['ge100']['published_percent'] == '6.7'):
+        raise RuntimeError('scientific runtime invariant failed: scripts/extract_vat_compliance_evidence.py:326')
     # JCCI invoice burden incidence. These are response shares, not resource shares.
     rows += [
       evidence("jcci2024_invoice_cost_increase_share","0.488","ratio","SURVEY_RESPONSE_SHARE",

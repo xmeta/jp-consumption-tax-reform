@@ -263,7 +263,8 @@ def make_model(data: v2.Data, include_epsilon: bool) -> Model:
             bounds[z_idx[(di, qi)]] = (0.0, 0.1)
 
     if include_epsilon:
-        assert eps_idx is not None
+        if not (eps_idx is not None):
+            raise RuntimeError('scientific runtime invariant failed: research/income_tax_partial_identification/run_rank_bridge_lp_v3.py:266')
         bounds[eps_idx] = (0.0, 1.0)
 
     return Model(
@@ -325,18 +326,21 @@ def inequalities(
             a[model.z_index[(di, qi)]] -= 10.0
 
         if model.include_epsilon:
-            assert model.epsilon_index is not None
+            if not (model.epsilon_index is not None):
+                raise RuntimeError('scientific runtime invariant failed: research/income_tax_partial_identification/run_rank_bridge_lp_v3.py:328')
             a[model.epsilon_index] = -1.0
             b = 0.0
         else:
-            assert epsilon is not None
+            if not (epsilon is not None):
+                raise RuntimeError('scientific runtime invariant failed: research/income_tax_partial_identification/run_rank_bridge_lp_v3.py:332')
             b = float(epsilon)
         rows.append(a)
         rhs.append(b)
 
         bvec = -a
         if model.include_epsilon:
-            assert model.epsilon_index is not None
+            if not (model.epsilon_index is not None):
+                raise RuntimeError('scientific runtime invariant failed: research/income_tax_partial_identification/run_rank_bridge_lp_v3.py:339')
             bvec[model.epsilon_index] = -1.0
         rows.append(bvec)
         rhs.append(b)
@@ -524,7 +528,8 @@ def solve_minimum_at_delta(
 ):
     model = make_model(data, include_epsilon=True)
     c = np.zeros(model.nvars)
-    assert model.epsilon_index is not None
+    if not (model.epsilon_index is not None):
+        raise RuntimeError('scientific runtime invariant failed: research/income_tax_partial_identification/run_rank_bridge_lp_v3.py:527')
     c[model.epsilon_index] = 1.0
     res = solve_lp(model, c, delta=delta, method=method)
     if not res.success:
@@ -573,7 +578,8 @@ def objective_vector(
     elif metric == "transported_nta_positive_self_assessed_balance_rate":
         if overall:
             raise ValueError("overall transported NTA rate not pre-specified")
-        assert decile_index is not None
+        if not (decile_index is not None):
+            raise RuntimeError('scientific runtime invariant failed: research/income_tax_partial_identification/run_rank_bridge_lp_v3.py:576')
         for qi in range(len(data.deciles)):
             c[model.z_index[(decile_index, qi)]] = 10.0
         return c
@@ -587,7 +593,8 @@ def objective_vector(
             for si in range(len(data.scenarios)):
                 c[model.lambda_index[(di, si)]] = 0.1 * values[di, si]
     else:
-        assert decile_index is not None
+        if not (decile_index is not None):
+            raise RuntimeError('scientific runtime invariant failed: research/income_tax_partial_identification/run_rank_bridge_lp_v3.py:590')
         for si in range(len(data.scenarios)):
             c[model.lambda_index[(decile_index, si)]] = values[decile_index, si]
     return c
@@ -791,7 +798,8 @@ def zero_row_and_plan(
         }
         return row, [], None
 
-    assert delta_star is not None and diag is not None
+    if not (delta_star is not None and diag is not None):
+        raise RuntimeError('scientific runtime invariant failed: research/income_tax_partial_identification/run_rank_bridge_lp_v3.py:794')
     lam, y, t, z = unpack(model, res.x)
     row = {
         "spec_version": SPEC_VERSION,

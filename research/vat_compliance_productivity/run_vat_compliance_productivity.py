@@ -35,9 +35,11 @@ def parse_axes():
       "allocative_efficiency_dividend_share",
       "transition_years",
     ]
-    assert set(raw)==set(needed)
+    if not (set(raw) == set(needed)):
+        raise RuntimeError('scientific runtime invariant failed: research/vat_compliance_productivity/run_vat_compliance_productivity.py:38')
     for r in raw.values():
-        assert r["identification_status"]=="STRESS_TEST_NOT_EMPIRICAL_BOUND"
+        if not (r['identification_status'] == 'STRESS_TEST_NOT_EMPIRICAL_BOUND'):
+            raise RuntimeError('scientific runtime invariant failed: research/vat_compliance_productivity/run_vat_compliance_productivity.py:40')
     vals={}
     for k,r in raw.items():
         if k=="transition_years":
@@ -48,33 +50,45 @@ def parse_axes():
 
 def build():
     ident={r["quantity"]:r for r in read(IDENT)}
-    assert ident["vat_specific_real_resource_cost_share_of_output"]["status"]=="NOT_IDENTIFIED"
-    assert ident["productive_redeployment_fraction_rho"]["status"]=="NOT_IDENTIFIED"
-    assert ident["allocative_efficiency_dividend"]["status"]=="NOT_IDENTIFIED"
-    assert ident["compliance_savings_one_for_one_gdp"]["status"]=="PROHIBITED"
-    assert ident["income_gini_and_FGT2_effect"]["status"]=="NOT_MODELED_PHASE1"
-    assert ident["fiscal_debt_effect"]["model_use"]=="FINANCING_CHANNEL_SEPARATE"
+    if not (ident['vat_specific_real_resource_cost_share_of_output']['status'] == 'NOT_IDENTIFIED'):
+        raise RuntimeError('scientific runtime invariant failed: research/vat_compliance_productivity/run_vat_compliance_productivity.py:51')
+    if not (ident['productive_redeployment_fraction_rho']['status'] == 'NOT_IDENTIFIED'):
+        raise RuntimeError('scientific runtime invariant failed: research/vat_compliance_productivity/run_vat_compliance_productivity.py:52')
+    if not (ident['allocative_efficiency_dividend']['status'] == 'NOT_IDENTIFIED'):
+        raise RuntimeError('scientific runtime invariant failed: research/vat_compliance_productivity/run_vat_compliance_productivity.py:53')
+    if not (ident['compliance_savings_one_for_one_gdp']['status'] == 'PROHIBITED'):
+        raise RuntimeError('scientific runtime invariant failed: research/vat_compliance_productivity/run_vat_compliance_productivity.py:54')
+    if not (ident['income_gini_and_FGT2_effect']['status'] == 'NOT_MODELED_PHASE1'):
+        raise RuntimeError('scientific runtime invariant failed: research/vat_compliance_productivity/run_vat_compliance_productivity.py:55')
+    if not (ident['fiscal_debt_effect']['model_use'] == 'FINANCING_CHANNEL_SEPARATE'):
+        raise RuntimeError('scientific runtime invariant failed: research/vat_compliance_productivity/run_vat_compliance_productivity.py:56')
 
     regimes=read(REGIMES)
-    assert len(regimes)==4
+    if not (len(regimes) == 4):
+        raise RuntimeError('scientific runtime invariant failed: research/vat_compliance_productivity/run_vat_compliance_productivity.py:59')
     by={r["regime_id"]:r for r in regimes}
-    assert set(by)=={
-      "current_8_10_admin_retained",
-      "reduced_5_admin_retained",
-      "zero_rate_admin_retained",
-      "full_vat_abolition",
-    }
+    if not (set(by) == {'current_8_10_admin_retained', 'reduced_5_admin_retained', 'zero_rate_admin_retained', 'full_vat_abolition'}):
+        raise RuntimeError('scientific runtime invariant failed: research/vat_compliance_productivity/run_vat_compliance_productivity.py:61')
     for rid in ("current_8_10_admin_retained","reduced_5_admin_retained","zero_rate_admin_retained"):
-        assert by[rid]["vat_admin_state"]=="retained"
-        assert by[rid]["invoice_system_state"]=="retained"
-        assert float(by[rid]["vat_admin_removal_fraction"])==0
-    assert by["full_vat_abolition"]["vat_admin_state"]=="abolished"
-    assert by["full_vat_abolition"]["invoice_system_state"]=="abolished"
-    assert float(by["full_vat_abolition"]["vat_admin_removal_fraction"])==1
+        if not (by[rid]['vat_admin_state'] == 'retained'):
+            raise RuntimeError('scientific runtime invariant failed: research/vat_compliance_productivity/run_vat_compliance_productivity.py:68')
+        if not (by[rid]['invoice_system_state'] == 'retained'):
+            raise RuntimeError('scientific runtime invariant failed: research/vat_compliance_productivity/run_vat_compliance_productivity.py:69')
+        if not (float(by[rid]['vat_admin_removal_fraction']) == 0):
+            raise RuntimeError('scientific runtime invariant failed: research/vat_compliance_productivity/run_vat_compliance_productivity.py:70')
+    if not (by['full_vat_abolition']['vat_admin_state'] == 'abolished'):
+        raise RuntimeError('scientific runtime invariant failed: research/vat_compliance_productivity/run_vat_compliance_productivity.py:71')
+    if not (by['full_vat_abolition']['invoice_system_state'] == 'abolished'):
+        raise RuntimeError('scientific runtime invariant failed: research/vat_compliance_productivity/run_vat_compliance_productivity.py:72')
+    if not (float(by['full_vat_abolition']['vat_admin_removal_fraction']) == 1):
+        raise RuntimeError('scientific runtime invariant failed: research/vat_compliance_productivity/run_vat_compliance_productivity.py:73')
     # The decisive institutional distinction.
-    assert float(by["zero_rate_admin_retained"]["vat_standard_rate"])==0
-    assert float(by["full_vat_abolition"]["vat_standard_rate"])==0
-    assert by["zero_rate_admin_retained"]["vat_admin_state"] != by["full_vat_abolition"]["vat_admin_state"]
+    if not (float(by['zero_rate_admin_retained']['vat_standard_rate']) == 0):
+        raise RuntimeError('scientific runtime invariant failed: research/vat_compliance_productivity/run_vat_compliance_productivity.py:75')
+    if not (float(by['full_vat_abolition']['vat_standard_rate']) == 0):
+        raise RuntimeError('scientific runtime invariant failed: research/vat_compliance_productivity/run_vat_compliance_productivity.py:76')
+    if not (by['zero_rate_admin_retained']['vat_admin_state'] != by['full_vat_abolition']['vat_admin_state']):
+        raise RuntimeError('scientific runtime invariant failed: research/vat_compliance_productivity/run_vat_compliance_productivity.py:77')
 
     a=parse_axes()
     combos=list(itertools.product(
@@ -121,12 +135,18 @@ def build():
     # Guard architecture, not just a few selected rows.
     for r in rows:
         if r["vat_admin_state"]=="retained":
-            assert float(r["released_vat_admin_resource_share"])==0
-            assert float(r["compliance_productivity_level_effect"])==0
-            assert float(r["allocative_efficiency_level_effect"])==0
-            assert float(r["total_institutional_level_effect"])==0
-            assert float(r["annualized_transition_growth_contribution"])==0
-        assert float(r["ordinary_vat_demand_effect"])==0
+            if not (float(r['released_vat_admin_resource_share']) == 0):
+                raise RuntimeError('scientific runtime invariant failed: research/vat_compliance_productivity/run_vat_compliance_productivity.py:124')
+            if not (float(r['compliance_productivity_level_effect']) == 0):
+                raise RuntimeError('scientific runtime invariant failed: research/vat_compliance_productivity/run_vat_compliance_productivity.py:125')
+            if not (float(r['allocative_efficiency_level_effect']) == 0):
+                raise RuntimeError('scientific runtime invariant failed: research/vat_compliance_productivity/run_vat_compliance_productivity.py:126')
+            if not (float(r['total_institutional_level_effect']) == 0):
+                raise RuntimeError('scientific runtime invariant failed: research/vat_compliance_productivity/run_vat_compliance_productivity.py:127')
+            if not (float(r['annualized_transition_growth_contribution']) == 0):
+                raise RuntimeError('scientific runtime invariant failed: research/vat_compliance_productivity/run_vat_compliance_productivity.py:128')
+        if not (float(r['ordinary_vat_demand_effect']) == 0):
+            raise RuntimeError('scientific runtime invariant failed: research/vat_compliance_productivity/run_vat_compliance_productivity.py:129')
 
     summary=[]
     for reg in regimes:

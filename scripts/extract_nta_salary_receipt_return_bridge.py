@@ -187,21 +187,28 @@ def build():
     def s(rows_, field):
         return sum(int(r[field]) for r in rows_)
 
-    assert s(high_all, "salary_receipt_persons_estimated") == 235_287
-    assert s(high_salary, "salary_receipt_persons_estimated") == 225_050
-    assert s(high_non_salary, "salary_receipt_persons_estimated") == 10_237
-    assert s(high_all, "salary_withholding_persons_estimated") == 227_606
-    assert s(high_all, "no_salary_withholding_persons_estimated") == 7_681
+    if not (s(high_all, 'salary_receipt_persons_estimated') == 235287):
+        raise RuntimeError('scientific runtime invariant failed: scripts/extract_nta_salary_receipt_return_bridge.py:190')
+    if not (s(high_salary, 'salary_receipt_persons_estimated') == 225050):
+        raise RuntimeError('scientific runtime invariant failed: scripts/extract_nta_salary_receipt_return_bridge.py:191')
+    if not (s(high_non_salary, 'salary_receipt_persons_estimated') == 10237):
+        raise RuntimeError('scientific runtime invariant failed: scripts/extract_nta_salary_receipt_return_bridge.py:192')
+    if not (s(high_all, 'salary_withholding_persons_estimated') == 227606):
+        raise RuntimeError('scientific runtime invariant failed: scripts/extract_nta_salary_receipt_return_bridge.py:193')
+    if not (s(high_all, 'no_salary_withholding_persons_estimated') == 7681):
+        raise RuntimeError('scientific runtime invariant failed: scripts/extract_nta_salary_receipt_return_bridge.py:194')
 
     t19 = {r["metric_id"]: r for r in read_csv(T19_AUDIT)}
     private_gt20 = int(t19["private_salary_full_year_salary_receipts_gt20m"]["value"])
-    assert private_gt20 == 320_983
+    if not (private_gt20 == 320983):
+        raise RuntimeError('scientific runtime invariant failed: scripts/extract_nta_salary_receipt_return_bridge.py:198')
 
     t22_salary = [r for r in read_csv(T22) if r["primary_income_type"] == "salary"]
     t22_all = sum(int(r["table22_population_persons"]) for r in t22_salary)
     t22_pos = sum(int(r["positive_self_assessed_balance_persons"]) for r in t22_salary)
     t22_ref = sum(int(r["refund_persons"]) for r in t22_salary)
-    assert (t22_all, t22_pos, t22_ref) == (11_423_587, 2_385_726, 7_697_018)
+    if not ((t22_all, t22_pos, t22_ref) == (11423587, 2385726, 7697018)):
+        raise RuntimeError('scientific runtime invariant failed: scripts/extract_nta_salary_receipt_return_bridge.py:204')
     metrics = [
         metric(
             "private_salary_full_year_receipts_gt20m",

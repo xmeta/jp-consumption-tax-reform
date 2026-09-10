@@ -182,13 +182,20 @@ def build():
 
     # Reconciliation metadata are repeated by row in the source table output so
     # downstream users cannot overlook the public-table rounding mismatch.
-    assert exact_total == 23_362_184
-    assert exact_positive == 5_158_260
-    assert exact_refund == 13_527_496
-    assert displayed_category_positive == 5_174
-    assert displayed_category_total == 23_390
-    assert displayed_category_refund == 13_534
-    assert displayed_category_zero == 4_681
+    if not (exact_total == 23362184):
+        raise RuntimeError('scientific runtime invariant failed: scripts/extract_nta_stage2_holdout.py:185')
+    if not (exact_positive == 5158260):
+        raise RuntimeError('scientific runtime invariant failed: scripts/extract_nta_stage2_holdout.py:186')
+    if not (exact_refund == 13527496):
+        raise RuntimeError('scientific runtime invariant failed: scripts/extract_nta_stage2_holdout.py:187')
+    if not (displayed_category_positive == 5174):
+        raise RuntimeError('scientific runtime invariant failed: scripts/extract_nta_stage2_holdout.py:188')
+    if not (displayed_category_total == 23390):
+        raise RuntimeError('scientific runtime invariant failed: scripts/extract_nta_stage2_holdout.py:189')
+    if not (displayed_category_refund == 13534):
+        raise RuntimeError('scientific runtime invariant failed: scripts/extract_nta_stage2_holdout.py:190')
+    if not (displayed_category_zero == 4681):
+        raise RuntimeError('scientific runtime invariant failed: scripts/extract_nta_stage2_holdout.py:191')
 
     max_abs = max(float(r["absolute_difference_percentage_point"]) for r in valid)
     for r in valid:

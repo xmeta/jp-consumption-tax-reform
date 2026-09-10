@@ -104,7 +104,8 @@ def build():
       ('2','0.933','0.131','0.676','1.190'),('2.5','1.085','0.172','0.748','1.422')]
     rows=[]
     for (w,b0,se0,l0,h0),(w2,b1,se1,l1,h1) in zip(pre,post):
-        assert w==w2
+        if not (w == w2):
+            raise RuntimeError('scientific runtime invariant failed: scripts/build_ichikawa_2019_vat_10m_threshold_bridge.py:107')
         overlap=max(Decimal(l0),Decimal(l1)) <= min(Decimal(h0),Decimal(h1))
         diff=Decimal(b1)-Decimal(b0)
         rows.append({

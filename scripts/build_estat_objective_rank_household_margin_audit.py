@@ -120,21 +120,27 @@ def build() -> tuple[list[dict[str, object]], list[dict[str, object]]]:
 
     annual_population = [int(r["population_households"]) for r in annual]
     annual_sample = [int(r["approx_sample_households"]) for r in annual]
-    assert len(annual_population) == 10
-    assert set(annual_population) == {5_355_441}
+    if not (len(annual_population) == 10):
+        raise RuntimeError('scientific runtime invariant failed: scripts/build_estat_objective_rank_household_margin_audit.py:123')
+    if not (set(annual_population) == {5355441}):
+        raise RuntimeError('scientific runtime invariant failed: scripts/build_estat_objective_rank_household_margin_audit.py:124')
 
     objective_totals = [
         int(r["household_members"])
         for r in objective
         if r["semantic_key"] == "total"
     ]
-    assert len(objective_totals) == 10
-    assert set(objective_totals) == {11_390_017}
+    if not (len(objective_totals) == 10):
+        raise RuntimeError('scientific runtime invariant failed: scripts/build_estat_objective_rank_household_margin_audit.py:131')
+    if not (set(objective_totals) == {11390017}):
+        raise RuntimeError('scientific runtime invariant failed: scripts/build_estat_objective_rank_household_margin_audit.py:132')
 
     sample31 = sample_counts(rows31)
     sample61 = sample_counts(rows61, household_type="00")
-    assert sample31 == sample61
-    assert sum(sample31) == 74_150
+    if not (sample31 == sample61):
+        raise RuntimeError('scientific runtime invariant failed: scripts/build_estat_objective_rank_household_margin_audit.py:136')
+    if not (sum(sample31) == 74150):
+        raise RuntimeError('scientific runtime invariant failed: scripts/build_estat_objective_rank_household_margin_audit.py:137')
 
     for sid in ("ESTAT-7153-1-2024", "ESTAT-7156-1-2024"):
         source = catalog[sid]

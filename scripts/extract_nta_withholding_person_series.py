@@ -115,9 +115,12 @@ def build():
     r06 = next(r for r in series if r["year"] == 2006)
     r07 = next(r for r in series if r["year"] == 2007)
     r24 = next(r for r in series if r["year"] == 2024)
-    assert (r06["public_offices_persons_thousand"], r06["others_persons_thousand"], r06["public_plus_others_persons_thousand"]) == (9170, 66936, 76106)
-    assert r07["public_offices_persons_thousand"] == ""
-    assert r24["public_offices_persons_thousand"] == ""
+    if not ((r06['public_offices_persons_thousand'], r06['others_persons_thousand'], r06['public_plus_others_persons_thousand']) == (9170, 66936, 76106)):
+        raise RuntimeError('scientific runtime invariant failed: scripts/extract_nta_withholding_person_series.py:118')
+    if not (r07['public_offices_persons_thousand'] == ''):
+        raise RuntimeError('scientific runtime invariant failed: scripts/extract_nta_withholding_person_series.py:119')
+    if not (r24['public_offices_persons_thousand'] == ''):
+        raise RuntimeError('scientific runtime invariant failed: scripts/extract_nta_withholding_person_series.py:120')
     p06 = re.sub(r"\s+", "", pdf_page_text(PDF2006))
     p07 = re.sub(r"\s+", "", pdf_page_text(PDF2007))
     for needle in ("9,170", "66,936", "76,106", "Numberoftaxpayers"):
@@ -130,8 +133,10 @@ def build():
         raise RuntimeError("2007 PDF unexpectedly contains person header")
 
     current = {r["metric_id"]: r for r in read_dicts(CURRENT)}
-    assert int(current["source_salary_public_offices_payment"]["value"]) == r24["public_offices_salary_payment_million_yen"]
-    assert int(current["source_salary_other_payment"]["value"]) == r24["others_salary_payment_million_yen"]
+    if not (int(current['source_salary_public_offices_payment']['value']) == r24['public_offices_salary_payment_million_yen']):
+        raise RuntimeError('scientific runtime invariant failed: scripts/extract_nta_withholding_person_series.py:133')
+    if not (int(current['source_salary_other_payment']['value']) == r24['others_salary_payment_million_yen']):
+        raise RuntimeError('scientific runtime invariant failed: scripts/extract_nta_withholding_person_series.py:134')
 
     person_share_2006 = 9170 / 76106
     payment_share_2006 = r06["public_offices_salary_payment_million_yen"] / (

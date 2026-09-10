@@ -1,5 +1,8 @@
 #!/usr/bin/env python3
 """Regression and invariant tests for pre-specified rank-transport LP v3."""
+
+if not __debug__:
+    raise RuntimeError('optimized Python is not supported for executable tests; assertions must remain active')
 from pathlib import Path
 import csv
 import importlib.util

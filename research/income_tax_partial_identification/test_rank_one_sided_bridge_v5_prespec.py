@@ -7,6 +7,9 @@ Git history preserves both gates.  The current promoted state keeps the exact
 pre-specification bytes frozen while requiring the later, separately promoted
 P1-C17 claim to retain its model-contingent status.
 """
+
+if not __debug__:
+    raise RuntimeError('optimized Python is not supported for executable tests; assertions must remain active')
 from pathlib import Path
 import csv
 import hashlib

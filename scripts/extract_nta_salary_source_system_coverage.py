@@ -134,10 +134,14 @@ def build():
     private_to_other_pay = private_salary / other_pay
     private_to_other_tax = private_tax / other_tax
 
-    assert (public_pay, other_pay, total_pay) == (28_282_710, 325_610_351, 353_893_061)
-    assert (public_tax, other_tax, total_tax) == (917_029, 11_021_742, 11_938_771)
-    assert (day_total_pay, day_total_tax) == (1_232_032, 20_909)
-    assert (private_salary, private_tax) == (241_438_813, 11_183_370)
+    if not ((public_pay, other_pay, total_pay) == (28282710, 325610351, 353893061)):
+        raise RuntimeError('scientific runtime invariant failed: scripts/extract_nta_salary_source_system_coverage.py:137')
+    if not ((public_tax, other_tax, total_tax) == (917029, 11021742, 11938771)):
+        raise RuntimeError('scientific runtime invariant failed: scripts/extract_nta_salary_source_system_coverage.py:138')
+    if not ((day_total_pay, day_total_tax) == (1232032, 20909)):
+        raise RuntimeError('scientific runtime invariant failed: scripts/extract_nta_salary_source_system_coverage.py:139')
+    if not ((private_salary, private_tax) == (241438813, 11183370)):
+        raise RuntimeError('scientific runtime invariant failed: scripts/extract_nta_salary_source_system_coverage.py:140')
 
     metrics = [
         metric(

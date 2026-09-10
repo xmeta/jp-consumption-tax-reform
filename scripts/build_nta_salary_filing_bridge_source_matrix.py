@@ -327,11 +327,16 @@ def build():
     ]
     person_links = [r for r in rows if is_yes(r["cross_family_person_link"])]
 
-    assert not gt20_and_submission
-    assert not gt20_and_processing
-    assert not yea_and_processing
-    assert not employer_and_return
-    assert not person_links
+    if not (not gt20_and_submission):
+        raise RuntimeError('scientific runtime invariant failed: scripts/build_nta_salary_filing_bridge_source_matrix.py:330')
+    if not (not gt20_and_processing):
+        raise RuntimeError('scientific runtime invariant failed: scripts/build_nta_salary_filing_bridge_source_matrix.py:331')
+    if not (not yea_and_processing):
+        raise RuntimeError('scientific runtime invariant failed: scripts/build_nta_salary_filing_bridge_source_matrix.py:332')
+    if not (not employer_and_return):
+        raise RuntimeError('scientific runtime invariant failed: scripts/build_nta_salary_filing_bridge_source_matrix.py:333')
+    if not (not person_links):
+        raise RuntimeError('scientific runtime invariant failed: scripts/build_nta_salary_filing_bridge_source_matrix.py:334')
 
     audit = [
         {

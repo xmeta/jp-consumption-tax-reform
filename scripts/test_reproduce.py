@@ -2,6 +2,9 @@
 """Fast structural regression tests for scripts/reproduce.py."""
 from __future__ import annotations
 
+if not __debug__:
+    raise RuntimeError('optimized Python is not supported for executable tests; assertions must remain active')
+
 import importlib.util
 import subprocess
 import sys
