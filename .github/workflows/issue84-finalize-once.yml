@@ -1,0 +1,37 @@
+name: issue84-finalize-once
+on:
+  push:
+    branches:
+      - research/issue-84-prospective-vat-panel
+
+permissions:
+  contents: write
+
+jobs:
+  finalize:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          ref: research/issue-84-prospective-vat-panel
+      - uses: actions/setup-python@v7
+        with:
+          python-version: '3.12'
+      - name: Clarify first-stage direction and regenerate manifest
+        run: |
+          git rm .github/workflows/issue84-finalize-once.yml
+          python - <<'PY'
+          from pathlib import Path
+          p = Path('research/vat_compliance_productivity/firm_level_identification_design.csv')
+          s = p.read_text(encoding='utf-8')
+          old = 'measured positive first stage'
+          assert s.count(old) == 1, s.count(old)
+          p.write_text(s.replace(old, 'measured burden-reducing first stage'), encoding='utf-8')
+          PY
+          python scripts/generate_manifest.py
+          git add research/vat_compliance_productivity/firm_level_identification_design.csv MANIFEST.sha256
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git commit -m 'Finalize Issue #84 prespec wording and manifest'
+          git push
