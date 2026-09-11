@@ -244,6 +244,25 @@ the missing link. This is preferable to assigning zero: zero would be an
 economic claim, whereas an empty value plus a status is a scientific-state
 statement.
 
+== Pareto screening rule
+
++pareto_objectives.csv+ freezes eight headline objectives and their directions before
+any scalar welfare weights are used. Robust dominance is intentionally strict: for
+every required objective, both scenarios must have numerical lower/upper bounds; one
+scenario must be no worse over the full interval on every objective and strictly better
+on at least one. If any required objective is unbounded or unidentified, the pair is
++INDETERMINATE_MISSING_REQUIRED_OBJECTIVES+ rather than being treated as tied or
+non-dominated.
+
+The current repository therefore does not claim an optimal scenario. Only the
+incremental-policy debt objective is bounded for some financing scenarios (and the
+baseline zero path); GDP, growth, growth-decline, income/wealth/intergenerational
+inequality and FGT2 remain missing as full policy outcomes. All eight scenarios are
+classified +UNRESOLVED_NOT_ENOUGH_IDENTIFIED_OBJECTIVES+. No normative welfare
+weights are used by this screen; any later headline scalar ranking requires a separate
+pre-specified weight set and sensitivity analysis after the required outcomes are
+identified or defensibly bounded.
+
 == Outputs
 
 * +data/derived/vat_fiscal_receipt_reference.csv+: observed FY2024 central
@@ -271,6 +290,10 @@ statement.
   institutional stress points = 2,400 rows.
 * +data/derived/vat_policy_scenario_summary.csv+: one row per policy scenario
   with the institutional range and joint outcome-status vector.
+* +data/derived/vat_policy_pareto_screen.csv+: identification-aware scenario-level
+  Pareto screen over the committed headline objectives.
+* +data/derived/vat_policy_pareto_pairwise.csv+: all 28 pairwise robust-dominance
+  checks, preserving missing required objectives rather than imputing them.
 
 == Reproduction
 
@@ -293,6 +316,8 @@ python scripts/build_vat_household_tax_content_envelope.py
 python scripts/test_vat_household_tax_content_envelope.py
 python research/vat_policy_integration/run_vat_policy_scenario_matrix.py
 python research/vat_policy_integration/test_vat_policy_scenario_matrix.py
+python research/vat_policy_integration/build_vat_policy_pareto_screen.py
+python research/vat_policy_integration/test_vat_policy_pareto_screen.py
 ----
 == Scientific status
 
