@@ -20,7 +20,7 @@ treatment_eligibility,W1,treatment frame,binary + pre-specified reason,protocol,
 treatment_uptake,W2,first stage/compliance,binary + intensity,system log,local_rho_internal,Assignment and uptake remain distinct; no as-treated relabeling
 treatment_start_date,W1,timing,date,system log,all treatment estimands,Must precede W2 measurement window
 nonvat_admin_hours,W0;W1;W2,negative control,hours per fixed task window,task diary + activity log,treatment validity,Used to detect bundled general-admin productivity effects
-released_internal_vat_hours,W2,mechanism denominator,hours per fixed post window,derived from pre-specified pre/post task measure,local_rho_internal,Requires a valid positive treatment first stage; denominator cannot be manufactured from assignment alone
+released_internal_vat_hours,W2,mechanism denominator,hours per fixed post window,derived from pre-specified pre/post task measure,local_rho_internal,Requires a valid burden-reducing treatment first stage; denominator cannot be manufactured from assignment alone
 productive_reassigned_hours,W2,mechanism numerator,hours per fixed post window,staff reassignment log,local_rho_internal,Productive destination taxonomy fixed ex ante and must reconcile with released hours
 nonproductive_reassigned_hours,W2,mechanism reconciliation,hours per fixed post window,staff reassignment log,local_rho_internal,Productive plus nonproductive/unused released hours must reconcile within pre-specified tolerance
 sales,W0;W3,outcome,JPY per 12 months,accounting records,local_output_response,Same accounting period convention across waves
