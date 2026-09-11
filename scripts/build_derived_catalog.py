@@ -25,6 +25,22 @@ SPECS = [
         "Bounded negative-source result: household-unit annual-income to OECD-new equivalized-disposable-income Fréchet transport is not identified from the examined public aggregate tables because the objective-rank population household margin is absent; person deciles, sample counts, same-rank and independence substitutions are explicitly prohibited",
     ),
     (
+        "ESTAT-OBJECTIVE-RANK-RESTRICTED-ROUTE-AUDIT-2024",
+        "estat_objective_rank_restricted_route_audit_2024.csv",
+        "scripts/build_estat_objective_rank_household_margin_audit.py",
+        "EMICRO-2026-ONSITE-NSFCW-QUERY;EMICRO-NSFCW-2024-DS51-META;EMICRO-NSFCW-2024-DS52-META;EMICRO-ONSITE-USE-GUIDANCE;NSTAC-CUSTOM-TABULATION-GUIDANCE",
+        "DERIVED_SECURE_ACCESS_ROUTE_FEASIBILITY_AUDIT",
+        "Five-route audit: 2024 NSFCW DS51 and DS52 are listed for onsite use and expose the required objective-income/expenditure inputs, but cross-system same-household joining remains provider-confirmation-gated; current custom-tabulation listing does not expose 2024",
+    ),
+    (
+        "ESTAT-OBJECTIVE-RANK-RESTRICTED-VARIABLE-MAP-2024",
+        "estat_objective_rank_restricted_variable_map_2024.csv",
+        "scripts/build_estat_objective_rank_household_margin_audit.py",
+        "EMICRO-NSFCW-2024-DS51-META;EMICRO-NSFCW-2024-DS52-META",
+        "DERIVED_SECURE_MICRODATA_VARIABLE_CONTRACT",
+        "Eighteen machine-readable 2024 onsite variables covering candidate household join fields, household size, annual income, OECD-new annual disposable income, weights, consumption and VAT rate-scope proxy inputs; annual-income and objective ranks remain distinct",
+    ),
+    (
         "ESTAT-NSFCW-2024-ANNUAL-INCOME-DECILE-EXPENDITURE-DIAGNOSTIC",
         "estat_2024_annual_income_decile_expenditure_diagnostic.csv",
         "scripts/build_estat_2024_annual_income_decile_expenditure_diagnostic.py",

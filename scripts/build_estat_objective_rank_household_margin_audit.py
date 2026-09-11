@@ -26,6 +26,8 @@ F71531 = ROOT / "data/derived/estat_71531_deciles_long.csv"
 F71561 = ROOT / "data/derived/estat_71561_deciles_long.csv"
 OUT_MATRIX = ROOT / "data/derived/estat_objective_rank_household_margin_source_matrix_2024.csv"
 OUT_AUDIT = ROOT / "data/derived/estat_objective_rank_household_margin_identification_audit_2024.csv"
+OUT_RESTRICTED_ROUTES = ROOT / "data/derived/estat_objective_rank_restricted_route_audit_2024.csv"
+OUT_RESTRICTED_VARIABLES = ROOT / "data/derived/estat_objective_rank_restricted_variable_map_2024.csv"
 
 NEW_HTML_SOURCES = {
     "ESTAT-7142-1-2-2024-DBVIEW": {
@@ -330,6 +332,180 @@ def build() -> tuple[list[dict[str, object]], list[dict[str, object]]]:
     return matrix, audit
 
 
+
+def _meta_rows(catalog: dict[str, dict[str, str]], source_id: str, expected_aggregate: str) -> tuple[dict[str, dict[str, str]], str]:
+    source = catalog[source_id]
+    x = XlsxStream(ROOT / source["raw_file"])
+    rows: list[tuple[int, dict[str, str]]] = []
+    try:
+        rows = list(x.rows())
+    finally:
+        x.close()
+    if rows[0][1].get("B") != "00200564" or expected_aggregate not in rows[1][1].get("F", ""):
+        raise RuntimeError(f"{source_id}: unexpected 2024 NSFCW metadata header")
+    by_var = {v.get("N", ""): v for rn, v in rows if rn >= 9 and v.get("N")}
+    return by_var, rows[1][1].get("B", "")
+
+
+def build_restricted_route() -> tuple[list[dict[str, object]], list[dict[str, object]]]:
+    catalog = {r["source_id"]: r for r in read_csv(CATALOG)}
+    ds51, ds51_name = _meta_rows(catalog, "EMICRO-NSFCW-2024-DS51-META", "所得資産集計体系")
+    ds52, ds52_name = _meta_rows(catalog, "EMICRO-NSFCW-2024-DS52-META", "細分類")
+
+    expected = {
+        "DS51": ["SetaiFugo", "Ichiren", "SetaiID", "Setaijinnin", "I_Bdy001", "I_Bdy031", "M_Weight_Ippan_ZenkokuKen"],
+        "DS52": ["SetaiFugo", "Ichiren", "SetaiID", "Setaijinnin", "M_Nenshu", "Bdy003", "Bdy004", "Bdy015", "Bdy016", "Bdy233", "M_Weight_Ippan_ZenkokuKen"],
+    }
+    for code, names in expected.items():
+        table = ds51 if code == "DS51" else ds52
+        missing = [name for name in names if name not in table]
+        if missing:
+            raise RuntimeError(f"{code}: required metadata variables missing: {missing}")
+    if "2024年集計" not in ds51["SetaiID"].get("I", "") or "2024年集計" not in ds52["SetaiID"].get("I", ""):
+        raise RuntimeError("SetaiID 2024 non-use guard missing from official metadata")
+
+    def variable_row(dataset_code: str, source_id: str, table: dict[str, dict[str, str]], name: str, role: str, bridge_use: str, guard: str) -> dict[str, object]:
+        v = table[name]
+        return {
+            "dataset_code": dataset_code,
+            "source_id": source_id,
+            "variable_name": name,
+            "variable_label": v.get("D", ""),
+            "position": v.get("E", ""),
+            "role": role,
+            "unit_or_definition": v.get("I", ""),
+            "statistical_unit": "HOUSEHOLD",
+            "objective_rank_concept": "OECD_NEW_EQUIVALIZED_DISPOSABLE_INCOME_DECILE",
+            "availability_status": "OBSERVED_OFFICIAL_METADATA",
+            "bridge_use": bridge_use,
+            "guard": guard,
+        }
+
+    variables = [
+        variable_row("M4AR8-DS51", "EMICRO-NSFCW-2024-DS51-META", ds51, "SetaiFugo", "candidate_cross_system_household_key", "candidate join component; provider confirmation required", "Metadata does not itself authorize or prove DS51-DS52 joining."),
+        variable_row("M4AR8-DS51", "EMICRO-NSFCW-2024-DS51-META", ds51, "Ichiren", "candidate_cross_system_household_key", "candidate join component; provider confirmation required", "Must not be treated as a stable cross-system key without provider confirmation."),
+        variable_row("M4AR8-DS51", "EMICRO-NSFCW-2024-DS51-META", ds51, "SetaiID", "nonusable_2024_household_id", "none", "Official metadata says empty / not used for 2024 aggregation."),
+        variable_row("M4AR8-DS51", "EMICRO-NSFCW-2024-DS51-META", ds51, "Setaijinnin", "equivalization_input", "household-size input needed for the official equivalized-disposable-income rank construction", "Use the official NSFCW equivalization rule; do not invent a rank mapping."),
+        variable_row("M4AR8-DS51", "EMICRO-NSFCW-2024-DS51-META", ds51, "I_Bdy001", "annual_household_income", "annual-income side of the joint bridge", "Annual household income is not the objective rank."),
+        variable_row("M4AR8-DS51", "EMICRO-NSFCW-2024-DS51-META", ds51, "I_Bdy031", "oecd_new_annual_disposable_income", "income numerator for the objective-rank construction", "Do not relabel annual-income deciles as this rank."),
+        variable_row("M4AR8-DS51", "EMICRO-NSFCW-2024-DS51-META", ds51, "M_Weight_Ippan_ZenkokuKen", "population_weight", "weighted household objective-rank distribution", "Use only under the provider-approved population/weight definition."),
+        variable_row("M4AR8-DS52", "EMICRO-NSFCW-2024-DS52-META", ds52, "SetaiFugo", "candidate_cross_system_household_key", "candidate join component; provider confirmation required", "Metadata does not itself authorize or prove DS51-DS52 joining."),
+        variable_row("M4AR8-DS52", "EMICRO-NSFCW-2024-DS52-META", ds52, "Ichiren", "candidate_cross_system_household_key", "candidate join component; provider confirmation required", "Must not be treated as a stable cross-system key without provider confirmation."),
+        variable_row("M4AR8-DS52", "EMICRO-NSFCW-2024-DS52-META", ds52, "SetaiID", "nonusable_2024_household_id", "none", "Official metadata says empty / not used for 2024 aggregation."),
+        variable_row("M4AR8-DS52", "EMICRO-NSFCW-2024-DS52-META", ds52, "Setaijinnin", "household_size", "same-household consistency check if cross-system join is approved", "Not a substitute for DS51 OECD-new annual disposable income."),
+        variable_row("M4AR8-DS52", "EMICRO-NSFCW-2024-DS52-META", ds52, "M_Nenshu", "annual_household_income", "annual-income rank / consistency variable on expenditure records", "Annual income remains a distinct rank concept from objective rank."),
+        variable_row("M4AR8-DS52", "EMICRO-NSFCW-2024-DS52-META", ds52, "Bdy003", "consumption_expenditure", "household consumption denominator / expenditure diagnostic", "Two-month-average accounting measure; not itself a legal VAT base."),
+        variable_row("M4AR8-DS52", "EMICRO-NSFCW-2024-DS52-META", ds52, "Bdy004", "food_expenditure", "VAT rate-scope input", "Broad food is not identical to the reduced-rate legal base."),
+        variable_row("M4AR8-DS52", "EMICRO-NSFCW-2024-DS52-META", ds52, "Bdy015", "alcohol_expenditure", "VAT rate-scope exclusion input", "Category-level mapping remains an accounting proxy."),
+        variable_row("M4AR8-DS52", "EMICRO-NSFCW-2024-DS52-META", ds52, "Bdy016", "dining_out_expenditure", "VAT rate-scope exclusion input", "Category-level mapping remains an accounting proxy."),
+        variable_row("M4AR8-DS52", "EMICRO-NSFCW-2024-DS52-META", ds52, "Bdy233", "newspaper_expenditure", "VAT rate-scope sensitivity input", "Qualifying subscription status is not identified by the category alone."),
+        variable_row("M4AR8-DS52", "EMICRO-NSFCW-2024-DS52-META", ds52, "M_Weight_Ippan_ZenkokuKen", "population_weight", "weighted expenditure distribution", "Use only under the provider-approved population/weight definition."),
+    ]
+
+    query_source = catalog["EMICRO-2026-ONSITE-NSFCW-QUERY"]
+    query = (ROOT / query_source["raw_file"]).read_text(encoding="utf-8", errors="ignore")
+    if "2024年" not in query or 'data-list-id="658126"' not in query:
+        raise RuntimeError("2024 NSFCW onsite listing not verified")
+    guidance = (ROOT / catalog["EMICRO-ONSITE-USE-GUIDANCE"]["raw_file"]).read_text(encoding="utf-8", errors="ignore")
+    if "オンサイト施設" not in guidance or "所定の審査" not in guidance:
+        raise RuntimeError("onsite access/output-review guidance not verified")
+    custom = (ROOT / catalog["NSTAC-CUSTOM-TABULATION-GUIDANCE"]["raw_file"]).read_text(encoding="utf-8", errors="ignore")
+    custom_text = re.sub(r"<[^>]+>", " ", html.unescape(custom))
+    custom_text = re.sub(r"\s+", " ", custom_text)
+    m = re.search(r"全国家計構造調査\s*（全国消費実態調査）(.*?)労働力調査", custom_text)
+    if not m or "2019年" not in m.group(1):
+        raise RuntimeError("current NSFCW custom-tabulation year listing not verified")
+    custom_2024 = "2024年" in m.group(1)
+
+    routes = [
+        {
+            "route_id": "NSFCW_2024_ONSITE_DS51_X_DS52",
+            "provider": "Statistics Bureau of Japan / National Statistics Center via e-Micro",
+            "year": "2024",
+            "access_mode": "ON_SITE_QUESTIONNAIRE_INFORMATION",
+            "datasets": f"M4AR8-DS51:{ds51_name};M4AR8-DS52:{ds52_name}",
+            "household_unit": "HOUSEHOLD",
+            "objective_rank_definition": "OECD_NEW_EQUIVALIZED_DISPOSABLE_INCOME_DECILE_FROM_DS51_I_Bdy031_PLUS_OFFICIAL_EQUIVALIZATION_INPUTS",
+            "expenditure_definition": "DS52_DETAILED_TWO_MONTH_AVERAGE_HOUSEHOLD_EXPENDITURE_WITH_RATE_SCOPE_PROXY_INPUTS",
+            "household_join_status": "SHARED_SETAIFUGO_AND_ICHIREN_OBSERVED;EXACT_CROSS_SYSTEM_JOIN_KEY_PROVIDER_CONFIRMATION_REQUIRED;SETAIID_NOT_USED_2024",
+            "access_status": "LISTED_AVAILABLE_ONSITE_2024",
+            "expected_identification_gain": "DIRECT_HOUSEHOLD_JOINT_RANK_BRIDGE_IF_CROSS_SYSTEM_JOIN_CONFIRMED",
+            "current_identification_status": "NOT_IDENTIFIED_PENDING_ACCESS_AND_JOIN_CONFIRMATION",
+            "access_disclosure_reproducibility": "Secure onsite application required; raw questionnaire microdata cannot be checked into this repository; disclosure-reviewed outputs plus code/specification are the reproducible boundary.",
+            "stop_rule": "STOP_PUBLIC_AGGREGATE_SEARCH;NEXT_ACTION_PROVIDER_JOIN_CONFIRMATION_AND_ONSITE_APPLICATION",
+            "source_ids": "EMICRO-2026-ONSITE-NSFCW-QUERY;EMICRO-NSFCW-2024-DS51-META;EMICRO-NSFCW-2024-DS52-META;EMICRO-ONSITE-USE-GUIDANCE",
+        },
+        {
+            "route_id": "NSFCW_2024_ONSITE_DS51_ONLY",
+            "provider": "Statistics Bureau of Japan / e-Micro",
+            "year": "2024",
+            "access_mode": "ON_SITE_QUESTIONNAIRE_INFORMATION",
+            "datasets": f"M4AR8-DS51:{ds51_name}",
+            "household_unit": "HOUSEHOLD",
+            "objective_rank_definition": "HAS_OECD_NEW_ANNUAL_DISPOSABLE_INCOME_INPUT",
+            "expenditure_definition": "NO_DETAILED_CONSUMPTION_FILE_IN_THIS_DATASET",
+            "household_join_status": "NOT_APPLICABLE_SINGLE_DATASET",
+            "access_status": "LISTED_AVAILABLE_ONSITE_2024",
+            "expected_identification_gain": "NO_DIRECT_VAT_EXPENDITURE_BRIDGE_ALONE",
+            "current_identification_status": "INSUFFICIENT_ALONE",
+            "access_disclosure_reproducibility": "Same onsite/disclosure constraints as the primary route.",
+            "stop_rule": "DO_NOT_SUBSTITUTE_OBJECTIVE_RANK_MARGIN_FOR_JOINT_HOUSEHOLD_BRIDGE",
+            "source_ids": "EMICRO-NSFCW-2024-DS51-META;EMICRO-ONSITE-USE-GUIDANCE",
+        },
+        {
+            "route_id": "NSFCW_2024_ONSITE_DS52_ONLY",
+            "provider": "Statistics Bureau of Japan / e-Micro",
+            "year": "2024",
+            "access_mode": "ON_SITE_QUESTIONNAIRE_INFORMATION",
+            "datasets": f"M4AR8-DS52:{ds52_name}",
+            "household_unit": "HOUSEHOLD",
+            "objective_rank_definition": "NO_DS51_I_Bdy031_OECD_NEW_ANNUAL_DISPOSABLE_INCOME_VARIABLE",
+            "expenditure_definition": "HAS_DETAILED_TWO_MONTH_AVERAGE_EXPENDITURE_AND_WEIGHTS",
+            "household_join_status": "NOT_APPLICABLE_SINGLE_DATASET",
+            "access_status": "LISTED_AVAILABLE_ONSITE_2024",
+            "expected_identification_gain": "NO_EXACT_OBJECTIVE_RANK_BRIDGE_ALONE",
+            "current_identification_status": "INSUFFICIENT_ALONE",
+            "access_disclosure_reproducibility": "Same onsite/disclosure constraints as the primary route.",
+            "stop_rule": "DO_NOT_RELABEL_ANNUAL_INCOME_OR_DS52_DISPOSABLE_INCOME_AS_OBJECTIVE_RANK",
+            "source_ids": "EMICRO-NSFCW-2024-DS52-META;EMICRO-ONSITE-USE-GUIDANCE",
+        },
+        {
+            "route_id": "NSFCW_2024_CUSTOM_TABULATION",
+            "provider": "National Statistics Center",
+            "year": "2024",
+            "access_mode": "CUSTOM_TABULATION",
+            "datasets": "REQUESTED_2024_NSFCW_CUSTOM_TABLE",
+            "household_unit": "HOUSEHOLD",
+            "objective_rank_definition": "REQUEST_OBJECTIVE_RANK_X_EXPENDITURE_TABLE_IF_PROVIDER_SUPPORTS_2024",
+            "expenditure_definition": "REQUEST_HOUSEHOLD_EXPENDITURE_OR_VAT_RATE_SCOPE_CROSSTAB",
+            "household_join_status": "PROVIDER_PERFORMS_TABULATION_NO_USER_MICRODATA_JOIN",
+            "access_status": "NOT_CURRENTLY_LISTED_FOR_2024" if not custom_2024 else "LISTED_FOR_2024",
+            "expected_identification_gain": "DIRECT_AGGREGATE_JOINT_BRIDGE_IF_2024_CUSTOM_SPEC_ACCEPTED;OTHERWISE_NO_GAIN",
+            "current_identification_status": "NOT_AVAILABLE_FROM_CURRENT_LISTING" if not custom_2024 else "PENDING_SPECIFICATION",
+            "access_disclosure_reproducibility": "Fee-based specification and provider disclosure rules; resulting table can be provenance-registered if supplied.",
+            "stop_rule": "DO_NOT_ASSUME_2024_SERVICE_FROM_2019_LISTING;REOPEN_ONLY_ON_PROVIDER_CONFIRMATION",
+            "source_ids": "NSTAC-CUSTOM-TABULATION-GUIDANCE",
+        },
+        {
+            "route_id": "PUBLIC_AGGREGATE_TABLE_SEARCH",
+            "provider": "e-Stat public tables",
+            "year": "2024",
+            "access_mode": "PUBLIC_AGGREGATE",
+            "datasets": "SEVEN_ALREADY_AUDITED_SOURCE_FAMILIES",
+            "household_unit": "MIXED_HOUSEHOLD_PERSON_SAMPLE_COUNT",
+            "objective_rank_definition": "PUBLIC_OBJECTIVE_RANK_PERSON_MARGIN_ONLY",
+            "expenditure_definition": "ANNUAL_INCOME_RANK_HOUSEHOLD_EXPENDITURE_ONLY",
+            "household_join_status": "NO_DIRECT_JOINT_TABLE_IN_AUDITED_FAMILIES",
+            "access_status": "PUBLIC",
+            "expected_identification_gain": "NO_FURTHER_GAIN_UNDER_EXISTING_AUDIT",
+            "current_identification_status": "PUBLIC_AGGREGATE_HOUSEHOLD_MARGIN_NOT_IDENTIFIED",
+            "access_disclosure_reproducibility": "Fully reproducible public route already captured in repository.",
+            "stop_rule": "STOP_PUBLIC_SEARCH_UNLESS_NEW_SOURCE_SUPPLIES_HOUSEHOLD_JOINT_BRIDGE_OR_OBJECTIVE_RANK_POPULATION_HOUSEHOLD_MARGIN",
+            "source_ids": "ESTAT-OBJECTIVE-RANK-HOUSEHOLD-MARGIN-SOURCE-MATRIX-2024",
+        },
+    ]
+    return routes, variables
+
 def write_or_check(path: Path, rows: list[dict[str, object]], check: bool) -> None:
     expected = render(rows)
     if check:
@@ -347,12 +523,15 @@ def main() -> None:
     ap.add_argument("--check", action="store_true")
     args = ap.parse_args()
     matrix, audit = build()
+    routes, variables = build_restricted_route()
     write_or_check(OUT_MATRIX, matrix, args.check)
     write_or_check(OUT_AUDIT, audit, args.check)
+    write_or_check(OUT_RESTRICTED_ROUTES, routes, args.check)
+    write_or_check(OUT_RESTRICTED_VARIABLES, variables, args.check)
     if args.check:
         print(
             "NSFCW objective-rank household-margin audit: current "
-            "(7 source families; no objective-rank population household margin)"
+            "(7 public source families; 2024 onsite route mapped; join confirmation pending)"
         )
 
 
