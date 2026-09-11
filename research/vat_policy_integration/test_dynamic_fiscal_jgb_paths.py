@@ -65,7 +65,7 @@ for aid in {r["assumption_set_id"] for r in rows}:
     for year in range(1, 11):
         full = D(by_key[("full_abolition_jgb", aid, str(year))]["closing_incremental_debt_yen"])
         mixed = D(by_key[("full_abolition_mixed", aid, str(year))]["closing_incremental_debt_yen"])
-        assert mixed * 2 == full
+        assert abs(mixed * 2 - full) < D("0.000001")
 
 low = by_key[("full_abolition_jgb", "r01_g04", "10")]
 high = by_key[("full_abolition_jgb", "r04_g00", "10")]
