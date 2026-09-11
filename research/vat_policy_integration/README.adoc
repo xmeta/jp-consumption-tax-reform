@@ -101,17 +101,36 @@ effect.
 
 === Historical pass-through and quantity evidence
 
-+data/derived/vat_pass_through_evidence.csv+ keeps four distinct objects separate.
-Shiraishi's 2014 POS evidence finds heterogeneous retail pass-through, including
-under- and over-shifting.  The Bank of Japan's July 2019 full-pass-through input
-is retained as a *mechanical CPI assumption*, not relabeled as an empirical
-estimate.  The same BOJ outlook separates front-loading/subsequent decline from
-the real-income channel.  The Cabinet Office's ex-post 2014 estimate places the
++data/derived/vat_pass_through_evidence.csv+ keeps Japan historical evidence,
+mechanical assumptions, statutory scope and external temporary-cut evidence
+separate. Shiraishi's 2014 POS evidence finds heterogeneous retail pass-through,
+including under- and over-shifting. The Bank of Japan's July 2019 full-pass-through
+input is retained as a *mechanical CPI assumption*, not relabeled as an empirical
+estimate. The same BOJ outlook separates front-loading/subsequent decline from
+the real-income channel. The Cabinet Office's ex-post 2014 estimate places the
 front-loading/rebound timing shift at 2.5--3.3 trillion yen (about 0.5--0.6% of
 real GDP), but this is intertemporal substitution around a tax increase, not a
-steady-state VAT-cut demand elasticity.  Ministry of Finance material fixes the
+steady-state VAT-cut demand elasticity. Ministry of Finance material fixes the
 10%/8% statutory scope, while decile-specific standard/reduced/exempt shares are
 still unidentified.
+
+A bounded Issue #89 search adds two direct *external* temporary-cut episodes.
+Germany's 2020 temporary VAT cut produced about 70% supermarket price pass-through
+in a Germany-versus-Austria design; the subsequent rate restoration had only about
+half the price effect in the cited study scope. The United Kingdom's 2008 temporary
+2.5-percentage-point cut initially lowered prices, but part of pass-through was
+reversed within months; retail-sales volume rose around 1% and then fell after the
+cut ended, consistent with substantial intertemporal substitution. These results
+show why increase-to-decrease symmetry and a time-invariant pass-through parameter
+should not be imposed mechanically.
+
+The official Japanese standard-rate history used in the same audit enumerates the
+1989 introduction at 3% and increases to 5%, 8%, and 10%, but no implemented
+nationwide standard-rate decrease episode. Consequently the German 0.70 estimate
+and the UK temporary response are *external sensitivities*, not a formal bound on
+Japan. +data/derived/vat_rate_cut_transport_audit.csv+ records the stop rule. The
+Japan 5%, 0%, and abolition pass-through parameter remains +NOT_IDENTIFIED+, and
+full institutional abolition remains distinct from a temporary statutory-rate cut.
 
 === Annual-income-decile VAT rate-scope proxy
 
@@ -200,8 +219,11 @@ statement.
   and full-JGB static financing-share reference.
 * +data/derived/estat_2024_annual_income_decile_expenditure_diagnostic.csv+:
   observed annual-income-decile household expenditure and composition diagnostic.
-* +data/derived/vat_pass_through_evidence.csv+: historical Japan pass-through,
-  mechanical-assumption, VAT-base-scope and intertemporal-quantity evidence.
+* +data/derived/vat_pass_through_evidence.csv+: Japan historical pass-through,
+  mechanical assumptions and statutory scope plus external Germany/UK temporary-cut
+  evidence kept separate from the Japan policy parameter.
+* +data/derived/vat_rate_cut_transport_audit.csv+: bounded rate-cut transport,
+  symmetry, Japan-identification and public-search stop audit.
 * +data/derived/estat_2024_annual_income_decile_vat_rate_scope_diagnostic.csv+:
   annual-income-decile food/alcohol/dining/newspaper survey-category rate-scope proxy.
 * +data/derived/estat_objective_rank_restricted_route_audit_2024.csv+:

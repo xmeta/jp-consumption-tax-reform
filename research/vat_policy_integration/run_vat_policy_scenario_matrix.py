@@ -84,6 +84,8 @@ def build():
         "QR-2019-BOJ-DEMAND-CHANNELS",
         "QR-2014-CAO-FRONTLOAD-REBOUND",
         "BASE-2019-MOF-RATE-SCOPE",
+        "PT-2020-GERMANY-TEMP-CUT",
+        "QR-2008-UK-TEMP-CUT",
     }
     if set(pass_through) != required_pass_through:
         raise RuntimeError("unexpected VAT pass-through evidence set")
