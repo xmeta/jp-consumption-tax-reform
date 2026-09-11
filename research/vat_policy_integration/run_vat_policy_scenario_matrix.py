@@ -17,6 +17,7 @@ SENS = ROOT / "data/derived/vat_compliance_productivity_sensitivity.csv"
 IDENT = ROOT / "data/derived/vat_compliance_identification_status.csv"
 FISCAL = ROOT / "data/derived/vat_policy_fiscal_replacement_reference.csv"
 JGB_GDP = ROOT / "data/derived/vat_jgb_debt_gdp_reference.csv"
+DYNAMIC_FISCAL = ROOT / "data/derived/vat_dynamic_fiscal_summary.csv"
 HOUSEHOLD_EXP = ROOT / "data/derived/estat_2024_annual_income_decile_expenditure_diagnostic.csv"
 HOUSEHOLD_TAX = ROOT / "data/derived/vat_household_tax_content_envelope.csv"
 RATE_SCOPE = ROOT / "data/derived/estat_2024_annual_income_decile_vat_rate_scope_diagnostic.csv"
@@ -58,6 +59,7 @@ def build():
         raise RuntimeError('scientific runtime invariant failed: research/vat_policy_integration/run_vat_policy_scenario_matrix.py:54')
     fiscal = {r["scenario_id"]: r for r in read(FISCAL)}
     jgb_gdp = {r["scenario_id"]: r for r in read(JGB_GDP)}
+    dynamic_fiscal = {r["scenario_id"]: r for r in read(DYNAMIC_FISCAL)}
     household_exp = read(HOUSEHOLD_EXP)
     household_tax = read(HOUSEHOLD_TAX)
     rate_scope = read(RATE_SCOPE)
@@ -66,6 +68,8 @@ def build():
         raise RuntimeError('scientific runtime invariant failed: research/vat_policy_integration/run_vat_policy_scenario_matrix.py:59')
     if not (set(jgb_gdp) == EXPECTED_SCENARIOS):
         raise RuntimeError('scientific runtime invariant failed: research/vat_policy_integration/run_vat_policy_scenario_matrix.py:60')
+    if set(dynamic_fiscal) != EXPECTED_SCENARIOS:
+        raise RuntimeError('unexpected dynamic fiscal scenario set')
     if not (len(household_exp) == 10):
         raise RuntimeError('scientific runtime invariant failed: research/vat_policy_integration/run_vat_policy_scenario_matrix.py:61')
     if not ({int(r['annual_income_decile']) for r in household_exp} == set(range(1, 11))):
@@ -268,6 +272,7 @@ def build():
         levels = [float(r["institutional_gdp_level_effect"]) for r in rr]
         growth = [float(r["institutional_transition_growth_contribution"]) for r in rr]
         first = rr[0]
+        dynamic = dynamic_fiscal[scenario["scenario_id"]]
         summary.append({
             "scenario_id": scenario["scenario_id"],
             "scenario_label": scenario["scenario_label"],
@@ -288,6 +293,15 @@ def build():
             "static_incremental_jgb_financing_share_of_fy2024_nominal_gdp": first["static_incremental_jgb_financing_share_of_fy2024_nominal_gdp"],
             "static_incremental_jgb_financing_pct_of_fy2024_nominal_gdp": first["static_incremental_jgb_financing_pct_of_fy2024_nominal_gdp"],
             "debt_gdp_reference_status": first["debt_gdp_reference_status"],
+            "dynamic_fiscal_status": dynamic["dynamic_fiscal_status"],
+            "dynamic_fiscal_modeled_assumption_sets": dynamic["modeled_assumption_sets"],
+            "dynamic_fiscal_reported_path_assumption_set_id": dynamic["reported_path_assumption_set_id"],
+            "dynamic_fiscal_horizon_years": dynamic["horizon_years"],
+            "year10_incremental_debt_gdp_ratio_min": dynamic["year10_incremental_debt_gdp_ratio_min"],
+            "year10_incremental_debt_gdp_ratio_max": dynamic["year10_incremental_debt_gdp_ratio_max"],
+            "year10_cumulative_incremental_interest_yen_min": dynamic["year10_cumulative_incremental_interest_yen_min"],
+            "year10_cumulative_incremental_interest_yen_max": dynamic["year10_cumulative_incremental_interest_yen_max"],
+            "dynamic_fiscal_identification_status": dynamic["identification_status"],
             "overall_real_gdp_status": first["overall_real_gdp_level_effect_status"],
             "annual_real_growth_status": first["annual_real_growth_rate_effect_status"],
             "growth_decline_penalty_status": first["growth_decline_penalty_effect_status"],

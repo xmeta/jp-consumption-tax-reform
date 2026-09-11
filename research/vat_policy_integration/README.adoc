@@ -55,7 +55,42 @@ the official ESRI FY2024 nominal GDP of 642.4147 trillion yen.  The resulting
 GDP, is reported as a *static incremental JGB-financing share*.  It is not the
 change in observed debt/GDP: baseline debt stock, redemptions, other borrowing,
 financial assets, nominal-GDP feedback, interest costs and time dynamics are not
-modeled.
+modeled by that static benchmark.
+
+== Dynamic incremental fiscal/JGB accounting
+
+Issue #56 adds a separate stock-flow-consistent *incremental policy-debt*
+sensitivity module.  It does not reconstruct or forecast Japan's total government
+debt stock.  The opening incremental debt is zero and the FY2024 central VAT cash-
+receipt reference of 25.021206715 trillion yen is repeated as a constant nominal
+annual gap only for the financing sensitivity.  The accounting identity is
+
+[stem]
+++++
+D_t = D_{t-1} - R_t + I_t^{gross},\qquad
+I_t^{gross}=R_t+G_t+iD_{t-1}+\Delta A_t,
+++++
+
+where stem:[G_t] is the policy primary gap financed with JGBs, stem:[R_t]
+redemptions, stem:[i] the exogenous effective interest-rate sensitivity and
+stem:[\Delta A_t] the financial-asset change (fixed at zero in this first model).
+Redemptions are shown explicitly and refinanced, so they affect gross issuance but
+do not by themselves change net incremental debt.
+
+The committed sensitivity grid crosses effective interest rates of 1%, 2% and 4%
+with nominal-GDP growth of 0%, 2% and 4%, uses a 20% annual redemption/refinancing
+rate, a ten-year horizon, and a 50% primary JGB share for the mixed-financing case.
+These are versioned *model sensitivities, not empirical bounds*.  The stored annual
+paths use the central +r02_g02+ case; the summary reports extrema over all nine
+rate-growth combinations.
+
+Under those accounting assumptions, year-10 incremental debt/GDP is 27.53--46.76%
+for full JGB financing and 13.76--23.38% for the 50%-JGB mixed case. Income-tax and
+asset-tax replacement show zero incremental policy debt only *conditional on full
+replacement of the static target*.  The results are not total government debt/GDP,
+fiscal-sustainability estimates, interest-rate forecasts, or endogenous JGB-market
+responses.  VAT demand and institutional productivity effects are not inserted into
+nominal GDP here, which prevents double counting with the separate policy modules.
 
 On the household side, 2024 NSFCW Table 1-21 now supplies an observed
 *annual-household-income-decile expenditure diagnostic*. Monthly consumption

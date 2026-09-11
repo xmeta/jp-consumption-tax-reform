@@ -207,6 +207,19 @@ assert summary["full_abolition_jgb"]["static_incremental_jgb_financing_share_of_
 assert summary["full_abolition_jgb"]["static_incremental_jgb_financing_pct_of_fy2024_nominal_gdp"] == "3.894868333"
 assert summary["full_abolition_jgb"]["debt_gdp_reference_status"] == "STATIC_INCREMENTAL_JGB_FINANCING_SHARE_OF_FY2024_NOMINAL_GDP"
 assert summary["full_abolition_jgb"]["debt_gdp_status"] == "STATIC_JGB_AMOUNT_REFERENCE_AVAILABLE_DEBT_GDP_AND_DYNAMIC_PATH_NOT_MODELED"
+assert summary["full_abolition_jgb"]["dynamic_fiscal_status"] == "MODEL_CONTINGENT_INCREMENTAL_DEBT_PATH_SENSITIVITY"
+assert summary["full_abolition_jgb"]["dynamic_fiscal_modeled_assumption_sets"] == "9"
+assert summary["full_abolition_jgb"]["dynamic_fiscal_reported_path_assumption_set_id"] == "r02_g02"
+assert summary["full_abolition_jgb"]["year10_incremental_debt_gdp_ratio_min"] == "0.275285239955"
+assert summary["full_abolition_jgb"]["year10_incremental_debt_gdp_ratio_max"] == "0.467622064324"
+assert summary["full_abolition_mixed"]["year10_incremental_debt_gdp_ratio_min"] == "0.137642619977"
+assert summary["full_abolition_mixed"]["year10_incremental_debt_gdp_ratio_max"] == "0.233811032162"
+for sid in ("full_abolition_income_tax", "full_abolition_asset_tax"):
+    assert summary[sid]["year10_incremental_debt_gdp_ratio_min"] == "0"
+    assert summary[sid]["year10_incremental_debt_gdp_ratio_max"] == "0"
+for sid in ("reduced_5", "zero_rate_admin_retained", "full_abolition"):
+    assert summary[sid]["year10_incremental_debt_gdp_ratio_min"] == ""
+    assert summary[sid]["dynamic_fiscal_identification_status"] == "NOT_MODELED"
 for sid in ("full_abolition_income_tax", "full_abolition_asset_tax", "full_abolition_mixed"):
     assert summary[sid]["replacement_tax_target_reference_yen"] == "25021206715000"
 
