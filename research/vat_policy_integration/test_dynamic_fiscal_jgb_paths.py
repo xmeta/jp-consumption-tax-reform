@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 if not __debug__:
-    raise RuntimeError("optimized Python is not supported for executable tests")
+    raise RuntimeError("optimized Python is not supported for executable tests; assertions must remain active")
 from pathlib import Path
 from decimal import Decimal
 import csv
