@@ -73,17 +73,26 @@ def render_product(rows: list[dict[str, str]], product_id: str) -> str:
     return buffer.getvalue()
 
 
-def expected_outputs(root: Path = ROOT) -> dict[Path, str]:
+def expected_outputs(
+    root: Path = ROOT, product_id: str | None = None
+) -> dict[Path, str]:
     rows = read_graph(root)
+    outputs = (
+        {product_id: PRODUCT_OUTPUTS[product_id]}
+        if product_id is not None
+        else PRODUCT_OUTPUTS
+    )
     return {
-        relative: render_product(rows, product_id)
-        for product_id, relative in PRODUCT_OUTPUTS.items()
+        relative: render_product(rows, selected_product)
+        for selected_product, relative in outputs.items()
     }
 
 
-def generate(root: Path = ROOT, *, check: bool = False) -> list[str]:
+def generate(
+    root: Path = ROOT, *, check: bool = False, product_id: str | None = None
+) -> list[str]:
     errors: list[str] = []
-    for relative, expected in expected_outputs(root).items():
+    for relative, expected in expected_outputs(root, product_id).items():
         path = root / relative
         if check:
             if not path.is_file():
@@ -99,14 +108,17 @@ def generate(root: Path = ROOT, *, check: bool = False) -> list[str]:
 def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("--check", action="store_true")
+    parser.add_argument("--product", choices=sorted(PRODUCT_OUTPUTS))
     args = parser.parse_args()
-    errors = generate(ROOT, check=args.check)
+    errors = generate(ROOT, check=args.check, product_id=args.product)
     if errors:
         raise SystemExit("\n".join("ERROR: " + error for error in errors))
     action = "validation" if args.check else "generation"
+    products = [args.product] if args.product else list(PRODUCT_OUTPUTS)
+    rows = read_graph(ROOT)
     counts = {
-        product: sum(row["product_id"] == product for row in read_graph(ROOT))
-        for product in PRODUCT_OUTPUTS
+        product: sum(row["product_id"] == product for row in rows)
+        for product in products
     }
     print(
         "claim-registry " + action + ": OK "

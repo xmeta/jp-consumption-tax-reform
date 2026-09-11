@@ -64,6 +64,7 @@ VAT = (
     ("research/vat_policy_integration/test_vat_policy_scenario_matrix.py",),
     ("research/vat_policy_integration/build_vat_policy_pareto_screen.py",),
     ("research/vat_policy_integration/test_vat_policy_pareto_screen.py",),
+    ("scripts/generate_claim_registries.py", "--check", "--product", "vat_abolition"),
 )
 
 INCOME_TAX = (
@@ -156,7 +157,7 @@ PAPER1_GENERATORS = (
 PAPER1 = (
     *STAGE1,
     *PAPER1_GENERATORS,
-    ("scripts/generate_claim_registries.py", "--check"),
+    ("scripts/generate_claim_registries.py", "--check", "--product", "paper1"),
     *((path, "--check") for (path,) in PAPER1_GENERATORS),
     ("paper1/scripts/validate_claim_registry.py",),
 )

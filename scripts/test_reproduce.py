@@ -48,6 +48,20 @@ for path in generators:
     assert (path,) in paper1
     assert (path, "--check") in paper1
 
+assert (
+    "scripts/generate_claim_registries.py",
+    "--check",
+    "--product",
+    "paper1",
+) in reproduce.PAPER1
+assert (
+    "scripts/generate_claim_registries.py",
+    "--check",
+    "--product",
+    "vat_abolition",
+) in reproduce.VAT
+assert ("scripts/generate_claim_registries.py", "--check") in reproduce.PROVENANCE
+
 assert "data/derived/*.csv" in reproduce.CLEAN_ROOM_GLOBS
 assert "data/source_catalog.csv" in reproduce.CLEAN_ROOM_GLOBS
 assert "paper1/data/stage1_frontier_table.csv" in reproduce.CLEAN_ROOM_GLOBS
