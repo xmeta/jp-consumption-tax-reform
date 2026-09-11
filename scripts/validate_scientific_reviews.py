@@ -18,12 +18,17 @@ REVIEW_FIELDS = [
 ]
 PRODUCT_FIELDS = [
     "product_id", "display_name", "scope", "reproduction_target",
-    "claim_registry", "component_ids",
+    "claim_registry", "component_ids", "publication_status",
 ]
 TRACKS = {"ADVERSARIAL_CLAIM", "ECONOMIC_IDENTIFICATION", "MANUSCRIPT_MAJOR_REVISION"}
 INDEPENDENCE = {"INTERNAL_ADVERSARIAL": 1, "INDEPENDENT_REVIEWER": 2, "EXTERNAL_PEER": 3}
 GATE_STATUSES = {"PENDING", "SATISFIED"}
 COMMIT_RE = re.compile(r"^[0-9a-f]{40}$")
+
+PUBLICATION_TARGETS = {
+    "paper1": "SUBMISSION_QUALITY",
+    "vat_abolition": "STANDALONE_PAPER",
+}
 
 REQUIRED_GATES = {
     "paper1": {
@@ -152,6 +157,8 @@ def validate(root: Path = ROOT) -> list[str]:
             source_rows = list(csv.DictReader(handle))
         with (root / "data/claim_graph.csv").open(encoding="utf-8", newline="") as handle:
             claim_rows = list(csv.DictReader(handle))
+        with (root / "data/scientific_state.csv").open(encoding="utf-8", newline="") as handle:
+            state_rows = list(csv.DictReader(handle))
     except OSError as exc:
         errors.append(f"provenance: {exc}")
         return errors
@@ -167,6 +174,55 @@ def validate(root: Path = ROOT) -> list[str]:
             errors.append(
                 f"evidence: {claim.get('claim_id')}: review IDs used as evidence: "
                 + ";".join(sorted(used_review_ids))
+            )
+
+    gates_by_product = {
+        product_id: [gate for gate in gates if gate["product_id"] == product_id]
+        for product_id in product_ids
+    }
+
+    def identification_review_satisfied(product_id: str) -> bool:
+        return any(
+            gate["review_track"] == "ECONOMIC_IDENTIFICATION"
+            and gate["status"] == "SATISFIED"
+            for gate in gates_by_product.get(product_id, [])
+        )
+
+    for product in products:
+        product_id = product["product_id"]
+        target = PUBLICATION_TARGETS.get(product_id)
+        if product["publication_status"] == target and any(
+            gate["status"] != "SATISFIED" for gate in gates_by_product.get(product_id, [])
+        ):
+            errors.append(
+                f"promotion: {product_id}: {target} blocked until all product review gates are satisfied"
+            )
+
+    states_by_id = {row.get("component_id", ""): row for row in state_rows}
+    for product in products:
+        product_id = product["product_id"]
+        if identification_review_satisfied(product_id):
+            continue
+        for component_id in split(product["component_ids"]):
+            state = states_by_id.get(component_id)
+            if state is None:
+                continue
+            if (
+                state.get("maturity") == "READY"
+                or state.get("causal_status") == "CAUSAL_IDENTIFIED"
+                or state.get("policy_usable", "").lower() == "true"
+            ):
+                errors.append(
+                    f"promotion: {product_id}:{component_id}: strong scientific-state promotion requires satisfied independent identification review"
+                )
+
+    for claim in claim_rows:
+        product_id = claim.get("product_id", "")
+        if product_id not in product_ids or identification_review_satisfied(product_id):
+            continue
+        if claim.get("causal_status") == "CAUSAL_IDENTIFIED" or claim.get("policy_status") != "NOT_POLICY_USABLE":
+            errors.append(
+                f"promotion: {claim.get('claim_id')}: causal/policy claim promotion requires satisfied independent identification review"
             )
 
     return errors

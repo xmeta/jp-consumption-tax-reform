@@ -43,6 +43,7 @@ def copy_fixture(root: Path) -> None:
         "data/scientific_reviews.csv",
         "data/source_catalog.csv",
         "data/claim_graph.csv",
+        "data/scientific_state.csv",
         "reviews/paper1_adversarial_2026-09-12.adoc",
     ):
         dst = root / rel
@@ -117,5 +118,38 @@ with tempfile.TemporaryDirectory() as tmp:
     (root / "reviews/paper1_adversarial_2026-09-12.adoc").unlink()
     errors = validator.validate(root)
     check(any("missing findings_path" in error for error in errors), "missing review artifact passed")
+
+    root = Path(tmp) / "publication-promotion"
+    copy_fixture(root)
+    with (root / "data/research_products.csv").open(encoding="utf-8", newline="") as handle:
+        reader = csv.DictReader(handle)
+        product_rows = list(reader)
+        product_fields = list(reader.fieldnames or [])
+    next(row for row in product_rows if row["product_id"] == "paper1")["publication_status"] = "SUBMISSION_QUALITY"
+    write_csv(root / "data/research_products.csv", product_rows, product_fields)
+    errors = validator.validate(root)
+    check(any("SUBMISSION_QUALITY blocked" in error for error in errors), "publication promotion passed pending reviews")
+
+    root = Path(tmp) / "vat-publication-promotion"
+    copy_fixture(root)
+    with (root / "data/research_products.csv").open(encoding="utf-8", newline="") as handle:
+        reader = csv.DictReader(handle)
+        product_rows = list(reader)
+        product_fields = list(reader.fieldnames or [])
+    next(row for row in product_rows if row["product_id"] == "vat_abolition")["publication_status"] = "STANDALONE_PAPER"
+    write_csv(root / "data/research_products.csv", product_rows, product_fields)
+    errors = validator.validate(root)
+    check(any("STANDALONE_PAPER blocked" in error for error in errors), "VAT standalone-paper promotion passed pending reviews")
+
+    root = Path(tmp) / "state-promotion"
+    copy_fixture(root)
+    with (root / "data/scientific_state.csv").open(encoding="utf-8", newline="") as handle:
+        reader = csv.DictReader(handle)
+        state_rows = list(reader)
+        state_fields = list(reader.fieldnames or [])
+    next(row for row in state_rows if row["component_id"] == "stage1_filing_bound")["maturity"] = "READY"
+    write_csv(root / "data/scientific_state.csv", state_rows, state_fields)
+    errors = validator.validate(root)
+    check(any("strong scientific-state promotion requires" in error for error in errors), "strong state promotion passed pending identification review")
 
 print("scientific-review gate tests: OK")

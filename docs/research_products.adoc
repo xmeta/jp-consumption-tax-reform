@@ -12,12 +12,16 @@ state remains governed by `data/scientific_state.csv` and claim status by
 == Products
 
 `paper1` is the personal income-tax identification and robustness manuscript.
-Its claim projection is `paper1/data/claim_registry.csv` and its reproduction
-entrypoint is `python scripts/reproduce.py paper1`.
+Its current `publication_status` is `WORKING_MANUSCRIPT`; promotion to
+`SUBMISSION_QUALITY` is review-gated. Its claim projection is
+`paper1/data/claim_registry.csv` and its reproduction entrypoint is
+`python scripts/reproduce.py paper1`.
 
 `vat_abolition` is the VAT abolition / policy-integration research product. Its
-claim projection is `research/vat_claim_registry.csv` and its reproduction
-entrypoint is `python scripts/reproduce.py vat`.
+current `publication_status` is `RESEARCH_PROGRAM`; promotion to
+`STANDALONE_PAPER` is review-gated. Its claim projection is
+`research/vat_claim_registry.csv` and its reproduction entrypoint is
+`python scripts/reproduce.py vat`.
 
 Shared repository files may be consumed by either product. Consumption is
 explicit in `data/research_product_files.csv`; a shared file used by both

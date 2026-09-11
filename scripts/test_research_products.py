@@ -47,6 +47,9 @@ with tempfile.TemporaryDirectory() as tmp:
             assert len(names) == len(set(names))
             metadata = json.loads(archive.read("PRODUCT_BUNDLE.json"))
             assert metadata["product_id"] == product_id
+            with (ROOT / "data/research_products.csv").open(encoding="utf-8", newline="") as handle:
+                products = {row["product_id"]: row for row in csv.DictReader(handle)}
+            assert metadata["publication_status"] == products[product_id]["publication_status"]
             manifest = list(csv.DictReader(io.StringIO(archive.read("PRODUCT_BUNDLE_MANIFEST.csv").decode())))
             expected = [row for row in file_rows if row["product_id"] == product_id]
             assert len(manifest) == len(expected)

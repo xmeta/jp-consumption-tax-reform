@@ -15,9 +15,9 @@ Review records are governance artifacts, not scientific evidence. They must not 
 
 Independent economic/identification review is required before any change that promotes a component to `maturity=READY`, promotes `causal_status` to `CAUSAL_IDENTIFIED`, or sets `policy_usable=true`.
 
-At claim level, independent review is required before promoting an active claim to `identification_status=READY`, a causal identified claim, or a policy-usable conclusion.
+At claim level, independent review is required before promoting an active claim to a causal-identified or policy-usable conclusion. A descriptive `identification_status=READY` label alone is not publication approval and does not satisfy a product review gate.
 
-A product-level publication promotion also requires its product-specific gate rows to be satisfied.
+A product-level publication promotion also requires its product-specific gate rows to be satisfied. `data/research_products.csv` carries the current `publication_status`; changing `paper1` to `SUBMISSION_QUALITY` or `vat_abolition` to `STANDALONE_PAPER` is rejected while any required gate remains pending.
 
 == Review tracks
 

@@ -57,6 +57,7 @@ def build(product_id: str, output: Path, root: Path = ROOT) -> str:
         "reproduction_command": f"python scripts/reproduce.py {product['reproduction_target']}",
         "claim_registry": product["claim_registry"],
         "component_ids": product["component_ids"].split(";"),
+        "publication_status": product["publication_status"],
     }
     output.parent.mkdir(parents=True, exist_ok=True)
     with zipfile.ZipFile(output, "w") as archive:
