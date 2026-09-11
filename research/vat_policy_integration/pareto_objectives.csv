@@ -1,0 +1,9 @@
+objective_id,objective_label,direction,required_for_headline,value_min_column,value_max_column,status_column,admissibility_note
+overall_real_gdp_level_effect,Overall real GDP level effect,maximize,true,,,overall_real_gdp_status,Headline objective; no institutional-only proxy substitution allowed.
+annual_real_growth_rate_effect,Annual real growth rate effect,maximize,true,,,annual_real_growth_status,Headline objective; annual growth must be identified as an overall policy outcome.
+growth_decline_penalty,Growth-rate decline penalty,minimize,true,,,growth_decline_penalty_status,Penalty target from the repository objective function; requires a full growth path.
+income_gini_effect,Income Gini effect,minimize,true,,,income_gini_status,Objective-rank household incidence is required; annual-income deciles are not a substitute.
+wealth_gini_effect,Wealth Gini effect,minimize,true,,,wealth_gini_status,Requires a household wealth-policy bridge.
+intergenerational_gap_effect,Intergenerational inequality effect,minimize,true,,,intergenerational_gap_status,Requires an identified intergenerational outcome bridge.
+fgt2_effect,Squared poverty-gap FGT2 effect,minimize,true,,,fgt2_status,Objective-rank household incidence is required; rate-only tax-content envelopes are not welfare effects.
+year10_incremental_policy_debt_gdp,Year-10 incremental policy debt to GDP,minimize,true,year10_incremental_debt_gdp_ratio_min,year10_incremental_debt_gdp_ratio_max,dynamic_fiscal_identification_status,Incremental policy debt sensitivity only; not total government debt to GDP or a fiscal-sustainability estimate.

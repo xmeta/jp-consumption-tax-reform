@@ -563,6 +563,22 @@ SPECS = [
         "One row per Issue-26 scenario with institutional GDP/growth stress range, static FY2024 VAT receipt-removal/replacement references and full-JGB financing share of FY2024 nominal GDP where defined, plus annual-income-decile expenditure/tax-content diagnostics, survey-category VAT rate-scope proxy, historical pass-through/quantity evidence, and the joint unresolved-outcome status vector",
     ),
     (
+        "VAT-POLICY-PARETO-SCREEN",
+        "vat_policy_pareto_screen.csv",
+        "research/vat_policy_integration/build_vat_policy_pareto_screen.py",
+        "ESTAT-NSFCW-2024-T1-21-ANNUAL-INCOME-DECILE-EXPENDITURE;ESRI-SNA-2024-NOMINAL-GDP-FISCAL-YEAR;MOF-FY2024-TREASURY-REVENUE-2025-07;JCCI-2024-INVOICE-BACKOFFICE-SURVEY;JCCI-2025-INVOICE-SURVEY;SMEA-FY2025-INVOICE-TRANSACTION-SURVEY-ARCHIVED;ICHIKAWA-ARUDCHELVAN-ONJI-2019-VAT-10M-BUNCHING;RIETI-2019-VAT-COMPLIANCE-FIRM-GROWTH;RIETI-2021-SME-VAT-COMPLIANCE;RIETI-2021-QUANT-TAX-COMPLIANCE-COST;MOF-CONSUMPTION-TAX-SME-EXEMPTION-THRESHOLD;NTA-CONSUMPTION-TAX-BASIC;NTA-INVOICE-SYSTEM-OVERVIEW;JSTAGE-SHIRAISHI-2016-VAT-PASS-THROUGH-POS;BOJ-OUTLOOK-2019-07-CONSUMPTION-TAX;CAO-2014-CONSUMPTION-TAX-DEMAND;MOF-2019-CONSUMPTION-TAX-HIKE",
+        "MODEL_CONTINGENT_IDENTIFICATION_AWARE_PARETO_SCREEN",
+        "Eight-scenario headline-objective screen using robust interval dominance without scalar welfare weights; all scenarios remain unresolved because required GDP/growth/distribution objectives are not identified or bounded",
+    ),
+    (
+        "VAT-POLICY-PARETO-PAIRWISE",
+        "vat_policy_pareto_pairwise.csv",
+        "research/vat_policy_integration/build_vat_policy_pareto_screen.py",
+        "ESTAT-NSFCW-2024-T1-21-ANNUAL-INCOME-DECILE-EXPENDITURE;ESRI-SNA-2024-NOMINAL-GDP-FISCAL-YEAR;MOF-FY2024-TREASURY-REVENUE-2025-07;JCCI-2024-INVOICE-BACKOFFICE-SURVEY;JCCI-2025-INVOICE-SURVEY;SMEA-FY2025-INVOICE-TRANSACTION-SURVEY-ARCHIVED;ICHIKAWA-ARUDCHELVAN-ONJI-2019-VAT-10M-BUNCHING;RIETI-2019-VAT-COMPLIANCE-FIRM-GROWTH;RIETI-2021-SME-VAT-COMPLIANCE;RIETI-2021-QUANT-TAX-COMPLIANCE-COST;MOF-CONSUMPTION-TAX-SME-EXEMPTION-THRESHOLD;NTA-CONSUMPTION-TAX-BASIC;NTA-INVOICE-SYSTEM-OVERVIEW;JSTAGE-SHIRAISHI-2016-VAT-PASS-THROUGH-POS;BOJ-OUTLOOK-2019-07-CONSUMPTION-TAX;CAO-2014-CONSUMPTION-TAX-DEMAND;MOF-2019-CONSUMPTION-TAX-HIKE",
+        "MODEL_CONTINGENT_IDENTIFICATION_AWARE_PAIRWISE_DOMINANCE_AUDIT",
+        "All 28 pairwise scenario comparisons with missing-required-objective gates; no pair is promoted to robust dominance while required policy outcomes remain unidentified",
+    ),
+    (
         "VAT-COMPLIANCE-PRODUCTIVITY-SENSITIVITY",
         "vat_compliance_productivity_sensitivity.csv",
         "research/vat_compliance_productivity/run_vat_compliance_productivity.py",

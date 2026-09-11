@@ -62,6 +62,8 @@ VAT = (
     ("scripts/test_vat_household_tax_content_envelope.py",),
     ("research/vat_policy_integration/run_vat_policy_scenario_matrix.py",),
     ("research/vat_policy_integration/test_vat_policy_scenario_matrix.py",),
+    ("research/vat_policy_integration/build_vat_policy_pareto_screen.py",),
+    ("research/vat_policy_integration/test_vat_policy_pareto_screen.py",),
 )
 
 INCOME_TAX = (
