@@ -19,6 +19,7 @@ FISCAL = ROOT / "data/derived/vat_policy_fiscal_replacement_reference.csv"
 STATIC_JGB = ROOT / "data/derived/vat_jgb_debt_gdp_reference.csv"
 OUT = ROOT / "data/derived/vat_dynamic_fiscal_paths.csv"
 SUMMARY = ROOT / "data/derived/vat_dynamic_fiscal_summary.csv"
+CENTRAL_ASSUMPTION = "r02_g02"
 
 D = Decimal
 MODELED_SHARES = {
@@ -67,11 +68,9 @@ def build():
     assumptions = read(ASSUMPTIONS)
     if len(assumptions) != 9 or len({r["assumption_set_id"] for r in assumptions}) != 9:
         raise RuntimeError("dynamic fiscal assumption grid must contain 9 unique rows")
-    expected_rates = {"0.01", "0.02", "0.04"}
-    expected_growth = {"0", "0.02", "0.04"}
-    if {r["effective_interest_rate"] for r in assumptions} != expected_rates:
+    if {r["effective_interest_rate"] for r in assumptions} != {"0.01", "0.02", "0.04"}:
         raise RuntimeError("unexpected interest-rate sensitivity grid")
-    if {r["nominal_gdp_growth"] for r in assumptions} != expected_growth:
+    if {r["nominal_gdp_growth"] for r in assumptions} != {"0", "0.02", "0.04"}:
         raise RuntimeError("unexpected nominal-GDP sensitivity grid")
     if not all(r["annual_redemption_rate"] == "0.20" and r["mixed_primary_jgb_share"] == "0.50" for r in assumptions):
         raise RuntimeError("unexpected refinancing/mixed-financing assumptions")
@@ -91,7 +90,7 @@ def build():
     if static["full_abolition_jgb"]["static_incremental_jgb_financing_pct_of_fy2024_nominal_gdp"] != "3.894868333":
         raise RuntimeError("static 3.894868333 percent benchmark was reinterpreted")
 
-    paths = []
+    all_paths = []
     for scenario in scenarios:
         sid = scenario["scenario_id"]
         if sid not in MODELED_SHARES:
@@ -117,7 +116,7 @@ def build():
                 cumulative_interest += interest
                 if closing != opening + net_new:
                     raise RuntimeError("stock-flow identity failed")
-                paths.append({
+                all_paths.append({
                     "scenario_id": sid,
                     "assumption_set_id": a["assumption_set_id"],
                     "year": year,
@@ -146,10 +145,11 @@ def build():
                 })
                 opening = closing
 
+    reported_paths = [r for r in all_paths if r["assumption_set_id"] == CENTRAL_ASSUMPTION]
     summary = []
     for scenario in scenarios:
         sid = scenario["scenario_id"]
-        rr = [r for r in paths if r["scenario_id"] == sid and r["year"] == 10]
+        rr = [r for r in all_paths if r["scenario_id"] == sid and r["year"] == 10]
         if rr:
             ratios = [D(r["incremental_debt_gdp_ratio"]) for r in rr]
             interest = [D(r["cumulative_incremental_interest_yen"]) for r in rr]
@@ -163,6 +163,7 @@ def build():
             "scenario_id": sid,
             "dynamic_fiscal_status": STATUS[sid],
             "modeled_assumption_sets": assumptions_count,
+            "reported_path_assumption_set_id": CENTRAL_ASSUMPTION if rr else "",
             "horizon_years": "10" if rr else "",
             "year10_incremental_debt_gdp_ratio_min": ratio_min,
             "year10_incremental_debt_gdp_ratio_max": ratio_max,
@@ -170,11 +171,11 @@ def build():
             "year10_cumulative_incremental_interest_yen_max": int_max,
             "static_fy2024_jgb_gdp_pct_benchmark": static[sid]["static_incremental_jgb_financing_pct_of_fy2024_nominal_gdp"],
             "identification_status": "MODEL_CONTINGENT_ACCOUNTING_SENSITIVITY_NOT_FORECAST" if rr else "NOT_MODELED",
-            "note": "Paths are incremental to baseline and repeat the FY2024 nominal VAT receipt gap without indexing. Interest/GDP assumptions are exogenous sensitivities; no total-debt stock, endogenous rate response, VAT-demand effect, or institutional-productivity effect is inserted.",
+            "note": "Reported path uses r02_g02; summary extrema use all nine rate-growth sensitivities. Paths are incremental to baseline and repeat the FY2024 nominal VAT receipt gap without indexing. No total-debt stock, endogenous rate response, VAT-demand effect, or institutional-productivity effect is inserted.",
         })
-    if len(paths) != 450 or len(summary) != 8:
+    if len(all_paths) != 450 or len(reported_paths) != 50 or len(summary) != 8:
         raise RuntimeError("unexpected dynamic fiscal output dimensions")
-    return paths, summary
+    return reported_paths, summary
 
 
 def main():
@@ -185,7 +186,7 @@ def main():
         stale = [str(p.relative_to(ROOT)) for p, text in outputs if not p.exists() or p.read_text(encoding="utf-8") != text]
         if stale:
             raise SystemExit("stale generated artifacts: " + ", ".join(stale))
-        print("dynamic fiscal/JGB paths: current (450 path rows; 8 scenario summaries; incremental-debt sensitivity only)")
+        print("dynamic fiscal/JGB paths: current (50 central path rows; 8 summaries over 9 sensitivities; incremental debt only)")
     else:
         for p, text in outputs:
             p.parent.mkdir(parents=True, exist_ok=True); p.write_text(text, encoding="utf-8")
