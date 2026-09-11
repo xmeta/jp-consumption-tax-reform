@@ -325,7 +325,12 @@ python research/vat_policy_integration/test_vat_policy_pareto_screen.py
 PARTIAL_E2E_POLICY_MATRIX_WITH_STATIC_FISCAL_AND_HOUSEHOLD_RATE_ENVELOPES
 ----
 
-The matrix is operational end-to-end, but it is not yet a policy forecast or a
-joint welfare optimization. The next completion step is to build a defensible bridge from observed household
-expenditure to the objective-rank distribution and VAT-incidence channels, or to
-advance another currently explicit unresolved channel with official inputs.
+The matrix is operational end-to-end, but it is not a policy forecast or a
+joint welfare optimization.  M2 public-data work is decision-ready under explicit
+identification limits: the objective-rank public-table search and general
+rate-cut pass-through search are stopped, the dynamic fiscal/JGB sensitivity is
+implemented, and the Pareto layer refuses to rank scenarios whose required
+objectives are not numerically bounded.  The next identification step is the
+provider-confirmation gate in Issue #94 for the restricted 2024 NSFCW DS51-to-DS52
+household join.  Until approved data resolve that gate, objective-rank incidence,
+Gini, FGT2 and real-disposable-income policy effects remain +NOT_IDENTIFIED+.

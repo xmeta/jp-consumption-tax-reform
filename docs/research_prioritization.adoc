@@ -57,21 +57,41 @@ current `NOT_IDENTIFIED`/partial-identification state.
 
 == Current ordering
 
-The current first action is the firm-level VAT compliance-to-output bridge in
-Issues #26/#47.  It directly targets the three national parameters currently
-left as stress-grid inputs (`c_VAT`, `rho`, `a_alloc`).  The objective-rank
-household bridge is second because it blocks Gini, FGT2, and real-disposable-
-income comparisons.  Rate-cut/abolition pass-through is third because it blocks
-price, demand, inflation, and distributional responses.
+The highest-value unresolved VAT compliance-output quantities remain national
+`c_VAT`, `rho`, and `a_alloc`, but the standard historic public/restricted-linkage
+route is stopped and the prospective panel is gated on an approved sampling
+frame, data-protection protocol, and VAT-specific treatment.  More disconnected
+burden or invoice-incidence evidence is therefore not the next action.
 
-Issue #56 is deliberately below those identification gaps: a dynamic fiscal
-module is needed, but it is primarily model completion and can be implemented
-from existing official stock/flow data without pretending to identify market
-responses.  Issue #25 is retained in the queue as the restricted-data route for
-the income-tax same-person bridge, but its access delay and weaker immediate
-M2 VAT impact put it below the current VAT gaps.  Issue #2 remains a lower-VoI
-tightening task because the generic `C_U*(A)` robustness frontier is already
-valid without a point estimate of `C_U`.
+The next executable VAT identification step is Issue #94: obtain provider
+confirmation for the 2024 NSFCW DS51-to-DS52 same-household join inside the
+approved onsite environment.  This is the remaining high-VoI route that can
+directly unlock objective-rank household incidence, Gini, FGT2, and real-
+disposable-income analysis.  Broad public-table searching remains stopped.
+
+Issue #56 has completed the dynamic fiscal/JGB model-contingent path.  Additional
+descriptive fiscal series are stopped unless they identify the total-debt mapping
+or an endogenous market/macro response.  Issue #89 likewise completed the bounded
+rate-cut search; Japan 5%, 0%, and abolition pass-through remain `NOT_IDENTIFIED`
+unless new direct evidence or a validated transport design shrinks the admissible
+set.  After the Issue #94 provider gate, Issue #25 is the next restricted-data
+research route currently represented in the backlog.  Issue #2 remains lower VoI
+because the generic `C_U*(A)` robustness frontier is already valid without a
+point estimate of `C_U`.
+
+== M2 VAT decision-readiness boundary
+
+M2 completion means the repository can state what is identified, what is only
+model-contingent, and where further public-data work has hit an explicit stop
+rule.  It does *not* mean that Japan's optimal VAT policy, national compliance
+productivity dividend, policy pass-through, objective-rank Gini/FGT2 effects, or
+endogenous JGB-market response have been point identified.
+
+The eight-scenario matrix and Pareto screen remain valid negative-identification
+outputs: required welfare objectives are missing numerical bounds, so no scenario
+is promoted to an optimal or robustly non-dominated policy.  Future restricted or
+prospective data can shrink those sets through dedicated follow-up issues without
+keeping the M2 public-data search open indefinitely.
 
 == Validation
 
