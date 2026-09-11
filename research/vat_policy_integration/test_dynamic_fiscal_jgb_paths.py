@@ -27,12 +27,12 @@ modeled = {
     "full_abolition_asset_tax",
     "full_abolition_mixed",
 }
-assert len(rows) == 450
+assert len(rows) == 50
 assert len(summary) == 8
 for sid in modeled:
     rr = [r for r in rows if r["scenario_id"] == sid]
-    assert len(rr) == 90
-    assert len({r["assumption_set_id"] for r in rr}) == 9
+    assert len(rr) == 10
+    assert {r["assumption_set_id"] for r in rr} == {"r02_g02"}
     assert {int(r["year"]) for r in rr} == set(range(1, 11))
 
 for r in rows:
@@ -50,32 +50,30 @@ for sid in ("current_8_10", "full_abolition_income_tax", "full_abolition_asset_t
     assert all(D(r["closing_incremental_debt_yen"]) == 0 for r in rows if r["scenario_id"] == sid)
     assert all(D(r["incremental_interest_expense_yen"]) == 0 for r in rows if r["scenario_id"] == sid)
 
-jgb_y1_g0 = [
-    r for r in rows
-    if r["scenario_id"] == "full_abolition_jgb"
-    and r["year"] == "1"
-    and r["nominal_gdp_growth"] == "0"
-]
-assert len(jgb_y1_g0) == 3
-assert all(r["closing_incremental_debt_yen"] == "25021206715000" for r in jgb_y1_g0)
-assert all(r["incremental_debt_gdp_ratio"] == "0.038948683327" for r in jgb_y1_g0)
+jgb_y1 = [r for r in rows if r["scenario_id"] == "full_abolition_jgb" and r["year"] == "1"]
+assert len(jgb_y1) == 1
+assert jgb_y1[0]["closing_incremental_debt_yen"] == "25021206715000"
+assert jgb_y1[0]["effective_interest_rate"] == "0.02"
+assert jgb_y1[0]["nominal_gdp_growth"] == "0.02"
 
-by_key = {(r["scenario_id"], r["assumption_set_id"], r["year"]): r for r in rows}
-for aid in {r["assumption_set_id"] for r in rows}:
-    for year in range(1, 11):
-        full = D(by_key[("full_abolition_jgb", aid, str(year))]["closing_incremental_debt_yen"])
-        mixed = D(by_key[("full_abolition_mixed", aid, str(year))]["closing_incremental_debt_yen"])
-        assert abs(mixed * 2 - full) < D("0.000001")
-
-low = by_key[("full_abolition_jgb", "r01_g04", "10")]
-high = by_key[("full_abolition_jgb", "r04_g00", "10")]
-assert D(high["incremental_debt_gdp_ratio"]) > D(low["incremental_debt_gdp_ratio"])
-assert D(high["cumulative_incremental_interest_yen"]) > D(low["cumulative_incremental_interest_yen"])
+by_key = {(r["scenario_id"], r["year"]): r for r in rows}
+for year in range(1, 11):
+    full = D(by_key[("full_abolition_jgb", str(year))]["closing_incremental_debt_yen"])
+    mixed = D(by_key[("full_abolition_mixed", str(year))]["closing_incremental_debt_yen"])
+    assert abs(mixed * 2 - full) < D("0.000001")
 assert any(D(r["redemptions_yen"]) > 0 for r in rows if r["scenario_id"] == "full_abolition_jgb" and r["year"] != "1")
 
-assert summary["full_abolition_jgb"]["static_fy2024_jgb_gdp_pct_benchmark"] == "3.894868333"
-assert summary["full_abolition_jgb"]["dynamic_fiscal_status"] == "MODEL_CONTINGENT_INCREMENTAL_DEBT_PATH_SENSITIVITY"
+jgb = summary["full_abolition_jgb"]
+assert jgb["static_fy2024_jgb_gdp_pct_benchmark"] == "3.894868333"
+assert jgb["dynamic_fiscal_status"] == "MODEL_CONTINGENT_INCREMENTAL_DEBT_PATH_SENSITIVITY"
+assert jgb["modeled_assumption_sets"] == "9"
+assert jgb["reported_path_assumption_set_id"] == "r02_g02"
+assert jgb["year10_incremental_debt_gdp_ratio_min"] == "0.275285239955"
+assert jgb["year10_incremental_debt_gdp_ratio_max"] == "0.467622064324"
+assert D(jgb["year10_cumulative_incremental_interest_yen_max"]) > D(jgb["year10_cumulative_incremental_interest_yen_min"])
 assert summary["full_abolition_mixed"]["dynamic_fiscal_status"] == "MODEL_CONTINGENT_HALF_PRIMARY_JGB_SHARE_SENSITIVITY"
+assert summary["full_abolition_mixed"]["year10_incremental_debt_gdp_ratio_min"] == "0.137642619977"
+assert summary["full_abolition_mixed"]["year10_incremental_debt_gdp_ratio_max"] == "0.233811032162"
 assert summary["full_abolition_income_tax"]["year10_incremental_debt_gdp_ratio_min"] == "0"
 assert summary["full_abolition_asset_tax"]["year10_incremental_debt_gdp_ratio_max"] == "0"
 for sid in ("reduced_5", "zero_rate_admin_retained", "full_abolition"):
@@ -88,4 +86,4 @@ subprocess.run(
     cwd=ROOT,
     check=True,
 )
-print("dynamic fiscal/JGB tests: OK (stock-flow identity; 9 rate-growth sensitivities; static benchmark preserved; total debt not inferred)")
+print("dynamic fiscal/JGB tests: OK (stock-flow identity; central 10-year paths; 9-set sensitivity envelope; static benchmark preserved)")
