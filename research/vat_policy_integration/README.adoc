@@ -1,5 +1,5 @@
 = VAT policy scenario integration matrix
-:revdate: 2026-09-10
+:revdate: 2026-09-11
 
 == Purpose
 
@@ -136,6 +136,49 @@ extrapolated into a point estimate for a 5%, 0%, or institutional-abolition
 scenario.  Gini, FGT2 and real-disposable-income effects remain blank because the
 objective-rank bridge and household VAT-base/incidence mapping are still missing.
 
+=== 2024 restricted objective-rank route
+
+Issue #86 now has a concrete restricted-data route rather than another public-table
+search.  The e-Micro onsite catalog lists the 2024 NSFCW, and its official
+secondary metadata expose three 2024 data systems.  Two are relevant here:
++M4AR8-DS51+ (income/assets aggregation) and +M4AR8-DS52+ (detailed two-month-
+average household accounts).
+
+DS51 exposes household annual income (+I_Bdy001+), annual disposable income on
+the OECD-new basis (+I_Bdy031+), household size and population weights.  DS52
+exposes household annual income, detailed consumption expenditure, food, alcohol,
+dining-out, newspaper expenditure and population weights.  Both metadata files
+also expose +SetaiFugo+ and +Ichiren+ fields.  However, the separate +SetaiID+
+field is documented as empty/not used for 2024 aggregation, and the metadata do
+*not* by themselves establish the complete authorized cross-system join key.
+Additional geography/unit fields may be part of the required composite key.  The
+DS51-to-DS52 same-household join is therefore a provider-confirmation gate, not
+an assumed fact.
+
+If the provider confirms that cross-system household join inside the approved
+onsite environment, the route can directly construct the missing household-unit
+joint bridge between objective-rank income inputs and detailed expenditure.  It
+would still not by itself identify legal transaction-level VAT bases or policy
+pass-through.  If the join is not permitted/stable, DS51 alone lacks detailed
+consumption and DS52 alone lacks the exact DS51 OECD-new annual-disposable-income
+input, so neither is silently promoted to the objective rank.
+
+The current National Statistics Center custom-tabulation listing names 2019 and
+older NSFCW years, not 2024.  A 2024 custom table is therefore a provider-inquiry
+fallback only; it is not treated as currently available.  Broad public aggregate
+search remains stopped under the existing rule.  Until approved data access and
+the join gate are resolved, objective-rank household VAT incidence, Gini, FGT2
+and real-disposable-income effects remain +NOT_IDENTIFIED+.
+
+The machine-readable contracts are:
+
+* +data/derived/estat_objective_rank_restricted_route_audit_2024.csv+; and
+* +data/derived/estat_objective_rank_restricted_variable_map_2024.csv+.
+
+Raw questionnaire microdata cannot be committed to this repository.  Reproduction
+for this route is therefore code/specification plus provider-reviewed,
+disclosure-safe outputs.
+
 The matrix also contains explicit fields for overall real GDP, annual real
 growth, growth-decline penalty, income Gini, wealth Gini, intergenerational gap,
 FGT2, real disposable income by decile, inflation, fiscal balance, debt/GDP and
@@ -161,6 +204,10 @@ statement.
   mechanical-assumption, VAT-base-scope and intertemporal-quantity evidence.
 * +data/derived/estat_2024_annual_income_decile_vat_rate_scope_diagnostic.csv+:
   annual-income-decile food/alcohol/dining/newspaper survey-category rate-scope proxy.
+* +data/derived/estat_objective_rank_restricted_route_audit_2024.csv+:
+  2024 onsite/custom/public route status and identification-gain gates.
+* +data/derived/estat_objective_rank_restricted_variable_map_2024.csv+:
+  machine-readable DS51/DS52 household, rank, weight and expenditure variable contract.
 * +data/derived/vat_household_tax_content_envelope.csv+: eight scenarios x ten
   annual-income deciles of statutory-rate tax-content/price-relief envelopes.
 * +data/derived/vat_policy_scenario_matrix.csv+: 8 scenarios x 300
@@ -181,6 +228,8 @@ python scripts/build_estat_2024_annual_income_decile_expenditure_diagnostic.py
 python scripts/test_estat_2024_annual_income_decile_expenditure_diagnostic.py
 python scripts/build_estat_2024_annual_income_decile_vat_rate_scope_diagnostic.py
 python scripts/test_estat_2024_annual_income_decile_vat_rate_scope_diagnostic.py
+python scripts/build_estat_objective_rank_household_margin_audit.py
+python scripts/test_estat_objective_rank_household_margin_audit.py
 python scripts/build_vat_pass_through_evidence.py
 python scripts/test_vat_pass_through_evidence.py
 python scripts/build_vat_household_tax_content_envelope.py
