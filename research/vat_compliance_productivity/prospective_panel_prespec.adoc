@@ -1,0 +1,155 @@
+= Prospective VAT burden-redeployment firm panel pre-specification
+:revdate: 2026-09-11
+
+== Scope
+
+This pre-specification is the Issue #84 fallback after Issue #82 stopped the
+standard historic e-Micro linkage route.  It defines the minimum panel that
+could reduce uncertainty in `c_VAT` and local redeployment behavior without
+turning a burden survey into a GDP estimate.
+
+The authoritative machine-readable contracts are
+`prospective_panel_estimand_map.csv` and
+`prospective_panel_variable_dictionary.csv`.  Before data exist, national
+`c_VAT`, national `rho`, and `a_alloc` remain `NOT_IDENTIFIED`.
+
+== Population and sampling
+
+The target for a national `c_VAT` claim is active private businesses in Japan
+that incur or could incur VAT-administration resources during the measurement
+period.  A national claim requires a probability frame with known inclusion
+probabilities and coverage appropriate to that target.
+
+The Statistics Bureau Business Register is the preferred frame in principle:
+it is continuously updated and designed to retain information on all
+establishments and enterprises.  Its official provision page, however, limits
+provision to approved administrative bodies, local governments and specified
+independent administrative institutions for statistical purposes.  This
+repository therefore does not assume direct academic access.
+
+Two execution tiers are pre-specified:
+
+. *National-inference tier*: an eligible public/statistical partner draws the
+  sample from the Business Register (or another frame demonstrated to have
+  known inclusion probabilities and target-population coverage).  Base weights
+  are inverse selection probabilities, then response/attrition adjustments and
+  pre-specified calibration are applied.
+. *Pilot tier*: a recruited or commercial frame may be used to test task
+  measurement, identifiers and the randomized burden-reduction first stage.
+  Unknown inclusion probabilities automatically disable national `c_VAT`.
+
+The 2024 Economic Census is a useful public calibration diagnostic, but its
+private-establishment scope excludes some units, explicitly including
+individually operated establishments with no employees.  Published Census
+margins alone therefore cannot repair an uncovered all-business sampling frame.
+
+Pre-specified stratification variables are industry, employment-size class,
+legal form and region, with deliberate oversampling of small/threshold- or
+invoice-exposed firms allowed only when selection probabilities remain known.
+Nonresponse and panel attrition are adjusted from frame/baseline covariates;
+remaining non-ignorable selection is reported as sensitivity rather than
+assumed away.
+
+== Measurement period and waves
+
+A short one-off burden questionnaire is insufficient.  The minimum design has:
+
+* `W0`: enrollment, frame variables, fiscal/VAT status, baseline accounting
+  outcomes and initiation of an event/time diary;
+* a pre-treatment task-measurement window covering recurring VAT work;
+* `W1`: the first complete post-activation VAT reporting/compliance cycle;
+* `W2`: an aligned mid-horizon outcome/redeployment measurement;
+* `W3`: at least 12 months after activation so recurring and annual/episodic VAT
+  tasks can be reconciled over a complete annual cycle.
+
+The primary annual `c_VAT` estimand is not produced until a complete 12-month
+cycle is observed or an independently validated annualization mapping exists.
+The design does not extrapolate four-week diary minutes to an annual total by
+simple multiplication.
+
+== VAT-specific resource measurement
+
+Every time event is assigned a pre-specified task type and specificity class:
+`DISAPPEARS_WITH_VAT`, `RETAINED_GENERAL_ACCOUNTING`, or `MIXED_UNCERTAIN`.
+Only the first class enters the primary recurring VAT numerator.  Mixed/shared
+bookkeeping enters sensitivity analysis; tax remittances are transfers and are
+excluded.
+
+Internal time is valued using role-specific opportunity-cost measures.
+Recurring external adviser/accountant/software spending is reported separately
+as a private-cost proxy.  A model-compatible real-resource `c_VAT` additionally
+requires provider-side VAT-specific real resource inputs or a separately
+identified price-to-resource mapping.  One-time setup, migration and training
+are transition resources, not recurring `c_VAT`.
+
+Value added, not sales, is the preferred denominator for aggregation because
+summing sales across firms double counts intermediate transactions.
+
+== Causal design for redeployment
+
+A descriptive panel cannot identify `rho`.  The prospective design therefore
+includes an embedded randomized offer of a standardized VAT-specific workflow
+automation/assistance package *only if* its provider-side resource use can be
+metered.  Assignment is the primary treatment; adoption is secondary and may be
+instrumented by assignment under the pre-specified exclusion, monotonicity and
+no-interference assumptions.
+
+The first causal estimand is deliberately narrower than model `rho`:
+treatment-induced productive reassignment of internal staff resources divided
+by treatment-induced reduction in internal VAT resources.  A model-compatible
+local `rho` is reported only if external/provider resources and transition
+inputs are also measured so that net total resource release is defined.
+Neither local estimand is automatically transported to national full VAT
+abolition.
+
+Sales, value added, employment and investment are secondary reduced-form
+outcomes.  They are not added to `c_VAT * rho` as an extra allocation dividend
+unless the direct resource channel is separately decomposed.
+
+== Linkage and privacy
+
+The analysis dataset uses a study-generated pseudonymous `panel_firm_id`.
+Corporation number may be used only inside an approved trusted linkage boundary
+to create a non-reversible analysis token; raw corporation number is not stored
+in the analysis dataset.  Public invoice-registration history may be linked for
+corporations only when legally and institutionally approved.  No name/address
+probabilistic matching is used to bypass access controls.
+
+== Pilot and futility gates
+
+The full panel is not fielded merely because the questionnaire can be deployed.
+The following gates are pre-specified:
+
+* `FRAME_GATE`: if inclusion probabilities/coverage needed for the national
+  target cannot be established, disable the national `c_VAT` claim; continue
+  only an explicitly local/pilot design.
+* `SPECIFICITY_GATE`: if pilot respondents cannot reliably separate VAT-specific
+  tasks from retained general accounting, stop the `c_VAT` measurement design
+  and revise the instrument before scale-up.
+* `IDENTIFIER_GATE`: if a lawful stable linkage token cannot be maintained,
+  drop linked administrative outcomes rather than constructing a probabilistic
+  confidential join.
+* `ANNUALIZATION_GATE`: if a complete VAT compliance cycle/12-month task record
+  cannot be obtained, do not report annual `c_VAT` from diary multiplication.
+* `PROVIDER_RESOURCE_GATE`: if intervention/provider resource inputs are not
+  measured, `RHO_MODEL_LOCAL` remains unidentified even if internal hours fall.
+* `FIRST_STAGE_GATE`: if the randomized offer does not reduce the pre-specified
+  VAT-resource first-stage with a 95% confidence interval entirely in the
+  intended direction, stop `rho` scale-up and do not interpret outcome noise as
+  redeployment.
+* `ATTRITION_GATE`: if treatment-dependent missingness cannot be handled by the
+  pre-specified weighting/bounding analysis, stop the causal `rho` claim.
+
+No final full-panel sample size is invented before the pilot.  The pilot supplies
+variance, compliance, clustering and attrition inputs for a separately frozen
+power calculation.  Any eventual minimum detectable effect must be selected for
+policy relevance before outcome inspection.
+
+== Claim boundary
+
+Successful execution can estimate a frame-specific VAT private-cost share and,
+with stronger provider-resource measurement, move toward a model-compatible
+`c_VAT`.  A valid randomized first stage can estimate a local redeployment
+fraction.  National model `rho`, national `a_alloc`, GDP growth, Gini and FGT2
+remain outside this panel unless separate identification and transport evidence
+is added.
