@@ -1,0 +1,60 @@
+= Scientific Review Gates
+:revdate: 2026-09-12
+
+== Purpose
+
+Computational CI and scientific review are separate gates.
+
+CI establishes that declared computations, schemas, provenance checks, documents, and clean-room reproduction pass. It does not establish that an identifying assumption is credible, that interpretation is correct, or that manuscript language is publication-ready.
+
+`data/scientific_review_gates.csv` is the machine-readable promotion gate. `data/scientific_reviews.csv` records completed reviews. Review findings live under `reviews/`.
+
+Review records are governance artifacts, not scientific evidence. They must not be registered as raw sources or used as claim evidence.
+
+== Promotion classes requiring review
+
+Independent economic/identification review is required before any change that promotes a component to `maturity=READY`, promotes `causal_status` to `CAUSAL_IDENTIFIED`, or sets `policy_usable=true`.
+
+At claim level, independent review is required before promoting an active claim to a causal-identified or policy-usable conclusion. A descriptive `identification_status=READY` label alone is not publication approval and does not satisfy a product review gate.
+
+A product-level publication promotion also requires its product-specific gate rows to be satisfied. `data/research_products.csv` carries the current `publication_status`; changing `paper1` to `SUBMISSION_QUALITY` or `vat_abolition` to `STANDALONE_PAPER` is rejected while any required gate remains pending.
+
+== Review tracks
+
+`ADVERSARIAL_CLAIM` checks whether the exact language stays inside claim-registry boundaries and whether semantic distinctions survive manuscript editing.
+
+`ECONOMIC_IDENTIFICATION` challenges identifying assumptions, population mappings, counterfactual interpretation, and whether stated bounds or causal conclusions follow from the data.
+
+`MANUSCRIPT_MAJOR_REVISION` checks the manuscript against the prior Major Revision critique and records which criticisms are resolved, unresolved, or superseded by a narrower contribution.
+
+Computational replication is checked by CI and reproduction targets. It is intentionally not encoded as a scientific-review track, because passing CI cannot satisfy a scientific-review gate.
+
+== Independence classes
+
+The minimum independence order is:
+
+----
+INTERNAL_ADVERSARIAL < INDEPENDENT_REVIEWER < EXTERNAL_PEER
+----
+
+An internal adversarial review is useful for catching overclaiming but cannot satisfy a gate that requires `INDEPENDENT_REVIEWER` or stronger independence.
+
+== Current product gates
+
+For `paper1`, submission-quality promotion requires adversarial-claim review, independent economic/identification review, and manuscript review against the prior Major Revision critique. The internal adversarial review `P1-AR-001` is complete; the independent gates remain pending.
+
+For `vat_abolition`, standalone-paper promotion requires adversarial-claim review and independent economic/identification review. Neither is currently satisfied.
+
+Therefore neither product is promoted by the presence of green CI alone.
+
+== Validation
+
+Run:
+
+----
+python scripts/test_scientific_reviews.py
+python scripts/validate_scientific_reviews.py
+python scripts/reproduce.py integrity
+----
+
+The validator checks schema, product coverage, review/gate linkage, minimum independence, review-artifact existence, reviewed-commit syntax, and the prohibition on using review artifacts as source or claim evidence.

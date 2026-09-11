@@ -1,3 +1,3 @@
-product_id,display_name,scope,reproduction_target,claim_registry,component_ids
-paper1,Paper 1 income-tax identification and robustness,"Personal income-tax identification, robustness frontiers, and model-contingent rank-bridge sensitivity analysis",paper1,paper1/data/claim_registry.csv,income_tax_pseudofiler;income_tax_partial_identification;stage1_filing_bound
-vat_abolition,VAT abolition and policy integration,"VAT institutional abolition, compliance-productivity sensitivity, fiscal/household accounting envelopes, and policy-scenario integration",vat,research/vat_claim_registry.csv,vat_compliance_productivity;vat_policy_integration
+product_id,display_name,scope,reproduction_target,claim_registry,component_ids,publication_status
+paper1,Paper 1 income-tax identification and robustness,"Personal income-tax identification, robustness frontiers, and model-contingent rank-bridge sensitivity analysis",paper1,paper1/data/claim_registry.csv,income_tax_pseudofiler;income_tax_partial_identification;stage1_filing_bound,WORKING_MANUSCRIPT
+vat_abolition,VAT abolition and policy integration,"VAT institutional abolition, compliance-productivity sensitivity, fiscal/household accounting envelopes, and policy-scenario integration",vat,research/vat_claim_registry.csv,vat_compliance_productivity;vat_policy_integration,RESEARCH_PROGRAM

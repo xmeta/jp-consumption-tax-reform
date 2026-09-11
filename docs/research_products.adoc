@@ -12,12 +12,16 @@ state remains governed by `data/scientific_state.csv` and claim status by
 == Products
 
 `paper1` is the personal income-tax identification and robustness manuscript.
-Its claim projection is `paper1/data/claim_registry.csv` and its reproduction
-entrypoint is `python scripts/reproduce.py paper1`.
+Its current `publication_status` is `WORKING_MANUSCRIPT`; promotion to
+`SUBMISSION_QUALITY` is review-gated. Its claim projection is
+`paper1/data/claim_registry.csv` and its reproduction entrypoint is
+`python scripts/reproduce.py paper1`.
 
 `vat_abolition` is the VAT abolition / policy-integration research product. Its
-claim projection is `research/vat_claim_registry.csv` and its reproduction
-entrypoint is `python scripts/reproduce.py vat`.
+current `publication_status` is `RESEARCH_PROGRAM`; promotion to
+`STANDALONE_PAPER` is review-gated. Its claim projection is
+`research/vat_claim_registry.csv` and its reproduction entrypoint is
+`python scripts/reproduce.py vat`.
 
 Shared repository files may be consumed by either product. Consumption is
 explicit in `data/research_product_files.csv`; a shared file used by both
@@ -43,3 +47,14 @@ Run `python scripts/validate_research_products.py` to verify product IDs, claim
 projections, scientific-component links, reproduction commands, file existence,
 and cross-product isolation. `python scripts/test_research_products.py` also
 checks deterministic archive construction and bundle-manifest hashes.
+
+== Scientific review boundary
+
+Product release boundaries and scientific-review gates are separate controls.
+A deterministic replication archive can be complete while publication promotion
+remains blocked.
+
+The review policy is defined in `data/scientific_review_gates.csv` and
+`docs/scientific_reviews.adoc`. Passing `python scripts/reproduce.py paper1` or
+`python scripts/reproduce.py vat` is necessary computational evidence but does
+not satisfy an independent scientific-review requirement.

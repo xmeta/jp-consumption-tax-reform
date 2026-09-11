@@ -1,0 +1,50 @@
+= Paper 1 Internal Adversarial Claim Review
+:revdate: 2026-09-12
+
+Review ID: `P1-AR-001`
+
+Reviewed commit: `863ebef125dac7ce4ab4ae1203c59c50f8b50a29`.
+
+Review track: `ADVERSARIAL_CLAIM`.
+
+Independence class: `INTERNAL_ADVERSARIAL`. This is not an external peer review and does not satisfy the independent economic-identification gate.
+
+== Scope
+
+The review checked whether the manuscript language remains inside the claim boundaries recorded in `data/claim_graph.csv` and `paper1/data/claim_registry.csv`.
+
+It focused on population semantics, the NTA positive-self-assessed-balance event, model-contingent rank bridges, and prohibited point-identification or policy-optimality interpretations.
+
+Reviewer judgments in this file are governance records. They are not empirical evidence and must not be cited as support for a scientific claim.
+
+== Findings
+
+=== P1-AR-001-F1 — IMPORTANT — resolved
+
+`paper1/chapters/02_identification_framework.adoc` used the phrase `positive self-assessed liability` in the conceptual selection chain.
+
+That wording conflicts with the repository's audited NTA semantics: `申告納税額>0` is a positive self-assessed return balance after tax credits and source withholding, not positive annual income-tax liability.
+
+Resolution: replace the phrase with `positive self-assessed balance`. No numerical result changes.
+
+=== P1-AR-001-F2 — IMPORTANT — resolved
+
+`paper1/README.adoc` described the directory as the `first-submission manuscript`, which can be read as a publication-readiness state even though no independent scientific-review gate had been satisfied.
+
+Resolution: relabel it as a submission-oriented working manuscript and point to the explicit review gate. This is a governance-status correction, not a scientific promotion.
+
+=== P1-AR-001-F3 — PASS
+
+Claims P1-C13 through P1-C17 consistently distinguish modeled annual-tax-positive events from the NTA positive-self-assessed-balance event and explicitly forbid interpreting discrepancy parameters as measurement error for one tax event.
+
+No point-identification, confidence-region, causal-bound, or observed-linkage promotion was found in the reviewed manuscript language for these claims.
+
+=== P1-AR-001-F4 — PASS
+
+The stage-1 filing result keeps the untracked mismatch budget `C_U` unresolved and presents a robustness frontier rather than an unconditional filing-rate lower bound.
+
+== Review disposition
+
+Internal adversarial claim review: `COMPLETE`.
+
+Submission-quality promotion: `BLOCKED`. Independent economic/identification review and the manuscript review against the prior Major Revision critique remain pending.

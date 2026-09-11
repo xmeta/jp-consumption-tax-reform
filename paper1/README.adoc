@@ -1,6 +1,8 @@
 = Paper 1 build notes
 
-This directory contains the first-submission manuscript only.
+This directory contains the submission-oriented working manuscript. It is not
+submission-quality until the scientific-review gates in
+`data/scientific_review_gates.csv` are satisfied.
 
 It does not claim an optimal VAT rate, a structural macro effect, a
 point-identified filer MTR distribution, or an unconditional filing-rate lower

@@ -11,10 +11,14 @@ PRODUCTS = ROOT / "data/research_products.csv"
 FILES = ROOT / "data/research_product_files.csv"
 PRODUCT_FIELDS = [
     "product_id", "display_name", "scope", "reproduction_target",
-    "claim_registry", "component_ids",
+    "claim_registry", "component_ids", "publication_status",
 ]
 FILE_FIELDS = ["product_id", "path", "role"]
 ROLES = {"PRODUCT", "SHARED", "RELEASE_METADATA"}
+PUBLICATION_STATUSES = {
+    "paper1": {"WORKING_MANUSCRIPT", "SUBMISSION_QUALITY"},
+    "vat_abolition": {"RESEARCH_PROGRAM", "STANDALONE_PAPER"},
+}
 PRIVATE_ROOTS = {
     "paper1": (
         "paper1/",
@@ -98,6 +102,9 @@ def validate(root: Path = ROOT) -> list[str]:
             errors.append(f"multi-product file must be shared/metadata: {path}")
 
     for product_id, product in by_product.items():
+        allowed_publication = PUBLICATION_STATUSES.get(product_id, set())
+        if product["publication_status"] not in allowed_publication:
+            errors.append(f"{product_id}: invalid publication_status {product['publication_status']}")
         target = product["reproduction_target"]
         if target not in reproduce.TARGETS:
             errors.append(f"{product_id}: unknown reproduction target {target}")
