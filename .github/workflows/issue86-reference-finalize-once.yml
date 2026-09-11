@@ -1,0 +1,29 @@
+name: issue86-reference-finalize-once
+on:
+  push:
+    branches:
+      - fix/issue-86-backlog-reference
+
+permissions:
+  contents: write
+
+jobs:
+  finalize:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          ref: fix/issue-86-backlog-reference
+      - uses: actions/setup-python@v7
+        with:
+          python-version: '3.12'
+      - name: Regenerate manifest and remove one-shot workflow
+        run: |
+          git rm .github/workflows/issue86-reference-finalize-once.yml
+          python scripts/generate_manifest.py
+          git add MANIFEST.sha256
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git commit -m 'Regenerate manifest for Issue #86 reference fix'
+          git push
