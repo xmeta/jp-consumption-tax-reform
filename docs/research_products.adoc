@@ -1,0 +1,45 @@
+= Research Product Boundaries
+:revdate: 2026-09-12
+
+== Authority
+
+`data/research_products.csv` defines the stable research products in this
+monorepo. `data/research_product_files.csv` defines each product's release
+boundary. These files do not upgrade any scientific status; current scientific
+state remains governed by `data/scientific_state.csv` and claim status by
+`data/claim_graph.csv`.
+
+== Products
+
+`paper1` is the personal income-tax identification and robustness manuscript.
+Its claim projection is `paper1/data/claim_registry.csv` and its reproduction
+entrypoint is `python scripts/reproduce.py paper1`.
+
+`vat_abolition` is the VAT abolition / policy-integration research product. Its
+claim projection is `research/vat_claim_registry.csv` and its reproduction
+entrypoint is `python scripts/reproduce.py vat`.
+
+Shared repository files may be consumed by either product. Consumption is
+explicit in `data/research_product_files.csv`; a shared file used by both
+products therefore has one row for each consumer. Product-private roots from one
+product are forbidden from the other product's release boundary.
+
+== Replication bundles
+
+A deterministic product-specific archive is built with:
+
+----
+python scripts/build_product_bundle.py paper1 --output /tmp/paper1.zip
+python scripts/build_product_bundle.py vat_abolition --output /tmp/vat.zip
+----
+
+Each archive contains only its declared release files plus generated
+`PRODUCT_BUNDLE.json` and `PRODUCT_BUNDLE_MANIFEST.csv`. The latter records the
+SHA-256 and byte size of every copied file. The archive is suitable as the input
+to a product-specific DOI/replication deposit; unrelated product-private research
+is not copied into the archive.
+
+Run `python scripts/validate_research_products.py` to verify product IDs, claim
+projections, scientific-component links, reproduction commands, file existence,
+and cross-product isolation. `python scripts/test_research_products.py` also
+checks deterministic archive construction and bundle-manifest hashes.
