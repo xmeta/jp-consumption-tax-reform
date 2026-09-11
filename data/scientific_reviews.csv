@@ -1,0 +1,2 @@
+review_id,product_id,review_track,independence,status,reviewed_commit,findings_path,resolution_path,evidence_eligible
+P1-AR-001,paper1,ADVERSARIAL_CLAIM,INTERNAL_ADVERSARIAL,COMPLETE,863ebef125dac7ce4ab4ae1203c59c50f8b50a29,reviews/paper1_adversarial_2026-09-12.adoc,reviews/paper1_adversarial_2026-09-12.adoc,false

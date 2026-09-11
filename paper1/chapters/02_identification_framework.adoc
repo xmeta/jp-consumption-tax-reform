@@ -41,7 +41,7 @@ The F71561-to-NTA bridge is decomposed conceptually into
 \rightarrow
 \text{final-return filer}
 \rightarrow
-\text{positive self-assessed liability}.
+\text{positive self-assessed balance}.
 ++++
 
 This paper focuses on making each selection step explicit rather than absorbing

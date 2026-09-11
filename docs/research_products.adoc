@@ -43,3 +43,14 @@ Run `python scripts/validate_research_products.py` to verify product IDs, claim
 projections, scientific-component links, reproduction commands, file existence,
 and cross-product isolation. `python scripts/test_research_products.py` also
 checks deterministic archive construction and bundle-manifest hashes.
+
+== Scientific review boundary
+
+Product release boundaries and scientific-review gates are separate controls.
+A deterministic replication archive can be complete while publication promotion
+remains blocked.
+
+The review policy is defined in `data/scientific_review_gates.csv` and
+`docs/scientific_reviews.adoc`. Passing `python scripts/reproduce.py paper1` or
+`python scripts/reproduce.py vat` is necessary computational evidence but does
+not satisfy an independent scientific-review requirement.

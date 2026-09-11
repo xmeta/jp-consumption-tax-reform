@@ -1,5 +1,5 @@
 = Machine-readable Scientific State
-:revdate: 2026-09-11
+:revdate: 2026-09-12
 
 == Authority
 
@@ -13,7 +13,9 @@ The authority order is:
 A lower item never overrides a higher one. In particular, an old Issue or PR
 description is not evidence that a module is identified, causal, policy-usable,
 or ready. Scientific promotion requires a repository-state change that passes the
-validation gates.
+validation gates. Publication-quality promotion and stronger scientific-status
+promotions additionally pass the separate review gates in
+`data/scientific_review_gates.csv`; review approval never substitutes for evidence.
 
 The integrity gate mechanically checks that every active module declared in the
 authority has its current detailed status token represented in `STATUS.adoc`.

@@ -168,6 +168,8 @@ INTEGRITY = (
     ("scripts/test_research_priority.py",),
     ("scripts/test_research_products.py",),
     ("scripts/validate_research_products.py",),
+    ("scripts/test_scientific_reviews.py",),
+    ("scripts/validate_scientific_reviews.py",),
     ("scripts/validate_repo.py",),
     ("scripts/check_manifest.py",),
     ("scripts/test_check_clean_tree.py",),
