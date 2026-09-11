@@ -3,11 +3,17 @@
 
 == Authority
 
-`data/scientific_state.csv` is the repository authority for the current
-scientific state of active research modules.
+The authority order is:
 
-`STATUS.adoc`, module README files, Issues, Pull Requests, and comments are
-human-facing mirrors or work records. They do not override the CSV authority.
+. `data/scientific_state.csv` for module-level scientific state and blockers;
+. `data/claim_graph.csv` and its deterministic product projections for claim-level authority;
+. `STATUS.adoc` and module README files as human-facing mirrors; and
+. GitHub Issues, Pull Requests, reviews, and comments as project-management/work records.
+
+A lower item never overrides a higher one. In particular, an old Issue or PR
+description is not evidence that a module is identified, causal, policy-usable,
+or ready. Scientific promotion requires a repository-state change that passes the
+validation gates.
 
 The integrity gate mechanically checks that every active module declared in the
 authority has its current detailed status token represented in `STATUS.adoc`.
@@ -65,6 +71,12 @@ input.
 |`blockers`
 |Semicolon-separated unresolved conditions. Active modules below `READY` must
 list at least one blocker; a `READY` component must have no unresolved blocker.
+
+|`issue_refs`
+|Semicolon-separated GitHub Issue numbers that own or document the blocker work.
+Every active non-`READY` component must reference at least one Issue. Closed Issue
+references are allowed when they preserve an explicit stop rule or completed
+identification audit; continuing work must add the current follow-up Issue.
 
 |`supersedes` / `superseded_by`
 |Semicolon-separated component IDs for explicit scientific-state supersession.
@@ -156,6 +168,25 @@ failed:
 Coverage and human-facing synchronization retain their more specific
 `coverage:` and `sync:` prefixes.
 
+== Issue/PR stale-state maintenance
+
+Issue state is deliberately not queried from CI, so repository validation does
+not depend on GitHub network availability. Instead, milestone/phase closure uses
+this lightweight maintenance rule:
+
+. inspect every `issue_refs` entry for the components changed by the milestone;
+. update `data/scientific_state.csv` first when evidence changes scientific state;
+. refresh materially stale active Issue bodies or close them with an explicit
+  identification/stop-rule summary;
+. when a blocker survives a closed Issue, add the active follow-up Issue reference
+  unless the closed Issue itself records the terminal stop rule; and
+. treat PR descriptions/comments only as evidence of what changed, never as the
+  current scientific-status authority.
+
+The validator enforces that active non-`READY` components have syntactically valid
+Issue references. Human reconciliation of live GitHub state occurs at milestone or
+phase boundaries, where it is useful and does not make scientific CI network-dependent.
+
 == Validation
 
 Run:
@@ -169,7 +200,7 @@ python scripts/reproduce.py integrity
 
 The checks cover schema shape, enum values, unique primary identifiers,
 conflicting active module declarations, active-module coverage, blocker
-semantics, evidence/output path existence, supersession reciprocity,
+semantics, blocker-Issue reference syntax/coverage, evidence/output path existence, supersession reciprocity,
 `STATUS.adoc` status-token synchronization, cross-field identification
 invariants, per-claim semantic guards, and recovery-only evidence exclusion for
 active reproduced claims.

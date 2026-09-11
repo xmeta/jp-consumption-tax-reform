@@ -20,6 +20,7 @@ FIELDS = [
     "evidence_paths",
     "output_paths",
     "blockers",
+    "issue_refs",
     "supersedes",
     "superseded_by",
     "active",
@@ -229,6 +230,19 @@ def validate(root: Path) -> list[str]:
                 errors.append(
                     f"identification: {prefix}: non-READY active component must list blockers"
                 )
+
+            issue_refs = split_paths(row["issue_refs"])
+            if maturity in MATURITY - {"READY"} and not issue_refs:
+                errors.append(
+                    f"sync: {prefix}: non-READY active component must reference blocker issue"
+                )
+            if len(issue_refs) != len(set(issue_refs)):
+                errors.append(f"schema: {prefix}: duplicate issue_refs")
+            for issue_ref in issue_refs:
+                if not issue_ref.isdigit() or int(issue_ref) <= 0:
+                    errors.append(
+                        f"schema: {prefix}: issue_refs must be positive GitHub issue numbers"
+                    )
 
         if policy_usable == "true" and maturity != "READY":
             errors.append(

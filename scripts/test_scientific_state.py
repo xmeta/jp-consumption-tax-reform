@@ -24,6 +24,7 @@ FIELDS = [
     "evidence_paths",
     "output_paths",
     "blockers",
+    "issue_refs",
     "supersedes",
     "superseded_by",
     "active",
@@ -62,6 +63,7 @@ def write_fixture(root: Path) -> None:
             "evidence_paths": "evidence-a.txt",
             "output_paths": "output-a.txt",
             "blockers": "latent link missing",
+            "issue_refs": "101",
             "supersedes": "",
             "superseded_by": "",
             "active": "true",
@@ -78,6 +80,7 @@ def write_fixture(root: Path) -> None:
             "evidence_paths": "evidence-b.txt",
             "output_paths": "output-b.txt",
             "blockers": "counterfactual missing",
+            "issue_refs": "102;103",
             "supersedes": "",
             "superseded_by": "",
             "active": "true",
@@ -145,6 +148,24 @@ with tempfile.TemporaryDirectory() as tmp:
     check(
         "non-READY active component must list blockers" in blocker.stdout,
         "blocker diagnostic missing",
+    )
+
+    write_fixture(fixture := Path(tmp) / "issue-ref")
+    mutate_csv(fixture, lambda rows: rows[0].__setitem__("issue_refs", ""))
+    issue_ref = run_validator(fixture)
+    check(issue_ref.returncode != 0, "missing blocker issue reference unexpectedly passed")
+    check(
+        "non-READY active component must reference blocker issue" in issue_ref.stdout,
+        "blocker issue-reference diagnostic missing",
+    )
+
+    write_fixture(fixture := Path(tmp) / "bad-issue-ref")
+    mutate_csv(fixture, lambda rows: rows[0].__setitem__("issue_refs", "issue-3"))
+    bad_issue_ref = run_validator(fixture)
+    check(bad_issue_ref.returncode != 0, "malformed issue reference unexpectedly passed")
+    check(
+        "issue_refs must be positive GitHub issue numbers" in bad_issue_ref.stdout,
+        "malformed issue-reference diagnostic missing",
     )
 
     write_fixture(fixture := Path(tmp) / "sync")
