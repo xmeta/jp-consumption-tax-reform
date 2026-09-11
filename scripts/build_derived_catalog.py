@@ -531,6 +531,22 @@ SPECS = [
         "Eight-scenario FY2024 nominal-GDP denominator map; full-JGB abolition scenario equals 25.021206715 trillion yen divided by 642.4147 trillion yen = 3.894868333 percent of FY2024 nominal GDP; explicitly not an observed or dynamic debt/GDP change",
     ),
     (
+    "VAT-DYNAMIC-FISCAL-PATHS",
+    "vat_dynamic_fiscal_paths.csv",
+    "research/vat_policy_integration/build_dynamic_fiscal_jgb_paths.py",
+    "ESRI-SNA-2024-NOMINAL-GDP-FISCAL-YEAR;MOF-FY2024-TREASURY-REVENUE-2025-07",
+    "MODEL_CONTINGENT_INCREMENTAL_FISCAL_PATH",
+    "Twenty decision-relevant 10-year stock-flow rows for full-JGB and 50-percent-JGB mixed financing under the committed 2-percent interest / 2-percent nominal-GDP central sensitivity; incremental policy debt only, not total government debt or a market forecast",
+),
+(
+    "VAT-DYNAMIC-FISCAL-SUMMARY",
+    "vat_dynamic_fiscal_summary.csv",
+    "research/vat_policy_integration/build_dynamic_fiscal_jgb_paths.py",
+    "ESRI-SNA-2024-NOMINAL-GDP-FISCAL-YEAR;MOF-FY2024-TREASURY-REVENUE-2025-07",
+    "MODEL_CONTINGENT_INCREMENTAL_FISCAL_SENSITIVITY_ENVELOPE",
+    "Eight-scenario summary over nine exogenous interest-rate x nominal-GDP-growth sensitivities; year-10 full-JGB incremental debt/GDP is 27.53--46.76 percent and 50-percent-JGB mixed financing is 13.76--23.38 percent; full replacement zero-debt cases are conditional and no total-debt or endogenous-rate forecast is claimed",
+),
+    (
         "VAT-POLICY-SCENARIO-MATRIX",
         "vat_policy_scenario_matrix.csv",
         "research/vat_policy_integration/run_vat_policy_scenario_matrix.py",
