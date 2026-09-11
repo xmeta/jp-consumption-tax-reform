@@ -58,8 +58,9 @@ def fmt(x, places="0.000000000001"):
     return s.rstrip("0").rstrip(".") if "." in s else s
 
 
-def yen(x):
-    return str(int(x.quantize(D("1"))))
+def money(x):
+    s = format(x, "f")
+    return s.rstrip("0").rstrip(".") if "." in s else s
 
 
 def build():
@@ -120,24 +121,24 @@ def build():
                     "scenario_id": sid,
                     "assumption_set_id": a["assumption_set_id"],
                     "year": year,
-                    "fy2024_static_gap_reference_yen": yen(annual_gap),
+                    "fy2024_static_gap_reference_yen": money(annual_gap),
                     "primary_jgb_share": fmt(primary_jgb_share),
                     "replacement_revenue_share": fmt(D("1") - primary_jgb_share) if annual_gap else "0",
-                    "policy_primary_gap_yen": yen(policy_primary_gap),
-                    "replacement_revenue_yen": yen(replacement_revenue),
-                    "opening_incremental_debt_yen": yen(opening),
+                    "policy_primary_gap_yen": money(policy_primary_gap),
+                    "replacement_revenue_yen": money(replacement_revenue),
+                    "opening_incremental_debt_yen": money(opening),
                     "effective_interest_rate": a["effective_interest_rate"],
-                    "incremental_interest_expense_yen": yen(interest),
+                    "incremental_interest_expense_yen": money(interest),
                     "annual_redemption_rate": a["annual_redemption_rate"],
-                    "redemptions_yen": yen(redemptions),
+                    "redemptions_yen": money(redemptions),
                     "financial_asset_change_yen": a["financial_asset_change_yen"],
-                    "net_new_issuance_yen": yen(net_new),
-                    "gross_new_issuance_yen": yen(gross_new),
-                    "closing_incremental_debt_yen": yen(closing),
+                    "net_new_issuance_yen": money(net_new),
+                    "gross_new_issuance_yen": money(gross_new),
+                    "closing_incremental_debt_yen": money(closing),
                     "nominal_gdp_growth": a["nominal_gdp_growth"],
-                    "nominal_gdp_sensitivity_yen": yen(nominal_gdp),
+                    "nominal_gdp_sensitivity_yen": money(nominal_gdp),
                     "incremental_debt_gdp_ratio": fmt(closing / nominal_gdp),
-                    "cumulative_incremental_interest_yen": yen(cumulative_interest),
+                    "cumulative_incremental_interest_yen": money(cumulative_interest),
                     "path_status": STATUS[sid],
                     "assumption_status": a["assumption_status"],
                     "total_debt_gdp_status": "NOT_COMPUTED_BASELINE_TOTAL_DEBT_STOCK_OUTSIDE_THIS_INCREMENTAL_MODULE",
@@ -154,7 +155,7 @@ def build():
             interest = [D(r["cumulative_incremental_interest_yen"]) for r in rr]
             assumptions_count = str(len(rr))
             ratio_min, ratio_max = fmt(min(ratios)), fmt(max(ratios))
-            int_min, int_max = yen(min(interest)), yen(max(interest))
+            int_min, int_max = money(min(interest)), money(max(interest))
         else:
             assumptions_count = "0"
             ratio_min = ratio_max = int_min = int_max = ""
