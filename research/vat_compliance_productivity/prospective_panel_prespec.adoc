@@ -1,0 +1,160 @@
+= Prospective VAT burden-redeployment firm panel pre-specification
+:revdate: 2026-09-11
+
+== Scope
+
+This is a design artifact for Issue #84, not evidence that any model parameter is identified.
+The machine-readable definitions are `prospective_panel_estimand_map.csv` and
+`prospective_panel_variable_dictionary.csv`.  No effect size, sample size, or
+national parameter value is inferred here.
+
+== Identification targets
+
+The panel separates three objects that must not be collapsed.
+
+* `national_c_vat` is a population-weighted real-resource-cost estimand.
+* `local_rho_internal` is the fraction of measured *internal staff* VAT hours
+  released by a valid intervention that is productively reassigned in the
+  treated/complier population.
+* model `rho` covers every real resource represented in model `c_VAT`.  If
+  adviser/software/provider resources are included in `c_VAT`, internal staff
+  redeployment alone cannot identify model `rho`.
+
+`a_alloc` is outside this panel's identification scope.  Firm outcomes may be
+reported as a local reduced form, but they do not become national `a_alloc`.
+
+== Sampling and target population
+
+A national `c_VAT` result requires an approved sampling frame that supplies
+known, non-zero inclusion probabilities for the stated target population.
+Industry, size, legal form and VAT-regime strata are fixed before sampling.
+Oversampling is allowed only when the inclusion probabilities are retained and
+undone by the analysis weights.
+
+If no approved probability frame is available, a recruited/convenience pilot
+may still test measurement and treatment mechanics, but every estimate is
+labelled pilot/frame-specific.  It must not be called national `c_VAT`.
+
+Corporations and sole proprietors are either both covered by the stated frame or
+reported as separate target populations.  Nonresponse and attrition adjustments
+are pre-specified from frame/baseline variables.  Complete-case and weighted
+results are reported separately.  Loss to follow-up is never coded as business
+exit without independent evidence.
+
+== VAT-specific real-resource measurement
+
+At W0 and W1 firms complete a fixed four-week VAT-task diary, supported where
+possible by activity/accounting-system logs.  Time is split into:
+
+* qualified-invoice tasks;
+* VAT calculation/return tasks; and
+* VAT-specific incremental recordkeeping.
+
+Ordinary bookkeeping that would remain without VAT is recorded separately and
+is not charged to `c_VAT`.  Internal hours are valued with a role-specific
+opportunity-cost rule fixed before analysis.  VAT remittances are transfers and
+are never counted as compliance resources.
+
+Adviser and software payments are private expenditure measures, not automatically
+social real-resource cost.  They enter model-compatible `c_VAT` only if provider
+VAT-specific labour/capital resources are directly measured or linked through a
+pre-specified validated conversion.  Without that bridge, the study reports an
+internal-resource partial estimand and keeps national model `c_VAT`
+`NOT_IDENTIFIED`.
+
+== Treatment and variation for `rho`
+
+The preferred design is a randomized VAT-task-specific burden-reduction
+intervention or encouragement.  It must not bundle sales, finance, inventory,
+general bookkeeping, or other non-VAT productivity functionality.
+
+A quasi-random policy/timing design is admissible only under a separate frozen
+design specifying assignment, exclusion/continuity assumptions, manipulation
+checks, and comparison population.  A descriptive cross-section is never a
+`rho` design.
+
+The first stage is change in measured VAT-specific internal hours.  Released
+hours and their destinations are then measured directly.  Productive and
+nonproductive/unused reassignment must reconcile with released hours within a
+pilot-fixed tolerance.  Assignment without observed resource release and
+reassignment does not identify `local_rho_internal`.
+
+== Waves and outcome windows
+
+The minimum sequence is frozen as follows.
+
+* W0: baseline 12-month accounting outcomes plus a four-week VAT-task diary.
+* W1: immediately pre-intervention confirmation and treatment assignment.
+* W2: one to three months after treatment start; repeat task diary/log and
+  resource-reassignment module.
+* W3: nine to twelve months after treatment start; accounting outcomes on a
+  definitionally consistent 12-month basis where available.
+
+Calendar dates may move with implementation.  Relative windows, variable
+definitions, primary outcomes, and treatment rules cannot be changed in response
+to observed effects.
+
+== Outcomes and channel separation
+
+Pre-specified outcomes are sales, value added (or an explicitly named proxy),
+employment, investment and exit/survival.  W3 reduced-form effects are local
+diagnostics and may combine direct compliance-resource and allocation channels.
+They are not added to `c_VAT * rho` unless a design separately decomposes the
+direct resource channel from residual allocation effects.
+
+== Weighting and national transport
+
+For the national path, the analysis weight is built from inverse inclusion
+probability, pre-specified nonresponse/attrition adjustment, and any documented
+calibration to frame margins.  Missing population coverage cannot be repaired
+by silently post-stratifying a convenience sample.
+
+Treatment effects apply initially to the eligible/complier population.  Moving
+from a VAT-task intervention to nationwide institutional abolition requires a
+separate transport argument covering treatment eligibility, treatment-vs-
+abolition differences, nonrespondents, uncovered legal forms, and external
+service providers.  That transport is not assumed by this pre-specification.
+
+== Privacy and linkage
+
+Analytic data use a pseudonymous `panel_id`.  Direct identifiers are stored
+separately under the approved data-protection protocol.  Corporation number or
+public invoice history may be linked only when lawful and within the documented
+consent/provider approval.  Restricted official microdata are linked only
+inside the provider-approved environment.  Probabilistic name/address matching
+of confidential records is prohibited.
+
+== Pilot and futility gates
+
+Do not field a costly full panel merely because a pilot can be recruited.
+Stop, redesign, or restrict the estimand when any of these structural gates
+fails:
+
+. VAT-specific work cannot be separated reliably from ordinary bookkeeping.
+. The national path lacks known inclusion probabilities; the study may continue
+  only as a pilot/local design.
+. Purchased adviser/software payments cannot be mapped to provider real
+  resources; model-compatible national `c_VAT` remains unidentified.
+. The intervention bundles material non-VAT productivity functions.
+. The pilot 95% confidence interval for the treatment first stage on VAT
+  internal hours does not establish a reduction below zero.
+. Released hours and productive/nonproductive destinations cannot be reconciled
+  under the frozen measurement rule.
+. Attrition or linkage loss cannot be characterized well enough to define the
+  analysis population and weights.
+
+Passing these gates only authorizes a larger study.  It does not identify a
+national parameter before the required data are actually observed.
+
+== Status after pre-specification
+
+----
+national c_VAT = NOT_IDENTIFIED
+model rho      = NOT_IDENTIFIED
+national a_alloc = NOT_IDENTIFIED
+----
+
+The panel is execution-ready as a design, conditional on an approved frame,
+privacy protocol, and VAT-specific treatment.  Until those external conditions
+exist, the repository should move to the next executable high-VoI gap rather
+than accumulate another disconnected burden survey.

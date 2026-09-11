@@ -1,0 +1,29 @@
+name: issue84-manifest-once
+on:
+  push:
+    branches:
+      - research/issue-84-prospective-vat-panel
+
+permissions:
+  contents: write
+
+jobs:
+  regenerate:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          ref: research/issue-84-prospective-vat-panel
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.12"
+      - name: Regenerate manifest and remove one-shot workflow
+        run: |
+          git config user.name github-actions[bot]
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          git rm .github/workflows/issue84-manifest-once.yml
+          python scripts/generate_manifest.py
+          git add MANIFEST.sha256 .github/workflows/issue84-manifest-once.yml
+          git commit -m "Regenerate manifest for Issue #84"
+          git push
