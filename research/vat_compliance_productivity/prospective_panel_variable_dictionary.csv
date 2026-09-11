@@ -1,0 +1,33 @@
+variable_id,wave,role,unit_or_type,collection_source,required_for,missing_or_invalid_rule
+panel_id,ALL,identifier,pseudonymous string,study system,all estimands,Direct identifiers stored separately; analytic data contain only the pseudonymous panel ID
+frame_stratum,W0,sampling,categorical,sampling frame,national_c_vat,Must be defined before draw; post-outcome strata changes prohibited
+inclusion_probability,W0,sampling,"probability in (0,1]",sampling frame,national_c_vat,"If unknown or zero for target-population units, national c_VAT path stops; pilot may continue"
+business_legal_form,W0,sampling/control,categorical,frame/survey,national_c_vat; transport,Corporations and sole proprietors must be covered or reported as separate target populations
+industry,W0,sampling/control,pre-specified industry code,frame/survey,national_c_vat; transport,Missing industry may not be silently imputed for calibration weighting
+employment_fte,W0;W3,outcome/control,FTE persons,payroll/accounting/survey,c_VAT denominator checks; local_output_response,Definition fixed across waves
+baseline_output,W0,denominator,JPY per 12 months,accounting records,national_c_vat,"Accounting basis and 12-month period fixed before analysis; never substitute sales without relabeling"
+vat_registration_status,W0,regime/control,categorical + date where available,firm record / lawful public linkage,stratification; transport,Registration status is not itself VAT resource cost
+vat_internal_hours_total,W0;W1;W2,resource,hours per fixed task window,task diary + activity log,national_c_vat; local_rho_internal,Must reconcile task components within tolerance fixed before pilot
+vat_internal_hours_invoice,W0;W1;W2,resource component,hours per fixed task window,task diary + activity log,national_c_vat; local_rho_internal,Only VAT/invoice-specific work; ordinary bookkeeping excluded
+vat_internal_hours_return,W0;W1;W2,resource component,hours per fixed task window,task diary + activity log,national_c_vat; local_rho_internal,Only VAT return/calculation work
+vat_internal_hours_recordkeeping,W0;W1;W2,resource component,hours per fixed task window,task diary + activity log,national_c_vat; local_rho_internal,VAT-specific incremental recordkeeping only
+vat_staff_opportunity_cost,W0,valuation,JPY per hour,payroll/role wage schedule,national_c_vat,Use opportunity-cost rule fixed ex ante; do not value all roles at one arbitrary wage
+vat_adviser_payment,W0;W2,private cost,JPY per common period,invoice/accounting records,private-cost diagnostic; c_VAT bridge input,Payment is not social real-resource cost until provider resource bridge is identified
+vat_software_payment,W0;W2,private cost,JPY per common period,invoice/accounting records,private-cost diagnostic; c_VAT bridge input,Payment is not social real-resource cost until provider resource bridge is identified
+provider_resource_bridge_status,W0;W2,identification gate,categorical,provider-side measurement or validated mapping,national_c_vat; model_rho,If absent; purchased services are excluded from model-compatible resource total and only internal-resource partial estimand is reported
+treatment_assignment,W1,treatment,binary/arm,randomization system,local_rho_internal; local_output_response,For experimental path assignment must be randomized and immutable after draw
+treatment_eligibility,W1,treatment frame,binary + pre-specified reason,protocol,local_rho_internal; transport,Eligibility determined before assignment/outcomes
+treatment_uptake,W2,first stage/compliance,binary + intensity,system log,local_rho_internal,Assignment and uptake remain distinct; no as-treated relabeling
+treatment_start_date,W1,timing,date,system log,all treatment estimands,Must precede W2 measurement window
+nonvat_admin_hours,W0;W1;W2,negative control,hours per fixed task window,task diary + activity log,treatment validity,Used to detect bundled general-admin productivity effects
+released_internal_vat_hours,W2,mechanism denominator,hours per fixed post window,derived from pre-specified pre/post task measure,local_rho_internal,Requires a valid burden-reducing treatment first stage; denominator cannot be manufactured from assignment alone
+productive_reassigned_hours,W2,mechanism numerator,hours per fixed post window,staff reassignment log,local_rho_internal,Productive destination taxonomy fixed ex ante and must reconcile with released hours
+nonproductive_reassigned_hours,W2,mechanism reconciliation,hours per fixed post window,staff reassignment log,local_rho_internal,Productive plus nonproductive/unused released hours must reconcile within pre-specified tolerance
+sales,W0;W3,outcome,JPY per 12 months,accounting records,local_output_response,Same accounting period convention across waves
+value_added,W0;W3,primary output outcome,JPY per 12 months or named proxy,accounting records,local_output_response,"If direct value added unavailable, proxy formula must be named and never relabeled as true value added"
+investment,W0;W3,outcome,JPY per 12 months,accounting records,local_output_response,Definition fixed before treatment
+exit_status,W3,outcome,binary + date,registry/contact verification,local_output_response; attrition,Loss to follow-up cannot be silently coded as exit
+response_status,ALL,missingness,categorical,study system,nonresponse/attrition adjustment,Reason-coded by wave
+nonresponse_adjustment,W0;W3,weighting,positive factor,pre-specified response model,national_c_vat; transport,Model uses baseline/frame variables only unless explicitly justified; complete-case results reported separately
+analysis_weight,W0;W3,weighting,positive weight,derived,national_c_vat; transport,"Must reproduce inclusion-probability, nonresponse and calibration steps; unavailable inclusion probabilities prohibit national label"
+linkage_consent_scope,W0,privacy/governance,categorical,consent/approval record,lawful linkage,Link only sources explicitly covered by consent/provider approval; no probabilistic name/address matching of confidential records
