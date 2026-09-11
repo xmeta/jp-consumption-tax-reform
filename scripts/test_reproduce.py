@@ -48,6 +48,12 @@ for path in generators:
     assert (path,) in paper1
     assert (path, "--check") in paper1
 
+assert ("scripts/generate_claim_registries.py", "--product", "paper1") in paper1
+assert paper1.index(("scripts/generate_claim_registries.py", "--product", "paper1")) < paper1.index(("scripts/generate_claim_registries.py", "--check", "--product", "paper1"))
+vat = list(reproduce.VAT)
+assert ("scripts/generate_claim_registries.py", "--product", "vat_abolition") in vat
+assert vat.index(("scripts/generate_claim_registries.py", "--product", "vat_abolition")) < vat.index(("scripts/generate_claim_registries.py", "--check", "--product", "vat_abolition"))
+
 assert (
     "scripts/generate_claim_registries.py",
     "--check",
