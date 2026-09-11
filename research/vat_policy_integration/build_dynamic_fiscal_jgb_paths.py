@@ -20,6 +20,7 @@ STATIC_JGB = ROOT / "data/derived/vat_jgb_debt_gdp_reference.csv"
 OUT = ROOT / "data/derived/vat_dynamic_fiscal_paths.csv"
 SUMMARY = ROOT / "data/derived/vat_dynamic_fiscal_summary.csv"
 CENTRAL_ASSUMPTION = "r02_g02"
+REPORTED_PATH_SCENARIOS = {"full_abolition_jgb", "full_abolition_mixed"}
 
 D = Decimal
 MODELED_SHARES = {
@@ -145,7 +146,11 @@ def build():
                 })
                 opening = closing
 
-    reported_paths = [r for r in all_paths if r["assumption_set_id"] == CENTRAL_ASSUMPTION]
+    reported_paths = [
+        r for r in all_paths
+        if r["assumption_set_id"] == CENTRAL_ASSUMPTION
+        and r["scenario_id"] in REPORTED_PATH_SCENARIOS
+    ]
     summary = []
     for scenario in scenarios:
         sid = scenario["scenario_id"]
@@ -163,7 +168,7 @@ def build():
             "scenario_id": sid,
             "dynamic_fiscal_status": STATUS[sid],
             "modeled_assumption_sets": assumptions_count,
-            "reported_path_assumption_set_id": CENTRAL_ASSUMPTION if rr else "",
+            "reported_path_assumption_set_id": CENTRAL_ASSUMPTION if sid in REPORTED_PATH_SCENARIOS else "",
             "horizon_years": "10" if rr else "",
             "year10_incremental_debt_gdp_ratio_min": ratio_min,
             "year10_incremental_debt_gdp_ratio_max": ratio_max,
@@ -171,9 +176,9 @@ def build():
             "year10_cumulative_incremental_interest_yen_max": int_max,
             "static_fy2024_jgb_gdp_pct_benchmark": static[sid]["static_incremental_jgb_financing_pct_of_fy2024_nominal_gdp"],
             "identification_status": "MODEL_CONTINGENT_ACCOUNTING_SENSITIVITY_NOT_FORECAST" if rr else "NOT_MODELED",
-            "note": "Reported path uses r02_g02; summary extrema use all nine rate-growth sensitivities. Paths are incremental to baseline and repeat the FY2024 nominal VAT receipt gap without indexing. No total-debt stock, endogenous rate response, VAT-demand effect, or institutional-productivity effect is inserted.",
+            "note": "Reported paths cover JGB and mixed financing under r02_g02; summary extrema use all nine rate-growth sensitivities. Zero-debt replacement cases remain in the summary. Paths are incremental to baseline and repeat the FY2024 nominal VAT receipt gap without indexing; no total-debt stock or endogenous market response is inferred.",
         })
-    if len(all_paths) != 450 or len(reported_paths) != 50 or len(summary) != 8:
+    if len(all_paths) != 450 or len(reported_paths) != 20 or len(summary) != 8:
         raise RuntimeError("unexpected dynamic fiscal output dimensions")
     return reported_paths, summary
 
@@ -186,7 +191,7 @@ def main():
         stale = [str(p.relative_to(ROOT)) for p, text in outputs if not p.exists() or p.read_text(encoding="utf-8") != text]
         if stale:
             raise SystemExit("stale generated artifacts: " + ", ".join(stale))
-        print("dynamic fiscal/JGB paths: current (50 central path rows; 8 summaries over 9 sensitivities; incremental debt only)")
+        print("dynamic fiscal/JGB paths: current (20 central paths; 8 summaries over 9 sensitivities; incremental debt only)")
     else:
         for p, text in outputs:
             p.parent.mkdir(parents=True, exist_ok=True); p.write_text(text, encoding="utf-8")
