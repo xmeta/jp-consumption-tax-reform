@@ -230,7 +230,7 @@ def build():
                 "debt_gdp_effect_status": debt_status,
                 "interest_rate_jgb_market_effect": "",
                 "interest_rate_jgb_market_effect_status": "BASELINE_NO_POLICY_CHANGE" if scenario["financing_strategy"] == "baseline" else "NOT_MODELED_FINANCING_AND_MARKET_FEEDBACK_REQUIRED",
-                "joint_outcome_status": "PARTIAL_E2E_REPORT_INSTITUTIONAL_STATIC_FISCAL_AND_HOUSEHOLD_RATE_ENVELOPE_NUMERIC_OTHER_CHANNELS_EXPLICITLY_UNIDENTIFIED",
+                "joint_outcome_status": "SCENARIO_SCHEMA_REPORT_WITH_STATIC_REFERENCES_AND_UNRESOLVED_MACRO_OUTCOMES",
                 "identification_status": "MODEL_CONTINGENT_SCENARIO_MATRIX_NOT_POLICY_FORECAST",
             })
     if not (len(rows) == 2400):

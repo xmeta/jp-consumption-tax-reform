@@ -71,7 +71,7 @@ def build_fixture(root: Path) -> None:
             **claim("VAT-C02", "vat_abolition"),
             "component_id": "vat_policy_integration",
             "identification_status": "PARTIALLY_IDENTIFIED",
-            "empirical_status": "PARTIAL_E2E_POLICY_MATRIX",
+            "empirical_status": "SCENARIO_SCHEMA_INTEGRATED_WITH_UNRESOLVED_MACRO_OUTCOMES",
         }
     )
     write_csv(root / "data/claim_graph.csv", GRAPH_FIELDS, claims)
