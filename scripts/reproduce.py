@@ -19,6 +19,9 @@ ROOT = Path(__file__).resolve().parents[1]
 
 SOURCE_INTEGRITY = (
     ("scripts/build_source_catalog.py",),
+    ("scripts/build_raw_source_redistribution_audit.py",),
+    ("scripts/test_raw_source_redistribution.py",),
+    ("scripts/validate_raw_source_redistribution.py",),
     ("scripts/test_reproduce.py",),
 )
 
@@ -205,6 +208,7 @@ ALL_ORDER = (
 # deliberately keeps raw/recovery/config/spec inputs intact.
 CLEAN_ROOM_GLOBS = (
     "data/source_catalog.csv",
+    "data/raw_source_redistribution_audit.csv",
     "data/derived/*.csv",
     "data/derived_catalog.csv",
     "data/input_provenance.csv",

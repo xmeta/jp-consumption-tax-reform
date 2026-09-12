@@ -1,0 +1,54 @@
+= Data Availability and Redistribution
+:revdate: 2026-09-13
+
+== Scope
+
+This repository separates source *availability* from permission to redistribute
+source bytes. A source being publicly downloadable does not by itself authorize
+copying that file into a public replication deposit.
+
+`data/source_catalog.csv` is the authority for source identity, URL, committed
+raw path, SHA-256, and byte size. `data/raw_source_redistribution_audit.csv`
+adds the publication/redistribution decision for every registered raw source.
+The audit is generated from the source catalog plus
+`data/raw_source_redistribution_rules.csv`.
+
+== Public and archived sources
+
+Public web sources retain their publisher URL and expected SHA-256. The current
+public-release policy is conservative: raw third-party/source-provider bytes are
+not copied into public product bundles, even when site-wide terms appear to
+permit reuse. Instead, the bundle records exact external acquisition and hash
+verification instructions in `RAW_SOURCE_ACQUISITION.csv`.
+
+This avoids treating site-wide terms as source-specific clearance where embedded
+third-party rights, logos, images, article copyrights, or special terms may
+apply.
+== Restricted and recovery-only material
+
+Restricted microdata are not distributed by this repository. Public metadata
+about restricted-access routes may be committed when redistribution of that
+metadata itself is supportable, but access permission to the underlying
+microdata remains a separate institutional decision.
+
+Recovery-only evidence remains labeled as recovery evidence and is not converted
+into a public-source claim by inclusion in a bundle or manifest.
+
+== Reproduction versus redistribution
+
+Internal replication bundles preserve the declared product files and may be used
+inside an authorized research environment. Public-release bundles are built with:
+
+----
+python scripts/build_product_bundle.py paper1 --output /tmp/paper1-public.zip --public-release
+python scripts/build_product_bundle.py vat_abolition --output /tmp/vat-public.zip --public-release
+----
+
+For every excluded raw source selected by a product boundary, the generated
+`RAW_SOURCE_ACQUISITION.csv` records the publisher, source URL, expected SHA-256,
+rights status, terms URL, acquisition instruction, and attribution requirement.
+A changed upstream file must not silently replace the recorded evidence.
+
+Run `python scripts/reproduce.py source-integrity` to regenerate and validate the
+117-source redistribution audit. The audit records terms checked on 2026-09-13;
+publication deposit preparation should re-check terms if material time has passed.

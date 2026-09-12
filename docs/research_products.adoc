@@ -39,9 +39,15 @@ python scripts/build_product_bundle.py vat_abolition --output /tmp/vat.zip
 
 Each archive contains only its declared release files plus generated
 `PRODUCT_BUNDLE.json` and `PRODUCT_BUNDLE_MANIFEST.csv`. The latter records the
-SHA-256 and byte size of every copied file. The archive is suitable as the input
-to a product-specific DOI/replication deposit; unrelated product-private research
-is not copied into the archive.
+SHA-256 and byte size of every copied file. The default archive is an internal
+replication bundle; it is not by itself a redistribution-rights decision.
+
+For a public deposit, use `--public-release`. Raw source bytes are then excluded
+unless the source audit explicitly clears inclusion, and the archive receives
+`RAW_SOURCE_ACQUISITION.csv` with publisher URL, expected hash, rights status,
+terms URL, attribution requirement, and reacquisition instructions. Current
+policy conservatively excludes all registered external raw-source bytes. See
+`docs/data_availability.adoc`. Unrelated product-private research is never copied.
 
 Run `python scripts/validate_research_products.py` to verify product IDs, claim
 projections, scientific-component links, reproduction commands, file existence,

@@ -66,4 +66,19 @@ with tempfile.TemporaryDirectory() as tmp:
                     for prefix in validator.PRIVATE_ROOTS[other]
                 )
 
-print("research-product bundle tests: OK (determinism, hashes, isolation)")
+        public = tmp / f"{product_id}-public.zip"
+        builder.build(product_id, public, ROOT, public_release=True)
+        with zipfile.ZipFile(public) as archive:
+            names = archive.namelist()
+            assert not any(name.startswith("data/raw/") for name in names)
+            metadata = json.loads(archive.read("PRODUCT_BUNDLE.json"))
+            assert metadata["bundle_mode"] == "public_release"
+            acquisition = list(csv.DictReader(io.StringIO(archive.read("RAW_SOURCE_ACQUISITION.csv").decode())))
+            expected_raw = [row for row in file_rows if row["product_id"] == product_id and row["path"].startswith("data/raw/")]
+            assert len(acquisition) == len(expected_raw)
+            for row in acquisition:
+                assert row["public_release_action"] == "EXCLUDE_RAW_ACQUIRE_EXTERNALLY"
+                assert row["source_url"] in row["acquisition_instruction"]
+                assert row["sha256"] in row["acquisition_instruction"]
+
+print("research-product bundle tests: OK (determinism, hashes, isolation, public raw-source exclusion)")
