@@ -177,6 +177,15 @@ difference from the exact annual-statistics composition is 0.084436...pp,
 which rounds to 0.08444pp.  This is a point check only, not an independent
 holdout, confidence interval, or filer-MTR validation.
 
+== Raw-source redistribution audit
+
+`raw_source_redistribution_audit.csv` covers every row of `source_catalog.csv`
+and separates source availability from permission to redistribute committed raw
+bytes. `raw_source_redistribution_rules.csv` records the domain-level terms basis.
+Public-release product bundles conservatively omit raw source bytes and carry
+URL + expected SHA-256 reacquisition metadata instead. See
+`docs/data_availability.adoc`.
+
 == Validation
 
 The CI provenance gate verifies:

@@ -12,6 +12,7 @@ paper1,data/scientific_review_gates.csv,RELEASE_METADATA
 paper1,data/scientific_reviews.csv,RELEASE_METADATA
 paper1,data/scientific_state.csv,SHARED
 paper1,docs/claim_graph.adoc,RELEASE_METADATA
+paper1,docs/data_availability.adoc,RELEASE_METADATA
 paper1,docs/reproducibility.adoc,RELEASE_METADATA
 paper1,docs/research_products.adoc,RELEASE_METADATA
 paper1,docs/scientific_reviews.adoc,RELEASE_METADATA
@@ -180,6 +181,7 @@ vat_abolition,data/scientific_review_gates.csv,RELEASE_METADATA
 vat_abolition,data/scientific_state.csv,SHARED
 vat_abolition,data/source_catalog.csv,SHARED
 vat_abolition,docs/claim_graph.adoc,RELEASE_METADATA
+vat_abolition,docs/data_availability.adoc,RELEASE_METADATA
 vat_abolition,docs/reproducibility.adoc,RELEASE_METADATA
 vat_abolition,docs/research_products.adoc,RELEASE_METADATA
 vat_abolition,docs/scientific_state.adoc,RELEASE_METADATA
