@@ -229,6 +229,11 @@ The machine-readable contracts are:
 * +data/derived/estat_objective_rank_restricted_route_audit_2024.csv+; and
 * +data/derived/estat_objective_rank_restricted_variable_map_2024.csv+.
 
+The provider-confirmation questions, inquiry text, response branches and minimum
+onsite analysis specification are frozen in
+link:nsfcw_2024_provider_inquiry.adoc[the Issue #94 provider inquiry package].
+The package does not itself confirm or authorize a join.
+
 Raw questionnaire microdata cannot be committed to this repository.  Reproduction
 for this route is therefore code/specification plus provider-reviewed,
 disclosure-safe outputs.
