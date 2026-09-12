@@ -1,31 +1,152 @@
-= 目的関数と政策手段
-:revdate: 2026-09-10
+= 識別ゲート付き政策評価契約
+:revdate: 2026-09-12
 
-== 目的
+== 正本となる評価順序
 
 政策の「善」は税率そのものではなく、実体・分配・貧困の結果で定義する。
+単一の固定重み付き loss は正本にしない。現在の正本は次の順序である。
 
-主要な評価対象は、実質所得・生産 (Y) の増加、所得格差 (G_Y) と資産格差 (G_W) の縮小、世代間格差 (Gap_{Age}) の縮小、貧困指標の改善である。
-特に二乗貧困ギャップ (P_2) を含める。
+----
+identification gate
+  -> viability / safety constraints
+  -> multi-objective outcomes
+  -> robust Pareto frontier
+  -> optional secondary decision rule
+----
 
-実質成長率 (g_t) については、各年 (g_t>0) を強く優先し、
-((g_{t-1}-g_t)_+) により成長率の低下も罰する。
+この順序を飛ばして、未識別な outcome を一点の optimizer input にしたり、
+任意の重みで「最適政策」を作ったりしてはならない。
+機械可読な契約は `data/policy_evaluation_contract.csv` に置く。
 
-重みをまだ固定しない一般形は
+== Step 0: identification gate
+
+政策最適化へ直接入力できる outcome は、`data/scientific_state.csv` で
+`maturity=READY` かつ `policy_usable=true` の component に由来するものに限る。
+すなわち、直接入力集合は
 
 [stem]
 ++++
-L=sum_t[
- w_-(-g_t)_+^2+
- w_Delta(g_{t-1}-g_t)_+^2+
- w_{P2}P_{2,t}+
- w_Y G_{Y,t}+
- w_W G_{W,t}+
- w_A Gap_{Age,t}
-]+	ext{constraint penalties}.
+A(p)=\{j:\;maturity_j=READY\;\land\;policy\_usable_j=true\}.
 ++++
 
-== 手段
+`SENSITIVITY_ONLY` と `PARTIALLY_IDENTIFIED` は捨てないが、直接の一点入力にはしない。
+それらは明示された admissible set、robustness frontier、sensitivity analysis、
+break-even boundary のためだけに使う。`NOT_IDENTIFIED` は空値のまま保持する。
+実装 phase が完了していても、この gate を自動的に通過したことにはならない。
+
+現時点の active scientific-state component はすべて `policy_usable=false` である。
+したがって現在の headline optimizer への direct input 数は0であり、
+このIssueは未識別量を点推定へ昇格させない。
+
+== Step 1: viability / safety constraints
+
+規範上の第一条件は「毎年の実質成長率が0%より高い」ことである。
+厳密不等号は数値solverで直接扱わず、評価前に stem:[\epsilon_g>0] を固定して
+
+[stem]
+++++
+g_t(p,\theta) \ge \epsilon_g\quad\forall t
+++++
+
+とする。これが stem:[g_t>0] の運用上のviability conditionである。
+`epsilon_g` を結果を見て後付けしてはならない。
+
+深い不確実性を持つ場合、policy-usable な identified set があるときだけ
+
+[stem]
+++++
+\inf_{\theta\in\Theta}g_t(p,\theta)\ge\epsilon_g
+++++
+
+の robust constraint を使える。そうでなければ viability は `UNRESOLVED` であり、
+大きな penalty を置いて通過扱いにはしない。
+
+インフレ、利払い・債務負担、JGB市場機能、為替は core welfare objective ではなく
+constraint family / state / side effect として扱う。閾値を使う場合は評価前に明示する。
+現行の incremental debt/JGB sensitivity は、この constraint family を検討する材料であり、
+「債務を小さくするほど常に厚生が高い」という Pareto objective にはしない。
+
+== Step 2: multi-objective outcomes
+
+viability を満たす政策について、次の6目的を別々に保持する。
+
+=== 累積実質成長
+
+正成長の水準を評価するため
+
+[stem]
+++++
+C_Y(p)=\sum_t \beta^{t-1}\log(1+g_t(p))
+++++
+
+を最大化する。これにより、全期間0.1%成長と3%成長を同じ評価にしない。
+`beta` は時間選好を含む規範パラメータなので、使用時は事前に明示する。
+
+=== 成長率低下
+
+従来の良い性質は独立目的として維持する。
+
+[stem]
+++++
+D_g(p)=\sum_t \beta^{t-1}(g_{t-1}(p)-g_t(p))_+^2
+++++
+
+を最小化する。`C_Y` と `D_g` は相殺して一つの loss にしない。
+
+=== 分配・貧困
+
+次をそれぞれ独立に最小化する。
+
+* `P_2`: 二乗貧困ギャップ (FGT2)。core objective として維持する。
+* `G_Y`: 所得Gini。
+* `G_W`: 資産Gini。
+* `Gap_Age`: 世代間格差。
+
+これらを成長と固定重みで相殺しない。特に深刻な貧困悪化を高いGDP成長だけで
+帳消しにするような scalarization は headline rule としない。
+
+== Step 3: robust Pareto frontier
+
+policy-usable な制約を満たす政策集合を stem:[F]、admissible uncertainty set を
+stem:[\Theta] とする。政策 stem:[q] が stem:[p] を robustly Pareto-dominate するのは、
+全ての core objective で全 admissible uncertainty にわたり no-worse で、
+少なくとも一つの objective で strict improvement が成立する場合だけとする。
+
+区間で報告する場合、最大化目的なら `lower(q) >= upper(p)`、最小化目的なら
+`upper(q) <= lower(p)` を robust no-worse の十分条件として使い、少なくとも一つで
+厳密不等号を要求する。必要な objective が欠ける場合は `INDETERMINATE` であり、
+`ROBUSTLY_NON_DOMINATED` と読み替えない。
+
+`research/vat_policy_integration/pareto_objectives.csv` はこの6目的だけを列挙する。
+現行の8政策シナリオは必要な6目的の数値境界が揃っていないため、
+`data/derived/vat_policy_pareto_screen.csv` では全て
+`UNRESOLVED_NOT_ENOUGH_IDENTIFIED_OBJECTIVES` のままである。
+
+Pareto report は少なくとも、scenario、identification gate、viability status、
+利用可能な objective、欠ける objective、dominance classification、
+`normative_weights_used`、`headline_optimum_claim_allowed` を分けて示す。
+
+== Step 4: optional secondary decision rule
+
+単一政策を選ばなければならない場合に限り、Pareto frontier の後段で
+minimax regret 等を使える。
+
+[stem]
+++++
+p^*=\arg\min_p\max_{\theta\in\Theta,\,w\in W}Regret(p;\theta,w).
+++++
+
+ただし、`W`、stem:[\Theta]、尺度変換、regret の utility/value mapping は
+科学的事実ではなく規範・意思決定上の選択である。評価結果を見る前に明示し、
+固定重み一点だけで headline optimum を作らない。現在はこの二次規則を実行しない。
+
+== Dashboard metrics
+
+objective と diagnostic dashboard は分離する。`P_0`、`P_1`、lower-decile real income、
+growth-incidence profile、overall real GDP level 等は重要な dashboard 指標になり得るが、
+追加しただけで core Pareto objective にはならない。
+
+== 政策手段との分離
 
 政策ベクトルは税率と制度状態を分離する。例として
 
@@ -34,65 +155,33 @@ L=sum_t[
 p=(t_{VAT},s_{VAT}^{admin},lambda,\tau_Y,\tau_A,S_Y)
 ++++
 
-とし、stem:[t_{VAT}] は消費税率、stem:[s_{VAT}^{admin}] はVAT固有の計算・仕入税額控除・インボイス・申告等の行政制度状態を表す。
+とし、stem:[t_{VAT}] は税率、stem:[s_{VAT}^{admin}] はVAT固有の計算・仕入税額控除・
+インボイス・申告等の行政制度状態を表す。
 
-したがって +VAT rate = 0%+ と +VAT制度の完全廃止+ は同一政策ではない。
-税率を0%へ下げても制度を維持するシナリオでは、VAT固有事務の解放を自動的に仮定しない。
+したがって `VAT rate = 0%` とVAT制度完全廃止は同一政策ではない。
+税率0%でも行政制度を維持する場合、VAT固有事務の解放を自動仮定しない。
+また JGB、所得税、資産課税、所得支援等の financing/instrument choice と
+目的関数を混同しない。
 
-制度廃止による生産性チャネルは、通常の需要効果と分離して
+制度廃止の stem:[c_{VAT}]、stem:[\rho]、stem:[a_{alloc}]、Japanのrate-cut pass-through、
+objective-rank Gini/FGT2、endogenous JGB-market response 等は現在も
+`SENSITIVITY_ONLY` / `PARTIALLY_IDENTIFIED` / `NOT_IDENTIFIED` の境界を維持する。
+未実装チャネルを0とは置かない。
 
-[stem]
-++++
-\Delta y_{institution}
-=
-m(s_{VAT}^{admin})
-\left(
-\rho c_{VAT}+a_{alloc}
-\right)
-++++
+FY2024消費税収、名目GDP、incremental debt path、年間収入十分位別支出、
+current-basket tax-content envelope 等の既存診断は引き続き有用だが、
+その識別statusを超えて core welfare outcome に昇格させない。
 
-と表すことができる。ただし stem:[c_{VAT}]（VAT固有実資源費用率）、stem:[\rho]（生産的再配分率）、stem:[a_{alloc}]（配分効率利得）は現時点で点識別されておらず、感度分析入力としてのみ扱う。
+== 機械検証
 
-給付・還付、所得税、資産課税、所得支援等も政策手段として扱う。
-インフレ、金利、JGB市場機能、利払い、為替は目的そのものではなく状態・副作用・制約として扱う。
-VAT廃止時の減収をJGB・所得税・資産課税等のどれで補うかも、コンプライアンス生産性チャネルとは別の政策手段である。
-== 実装上の政策シナリオ接続
+`scripts/validate_policy_evaluation_contract.py` は次を強制する。
 
-Issue #26 のVAT制度廃止チャネルについては、
-+research/vat_policy_integration/+ が上記の「目的」と「手段」を混同しないための
-最小統合層を提供する。現行8/10%、5%、0%+VAT行政維持、完全廃止、
-完全廃止+JGB、所得税改革、資産課税、混合財源の8政策を同一schemaへ載せる。
+* direct optimizer input は `maturity=READY` かつ `policy_usable=true` に限る。
+* `SENSITIVITY_ONLY` / `PARTIALLY_IDENTIFIED` component は direct point input にしない。
+* core Pareto objectives は `C_Y`, `D_g`, FGT2, income Gini, wealth Gini,
+  intergenerational gap の6つに固定する。
+* inflation / debt service / JGB market function / exchange rate をPareto目的へ混入させない。
+* dashboard と core objectives を分離する。
+* minimax regret は明示的な normative secondary rule としてのみ存在できる。
 
-現時点で数値化されるのは、VAT制度完全廃止時だけ発生する
-stem:[m(\rho c_{VAT}+a_{alloc})] のstress componentとそのtransition-growth
-contributionである。overall GDP、年次成長率、Gini、FGT2、財政、債務等は、
-対応する需要・家計帰着・財源モジュールが再現可能になるまで空値と
-識別statusを併記する。未実装チャネルをゼロと仮定しない。
-
-財源側では、財務省のFY2024国庫歳入実績から中央政府の消費税収納済歳入額
-25.021206715兆円を静学的な置換対象referenceとして接続する。これは改革後の
-税収予測や財政収支ではなく、0%化/完全廃止時の粗い財源規模を示す基準値に
-限定する。5%化は10%/8%税率構成・課税ベース・行動反応を要するため、総税収を
-単純比例させない。
-
-JGB全額調達シナリオについては、内閣府2024年度国民経済計算の名目GDP
-642.4147兆円を分母に用い、25.021206715兆円のgross financing referenceが
-FY2024名目GDPの3.894868333%に相当することまでを静学的に報告する。ただし、
-これは既存債務残高、償還、金利、名目GDP反応を含むdebt/GDP変化ではない。
-
-分配側では、2024年全国家計構造調査表1-21から年間収入十分位別の月次消費支出と
-10大費目を観測diagnosticとして接続する。月次消費支出は年間収入十分位1で
-129,460円、十分位10で439,645円である。ただし、この順位は世帯年間収入十分位で
-あり、目的関数で用いるOECD新基準の等価可処分所得十分位ではない。また表の「食料」
-には酒類・外食が含まれるため8%軽減税率対象額とは扱わない。したがって有効なrank
-bridgeとVAT帰着モデルが成立するまでは、Gini、FGT2、十分位別実質可処分所得の政策
-効果は空値のまま保持する。
-
-一方、国税庁が示す現行の最大税率10%（地方消費税分を含む）だけを使えば、税込支出
-stem:[E] に内包されうる消費税等について stem:[0 \le T(E) \le E(10/110)]
-という会計上の上限は置ける。これを用い、税抜価格固定・完全転嫁・overshiftなしの
-静学的current-basket条件下で、5%化は最大 stem:[E(5/110)]、0%化/完全廃止は最大
-stem:[E(10/110)] の価格低下envelopeとして報告する。ただしこれは実際のVAT負担、
-CPI、厚生、Gini、FGT2、可処分所得効果ではない。軽減税率・非課税、転嫁、代替、数量
-反応を識別していないためである。またこの10%は地方消費税を含む一方、財源reference
-25.021206715兆円は中央政府収納額なので両者を同じ税額概念として集計しない。
+この契約変更自体は「最適な消費税率」を決めず、科学的stateも昇格させない。

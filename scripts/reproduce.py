@@ -167,6 +167,8 @@ PAPER1 = (
 )
 
 INTEGRITY = (
+    ("scripts/test_policy_evaluation_contract.py",),
+    ("scripts/validate_policy_evaluation_contract.py",),
     ("scripts/test_repository_migration.py",),
     ("scripts/validate_repository_migration.py",),
     ("scripts/test_research_priority.py",),

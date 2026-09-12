@@ -6,6 +6,7 @@ from validate_claim_graph import validate as validate_claim_graph
 from validate_scientific_state import validate as validate_scientific_state
 from validate_research_priority import validate as validate_research_priority
 from validate_repository_migration import validate as validate_repository_migration
+from validate_policy_evaluation_contract import validate as validate_policy_evaluation_contract
 
 ROOT = Path(__file__).resolve().parents[1]
 required = [
@@ -16,6 +17,7 @@ required = [
     ROOT / "data/claim_graph.csv",
     ROOT / "data/claim_evidence.csv",
     ROOT / "data/research_priority_backlog.csv",
+    ROOT / "data/policy_evaluation_contract.csv",
     ROOT / "docs/research_prioritization.adoc",
     ROOT / "docs/objective_function.adoc",
     ROOT / "docs/identification.adoc",
@@ -38,6 +40,7 @@ else:
     errors.extend(validate_claim_graph(ROOT))
     errors.extend(validate_research_priority(ROOT))
     errors.extend(validate_repository_migration(ROOT)[0])
+    errors.extend(validate_policy_evaluation_contract(ROOT))
 
 for token in [
     "Income-tax behavioral response |NOT_READY",
