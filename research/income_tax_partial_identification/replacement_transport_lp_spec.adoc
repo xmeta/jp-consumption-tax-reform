@@ -8,9 +8,10 @@ This document pre-specifies a *new* replacement LP before its numerical
 endpoints are computed.
 
 It is not a restoration of the historical V6 files
-`40_income_tax_partial_identification_lp.py`,
-`41_income_tax_partial_identification_checks.py`, or
-`42_income_tax_partial_identification_outputs.py`.
+`39_income_tax_restricted_lp_identified_set.py`,
+`40_income_tax_leave_one_table_out.py`,
+`41_income_tax_population_selection_nonidentification.py`, or
+`42_income_tax_surtax_restricted_lp_sensitivity.py`.
 
 The historical P1-C06 restricted-LP claim remains
 `DOCUMENTED_PRIOR_RUN_NOT_REPRODUCED`.

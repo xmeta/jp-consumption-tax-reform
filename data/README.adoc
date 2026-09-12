@@ -52,6 +52,12 @@ generating source chain has not been restored.
 `RECOVERY_GAP`:: A prior-run file is known to have existed but is not present
 byte-for-byte in the repository.
 
+Legacy byte recovery is separate from repository capability migration.
+`data/recovery/legacy_artifact_capability.csv` records whether each of the 45
+numbered legacy artifacts is scientifically superseded, retired, restored, or
+still unresolved; an unresolved gap blocks migration only when a current active
+claim still depends on it.
+
 `NOT_READY`:: The quantity is deliberately not assigned a result suitable for
 headline policy conclusions.
 
