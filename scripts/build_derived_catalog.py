@@ -355,6 +355,22 @@ SPECS = [
         "Documents 2006 as the last published Public Offices/Others person-estimate year, 2007 as the first missing year, 18 missing years through 2024, and prohibits 2006 person-share extrapolation",
     ),
     (
+        "NTA-JOINT-RESEARCH-THEME1-FIELD-PRESENCE-2014-2024",
+        "nta_joint_research_theme1_field_presence_2014_2024.csv",
+        "scripts/extract_nta_joint_research_theme1_feasibility.py",
+        "NTA-NTC-JOINT-RESEARCH-THEME1-SAMPLE",
+        "DERIVED_REPRODUCED_RESTRICTED_DATA_SCHEMA_AUDIT",
+        "Eighteen decision-relevant Theme-1 return fields mapped across 2014-2024; dedicated identifier, filing metadata, salary receipts/income, source withholding, assessed balance, payment/refund and core deductions are present throughout, with explicitly recorded period-specific additions",
+    ),
+    (
+        "NTA-JOINT-RESEARCH-THEME1-FEASIBILITY-2026",
+        "nta_joint_research_theme1_feasibility_2026.csv",
+        "scripts/extract_nta_joint_research_theme1_feasibility.py",
+        "NTA-NTC-JOINT-RESEARCH-CALL6;NTA-NTC-JOINT-RESEARCH-THEME1-SAMPLE;NTA-NTC-JOINT-RESEARCH-FAQ;NTA-NTC-JOINT-RESEARCH-GUIDELINE;NTA-NTC-JOINT-RESEARCH-OVERVIEW;NTA-NTC-INDEX-2026-09-12",
+        "DERIVED_RESTRICTED_ADMIN_DATA_FEASIBILITY_AUDIT",
+        "Sixteen route dimensions: material return-side longitudinal gain, payroll person-link boundary, applicant/access/duration/output-review/cost gates, approximately annual application cadence, closed sixth call, and no announced next-call date as of 2026-09-12",
+    ),
+    (
         "NTA-2024-ANNUAL-INCOME-CLASS-PRIMARY-TYPE-FILING-STATUS",
         "nta_income_class_primary_type_filing_status_2024.csv",
         "scripts/extract_nta_annual_income_class_filing_status.py",

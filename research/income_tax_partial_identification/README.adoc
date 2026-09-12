@@ -655,6 +655,26 @@ Applying the 2006 person share to 2024 is explicitly prohibited, and the
 2024 NTA Public Offices person count remains:
 `NTA_PUBLIC_OFFICES_PERSON_COUNT_NOT_IDENTIFIED`.
 
+== NTA Theme 1 restricted-data feasibility
+
+`nta_joint_research_theme1_feasibility.adoc` audits the current NTA / National
+Tax College Theme 1 schema and access contract.  The 2014--2024 advertised
+return schema provides a dedicated joint-research identifier together with
+salary receipts/income, source withholding, filing metadata, self-assessed
+balance, payment/refund fields and core deductions.  This is a material
+return-side longitudinal identification gain.
+
+It does not advertise a Private Salary Survey person key and does not observe
+non-filers or payroll year-end-adjustment status.  The private-payroll-to-return
+person link therefore remains `NOT_IDENTIFIED`; no amount/rank/demographic match
+is substituted.
+
+The sixth call closed on 2026-04-30.  The current guideline describes roughly
+annual solicitation, but the next exact window was not announced in the
+2026-09-12 NTC snapshot.  `nta_joint_research_theme1_proposal.adoc` records the
+minimum future-call design, gated on an announced call and eligible institutional
+applicant.  This access work does not change the public-data scientific state.
+
 == Reproduction
 
 [source,shell]
@@ -686,6 +706,8 @@ python scripts/extract_public_sector_person_coverage.py
 python scripts/test_public_sector_person_coverage.py
 python scripts/extract_nta_withholding_person_series.py
 python scripts/test_nta_withholding_person_series.py
+python scripts/extract_nta_joint_research_theme1_feasibility.py
+python scripts/test_nta_joint_research_theme1_feasibility.py
 python -m pip install -r requirements-research-lp.txt
 python research/income_tax_partial_identification/run_replacement_transport_lp.py
 python research/income_tax_partial_identification/test_replacement_transport_lp.py

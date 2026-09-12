@@ -74,10 +74,14 @@ descriptive fiscal series are stopped unless they identify the total-debt mappin
 or an endogenous market/macro response.  Issue #89 likewise completed the bounded
 rate-cut search; Japan 5%, 0%, and abolition pass-through remain `NOT_IDENTIFIED`
 unless new direct evidence or a validated transport design shrinks the admissible
-set.  After the Issue #94 provider gate, Issue #25 is the next restricted-data
-research route currently represented in the backlog.  Issue #2 remains lower VoI
-because the generic `C_U*(A)` robustness frontier is already valid without a
-point estimate of `C_U`.
+set.  Issue #25 has now completed its bounded Theme 1 schema/access feasibility audit:
+the return-side longitudinal gain is material and a future-call proposal is
+drafted, while the private-payroll person link remains `NOT_IDENTIFIED`.  The
+sixth call is closed and the next exact window is not announced as of 2026-09-12.
+Together with the Issue #94 provider-confirmation dependency, this leaves both
+high-VoI restricted routes externally gated rather than reasons to invent public
+proxies.  Issue #2 remains lower VoI because the generic `C_U*(A)` robustness
+frontier is already valid without a point estimate of `C_U`.
 
 == M2 VAT decision-readiness boundary
 
