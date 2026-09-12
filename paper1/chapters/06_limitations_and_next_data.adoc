@@ -23,11 +23,13 @@ The reproduced result is therefore a robustness function in stem:[C_U], not an
 identified point value or unconditional lower bound.
 
 Public NTA tables examined for this study do not provide a compatible
-resident/non-resident cross-tab of Table 2-1 Final-return processing-row persons. The NTA also reports
-920,649 statutory-report information records concerning payments to
-non-residents supplied to foreign tax authorities in FY2024, but that is a
-record count rather than a deduplicated final-return-person bound and is not
-used to set stem:[C_U].
+resident/non-resident cross-tab of Table 2-1 Final-return processing-row persons.
+The FY2024 national annual report's explicit non-resident table belongs to the
+withholding-income-tax section and reports payment amounts and withholding tax,
+not a residence-status split of Table 2-1 persons. The NTA also reports 920,649
+statutory-report information records concerning payments to non-residents
+supplied to foreign tax authorities in FY2024, but that is a record count rather
+than a deduplicated final-return-person bound and is not used to set stem:[C_U].
 
 === Data that would materially tighten identification
 
