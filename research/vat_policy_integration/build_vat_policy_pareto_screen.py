@@ -103,7 +103,7 @@ def build():
     summary = {row["scenario_id"]: row for row in summary_rows}
     if set(summary) != EXPECTED_SCENARIOS:
         raise RuntimeError("unexpected VAT scenario set")
-    if len(objectives) != 8:
+    if len(objectives) != 6:
         raise RuntimeError("unexpected Pareto objective count")
     if not all(o["required_for_headline"].lower() == "true" for o in objectives):
         raise RuntimeError("all committed Pareto objectives must remain headline-required")

@@ -20,7 +20,7 @@ def read(path):
 screen = read(SCREEN)
 pairwise = read(PAIRWISE)
 objectives = read(ROOT / "research/vat_policy_integration/pareto_objectives.csv")
-assert [(r["objective_id"], r["direction"]) for r in objectives] == [("overall_real_gdp_level_effect", "maximize"), ("annual_real_growth_rate_effect", "maximize"), ("growth_decline_penalty", "minimize"), ("income_gini_effect", "minimize"), ("wealth_gini_effect", "minimize"), ("intergenerational_gap_effect", "minimize"), ("fgt2_effect", "minimize"), ("year10_incremental_policy_debt_gdp", "minimize")]
+assert [(r["objective_id"], r["direction"]) for r in objectives] == [("cumulative_real_growth", "maximize"), ("growth_decline_penalty", "minimize"), ("fgt2_effect", "minimize"), ("income_gini_effect", "minimize"), ("wealth_gini_effect", "minimize"), ("intergenerational_gap_effect", "minimize")]
 assert all(r["required_for_headline"] == "true" for r in objectives)
 assert len(screen) == 8
 assert len(pairwise) == 28
@@ -45,13 +45,10 @@ assert all(r["normative_weights_used"] == "false" for r in pairwise)
 assert all(r["missing_required_objectives"] for r in pairwise)
 
 by_id = {r["scenario_id"]: r for r in screen}
-for sid in ("full_abolition_jgb", "full_abolition_income_tax", "full_abolition_asset_tax", "full_abolition_mixed"):
-    assert by_id[sid]["bounded_required_objective_count"] == "1"
-    assert by_id[sid]["bounded_required_objectives"] == "year10_incremental_policy_debt_gdp"
-assert by_id["current_8_10"]["bounded_required_objective_count"] == "1"
-assert by_id["current_8_10"]["bounded_required_objectives"] == "year10_incremental_policy_debt_gdp"
-for sid in ("reduced_5", "zero_rate_admin_retained", "full_abolition"):
-    assert by_id[sid]["bounded_required_objective_count"] == "0"
+assert all(row["required_objective_count"] == "6" for row in screen)
+assert all(row["bounded_required_objective_count"] == "0" for row in screen)
+assert all(row["bounded_required_objectives"] == "" for row in screen)
+assert all("cumulative_real_growth" in row["missing_required_objectives"] for row in screen)
 
 subprocess.run(
     [sys.executable, str(ROOT / "research/vat_policy_integration/build_vat_policy_pareto_screen.py"), "--check"],

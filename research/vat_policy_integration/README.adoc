@@ -246,22 +246,27 @@ statement.
 
 == Pareto screening rule
 
-+pareto_objectives.csv+ freezes eight headline objectives and their directions before
-any scalar welfare weights are used. Robust dominance is intentionally strict: for
-every required objective, both scenarios must have numerical lower/upper bounds; one
-scenario must be no worse over the full interval on every objective and strictly better
-on at least one. If any required objective is unbounded or unidentified, the pair is
++pareto_objectives.csv+ freezes six core headline objectives before any scalar welfare
+weights are used: discounted cumulative real growth, growth-decline penalty, FGT2,
+income Gini, wealth Gini and intergenerational inequality. Inflation, debt service,
+JGB-market function and exchange-rate conditions are constraint families rather than
+Pareto welfare objectives; overall GDP level and related diagnostics remain dashboard
+metrics. The general contract is +data/policy_evaluation_contract.csv+.
+
+Robust dominance is intentionally strict: for every required objective, both scenarios
+must have numerical lower/upper bounds; one scenario must be no worse over the full
+interval on every objective and strictly better on at least one. If any required
+objective is unbounded or unidentified, the pair is
 +INDETERMINATE_MISSING_REQUIRED_OBJECTIVES+ rather than being treated as tied or
 non-dominated.
 
-The current repository therefore does not claim an optimal scenario. Only the
-incremental-policy debt objective is bounded for some financing scenarios (and the
-baseline zero path); GDP, growth, growth-decline, income/wealth/intergenerational
-inequality and FGT2 remain missing as full policy outcomes. All eight scenarios are
-classified +UNRESOLVED_NOT_ENOUGH_IDENTIFIED_OBJECTIVES+. No normative welfare
-weights are used by this screen; any later headline scalar ranking requires a separate
-pre-specified weight set and sensitivity analysis after the required outcomes are
-identified or defensibly bounded.
+The current repository therefore does not claim an optimal scenario. None of the six
+core Pareto outcomes currently has a policy-usable numerical bound for the eight VAT
+scenarios, so all scenarios are +UNRESOLVED_NOT_ENOUGH_IDENTIFIED_OBJECTIVES+. The
+existing incremental-debt/JGB paths remain model-contingent constraint diagnostics,
+not a welfare objective. No normative welfare weights are used by this screen; any
+later single-policy rule must be explicitly normative and applied only after the
+identification gate and robust Pareto layer.
 
 == Outputs
 
