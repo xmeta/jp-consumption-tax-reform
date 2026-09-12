@@ -1,0 +1,150 @@
+= 2023 invoice-system causal-evidence and natural-experiment design
+:revdate: 2026-09-13
+
+== Status
+
+This is the execution specification for Issue #111.  It separates direct
+post-2023 descriptive evidence, historical Japanese VAT quasi-experiments, and
+new causal designs.  It does not promote any current repository claim to
+`CAUSAL_IDENTIFIED`.
+
+A bounded literature search through 2026-09-13 did not locate a public study
+that estimates firm-outcome effects of Japan's October-2023 qualified-invoice
+introduction with a defensible DiD, RDD, event-study or natural-experiment
+counterfactual.  This is a search-frontier statement, not proof of universal
+nonexistence.  The machine-readable audit is
+`invoice_2023_causal_literature_audit.csv`.
+
+== What can already be learned
+
+Direct post-introduction evidence exists.  The SME Agency/TSR and JCCI surveys,
+and Fujimaki (2025), document reported registration pressure, administrative
+burden and transaction adjustment.  These sources are useful for outcome and
+heterogeneity selection but do not supply an untreated counterfactual.
+
+Historical Japanese VAT studies provide stronger mechanism evidence:
+
+* Suzuki and Kawakubo (RIETI 21-E-090) exploit historical VAT reforms and a
+  manufacturing panel; their local structural/bunching estimates attribute the
+  observed small-enterprise output response mainly to compliance costs rather
+  than tax rates.
+* Ichikawa, Arudchelvan and Onji (2019) use the 2014 VAT-rate increase as a
+  quasi-experiment around the 10-million-yen exemption threshold; the relative
+  bunching comparison supports a compliance-burden mechanism but predates the
+  invoice-based trading-partner incentive.
+* Hosono, Hotei and Miyakawa (RIETI 19-E-041) show threshold responses vary with
+  productivity and compliance-cost conditions.
+
+These studies justify taking real behavioural distortions seriously.  They do
+not identify the causal effect of the 2023 invoice system and are not used as a
+numerical 2023 treatment coefficient.
+
+== Primary design for the 2023 introduction
+
+The preferred direct design is predetermined supplier exposure x post-2023.
+For firm `i`, define `E_i` only from supplier relationships and VAT/exemption
+status observed before October 2023.  Post-treatment registration choices or
+post-treatment supplier composition must never define `E_i`.
+
+A dynamic specification is:
+
+[stem]
+++++
+Y_{it}=\alpha_i+\lambda_t+\sum_{k\ne -1}\beta_k
+(E_i\times 1[t-T=k])+X_{it}'\gamma+\varepsilon_{it}.
+++++
+
+The coefficients before the event are specification diagnostics, not effects.
+The design is admissible only if pre-trends, common support and the frozen
+exposure definition survive audit.  Industry-by-time controls and placebo dates
+are required because the national reform coincides with sector-specific shocks.
+
+This design is not publicly executable now: the repository has no lawful panel
+that jointly contains pre-2023 supplier-level VAT status/exposure and repeated
+firm outcomes.  Aggregate survey shares are not substituted for that missing
+joint data.
+
+== Prospective 2026 natural experiments
+
+The FY2026 reform creates additional policy variation that can identify invoice
+burden mechanisms without relying on endogenous registration timing.
+
+=== Legal-form relief differential
+
+The current 20-percent special measure ends with tax periods containing dates
+through 2026-09-30.  Under the current reform, individual proprietors can use a
+30-percent special measure for 2027 and 2028, while corporations do not receive
+that extension.  A legal-form x ex-ante-eligibility x post design can therefore
+estimate a marginal seller-side burden effect if comparable pre-trends and
+common support are demonstrated.
+
+The treatment must be aligned to each tax period.  A raw individual-versus-
+corporation comparison is invalid because legal form is selected and associated
+with size, industry, financing and growth.  Matching/reweighting, dynamic
+pre-trends, eligibility interactions and simplified-taxation transitions are
+minimum diagnostics.
+
+=== Non-qualified-supplier input-credit step
+
+The current rule is not the previously scheduled 80%-to-50% step.  The FY2026
+reform changes the first step from 80% to 70% from October 2026, with later
+50%, 30% and 0% phases.  It also lowers the per-supplier purchase cap from
+1 billion yen to 100 million yen for affected tax periods.
+
+A buyer-side exposure design can interact a *pre-step* share of purchases from
+non-qualified suppliers with the October-2026 policy change.  The 70% share
+shock and the cap shock must be coded separately; either restrict to transactions
+safely below the cap or estimate distinct cap-exposure terms.  Using 80%-to-50%
+in an analysis would be a stale-rule error.
+
+Both 2026 designs are pre-registerable now but cannot yet deliver mature post-
+period estimates as of 2026-09-13.
+
+== Designs that are not causal by themselves
+
+`INVOICE_REGISTRY_X_BSBSA` remains useful as a deterministic corporate linkage
+backbone if the provider permits a privacy-preserving corporation key.  Invoice
+registration timing itself is endogenous.  A naive registered-versus-
+unregistered or early-versus-late event study is therefore diagnostic only.
+
+A difference-in-discontinuities design around the 10-million-yen VAT exemption
+threshold is also potentially useful, but only with the legally relevant
+base-period sales variable and explicit treatment of bunching/manipulation,
+voluntary invoice registration and concurrent relief measures.  Conventional
+RDD continuity cannot simply be assumed at a manipulated threshold.
+
+The ranked design matrix is `invoice_2023_natural_experiment_design.csv`.
+
+== Minimum data request
+
+The preferred 2023 design requires, in one approved environment:
+
+* stable firm identifiers and repeated outcomes from at least 2021 through 2025
+  (longer post-period coverage preferred);
+* supplier-customer identifiers and transaction/purchase values observed before
+  October 2023;
+* pre-treatment VAT/exemption status of suppliers or another provider-approved
+  pre-treatment variable that identifies invoice exposure without using later
+  registration choices;
+* sales/output, employment, investment and exit/survival outcomes where
+  available;
+* industry, size, region and legal form for common-support and trend controls;
+* invoice registration history for mechanism and compliance diagnostics, not as
+  the sole causal treatment definition.
+
+The 2026 designs additionally require tax-period dates, 20%/30% special-measure
+eligibility/use, base-period taxable sales, simplified-taxation status, and/or
+supplier-level non-qualified purchase exposure and cap exposure.  A data provider
+must confirm linkage and disclosure rules; probabilistic name/address matching
+of confidential records is prohibited.
+
+== Promotion rule
+
+A local estimate can shrink `a_alloc` uncertainty only for the population and
+margin identified by its design.  It does not identify national VAT-abolition
+GDP effects, `c_VAT`, or `rho`.  Promotion to a causal repository claim requires
+all design-specific diagnostics plus the independent identification review gate.
+
+Until then the repository state remains unchanged: current JCCI/SMEA/Fujimaki
+invoice evidence is descriptive; historical VAT quasi-experiments are mechanism
+and design evidence; national `a_alloc` remains `NOT_IDENTIFIED`.

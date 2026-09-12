@@ -11,6 +11,9 @@ Issue #26 Phase 1 separates VAT institutional abolition from a 0% statutory rate
 * +test_vat_compliance_productivity.py+ — architecture and numeric regression tests.
 * +firm_level_identification_bridge.adoc+ — firm-level `c_VAT` / `rho` / `a_alloc` estimands, linkage designs, causal assumptions and stop rules.
 * +firm_level_identification_design.csv+ — machine-readable candidate-design and identification-set reduction matrix.
+* +invoice_2023_causal_design.adoc+ — Issue #111 causal-evidence boundary, ranked natural experiments, estimands, diagnostics and minimum data request.
+* +invoice_2023_causal_literature_audit.csv+ — bounded direct/historical literature audit through 2026-09-13.
+* +invoice_2023_natural_experiment_design.csv+ — ranked 2023/2026 DiD, event-study and threshold designs with explicit failure modes.
 
 Observed Japan evidence is generated separately by
 +scripts/extract_meti_vat_internal_hours.py+,
@@ -139,6 +142,31 @@ provide population weights.  The report also compares 3.6% in December 2023
 with 3.8% in July 2025, but these are different cross-sectional waves and are
 not treated as a panel or causal trend.  Macro +a_alloc+ therefore remains
 +NOT_IDENTIFIED+.
+
+Issue #111 now adds a bounded causal-literature audit and a ranked natural-
+experiment frontier.  The audit found direct 2023-era survey and questionnaire
+research but no public firm-outcome study in the bounded search that identifies
+the October-2023 Japanese invoice introduction with a defensible DiD, RDD,
+event-study or natural-experiment counterfactual.  This is a search-frontier
+result, not a universal nonexistence claim.  Historical Japanese VAT
+quasi-experiments (RIETI 21-E-090 and Ichikawa et al. 2019) remain valuable
+mechanism evidence but are not relabeled as 2023 effects.
+
+The preferred direct 2023 design freezes supplier exposure before introduction
+and interacts that exposure with post-2023 event time; post-treatment invoice
+registration or post-treatment supplier composition is forbidden as the
+exposure definition.  The required pre-2023 supplier/VAT-status network joined
+to repeated firm outcomes is not publicly available in the repository, so no
+aggregate survey proxy is substituted for the missing microdata.
+
+The FY2026 invoice reform also creates prospective differential variation.  The
+current 20% special measure ends while individual proprietors receive a 30%
+special measure for 2027--2028, and the transitional buyer-side input-credit
+share changes from 80% to 70% from October 2026 while the per-supplier purchase
+cap tightens from 1 billion to 100 million yen.  These margins are pre-
+registerable natural-experiment candidates, but mature post-period outcomes do
+not yet exist as of 2026-09-13.  The 70% rule and cap shock must be modeled
+separately; an 80%-to-50% treatment definition is stale under the current reform.
 
 The wage bridge adds 2019 MHLW Basic Survey on Wage Structure components for
 17 industry-total/major-industry rows. Two transparent hourly-wage formulas are
