@@ -1,12 +1,13 @@
 = Research Status
-:revdate: 2026-09-11
+:revdate: 2026-09-12
 
 == Migration
 
 [cols="1,2"]
 |===
-|repository_migration |PARTIAL
+|repository_migration |COMPLETE
 |prior_package |44 research scripts + validator
+|migration_basis |45 legacy numbered artifacts covered by scientific capability; byte-recovery gaps may remain only when no active claim depends on them
 |current_authority |このGitリポジトリに実在し、検証されたファイルのみ
 |===
 

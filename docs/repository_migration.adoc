@@ -1,0 +1,51 @@
+= Repository migration by capability coverage
+:revdate: 2026-09-12
+
+== Authority
+
+`data/recovery/legacy_artifact_capability.csv` is the machine-readable migration
+coverage matrix for the 45 numbered legacy Python artifacts: 44 research
+scripts plus the historical handoff validator.
+
+The artifact identities come from the recovery registry inside the verified
+V6 recovered archive recorded in `releases/V6_RECOVERED_2026-09-08.adoc`.
+That archive has SHA-256
+`6878d12710be50b6876a8fdf07b03f86ac7d83a7d9445d42259776d38ba0b1ae`.
+The archive is recovery metadata, not evidence for current scientific claims.
+
+== Migration states
+
+`RESTORED_BYTE_OR_FUNCTIONALLY_EQUIVALENT`:: The required capability is present
+in the current repository as the restored or functionally equivalent authority.
+`SCIENTIFICALLY_SUPERSEDED`:: A current repository implementation or evidence
+chain replaces the retained scientific capability.
+`RETIRED_WITH_JUSTIFICATION`:: The historical capability is intentionally not
+part of the current active claim set and no active claim requires it.
+`UNRESOLVED_RECOVERY_GAP`:: The historical implementation remains unrecovered.
+
+== Completion rule
+
+`repository_migration=COMPLETE` is a scientific coverage statement, not a
+historical file-count or byte-recovery statement.
+
+Migration is `PARTIAL` if any `UNRESOLVED_RECOVERY_GAP` remains an
+`active_claim_dependency=true`. A retired artifact cannot be an active claim
+dependency. Superseded/restored rows must name existing current-repository
+replacement paths. Every referenced claim ID must exist in the claim graph.
+
+An unresolved artifact may coexist with `COMPLETE` only when it does not support
+a current active claim. The current unresolved rows 39, 40, and 42 are linked
+only to inactive recovery claim P1-C06. They remain explicit recovery gaps; they
+are not silently treated as reproduced.
+
+== Artifact-identity correction
+
+A prior provisional `data/recovery/recovery_gaps.csv` assigned incorrect names
+to legacy artifacts 39--45. Direct inspection of the registered V6 recovered
+archive's `recovery/artifact_recovery_registry.csv` shows the authoritative
+identities from `39_income_tax_restricted_lp_identified_set.py` through
+`45_income_tax_stage1_filing_rate_threshold.py`.
+
+The repository now uses those identities consistently. This correction changes
+recovery metadata only; it does not promote a recovery-only result, alter a
+numerical result, or relax any identification boundary.

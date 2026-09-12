@@ -137,9 +137,10 @@ publication.
 
 The historical V6 artifacts
 
-* `40_income_tax_partial_identification_lp.py`;
-* `41_income_tax_partial_identification_checks.py`;
-* `42_income_tax_partial_identification_outputs.py`
+* `39_income_tax_restricted_lp_identified_set.py`;
+* `40_income_tax_leave_one_table_out.py`;
+* `41_income_tax_population_selection_nonidentification.py`;
+* `42_income_tax_surtax_restricted_lp_sensitivity.py`
 
 remain byte-identical recovery gaps.
 
