@@ -1,54 +1,89 @@
 = 日本の消費税改革研究
 :lang: ja
-:revdate: 2026-09-11
+:revdate: 2026-09-13
 
 本リポジトリは、日本の消費税改革を「税率ありき」ではなく、明示した社会目的の下で評価する研究の正本である。
+政策目的と政策手段を分離し、識別できない数量を0や点推定として政策結論へ使わない。
 
-== 現在の原則
+== まず確認する場所
 
-* 目的と政策手段を分離する。
-* 実質経済成長率は各年で 0% を上回ることを優先し、成長率の低下も可能な限り避ける。
-* 所得・資産・世代間格差、貧困、二乗貧困ギャップ等を厚生評価へ入れる。
-* 特定の消費税率や 3% インフレを目的化しない。
-* 識別できない数量を点推定として論文の政策結論へ使わない。
+科学的状態のauthority orderは次の通りである。
 
-== 研究状態
+. `data/scientific_state.csv` — module-level scientific state / blocker
+. `data/claim_graph.csv` — claim-level authorityとproduct projection
+. `STATUS.adoc` と各module README — human-facing mirror
+. GitHub Issues / Pull Requests / Project — 作業管理。上位の科学的authorityを上書きしない
 
-直前パッケージでは44本の研究スクリプトとvalidatorが存在したが、新Gitリポジトリへの完全移植は未完了である。
-復元できていない成果物を存在するものとして扱わない。現在の科学的状態は link:STATUS.adoc[STATUS.adoc] を正本とする。
+詳細な契約は link:docs/scientific_state.adoc[Machine-readable Scientific State] を参照する。
+現在のactive componentは全て `policy_usable=false` であり、直接のpolicy optimizer inputとしてREADYなcomponentはない。
 
-== 再現
+== Research products
 
-研究者がローカルで使う再現経路とCIは `scripts/reproduce.py` に統一している。
+以下の行は `data/research_products.csv` とrepository integrity gateで機械照合する。
+
+[cols="2,2,1"]
+|===
+|Product |Publication status |Reproduce
+|paper1 |WORKING_MANUSCRIPT |paper1
+|vat_abolition |RESEARCH_PROGRAM |vat
+|===
+
+== Active scientific-state dashboard
+
+以下は `data/scientific_state.csv` のactive rowsを簡潔に表示する。長いblocker説明はここへ複製しない。
+
+[cols="2,4,2,1"]
+|===
+|Component |Detailed status |Maturity |Policy usable
+|income_tax_pseudofiler |SENSITIVITY_ONLY_REPRODUCED |SENSITIVITY_ONLY |false
+|income_tax_partial_identification |MODEL_CONTINGENT_RANK_ONE_SIDED_BRIDGE_REPRODUCED |SENSITIVITY_ONLY |false
+|stage1_filing_bound |ROBUSTNESS_FRONTIER |PARTIALLY_IDENTIFIED |false
+|vat_compliance_productivity |MODEL_CONTINGENT_COMPLIANCE_PRODUCTIVITY_SENSITIVITY |SENSITIVITY_ONLY |false
+|vat_policy_integration |SCENARIO_SCHEMA_INTEGRATED_WITH_STATIC_REFERENCES_AND_UNRESOLVED_MACRO_OUTCOMES |PARTIALLY_IDENTIFIED |false
+|===
+
+用語上、`REPRODUCED` は再生成可能であることを示し、因果識別や政策利用可能性を意味しない。
+`MODEL_CONTINGENT` / `SENSITIVITY_ONLY` は仮定・感度条件付き、`NOT_IDENTIFIED` / `NOT_READY` は未識別・未準備を示す。
+`RECOVERY_ONLY` は回復用証拠でありactive reproduced claimの単独根拠にはしない。
+
+== Reproduction
+
+通常の入口は `scripts/reproduce.py` である。
 
 [source,shell]
 ----
-python -m pip install -r requirements-research-lp.txt
-python -m pip install -r requirements-data-extraction.txt
-python scripts/reproduce.py --list
 python scripts/reproduce.py paper1
 python scripts/reproduce.py vat
-python scripts/reproduce.py all
-----
-
-release前のclean-room再現では、追跡済み生成物を一時worktree内で削除して再生成し、manifest・provenance・生成差分・clean treeまで検証する。
-
-[source,shell]
-----
 python scripts/reproduce.py clean-room
 ----
 
-Ruby/Asciidoctorを含む前提環境、各target、CI契約の詳細は link:REPRODUCE.adoc[REPRODUCE] と link:docs/reproducibility.adoc[再現性・完全性契約] を参照する。
+依存関係、全target、CI契約は link:REPRODUCE.adoc[REPRODUCE] と link:docs/reproducibility.adoc[再現性・完全性契約] を参照する。
 
-公開・引用時の入口は link:CITATION.cff[CITATION.cff]、link:docs/licensing.adoc[licensing policy]、link:docs/data_availability.adoc[Data Availability] である。
+== Current high-value blocker
 
-== 構成
+VATのobjective-rank household incidence bridgeは、2024 NSFCW `DS51` ↔ `DS52` のprovider-approved same-household joinが未確認であるため未識別を維持する。
+作業ownerは https://github.com/xmeta/jp-consumption-tax-reform/issues/94[Issue #94]。provider確認なしにjoin keyを推測しない。
 
-* `docs/objective_function.adoc` — 目的関数と政策手段の分離
-* `docs/identification.adoc` — 識別境界と許可される主張
-* `docs/reproducibility.adoc` — 再現性・完全性契約
-* `docs/research_prioritization.adoc` — Expected Value of Informationとstop ruleによる研究優先順位
-* `data/research_priority_backlog.csv` — decision-relevantな未識別ギャップの機械可読queue
-* `scripts/reproduce.py` — ローカル/CI共通のmaster reproduction entrypoint
-* `scripts/validate_repo.py` — 状態矛盾の検査
-* `research/vat_compliance_productivity/` — VAT税率0%と制度完全廃止を分離したコンプライアンス生産性感度分析
+その他の研究優先順位は `data/research_priority_backlog.csv`、作業順は https://github.com/users/xmeta/projects/1[GitHub Project #1] とmilestone `M3 Research governance and publication readiness` を参照する。
+
+== Publication / release
+
+* 引用情報: link:CITATION.cff[CITATION.cff]
+* Data Availability: link:docs/data_availability.adoc[docs/data_availability.adoc]
+* licensing / redistribution: link:docs/licensing.adoc[docs/licensing.adoc]
+* scientific review gate: `data/scientific_review_gates.csv`
+* release boundary: `data/research_products.csv` / `data/research_product_files.csv`
+
+repository全体には現在blanket public licenseを付与していない。第三者raw sourceの再配布可否は個別監査し、公開bundleではその境界を守る。
+
+== Navigation
+
+* link:docs/objective_function.adoc[目的関数] — 政策目的と政策手段の分離
+* link:docs/identification.adoc[識別境界] — 許可される主張
+* link:docs/claim_graph.adoc[Claim graph] — claim / evidence / product projection
+* link:docs/research_prioritization.adoc[研究優先順位] — EVSIとstop rule
+* link:paper1/README.adoc[Paper 1]
+* link:research/vat_compliance_productivity/README.adoc[VAT compliance-productivity]
+* link:research/vat_policy_integration/README.adoc[VAT policy integration]
+
+`README.adoc` がrootの唯一のREADME entry pointである。詳細状態は上記authorityへ委譲し、このREADME自体を独立したscientific authorityにはしない。
