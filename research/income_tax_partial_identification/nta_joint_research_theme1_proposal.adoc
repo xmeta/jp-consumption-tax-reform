@@ -1,0 +1,89 @@
+= Draft future-call proposal: Theme 1 return-side longitudinal bridge
+:revdate: 2026-09-12
+
+== Status
+
+This is an application-ready research-design draft for a future NTA / National
+Tax College joint-research call.  It is not an application, access approval, or
+claim that restricted microdata have been obtained.
+
+Submission is gated on an announced future call and an eligible full-time
+researcher at a qualifying institution.
+
+== Proposed research question
+
+How do salary receipts, source withholding, deductions, filing status,
+self-assessed tax, and payment/refund outcomes jointly evolve within individual
+income-tax return records, and how much does that observed return-side joint
+distribution shrink the identification gap left by public aggregate tables?
+
+The primary estimand is the joint distribution and transition structure among
+*return filers represented in Theme 1*.  The design does not define a payroll-
+to-return population union and does not treat non-filers as observed.
+
+== Required Theme 1 fields
+
+Use only fields advertised in the current Theme 1 sample schema: dedicated
+joint-research identifier, tax year, filing date/type, salary receipts/income,
+source withholding, self-assessed balance, payment/refund fields, and relevant
+deductions.  Request years 2014--2024 when the future call permits them.
+== Empirical design
+
+Construct filer-level annual records keyed only by the approved joint-research
+identifier.  Report:
+
+* cross-tabs of salary-receipt class, source withholding, self-assessed balance,
+  refund/payment status, and filing type;
+* longitudinal transitions across filing/refund/payment states where repeated
+  identifiers are available; and
+* sensitivity tables showing which conclusions depend on fields introduced only
+  in later years, such as salary-receipt class or explicit amended-return tax
+  increase.
+
+All reported cells and statistics must satisfy the NTA disclosure rules.  The
+analysis should prefer direct tabulations and transparent regressions over
+complex matching because the research question is identification of observed
+return-side relationships, not prediction.
+
+== Identification boundary
+
+The design can identify return-side same-record relationships conditional on the
+approved Theme 1 population and fields.  It cannot by itself identify:
+
+* Private Salary Survey year-end-adjustment status for the same person;
+* salary earners who do not file a return;
+* the full payroll-to-return person overlap; or
+* an external statistical-microdata linkage that has not been separately
+  approved.
+
+These remain explicit exclusions rather than modeled zeroes or inferred links.
+== Optional external-data extension
+
+Do not request an external linkage in the minimum Theme 1 proposal unless a
+specific statistical microdata source, lawful matching mechanism, and provider
+approval path are known.  If such a source later becomes available, amend the
+plan explicitly and preserve the Theme-1-only estimates as the primary bounded
+result.
+
+The Private Salary Survey must not be described as linkable merely because both
+systems contain salary variables.  A provider-approved person-level linkage is
+required before it can resolve the payroll-side bridge.
+
+== Operational plan
+
+Use the minimum necessary approved researchers and the shortest justified access
+period.  Analysis is performed on the NTA-provided Wako environment.  Export
+only disclosure-reviewed analysis results.  Repository code for the public-data
+benchmark and disclosure-safe analysis specification should remain versioned so
+that restricted results can be compared against the existing public-data bounds.
+
+== Success criterion
+
+The restricted-data study succeeds if it replaces at least one public aggregate
+unknown with an observed return-side joint distribution or transition while
+preserving the remaining payroll/non-filer boundary.  A scientifically useful
+negative result is also acceptable if the approved data cannot shrink that set.
+
+No scientific-state promotion occurs from proposal acceptance alone; promotion
+requires analyzed evidence, repository provenance, and the applicable scientific
+review gate.

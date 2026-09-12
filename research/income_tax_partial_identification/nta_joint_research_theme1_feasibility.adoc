@@ -1,0 +1,115 @@
+= NTA Theme 1 joint-research feasibility audit
+:revdate: 2026-09-12
+
+== Question
+
+Can the National Tax Agency / National Tax College restricted Theme 1 return
+microdata materially shrink the salary-to-final-return identification gap?
+
+== Official data contract
+
+The sixth-call Theme 1 schema covers 2014--2024 individual income-tax returns.
+The checked official sample is synthetic, not real taxpayer data.
+
+`data/derived/nta_joint_research_theme1_field_presence_2014_2024.csv` shows
+that the advertised schema contains, for every year 2014--2024:
+
+* a dedicated joint-research identifier and tax year;
+* filing date and filing type;
+* salary receipts and salary income;
+* source-withholding tax and self-assessed balance;
+* third-installment payment and refund fields; and
+* core deduction fields.
+
+Salary-receipt class is present from 2020 and the explicit amended-return tax
+increase field from 2022.  These differences are preserved rather than
+back-filled.
+
+== Identification gain
+
+Theme 1 materially improves the *return-side* evidence set.  Within an approved
+individual-return file, the advertised fields permit direct observation of
+salary receipts, source withholding, deductions, filing metadata, self-assessed
+balance, and payment/refund outcomes.  The dedicated joint-research identifier
+and repeated tax years make longitudinal return-side reconciliation feasible.
+
+This is narrower than the missing public-data bridge.  Theme 1 does not advertise
+a Private Salary Survey person identifier, does not observe non-filers, and does
+not expose private-payroll year-end-adjustment status.  Therefore:
+
+----
+return-side longitudinal tax-flow bridge = MATERIAL_PARTIAL_IDENTIFICATION_GAIN
+private-payroll-to-return person link     = NOT_IDENTIFIED
+----
+
+No salary amount, rank, demographic field, or model-based matching rule may be
+used as a substitute for an approved cross-source person identifier.
+
+== Access and operational constraints
+
+The 2026-03-01 guideline and current FAQ require individual-data academic
+applicants to be full-time researchers at an eligible public, independent,
+university, or inter-university institution.  A specific person's eligibility
+must be checked at application time; private-business affiliation alone is not
+sufficient.
+Approved individual data are used only on NTA-provided terminals at the National
+Tax College Wako campus.  The FAQ gives the ordinary access window as non-holiday
+weekdays 09:30--17:00 with advance reservation.  Individual-data users are
+appointed visiting professors and are subject to the associated confidentiality
+obligations.  Raw microdata and unreviewed intermediate outputs cannot be copied
+out of the secure environment.
+
+The guideline normally caps the approved use period at three years.  Research
+outputs must be reported to NTA before publication and pass the prescribed
+consistency, confidentiality, and disclosure checks.  This administrative
+review is not scientific validation and must not promote a repository claim by
+itself.
+
+The FAQ permits a proposal to combine eligible statistical microdata with the
+tax records for non-identifying statistical research.  Such linkage is not
+pre-approved: the external-data application, exact keys, processing time, and
+any external-data fee remain application-specific.  Any such fee is borne by
+the user.  No project-wide monetary cost is inferred from the reviewed sources.
+
+== Application timing
+
+The sixth call accepted applications from 2026-03-02 through 2026-04-30 12:00
+and is closed.  The guideline states that applications are solicited about once
+per year and that concrete dates are announced in advance.
+
+The National Tax College landing-page snapshot captured 2026-09-12 lists the
+sixth-call decision but no seventh-call application notice.  The next exact
+application window is therefore:
+
+----
+NOT_ANNOUNCED_AS_OF_2026_09_12
+----
+
+The approximately annual cadence must not be converted into guessed dates.
+== Decision for Issue 25
+
+The expected identification gain is material enough to justify a future-call
+proposal, but only for the return-side longitudinal question.  The proposal is
+recorded in `nta_joint_research_theme1_proposal.adoc`.
+
+The proposal deliberately does not claim to solve the private-payroll overlap.
+Adding external statistical microdata is an optional later extension only if an
+eligible source, lawful join mechanism, and provider approvals are established.
+
+This audit does not change `data/scientific_state.csv`.  Until restricted data
+are actually obtained and analyzed, the existing public-data scientific states
+remain authoritative.
+
+== Reproduction
+
+[source,shell]
+----
+python scripts/build_source_catalog.py
+python scripts/extract_nta_joint_research_theme1_feasibility.py
+python scripts/test_nta_joint_research_theme1_feasibility.py
+python scripts/build_derived_catalog.py
+python scripts/validate_provenance.py
+----
+
+The checked source workbook is synthetic schema/sample data, not taxpayer
+microdata.  All raw-source hashes are registered in `data/source_catalog.csv`.

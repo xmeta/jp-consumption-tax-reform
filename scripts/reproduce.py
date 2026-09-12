@@ -108,6 +108,8 @@ INCOME_TAX = (
     ("scripts/test_public_sector_person_coverage.py",),
     ("scripts/extract_nta_withholding_person_series.py",),
     ("scripts/test_nta_withholding_person_series.py",),
+    ("scripts/extract_nta_joint_research_theme1_feasibility.py",),
+    ("scripts/test_nta_joint_research_theme1_feasibility.py",),
     ("research/income_tax_pseudofiler/run_pseudofiler_core.py",),
     ("research/income_tax_pseudofiler/test_pseudofiler_core.py",),
     ("research/income_tax_partial_identification/run_replacement_transport_lp.py",),
