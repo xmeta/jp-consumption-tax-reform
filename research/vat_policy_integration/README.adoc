@@ -327,11 +327,12 @@ python research/vat_policy_integration/test_vat_policy_pareto_screen.py
 == Scientific status
 
 ----
-PARTIAL_E2E_POLICY_MATRIX_WITH_STATIC_FISCAL_AND_HOUSEHOLD_RATE_ENVELOPES
+SCENARIO_SCHEMA_INTEGRATED_WITH_STATIC_REFERENCES_AND_UNRESOLVED_MACRO_OUTCOMES
 ----
 
-The matrix is operational end-to-end, but it is not a policy forecast or a
-joint welfare optimization.  M2 public-data work is decision-ready under explicit
+The scenario schema is integrated across the current submodules and static
+references, but it is not a complete macro model, policy forecast or joint welfare
+optimization.  M2 public-data work is decision-ready under explicit
 identification limits: the objective-rank public-table search and general
 rate-cut pass-through search are stopped, the dynamic fiscal/JGB sensitivity is
 implemented, and the Pareto layer refuses to rank scenarios whose required

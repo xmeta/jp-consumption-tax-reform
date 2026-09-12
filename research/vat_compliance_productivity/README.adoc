@@ -162,7 +162,7 @@ The compliance-only outputs are now consumed by
 them into the eight Issue #26 policy scenarios.  That adapter jointly reports
 the status of GDP, growth, Gini, FGT2, inflation, fiscal and debt outcomes while
 leaving unavailable macro channels explicitly unmodeled rather than assigning
-zero.  This is a partial end-to-end integration, not a policy forecast.
+zero.  This is scenario-schema integration across the current submodules, not a complete macro model or policy forecast.
 
 The ordinary VAT demand channel and financing choices remain separate.
 
