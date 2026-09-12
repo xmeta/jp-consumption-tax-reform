@@ -106,14 +106,6 @@ jobs:
         run: python scripts/reproduce.py docs
 
   full-reproduction:
-    needs:
-      - source-integrity
-      - vat
-      - income-tax
-      - provenance
-      - paper1
-      - repository-integrity
-      - docs
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v7
