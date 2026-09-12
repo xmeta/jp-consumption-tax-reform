@@ -13,6 +13,10 @@ size as progress metrics.  More evidence is valuable only when it can plausibly
 shrink a decision-relevant admissible set, establish a missing linkage, or
 complete a model required for comparing policy scenarios.
 
+Decision-relevant progress reporting is governed separately by
+`docs/research_progress_kpis.adoc`; its canonical KPIs use this VoI queue as the
+gap authority and keep repository-integrity counts out of scientific progress.
+
 == Qualitative VoI rubric
 
 No pseudo-precise expected-value number is assigned when probabilities and loss

@@ -1,0 +1,111 @@
+= Decision-Relevant Research Progress KPIs
+:revdate: 2026-09-13
+
+== Purpose
+
+Research progress is not the same as repository growth. File counts, raw-source
+counts, derived-artifact counts, scenario rows, and manifest size are integrity
+or completeness diagnostics. They do not by themselves show that a policy-
+relevant uncertainty narrowed.
+
+The canonical progress KPIs below are deliberately small. They measure changes
+in identification, assumptions, decision relations, review state, or recovery
+state. If none changes, a PR may still be valuable engineering or integrity work,
+but it must not be reported as scientific progress.
+
+`data/research_priority_backlog.csv` remains the authority for which unresolved
+gap should receive the next unit of research effort. `data/scientific_state.csv`
+and `data/claim_graph.csv` remain the scientific-state authorities.
+
+== Canonical KPI set
+
+=== `voi_gap_advances`
+
+Count distinct `gap_id` rows in `data/research_priority_backlog.csv` whose
+admissible set is materially tightened, missing linkage is established, model-
+completion blocker is removed, or scientific status is promoted by new evidence.
+Pure evidence accumulation does not count.
+For every counted gap, report `gap_id`, before/after `current_scientific_status`
+and `current_admissible_set`, and whether the change can affect policy ranking or
+a material manuscript claim. This connects progress directly to the VoI queue.
+
+=== `identified_set_width_reduction`
+
+For the same parameter, population, unit, and maintained assumptions, let
+`W = upper - lower`. Report `W_before - W_after` and, when `W_before > 0`, the
+fraction `(W_before - W_after) / W_before`.
+
+Do not manufacture a percentage when the previous set was unbounded. Report a
+transition such as `UNBOUNDED -> [L,U]` instead. Width changes under different
+parameter definitions or stronger assumptions are not comparable improvements.
+
+=== `assumption_burden_reduction`
+
+Count named substantive assumptions removed or strictly weakened without adding
+a compensating stronger assumption that restores the same conclusion. List the
+assumptions; do not aggregate unrelated modeling conveniences into a score.
+
+=== `policy_relations_resolved`
+
+Count policy pairs that move from an `INDETERMINATE_*` dominance status to a
+validated robust relation in `data/derived/vat_policy_pareto_pairwise.csv`.
+Adding scenarios or rows does not count. The pair and before/after status must be
+reported.
+=== `independent_review_gates_satisfied`
+
+Report satisfied / total rows in `data/scientific_review_gates.csv` where
+`minimum_independence=INDEPENDENT_REVIEWER`. A larger numerator is progress in
+publication assurance, not evidence for the underlying scientific claim.
+
+=== `recovery_only_claims_upgraded_or_retired`
+
+Count claim IDs that cease to be active `RECOVERY_ONLY` claims because they gain
+eligible reproduced evidence or are explicitly retired. Use `data/claim_graph.csv`
+and `data/claim_evidence.csv`; deleting recovery metadata without resolving or
+retiring the claim does not count.
+
+== Snapshot helper
+
+The repository provides a small stock snapshot for before/after comparison:
+
+----
+python3 scripts/report_research_progress.py
+python3 scripts/report_research_progress.py --ref <base-commit-or-tag>
+----
+
+It reports the current HIGH-VoI backlog count, indeterminate policy-pair count,
+independent-review gate progress, and active recovery-only claim count. These
+stocks support the canonical delta KPIs but do not replace the required
+claim/gap-specific explanation for a major research PR.
+
+== Integrity metrics are separate
+The following remain useful release/integrity diagnostics, but are not scientific
+progress without one of the KPI changes above:
+
+* manifest/tracked-file count;
+* raw-source and derived-artifact count;
+* scenario, stress-grid, or table row count;
+* research-product bundle file count or deterministic hash;
+* test, reproduction, and CI pass/fail state.
+
+PR and release templates therefore place these in a separate
+`Integrity / completeness` section.
+
+== Major research PR reporting
+
+A major research PR is one that changes an admissible set, scientific status,
+claim interpretation, policy comparison, substantive model assumption, or
+publication review state. Such a PR reports the applicable KPI before/after
+values. Use `N/A` when a KPI is genuinely inapplicable; do not fill gaps with
+proxy counts.
+
+Engineering, documentation, and provenance-only PRs can state that scientific
+KPIs are unchanged and report only the relevant integrity checks.
+
+== Validation
+
+----
+python3 scripts/test_research_progress.py
+python3 scripts/report_research_progress.py --validate
+python3 scripts/reproduce.py integrity
+----

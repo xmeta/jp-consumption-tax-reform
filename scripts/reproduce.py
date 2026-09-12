@@ -178,6 +178,8 @@ INTEGRITY = (
     ("scripts/test_repository_migration.py",),
     ("scripts/validate_repository_migration.py",),
     ("scripts/test_research_priority.py",),
+    ("scripts/test_research_progress.py",),
+    ("scripts/report_research_progress.py", "--validate"),
     ("scripts/test_research_products.py",),
     ("scripts/validate_research_products.py",),
     ("scripts/test_scientific_reviews.py",),
