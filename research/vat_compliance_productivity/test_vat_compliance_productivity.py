@@ -14,6 +14,8 @@ AX=ROOT/"research/vat_compliance_productivity/sensitivity_axes.csv"
 DESIGN=ROOT/"research/vat_compliance_productivity/firm_level_identification_design.csv"
 SOURCE_CATALOG=ROOT/"data/source_catalog.csv"
 ACCESS_AUDIT=ROOT/"research/vat_compliance_productivity/firm_level_linkage_access_audit.csv"
+LIT_AUDIT=ROOT/"research/vat_compliance_productivity/invoice_2023_causal_literature_audit.csv"
+INVOICE_DESIGN=ROOT/"research/vat_compliance_productivity/invoice_2023_natural_experiment_design.csv"
 
 def read(p):
     with p.open(encoding="utf-8",newline="") as f: return list(csv.DictReader(f))
@@ -40,6 +42,8 @@ axes={r["parameter_id"]:r for r in read(AX)}
 designs=read(DESIGN)
 sources={r["source_id"] for r in read(SOURCE_CATALOG)}
 access_audit={r["audit_item"]:r for r in read(ACCESS_AUDIT)}
+invoice_lit=read(LIT_AUDIT)
+invoice_design=read(INVOICE_DESIGN)
 
 assert len(rows)==1200
 assert all(r["identification_status"]=="MODEL_CONTINGENT_STRESS_TEST_ONLY" for r in rows)
@@ -166,6 +170,44 @@ assert access_audit["cross_survey_linkage_permission"]["status"] == "NOT_ESTABLI
 assert access_audit["route_decision"]["status"] == "STOP_STANDARD_EMICRO_RETROSPECTIVE_LINKAGE"
 assert access_audit["national_parameter_status"]["status"] == "NOT_IDENTIFIED"
 for r in designs:
+    ids = [x for x in r["source_ids"].split(";") if x]
+    assert ids and set(ids) <= sources, (r["design_id"], set(ids) - sources)
+
+# Issue #111: direct invoice-era survey evidence remains descriptive, while
+# the ranked causal frontier rejects post-treatment exposure and stale 2026 rules.
+assert len(invoice_lit) == 7
+frontier = invoice_lit[0]
+assert frontier["evidence_id"] == "SEARCH-FRONTIER-2026-09-13"
+assert frontier["causal_identification_status"] == "NO_DIRECT_QUASI_EXPERIMENTAL_STUDY_FOUND_IN_BOUNDED_SEARCH"
+assert "not a proof" in frontier["search_or_scope_note"].lower()
+for r in invoice_lit:
+    ids = [x for x in r["source_ids"].split(";") if x]
+    assert ids and set(ids) <= sources, (r["evidence_id"], set(ids) - sources)
+for r in invoice_lit:
+    if r["direct_2023_invoice_effect"] == "YES_DIRECT_EVENT_CONTEXT":
+        assert "NOT_CAUSAL" in r["causal_identification_status"] or "NOT_2023_EFFECT" in r["causal_identification_status"]
+
+assert [int(r["design_rank"]) for r in invoice_design] == [1, 2, 3, 4, 5]
+by_invoice_design={r["design_id"]:r for r in invoice_design}
+assert set(by_invoice_design) == {
+    "PRE2023_SUPPLIER_EXPOSURE_X_2023_DID",
+    "2026_LEGAL_FORM_RELIEF_DIFFERENTIAL_DID",
+    "2026_UNREGISTERED_SUPPLIER_CREDIT_STEP_DID",
+    "INVOICE_REGISTRY_X_BSBSA_ADOPTION_EVENT_STUDY",
+    "VAT_10M_THRESHOLD_DIFF_IN_DISCONTINUITIES_2023",
+}
+primary=by_invoice_design["PRE2023_SUPPLIER_EXPOSURE_X_2023_DID"]
+assert primary["publicly_executable_2026_09"] == "NO"
+assert "pre-2023" in primary["treatment_or_exposure"].lower()
+assert "post-treatment registration" in primary["stop_rule"].lower()
+step=by_invoice_design["2026_UNREGISTERED_SUPPLIER_CREDIT_STEP_DID"]
+assert "80% to 70%" in step["policy_variation"]
+assert "80-to-50" in step["stop_rule"]
+assert "NTA-2026-INVOICE-REFORM" in step["source_ids"]
+registry=by_invoice_design["INVOICE_REGISTRY_X_BSBSA_ADOPTION_EVENT_STUDY"]
+assert registry["identification_strength"] == "DIAGNOSTIC_ONLY_UNLESS_EXOGENOUS_VARIATION_ADDED"
+assert "naive" in registry["stop_rule"].lower()
+for r in invoice_design:
     ids = [x for x in r["source_ids"].split(";") if x]
     assert ids and set(ids) <= sources, (r["design_id"], set(ids) - sources)
 
