@@ -1,6 +1,9 @@
 product_id,path,role
 paper1,.gitattributes,SHARED
 paper1,.gitignore,SHARED
+paper1,CITATION.cff,RELEASE_METADATA
+paper1,README.adoc,RELEASE_METADATA
+paper1,REPRODUCE.adoc,RELEASE_METADATA
 paper1,STATUS.adoc,RELEASE_METADATA
 paper1,data/claim_evidence.csv,SHARED
 paper1,data/claim_graph.csv,SHARED
@@ -13,6 +16,7 @@ paper1,data/scientific_reviews.csv,RELEASE_METADATA
 paper1,data/scientific_state.csv,SHARED
 paper1,docs/claim_graph.adoc,RELEASE_METADATA
 paper1,docs/data_availability.adoc,RELEASE_METADATA
+paper1,docs/licensing.adoc,RELEASE_METADATA
 paper1,docs/reproducibility.adoc,RELEASE_METADATA
 paper1,docs/research_products.adoc,RELEASE_METADATA
 paper1,docs/scientific_reviews.adoc,RELEASE_METADATA
@@ -28,6 +32,7 @@ paper1,paper1/chapters/05_validation_and_claims.adoc,PRODUCT
 paper1,paper1/chapters/06_limitations_and_next_data.adoc,PRODUCT
 paper1,paper1/chapters/07_related_literature.adoc,PRODUCT
 paper1,paper1/chapters/08_references.adoc,PRODUCT
+paper1,paper1/chapters/09_data_availability.adoc,PRODUCT
 paper1,paper1/data/claim_registry.csv,PRODUCT
 paper1,paper1/data/rank_bridge_v2_summary_table.csv,PRODUCT
 paper1,paper1/data/rank_bridge_v3_frontier_table.csv,PRODUCT
@@ -90,6 +95,9 @@ paper1,scripts/reproduce.py,SHARED
 paper1,scripts/validate_research_products.py,RELEASE_METADATA
 vat_abolition,.gitattributes,SHARED
 vat_abolition,.gitignore,SHARED
+vat_abolition,CITATION.cff,RELEASE_METADATA
+vat_abolition,README.adoc,RELEASE_METADATA
+vat_abolition,REPRODUCE.adoc,RELEASE_METADATA
 vat_abolition,STATUS.adoc,RELEASE_METADATA
 vat_abolition,data/claim_graph.csv,SHARED
 vat_abolition,data/derived/bsws_2019_industry_hourly_wage_bridge.csv,SHARED
@@ -182,6 +190,7 @@ vat_abolition,data/scientific_state.csv,SHARED
 vat_abolition,data/source_catalog.csv,SHARED
 vat_abolition,docs/claim_graph.adoc,RELEASE_METADATA
 vat_abolition,docs/data_availability.adoc,RELEASE_METADATA
+vat_abolition,docs/licensing.adoc,RELEASE_METADATA
 vat_abolition,docs/reproducibility.adoc,RELEASE_METADATA
 vat_abolition,docs/research_products.adoc,RELEASE_METADATA
 vat_abolition,docs/scientific_state.adoc,RELEASE_METADATA

@@ -1,0 +1,62 @@
+= Reproduce This Research Repository
+:revdate: 2026-09-13
+
+This file is the shortest entry point for an independent reproducer. Detailed
+environment and CI contracts remain in `docs/reproducibility.adoc`.
+
+== Environment
+
+From a fresh clone, use Python 3.12 and install:
+
+[source,shell]
+----
+python -m pip install -r requirements-research-lp.txt
+python -m pip install -r requirements-data-extraction.txt
+----
+
+Paper-document builds additionally require Ruby 3.3 and Asciidoctor.
+
+== Product reproduction
+
+Paper 1:
+
+[source,shell]
+----
+python scripts/reproduce.py paper1
+----
+
+The target regenerates and validates the stage-1/partial-identification product
+artifacts and `paper1/data/claim_registry.csv`, then requires a clean tree.
+
+VAT abolition/policy-integration product:
+
+[source,shell]
+----
+python scripts/reproduce.py vat
+----
+
+The target regenerates and validates the VAT evidence bridges, scenario matrix,
+Pareto screen, and `research/vat_claim_registry.csv`, then requires a clean tree.
+
+For the repository-wide release gate:
+
+[source,shell]
+----
+python scripts/reproduce.py clean-room
+----
+
+This deletes tracked generated outputs in a temporary worktree, regenerates them
+from tracked inputs, compares them, verifies provenance/manifest integrity, and
+requires the resulting worktree to be clean.
+
+== Public archival bundles
+
+[source,shell]
+----
+python scripts/build_product_bundle.py paper1 --output /tmp/paper1-public.zip --public-release
+python scripts/build_product_bundle.py vat_abolition --output /tmp/vat-public.zip --public-release
+----
+
+Each bundle includes `PRODUCT_BUNDLE_MANIFEST.csv`; excluded raw sources are
+represented by `RAW_SOURCE_ACQUISITION.csv`. See `docs/data_availability.adoc`
+and `docs/licensing.adoc` before public redistribution.
