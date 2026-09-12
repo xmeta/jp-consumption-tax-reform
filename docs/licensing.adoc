@@ -1,0 +1,61 @@
+= Licensing and Reuse Policy
+:revdate: 2026-09-13
+
+== Current repository license state
+
+The repository currently makes *no blanket public license grant* over all
+contents. Absence of a license file must not be interpreted as permission to
+reuse repository-original code, documentation, generated datasets, or
+third-party source material beyond rights provided by law.
+
+Machine-readable status token:
+
+----
+NO_BLANKET_PUBLIC_LICENSE_GRANTED
+----
+
+This conservative state avoids granting rights that the repository owner has
+not explicitly selected.
+
+== Repository-original material
+
+Repository-original software, documentation, and generated research artifacts
+remain under their applicable copyright until the maintainer explicitly adopts
+and commits a license. A future archival release may assign separate software
+and documentation/data licenses, but that is a release decision rather than an
+assumption made by the current research package.
+
+== Third-party and source-provider material
+
+`data/raw_source_redistribution_audit.csv` is the authority for third-party raw
+source redistribution. Public downloadability is not treated as redistribution
+permission. `docs/data_availability.adoc` describes the corresponding access
+and reacquisition policy.
+
+Current public product bundles exclude all registered third-party/source-provider
+raw bytes and provide URL + expected SHA-256 reacquisition metadata instead.
+This remains true even where site-wide terms appear permissive, because
+source-specific or embedded third-party rights may override general terms.
+
+== License strategy matrix
+
+[cols="2,2,4"]
+|===
+|Material |Current state |Public-release rule
+|Repository-original software |NO_PUBLIC_LICENSE_GRANTED |Select and commit an SPDX software license before a permissively licensed release.
+|Repository-original documentation |NO_PUBLIC_LICENSE_GRANTED |Select and commit a documentation license before granting reuse rights.
+|Repository-generated datasets |NO_PUBLIC_LICENSE_GRANTED |License only after confirming upstream/source constraints and contributor rights.
+|Third-party/source-provider raw bytes |PER_SOURCE_TERMS |Follow `data/raw_source_redistribution_audit.csv`; current public bundle reacquires externally.
+|===
+
+== Release gate
+
+Before a future DOI/archive deposit changes this license state, the maintainer
+must explicitly select and commit the applicable license or licenses, re-run the
+raw-source rights audit, and rebuild the public-release bundle. The selected
+license identifiers should then be added to `CITATION.cff` and the release
+metadata in the same change.
+
+A license change must not silently relicense third-party material. Raw-source
+rights remain source-specific regardless of the license selected for original
+repository material.

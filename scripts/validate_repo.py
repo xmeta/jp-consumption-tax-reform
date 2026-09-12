@@ -7,11 +7,14 @@ from validate_scientific_state import validate as validate_scientific_state
 from validate_research_priority import validate as validate_research_priority
 from validate_repository_migration import validate as validate_repository_migration
 from validate_policy_evaluation_contract import validate as validate_policy_evaluation_contract
+from validate_publication_metadata import validate as validate_publication_metadata
 from validate_raw_source_redistribution import validate as validate_raw_source_redistribution
 
 ROOT = Path(__file__).resolve().parents[1]
 required = [
     ROOT / "README.adoc",
+    ROOT / "CITATION.cff",
+    ROOT / "REPRODUCE.adoc",
     ROOT / "STATUS.adoc",
     ROOT / "PACKAGE_INTEGRITY.adoc",
     ROOT / "data/scientific_state.csv",
@@ -25,9 +28,10 @@ required = [
     ROOT / "docs/objective_function.adoc",
     ROOT / "docs/identification.adoc",
     ROOT / "docs/reproducibility.adoc",
+    ROOT / "docs/data_availability.adoc",
+    ROOT / "docs/licensing.adoc",
     ROOT / "docs/scientific_state.adoc",
     ROOT / "docs/repository_migration.adoc",
-    ROOT / "docs/data_availability.adoc",
     ROOT / "data/recovery/legacy_artifact_capability.csv",
     ROOT / "docs/claim_graph.adoc",
     ROOT / "paper1/data/claim_registry.csv",
@@ -45,6 +49,7 @@ else:
     errors.extend(validate_research_priority(ROOT))
     errors.extend(validate_repository_migration(ROOT)[0])
     errors.extend(validate_policy_evaluation_contract(ROOT))
+    errors.extend(validate_publication_metadata(ROOT))
     errors.extend(validate_raw_source_redistribution(ROOT))
 
 for token in [

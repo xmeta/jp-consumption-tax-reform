@@ -38,7 +38,9 @@ release前のclean-room再現では、追跡済み生成物を一時worktree内�
 python scripts/reproduce.py clean-room
 ----
 
-Ruby/Asciidoctorを含む前提環境、各target、CI契約の詳細は link:docs/reproducibility.adoc[再現性・完全性契約] を参照する。
+Ruby/Asciidoctorを含む前提環境、各target、CI契約の詳細は link:REPRODUCE.adoc[REPRODUCE] と link:docs/reproducibility.adoc[再現性・完全性契約] を参照する。
+
+公開・引用時の入口は link:CITATION.cff[CITATION.cff]、link:docs/licensing.adoc[licensing policy]、link:docs/data_availability.adoc[Data Availability] である。
 
 == 構成
 

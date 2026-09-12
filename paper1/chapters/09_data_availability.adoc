@@ -1,0 +1,15 @@
+== Data Availability
+
+All public-source inputs used by this manuscript are registered with publisher
+URL, source locator, SHA-256, and byte size in the repository provenance
+catalogs. Active manuscript claims do not rely exclusively on recovery-only
+evidence, and restricted microdata are not redistributed.
+
+For public archival release, third-party/source-provider raw bytes are excluded
+conservatively. The product bundle instead supplies exact reacquisition URLs and
+expected SHA-256 values in `RAW_SOURCE_ACQUISITION.csv` when a selected raw
+source cannot be redistributed with the bundle.
+
+The repository-wide availability and redistribution statement is maintained in
+`docs/data_availability.adoc`. Reproduction commands are documented in
+`REPRODUCE.adoc` and `docs/reproducibility.adoc`.

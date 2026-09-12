@@ -1,0 +1,14 @@
+cff-version: 1.2.0
+message: "If you use this research repository, please cite it using this metadata and the exact archived release when available."
+title: "jp-consumption-tax-reform"
+type: software
+authors:
+  - alias: "xmeta"
+repository-code: "https://github.com/xmeta/jp-consumption-tax-reform"
+url: "https://github.com/xmeta/jp-consumption-tax-reform"
+abstract: "Reproducible research on Japanese consumption-tax reform, partial identification, robustness analysis, and policy-scenario evaluation."
+keywords:
+  - "consumption tax"
+  - "Japan"
+  - "partial identification"
+  - "reproducibility"

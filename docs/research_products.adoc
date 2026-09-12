@@ -54,6 +54,19 @@ projections, scientific-component links, reproduction commands, file existence,
 and cross-product isolation. `python scripts/test_research_products.py` also
 checks deterministic archive construction and bundle-manifest hashes.
 
+== Archival and DOI release contract
+
+The `--public-release` archives are deterministic deposit candidates, not evidence
+that a DOI already exists. For an archival release, record the exact Git commit
+and bundle SHA-256, deposit that immutable archive, then update `CITATION.cff`
+with the issued DOI, release date, and release version/tag in the same release
+lineage. Do not pre-populate a DOI or permissive license before it has actually
+been issued or granted.
+
+The product-specific archive contents remain defined by
+`data/research_product_files.csv` and verified by the generated
+`PRODUCT_BUNDLE_MANIFEST.csv` plus repository provenance/manifest gates.
+
 == Scientific review boundary
 
 Product release boundaries and scientific-review gates are separate controls.
