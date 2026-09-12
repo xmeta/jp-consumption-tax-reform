@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+import csv
 from pathlib import Path
 import sys
 
@@ -11,6 +12,63 @@ from validate_publication_metadata import validate as validate_publication_metad
 from validate_raw_source_redistribution import validate as validate_raw_source_redistribution
 
 ROOT = Path(__file__).resolve().parents[1]
+
+
+def read_rows(path: Path) -> list[dict[str, str]]:
+    with path.open(encoding="utf-8", newline="") as handle:
+        return list(csv.DictReader(handle))
+
+
+def validate_readme_dashboard() -> list[str]:
+    errors: list[str] = []
+    readme_path = ROOT / "README.adoc"
+    if not readme_path.is_file():
+        return ["README dashboard missing: README.adoc"]
+    if (ROOT / "README.md").exists():
+        errors.append("README dashboard must have a single root entry point; remove README.md")
+
+    readme = readme_path.read_text(encoding="utf-8")
+    state_path = ROOT / "data/scientific_state.csv"
+    products_path = ROOT / "data/research_products.csv"
+    if not state_path.is_file() or not products_path.is_file():
+        return errors
+
+    for row in read_rows(state_path):
+        if row.get("active", "").strip().lower() != "true":
+            continue
+        expected = (
+            f"|{row['component_id']} |{row['status']} "
+            f"|{row['maturity']} |{row['policy_usable']}"
+        )
+        if expected not in readme:
+            errors.append(
+                "README dashboard scientific-state row is missing/stale: "
+                + row["component_id"]
+            )
+
+    for row in read_rows(products_path):
+        expected = (
+            f"|{row['product_id']} |{row['publication_status']} "
+            f"|{row['reproduction_target']}"
+        )
+        if expected not in readme:
+            errors.append(
+                "README dashboard research-product row is missing/stale: "
+                + row["product_id"]
+            )
+
+    for token in (
+        "`data/scientific_state.csv`",
+        "`data/claim_graph.csv`",
+        "`STATUS.adoc`",
+        "`scripts/reproduce.py`",
+        "issues/94",
+    ):
+        if token not in readme:
+            errors.append("README dashboard required navigation missing: " + token)
+    return errors
+
+
 required = [
     ROOT / "README.adoc",
     ROOT / "CITATION.cff",
@@ -18,6 +76,7 @@ required = [
     ROOT / "STATUS.adoc",
     ROOT / "PACKAGE_INTEGRITY.adoc",
     ROOT / "data/scientific_state.csv",
+    ROOT / "data/research_products.csv",
     ROOT / "data/claim_graph.csv",
     ROOT / "data/claim_evidence.csv",
     ROOT / "data/research_priority_backlog.csv",
@@ -51,6 +110,7 @@ else:
     errors.extend(validate_policy_evaluation_contract(ROOT))
     errors.extend(validate_publication_metadata(ROOT))
     errors.extend(validate_raw_source_redistribution(ROOT))
+    errors.extend(validate_readme_dashboard())
 
 for token in [
     "Income-tax behavioral response |NOT_READY",
