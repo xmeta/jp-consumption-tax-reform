@@ -109,4 +109,20 @@ assert "paper1/scripts/generate_frontier_table.py --check" in dry
 assert "paper1/index.adoc" in dry
 assert "scripts/check_manifest.py" in dry
 
+workflow = (ROOT / ".github/workflows/validate.yml").read_text(encoding="utf-8")
+for job in (
+    "source-integrity",
+    "vat",
+    "income-tax",
+    "provenance",
+    "paper1",
+    "repository-integrity",
+    "docs",
+):
+    assert f"\n  {job}:\n" in workflow
+full_reproduction = workflow.split("\n  full-reproduction:\n", 1)[1]
+full_preamble = full_reproduction.split("\n    steps:\n", 1)[0]
+assert "\n    needs:" not in full_preamble
+assert "run: python scripts/reproduce.py clean-room" in full_reproduction
+
 print("reproduction entrypoint structural tests: OK")
