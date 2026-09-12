@@ -1,0 +1,160 @@
+= 2024 NSFCW DS51–DS52 provider inquiry package
+:revdate: 2026-09-13
+
+== Status
+
+This is a provider-inquiry and minimum-analysis specification for Issue #94.
+It is not provider confirmation, access approval, or evidence that DS51 and
+DS52 may be joined.
+
+The target datasets are:
+
+* `M4AR8-DS51` — income/assets aggregation system;
+* `M4AR8-DS52` — detailed two-month-average household accounts.
+
+Until the provider confirms the same-household join and approved data are
+actually analyzed, objective-rank VAT incidence, Gini, FGT2 and real-
+disposable-income effects remain `NOT_IDENTIFIED`.
+
+== Official inquiry route
+
+The repository source `EMICRO-ONSITE-USE-GUIDANCE` records that questionnaire-
+information use is handled principally through e-Micro and that questions can
+be submitted through the Microdata Utilization consultation form using the
+subject `調査票情報の利用に関するお問い合わせ`.
+
+This inquiry concerns data interpretation and permitted cross-system use, not
+reservation of a physical onsite facility.
+== Facts already established from official secondary metadata
+
+The provider metadata expose `SetaiFugo` and `Ichiren` in both systems.
+`SetaiID` is documented as empty/not used for the 2024 aggregation.
+Those facts do *not* establish a complete or authorized cross-system key.
+
+DS51 contains the objective-rank-side inputs, including `I_Bdy031`
+(OECD-new annual disposable income), household size and population weights.
+DS52 contains detailed household expenditure and separate population weights,
+including `Bdy003` consumption expenditure, `Bdy004` food, `Bdy015` alcohol,
+`Bdy016` dining out and `Bdy233` newspaper expenditure.
+
+The complete variable-level authority is
+`data/derived/estat_objective_rank_restricted_variable_map_2024.csv`.
+The route-level authority is
+`data/derived/estat_objective_rank_restricted_route_audit_2024.csv`.
+
+== Questions that require provider confirmation
+
+. May records in `M4AR8-DS51` and `M4AR8-DS52` for the *same 2024 household*
+  be linked inside an approved onsite project?
+. If yes, what is the complete provider-approved join key or composite?
+  In particular, are `SetaiFugo` and `Ichiren` sufficient, or are geography,
+  survey-unit, month, sequence, or other fields also required?
+. Is that key technically stable and unique for this cross-system join, and is
+  the join institutionally permitted under the approved use application?
+. What is the cardinality between the two systems for an approved household
+  join (one-to-one, one-to-many, or another documented structure), especially
+  given that DS52 represents a two-month-average household-accounts system?
+. Which weight and population definition should be used after joining the two
+  systems, and are any adjustment or duplicate-handling rules required?
+. If cross-system joining is not supported, can the provider produce or accept
+  a 2024 custom tabulation that crosses the official OECD-new equivalized-
+  disposable-income rank with the required household expenditure measures?
+
+A positive answer to the first question is insufficient unless the exact key,
+cardinality, weight treatment, and institutional permission are also clear.
+
+== Minimum onsite analysis if the join is approved
+
+Population:: 2024 NSFCW household units represented in the provider-approved
+DS51–DS52 joint population. Do not infer unmatched households or silently
+change the population definition.
+
+Objective rank:: Construct the OECD-new equivalized-disposable-income rank from
+DS51 `I_Bdy031` and the official NSFCW equivalization inputs/rule. Do not use
+annual-income deciles as a substitute and do not invent an equivalization rule.
+
+Expenditure side:: Use DS52 detailed household expenditure. At minimum retain
+`Bdy003`, `Bdy004`, `Bdy015`, `Bdy016`, and `Bdy233`, while preserving the
+existing warning that survey categories are not transaction-level legal VAT
+bases.
+Weights:: Use only the provider-approved joint-population weight treatment.
+Do not choose between the DS51 and DS52 weight fields by convenience.
+
+Primary disclosure-safe outputs:: Weighted household counts by objective-rank
+bin and weighted expenditure totals/means for the retained expenditure fields,
+plus enough diagnostics to verify join cardinality, unmatched-record handling,
+and weight conservation without exporting restricted identifiers.
+
+Reproducibility boundary:: Version the analysis code and specification in this
+repository. Only provider-approved, disclosure-reviewed outputs may leave the
+onsite environment. Raw questionnaire microdata and join identifiers must not
+be checked into the repository.
+
+== Fallback if the join is unavailable
+
+Ask whether a 2024 custom tabulation can be supplied with household as the
+statistical unit and the official OECD-new equivalized-disposable-income rank
+crossed with the required expenditure measures. The minimum requested output is
+household counts/weights plus expenditure totals or means by objective-rank bin.
+
+A custom table is not treated as available until the provider confirms that the
+2024 survey can be tabulated to this specification and states the applicable
+access, fee and disclosure conditions.
+
+If neither the onsite join nor a 2024 custom table is supported, retain the
+current `NOT_IDENTIFIED` state and stop this route. Do not resume broad public-
+aggregate searching without a source that satisfies the existing stop rule.
+
+== Draft inquiry text
+件名（フォーム選択）:: `調査票情報の利用に関するお問い合わせ`
+
+問い合わせタイトル:: 令和6年全国家計構造調査 M4AR8-DS51 / DS52 の同一世帯接続可否について
+
+----
+令和6年（2024年）全国家計構造調査のオンサイト利用を検討しています。
+二次メタデータに掲載されている M4AR8-DS51
+（所得・資産側）と M4AR8-DS52（詳細な家計収支側）について、
+同一世帯のレコードをオンサイト環境内で接続して分析できるか確認したく、
+以下をご教示ください。
+
+1. DS51 と DS52 の同一世帯レコードの接続は、技術的かつ制度上可能でしょうか。
+2. 可能な場合、利用すべき正式な接続キー（複合キーを含む）をご教示ください。
+   両データに見られる SetaiFugo と Ichiren だけで十分か、地域・調査単位等の
+   追加項目が必要かも確認したいです。
+3. 接続時のレコード対応関係（1対1、1対多等）、重複・未接続レコードの扱い、
+   及び接続後に使用すべき集計用乗率をご教示ください。
+4. SetaiID は2024年集計では使用しない旨が二次メタデータにありますが、
+   今回のDS51–DS52接続にも使用しないという理解でよいでしょうか。
+5. 上記接続が利用できない場合、OECD新基準の等価可処分所得階級・十分位と
+   世帯の消費支出等を交差させた2024年のオーダーメード集計を依頼可能でしょうか。
+----
+== Response disposition
+
+[cols="1,2,2",options="header"]
+|===
+|Provider response |Repository action |Scientific consequence
+
+|Join approved with exact key and rules
+|Record the provider-approved composite, prepare the minimum onsite application,
+and implement disclosure-safe analysis code against the specification above.
+|Still `NOT_IDENTIFIED` until approved microdata are analyzed; access approval
+alone does not promote the claim.
+
+|Join not approved, 2024 custom tabulation feasible
+|Freeze the provider-approved custom-table specification and pursue that route.
+|Still `NOT_IDENTIFIED` until the resulting joint table is obtained and audited.
+
+|Neither route supported
+|Record the negative provider response and stop the restricted objective-rank
+route unless a genuinely new provider-supported source becomes available.
+|Retain objective-rank VAT incidence, Gini, FGT2 and real-disposable-income
+outcomes as `NOT_IDENTIFIED`.
+|===
+
+== Existing repository evidence
+
+* `EMICRO-2026-ONSITE-NSFCW-QUERY`
+* `EMICRO-NSFCW-2024-DS51-META`
+* `EMICRO-NSFCW-2024-DS52-META`
+* `EMICRO-ONSITE-USE-GUIDANCE`
+* `NSTAC-CUSTOM-TABULATION-GUIDANCE`
