@@ -12,8 +12,14 @@ ROOT = Path(__file__).resolve().parents[2]
 CAT = ROOT / "data/source_catalog.csv"
 FISCAL = ROOT / "data/derived/vat_policy_fiscal_replacement_reference.csv"
 OUT = ROOT / "data/derived/vat_jgb_debt_gdp_reference.csv"
-SOURCE_ID = "ESRI-SNA-2024-NOMINAL-GDP-FISCAL-YEAR"
-EXPECTED_SHA = "a0cd9e5e973360e704c2a4abbe3208239884559310d4df045c345cc3b9f17ae5"
+GDP_SOURCE_ID = "ESRI-SNA-2024-NOMINAL-GDP-FISCAL-YEAR"
+GGD_SOURCE_ID = "ESRI-SDDSPLUS-GGD-2026Q1"
+GGD_NOTES_SOURCE_ID = "ESRI-SDDSPLUS-GGD-NOTES"
+EXPECTED_SHA = {
+    GDP_SOURCE_ID: "a0cd9e5e973360e704c2a4abbe3208239884559310d4df045c345cc3b9f17ae5",
+    GGD_SOURCE_ID: "85f50cc10893bcb43c208d4298fd59d770855bcaba283c4e8bc45747005e3285",
+    GGD_NOTES_SOURCE_ID: "f3567fbe563c074538ec81531927152174d09980a1c2a79269ad7cc274932b21",
+}
 NS = "http://schemas.openxmlformats.org/spreadsheetml/2006/main"
 
 
@@ -55,25 +61,38 @@ def xlsx_cells(path):
 
 def build():
     catalog = {r["source_id"]: r for r in read_csv(CAT)}
-    source = catalog[SOURCE_ID]
-    if not (source['sha256'] == EXPECTED_SHA):
-        raise RuntimeError('scientific runtime invariant failed: research/vat_policy_integration/build_jgb_debt_gdp_reference.py:59')
-    cells = xlsx_cells(ROOT / source["raw_file"])
+    for source_id, expected_sha in EXPECTED_SHA.items():
+        if catalog[source_id]["sha256"] != expected_sha:
+            raise RuntimeError(f"source hash drift: {source_id}")
+    gdp_cells = xlsx_cells(ROOT / catalog[GDP_SOURCE_ID]["raw_file"])
+    ggd_cells = xlsx_cells(ROOT / catalog[GGD_SOURCE_ID]["raw_file"])
 
-    if not (cells['A1'] == '1. Gross Domestic Product (Expenditure approach: at current prices)'):
+    if not (gdp_cells['A1'] == '1. Gross Domestic Product (Expenditure approach: at current prices)'):
         raise RuntimeError('scientific runtime invariant failed: research/vat_policy_integration/build_jgb_debt_gdp_reference.py:62')
-    if not (cells['A3'] == 'Fiscal Year'):
+    if not (gdp_cells['A3'] == 'Fiscal Year'):
         raise RuntimeError('scientific runtime invariant failed: research/vat_policy_integration/build_jgb_debt_gdp_reference.py:63')
-    if not (cells['A4'] == '(Billion Yen)'):
+    if not (gdp_cells['A4'] == '(Billion Yen)'):
         raise RuntimeError('scientific runtime invariant failed: research/vat_policy_integration/build_jgb_debt_gdp_reference.py:64')
-    if not (cells['AF6'] == '2024'):
+    if not (gdp_cells['AF6'] == '2024'):
         raise RuntimeError('scientific runtime invariant failed: research/vat_policy_integration/build_jgb_debt_gdp_reference.py:65')
-    if not (cells['A48'] == '5.  Gross domestic product (expenditure approach) (1+2+3+4)'):
+    if not (gdp_cells['A48'] == '5.  Gross domestic product (expenditure approach) (1+2+3+4)'):
         raise RuntimeError('scientific runtime invariant failed: research/vat_policy_integration/build_jgb_debt_gdp_reference.py:66')
-    nominal_gdp_billion_yen = Decimal(cells["AF48"])
+    nominal_gdp_billion_yen = Decimal(gdp_cells["AF48"])
     if not (nominal_gdp_billion_yen == Decimal('642414.69999999995')):
         raise RuntimeError('scientific runtime invariant failed: research/vat_policy_integration/build_jgb_debt_gdp_reference.py:68')
     nominal_gdp_yen = Decimal("642414.7") * Decimal("1000000000")
+
+    if ggd_cells.get("A1") != "General Government Gross Debt":
+        raise RuntimeError("unexpected GGD workbook title")
+    if ggd_cells.get("A2") != "(Billion Yen)":
+        raise RuntimeError("unexpected GGD workbook unit")
+    if ggd_cells.get("BB4") != "2025" or ggd_cells.get("BB5") != "3":
+        raise RuntimeError("FY2024-end GGD period anchor drift")
+    if ggd_cells.get("A6") != "Total gross debt" or Decimal(ggd_cells["BB6"]) != Decimal("1361030.1"):
+        raise RuntimeError("FY2024-end GGD stock anchor drift")
+    baseline_ggd_yen = Decimal("1361030.1") * Decimal("1000000000")
+    baseline_ggd_ratio = baseline_ggd_yen / nominal_gdp_yen
+    baseline_ggd_pct = baseline_ggd_ratio * Decimal("100")
 
     fiscal = {r["scenario_id"]: r for r in read_csv(FISCAL)}
     jgb_yen = Decimal(fiscal["full_abolition_jgb"]["full_jgb_financing_reference_yen"])
@@ -96,16 +115,19 @@ def build():
         rows.append({
             "scenario_id": scenario_id,
             "fy2024_nominal_gdp_yen": str(int(nominal_gdp_yen)),
+            "fy2024_end_general_government_gross_debt_yen": str(int(baseline_ggd_yen)),
+            "fy2024_end_general_government_gross_debt_gdp_ratio": fmt_decimal(baseline_ggd_ratio.quantize(Decimal("0.000000000001"))),
+            "fy2024_end_general_government_gross_debt_gdp_pct": fmt_decimal(baseline_ggd_pct.quantize(Decimal("0.000000001"))),
+            "baseline_debt_status": "OBSERVED_FY2024_END_GENERAL_GOVERNMENT_GROSS_DEBT_TO_FY2024_NOMINAL_GDP",
             "full_jgb_financing_reference_yen": amount,
             "static_incremental_jgb_financing_share_of_fy2024_nominal_gdp": ratio_value,
             "static_incremental_jgb_financing_pct_of_fy2024_nominal_gdp": pct_value,
             "debt_gdp_reference_status": status,
-            "source_id": SOURCE_ID,
-            "source_locator": "Amount!AF48; FY2024 nominal GDP, billion yen",
+            "source_id": ";".join([GDP_SOURCE_ID, GGD_SOURCE_ID, GGD_NOTES_SOURCE_ID]),
+            "source_locator": "GDP Amount!AF48; GGD!BB6 (2025Q1 / FY2024 end)",
             "note": (
-                "Static gross financing amount divided by FY2024 nominal GDP. "
-                "This is not the change in observed debt/GDP: it excludes baseline debt stock, "
-                "redemptions, other borrowing, financial assets, GDP feedback, interest and time dynamics."
+                "Observed FY2024-end consolidated general-government gross debt is paired with FY2024 nominal GDP only as a static baseline. "
+                "The JGB-financing figure remains an incremental policy amount; no future total-debt path, endogenous interest response, or GDP feedback is inferred."
             ),
         })
     if not (len(rows) == 8):
@@ -124,7 +146,7 @@ def main():
             raise SystemExit("stale generated artifact: " + str(OUT.relative_to(ROOT)))
         print(
             "JGB debt/GDP reference: current "
-            "(FY2024 nominal GDP parsed from ESRI XLSX; full-JGB static financing share only)"
+            "(FY2024-end observed GGD/GDP baseline plus full-JGB static financing share)"
         )
     else:
         OUT.parent.mkdir(parents=True, exist_ok=True)

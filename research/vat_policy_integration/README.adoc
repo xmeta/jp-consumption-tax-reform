@@ -52,16 +52,23 @@ linear scaling of aggregate receipts.
 For the full-JGB financing scenario, the fiscal reference is also divided by
 the official ESRI FY2024 nominal GDP of 642.4147 trillion yen.  The resulting
 25.021206715 / 642.4147 = 0.038948683327 ratio, or 3.894868333% of FY2024 nominal
-GDP, is reported as a *static incremental JGB-financing share*.  It is not the
-change in observed debt/GDP: baseline debt stock, redemptions, other borrowing,
-financial assets, nominal-GDP feedback, interest costs and time dynamics are not
-modeled by that static benchmark.
+GDP, is reported as a *static incremental JGB-financing share*.  Separately,
+the ESRI SDDS Plus general-government gross-debt series supplies an observed
+FY2024-end stock of 1,361.0301 trillion yen (2025Q1).  Paired with FY2024 nominal
+GDP of 642.4147 trillion yen, that static baseline is 211.861605907% of GDP.
+The GGD concept is consolidated general government (central government, local
+governments and social security funds), so it is not replaced by a central-
+government debt series.  This observed baseline does not create a future total-
+debt path: redemptions, baseline debt evolution, other borrowing, financial
+assets, nominal-GDP feedback, interest costs and time dynamics remain separate.
 
 == Dynamic incremental fiscal/JGB accounting
 
 Issue #56 adds a separate stock-flow-consistent *incremental policy-debt*
-sensitivity module.  It does not reconstruct or forecast Japan's total government
-debt stock.  The opening incremental debt is zero and the FY2024 central VAT cash-
+sensitivity module.  Issue #118 adds the observed FY2024-end GGD/GDP baseline
+without adding a baseline-debt growth rule.  The module therefore still does not
+forecast Japan's future total government debt stock.  The opening incremental debt
+is zero and the FY2024 central VAT cash-
 receipt reference of 25.021206715 trillion yen is repeated as a constant nominal
 annual gap only for the financing sensitivity.  The accounting identity is
 

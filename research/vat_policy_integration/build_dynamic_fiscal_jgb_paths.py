@@ -86,8 +86,12 @@ def build():
         raise RuntimeError("dynamic fiscal scenario set drift")
     gap = D(fiscal["full_abolition_jgb"]["full_jgb_financing_reference_yen"])
     base_gdp = D(static["full_abolition_jgb"]["fy2024_nominal_gdp_yen"])
+    baseline_ggd = D(static["full_abolition_jgb"]["fy2024_end_general_government_gross_debt_yen"])
+    baseline_ggd_ratio = static["full_abolition_jgb"]["fy2024_end_general_government_gross_debt_gdp_ratio"]
     if gap != D("25021206715000") or base_gdp != D("642414700000000"):
         raise RuntimeError("static fiscal/JGB anchor drift")
+    if baseline_ggd != D("1361030100000000") or baseline_ggd_ratio != "2.118616059066":
+        raise RuntimeError("observed FY2024-end GGD baseline drift")
     if static["full_abolition_jgb"]["static_incremental_jgb_financing_pct_of_fy2024_nominal_gdp"] != "3.894868333":
         raise RuntimeError("static 3.894868333 percent benchmark was reinterpreted")
 
@@ -138,10 +142,12 @@ def build():
                     "nominal_gdp_growth": a["nominal_gdp_growth"],
                     "nominal_gdp_sensitivity_yen": money(nominal_gdp),
                     "incremental_debt_gdp_ratio": fmt(closing / nominal_gdp),
+                    "fy2024_end_general_government_gross_debt_yen": money(baseline_ggd),
+                    "fy2024_end_general_government_gross_debt_gdp_ratio": baseline_ggd_ratio,
                     "cumulative_incremental_interest_yen": money(cumulative_interest),
                     "path_status": STATUS[sid],
                     "assumption_status": a["assumption_status"],
-                    "total_debt_gdp_status": "NOT_COMPUTED_BASELINE_TOTAL_DEBT_STOCK_OUTSIDE_THIS_INCREMENTAL_MODULE",
+                    "total_debt_gdp_status": "BASELINE_OBSERVED_FUTURE_TOTAL_DEBT_PATH_NOT_MODELED",
                     "market_feedback_status": "NOT_IDENTIFIED_INTEREST_AND_GDP_PATHS_ARE_EXOGENOUS_SENSITIVITIES",
                 })
                 opening = closing
@@ -175,8 +181,10 @@ def build():
             "year10_cumulative_incremental_interest_yen_min": int_min,
             "year10_cumulative_incremental_interest_yen_max": int_max,
             "static_fy2024_jgb_gdp_pct_benchmark": static[sid]["static_incremental_jgb_financing_pct_of_fy2024_nominal_gdp"],
+            "fy2024_end_general_government_gross_debt_gdp_ratio": baseline_ggd_ratio,
+            "total_debt_gdp_status": "BASELINE_OBSERVED_FUTURE_TOTAL_DEBT_PATH_NOT_MODELED",
             "identification_status": "MODEL_CONTINGENT_ACCOUNTING_SENSITIVITY_NOT_FORECAST" if rr else "NOT_MODELED",
-            "note": "Reported paths cover JGB and mixed financing under r02_g02; summary extrema use all nine rate-growth sensitivities. Zero-debt replacement cases remain in the summary. Paths are incremental to baseline and repeat the FY2024 nominal VAT receipt gap without indexing; no total-debt stock or endogenous market response is inferred.",
+            "note": "Reported paths cover JGB and mixed financing under r02_g02; summary extrema use all nine rate-growth sensitivities. The observed FY2024-end GGD/GDP baseline is 2.118616059066. Paths remain incremental to that baseline; no baseline-debt growth rule, future total-debt path, or endogenous market response is inferred.",
         })
     if len(all_paths) != 450 or len(reported_paths) != 20 or len(summary) != 8:
         raise RuntimeError("unexpected dynamic fiscal output dimensions")
