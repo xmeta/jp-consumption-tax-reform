@@ -1,0 +1,73 @@
+= TDB-CAREE provider inquiry for invoice-system causal research
+:revdate: 2026-09-13
+
+== Status
+
+This document freezes the minimum provider inquiry for Issue #111. It is *not* evidence that TDB-CAREE has approved access, that the required 2021--2025+ panel exists in the current environment, or that TDB identifiers may be linked to the NTA invoice registry.
+
+The repository keeps the 2023 invoice-system causal effect `NOT_IDENTIFIED` until a provider-approved pre-treatment network, repeated outcomes, deterministic linkage and design diagnostics are available.
+
+== Why this is the primary route
+
+Koizumi, _Cascades of Tax Policy through Production Networks: Evidence from Japan_ (RIETI 24-E-025; later Southern Economic Journal, 2026) demonstrates the relevant architecture with TDB data: supplier-customer identities, firm sales/employment/capital/location/fiscal-year information, a network frozen before the policy, and DID / doubly robust DID estimation. The paper concerns a different investment-tax policy and supplies no 2023 invoice treatment effect.
+
+TDB-CAREE remains active in 2026 and publicly advertises research using TDB firm data. Its qualification page says external university researchers/students can participate through an approval process, but that page also retains an older 2024 contract-horizon sentence. Therefore the *current* eligibility and procedure are provider-confirmation items, not repository assumptions.
+
+== Minimum data needed
+
+For the preferred `PRE2023_SUPPLIER_EXPOSURE_X_2023_DID` design, ask whether the secure research environment can provide:
+
+* a supplier-customer network snapshot observed no later than 2023-09-30, preferably annual snapshots for 2021--2023;
+* stable firm identifiers across at least 2021--2025 (longer post-period preferred);
+* annual sales, employment and survival/exit outcomes; capital/investment where available;
+* industry, region, legal form and fiscal-year end;
+* a provider-approved deterministic route to the public NTA qualified-invoice registry for corporations, preferably corporate number or an internal crosswalk;
+* provider-approved aggregate/disclosure-reviewed export of event-study coefficients, support diagnostics and summary counts without firm identifiers.
+
+Post-treatment invoice registration must not be used as the sole treatment definition. The target exposure is frozen before October 2023.
+
+== Questions requiring provider confirmation
+
+. Is TDB-CAREE accepting new external research participants in 2026, and what is the current approval / affiliation procedure?
+. Does the currently accessible TDB panel contain 2021--2025 or later repeated firm observations with sales and employment outcomes?
+. Is a supplier-customer network snapshot dated on or before 2023-09-30 available, and can the snapshot date be fixed before analysis?
+. Can firms be deterministically linked inside the secure environment to the public NTA invoice registry using corporate number or another provider-approved crosswalk? If corporate number is not exposed to researchers, can CAREE/TDB perform the linkage internally and provide a pseudonymous research key?
+. May the public NTA registry snapshot/history be imported into the secure environment for this approved research purpose?
+. What coverage exists for sole proprietors, and should the first causal analysis be restricted to corporations?
+. Which outcome years and variables are available for sales, employment, capital/investment, exit/survival, industry, region, legal form and fiscal-year end?
+. What disclosure review applies to event-study coefficients, pre-trend/placebo tests, cell counts and heterogeneous effects?
+. Are historical network links point-in-time observations, or can later updates overwrite earlier relationships? What provider rule should be used to freeze the pre-treatment graph?
+
+== Ready-to-send Japanese inquiry
+
+Subject: `TDB企業間取引データを用いた2023年インボイス制度導入の因果分析に関する研究利用可否の照会`
+
+----
+TDB-CAREE ご担当者様
+
+2023年10月の適格請求書等保存方式（インボイス制度）導入が企業の売上・雇用・退出等に与えた因果効果を、制度導入前に固定した企業間取引ネットワークへの曝露を用いるDifference-in-Differences / event-studyで検証する研究を検討しています。
+
+TDB-CAREEの既存研究、特に小泉秀人氏の「Cascades of Tax Policy through Production Networks: Evidence from Japan」で、TDBの企業間取引ネットワークと企業パフォーマンスを用いた税制の準実験分析が実施されていることを確認しました。
+
+本研究について、以下をご教示いただけますでしょうか。
+
+1. 2026年現在、学外研究者がTDB-CAREEの研究担当者・研究補助員等として新規に参加するための手続きと資格要件。
+2. 2021年から2025年以降について、売上・従業者数等を継続観測できる企業パネルの利用可否。
+3. 2023年9月30日以前に観測された仕入先・販売先ネットワークを、制度導入前情報として固定して利用できるか。
+4. 国税庁の公開する適格請求書発行事業者公表データと、法人番号またはTDB側の決定論的な対応表を用いて、セキュア環境内で法人を接続できるか。研究者へ法人番号自体を開示できない場合、TDB-CAREE側で接続後に匿名研究キーを付与する方法が可能か。
+5. 公開NTAデータを研究環境へ持ち込むことの可否。
+6. 売上、雇用、設備・資本、退出/存続、業種、地域、法人格、決算期について利用可能な年次・項目。
+7. event-study係数、pre-trend/placebo検定、集計件数、異質性分析等の持ち出し・公表に必要な秘匿審査。
+8. 個人事業者の収録範囲。十分でない場合は、第一段階を法人に限定する想定です。
+
+研究では制度導入後の登録行動そのものを処置定義には用いず、2023年10月より前に観測された取引関係から曝露を固定します。また、個票・企業識別子を公表・持ち出す予定はありません。
+
+上記が研究可能であれば、必要な研究計画書・申請手続きについてもご案内いただければ幸いです。
+----
+
+== Response disposition
+
+* If the provider confirms a pre-2023 network, repeated outcomes and approved deterministic NTA linkage: prepare the smallest secure-environment analysis application and freeze the event-study specification before accessing post-treatment outcomes.
+* If CAREE can provide the network/outcomes but cannot link NTA data: ask whether CAREE/TDB can perform the linkage internally; do not name/address-match.
+* If CAREE cannot provide a pre-treatment network: request a TDB commercial historical extract quote only for the minimum corporation sample/window needed.
+* If neither route can provide a pre-treatment graph plus repeated outcomes: stop the rank-1 2023 design and retain `NOT_IDENTIFIED`; do not substitute current network data or post-treatment registration choices.

@@ -16,6 +16,7 @@ SOURCE_CATALOG=ROOT/"data/source_catalog.csv"
 ACCESS_AUDIT=ROOT/"research/vat_compliance_productivity/firm_level_linkage_access_audit.csv"
 LIT_AUDIT=ROOT/"research/vat_compliance_productivity/invoice_2023_causal_literature_audit.csv"
 INVOICE_DESIGN=ROOT/"research/vat_compliance_productivity/invoice_2023_natural_experiment_design.csv"
+TDB_ACCESS=ROOT/"research/vat_compliance_productivity/tdb_caree_invoice_causal_access_audit.csv"
 
 def read(p):
     with p.open(encoding="utf-8",newline="") as f: return list(csv.DictReader(f))
@@ -44,6 +45,7 @@ sources={r["source_id"] for r in read(SOURCE_CATALOG)}
 access_audit={r["audit_item"]:r for r in read(ACCESS_AUDIT)}
 invoice_lit=read(LIT_AUDIT)
 invoice_design=read(INVOICE_DESIGN)
+tdb_access=read(TDB_ACCESS)
 
 assert len(rows)==1200
 assert all(r["identification_status"]=="MODEL_CONTINGENT_STRESS_TEST_ONLY" for r in rows)
@@ -175,7 +177,7 @@ for r in designs:
 
 # Issue #111: direct invoice-era survey evidence remains descriptive, while
 # the ranked causal frontier rejects post-treatment exposure and stale 2026 rules.
-assert len(invoice_lit) == 7
+assert len(invoice_lit) == 8
 frontier = invoice_lit[0]
 assert frontier["evidence_id"] == "SEARCH-FRONTIER-2026-09-13"
 assert frontier["causal_identification_status"] == "NO_DIRECT_QUASI_EXPERIMENTAL_STUDY_FOUND_IN_BOUNDED_SEARCH"
@@ -186,6 +188,30 @@ for r in invoice_lit:
 for r in invoice_lit:
     if r["direct_2023_invoice_effect"] == "YES_DIRECT_EVENT_CONTEXT":
         assert "NOT_CAUSAL" in r["causal_identification_status"] or "NOT_2023_EFFECT" in r["causal_identification_status"]
+
+koizumi=next(r for r in invoice_lit if r["evidence_id"]=="KOIZUMI-2026-TAX-POLICY-NETWORK-CASCADE")
+assert koizumi["direct_2023_invoice_effect"] == "NO"
+assert koizumi["causal_identification_status"] == "CAUSAL_NETWORK_TAX_POLICY_TEMPLATE_NOT_2023_INVOICE_EFFECT"
+assert koizumi["source_ids"] == "RIETI-2024-TAX-POLICY-PRODUCTION-NETWORKS"
+assert "not its treatment-effect magnitude" in koizumi["search_or_scope_note"].lower()
+
+assert [int(r["route_rank"]) for r in tdb_access] == [1,2,3]
+by_route={r["route_id"]:r for r in tdb_access}
+primary_route=by_route["TDB_CAREE_RESEARCH_ROUTE"]
+assert primary_route["decision"] == "PRIMARY_PROVIDER_INQUIRY"
+assert primary_route["identification_value"] == "HIGHEST"
+assert "before treatment" in primary_route["network_coverage"].lower()
+assert "pre-treatment network" in primary_route["next_action"].lower()
+assert "provider confirmation" in primary_route["current_2026_status"].lower()
+assert "deterministic" in primary_route["deterministic_invoice_link"].lower()
+commercial=by_route["TDB_COMMERCIAL_TRANSACTION_ROUTE"]
+assert "JPY 250,000" in commercial["current_cost_or_access_note"]
+assert "JPY 10" in commercial["current_cost_or_access_note"]
+assert "current-only network" in commercial["stop_rule"].lower()
+assert by_route["BSBSA_PLUS_PUBLIC_INVOICE_WITHOUT_NETWORK"]["identification_value"] == "INSUFFICIENT_ALONE_FOR_RANK1_DESIGN"
+for r in tdb_access:
+    ids=[x for x in r["source_ids"].split(";") if x]
+    assert ids and set(ids) <= sources, (r["route_id"], set(ids)-sources)
 
 assert [int(r["design_rank"]) for r in invoice_design] == [1, 2, 3, 4, 5]
 by_invoice_design={r["design_id"]:r for r in invoice_design}
