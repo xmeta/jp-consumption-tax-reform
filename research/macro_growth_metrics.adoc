@@ -1,0 +1,79 @@
+= Macro growth stability metrics
+:revdate: 2026-09-13
+
+== Purpose
+
+This note tracks the implementation plan for Issue #121.
+
+The policy evaluation contract should not rely only on average economic growth.
+Real GDP growth paths should preserve information about positive growth, downside risk,
+and growth deterioration.
+
+== Candidate metrics
+
+=== Cumulative real growth contribution
+
+Measure long-run real growth contribution separately from stability:
+
+[stem]
+++++
+C_Y(p)=\sum_t \beta^{t-1}\log(1+g_t(p))
+++++
+
+=== Growth decline penalty
+
+Penalize unnecessary decreases in the growth rate:
+
+[stem]
+++++
+D_g(p)=\sum_t \beta^{t-1}(g_{t-1}(p)-g_t(p))_+^2
+++++
+
+=== Recession penalty
+
+Track periods where growth becomes negative:
+
+[stem]
+++++
+R_g(p)=\sum_t I(g_t(p)<0)|g_t(p)|
+++++
+
+== Data requirements
+
+Future dataset:
+
+`data/macro/real_gdp_quarterly.csv`
+
+Required fields:
+
+* quarter
+* real_gdp_growth_qoq
+* annualized_growth
+* status (observed/forecast)
+* source
+* revision_date
+
+Observed data and forecasts must not be mixed during validation.
+
+== Policy event markers
+
+Candidate metadata:
+
+* 1989 consumption tax introduction
+* 1997 consumption tax rate increase
+* 2014 consumption tax rate increase
+* 2019 consumption tax rate increase
+* 2023 invoice system introduction
+
+== Identification caution
+
+This dataset is for objective validation and descriptive analysis.
+It must not directly claim causal effects of consumption tax changes without an identification strategy.
+
+Possible later methods:
+
+* Difference-in-Differences
+* event study
+* synthetic control
+
+The invoice system should be evaluated separately from VAT rate changes because it changes administrative burden and compliance incentives rather than only tax rates.
