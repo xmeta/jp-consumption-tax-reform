@@ -93,6 +93,20 @@ D_g(p)=\sum_t \beta^{t-1}(g_{t-1}(p)-g_t(p))_+^2
 
 を最小化する。`C_Y` と `D_g` は相殺して一つの loss にしない。
 
+=== 景気後退診断 `R_g`
+
+負の実質成長がどの程度発生したかを監査する downside diagnostic として
+
+[stem]
+++++
+R_g(p)=\sum_t I(g_t(p)<0)|g_t(p)|
+++++
+
+を保持する。正本の viability condition は各期の stem:[g_t>0] なので、
+viability を満たす政策では `R_g=0` となる。このため `R_g` を第7の core Pareto objective として
+二重計上せず、viability が `UNRESOLVED` の場合や観測系列の妥当性確認に使う。
+`data/macro/real_gdp_quarterly.csv` に対する履歴診断は規範的な割引率を選ばず `beta=1` で計算する。
+
 === 分配・貧困
 
 次をそれぞれ独立に最小化する。
@@ -142,7 +156,7 @@ p^*=\arg\min_p\max_{\theta\in\Theta,\,w\in W}Regret(p;\theta,w).
 
 == Dashboard metrics
 
-objective と diagnostic dashboard は分離する。`P_0`、`P_1`、lower-decile real income、
+objective と diagnostic dashboard は分離する。`R_g`、`P_0`、`P_1`、lower-decile real income、
 growth-incidence profile、overall real GDP level 等は重要な dashboard 指標になり得るが、
 追加しただけで core Pareto objective にはならない。
 

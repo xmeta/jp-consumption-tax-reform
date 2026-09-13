@@ -3,13 +3,13 @@
 
 == Purpose
 
-This note tracks the implementation plan for Issue #121.
+This note records the implemented macro-growth validation layer for Issue #121.
 
 The policy evaluation contract should not rely only on average economic growth.
 Real GDP growth paths should preserve information about positive growth, downside risk,
 and growth deterioration.
 
-== Candidate metrics
+== Implemented diagnostics
 
 === Cumulative real growth contribution
 
@@ -40,30 +40,34 @@ R_g(p)=\sum_t I(g_t(p)<0)|g_t(p)|
 
 == Data requirements
 
-Future dataset:
+Canonical observed dataset:
 
 `data/macro/real_gdp_quarterly.csv`
+
+The current source snapshot is the Cabinet Office ESRI April-June 2026 second preliminary estimate released 2026-09-08. The table covers 1994Q1-2026Q2. The publisher leaves 1994Q1 QoQ blank because the preceding quarter is outside the table; the repository preserves that row as `source_baseline_no_qoq` rather than imputing zero. The remaining 129 quarters are `observed`.
 
 Required fields:
 
 * quarter
 * real_gdp_growth_qoq
 * annualized_growth
-* status (observed/forecast)
-* source
+* status (`observed` / `source_baseline_no_qoq`; any future forecast rows must use a distinct forecast status)
+* source_id
 * revision_date
 
-Observed data and forecasts must not be mixed during validation.
+Observed data and forecasts must not be mixed during validation. `scripts/compute_growth_metrics.py` therefore reads only `status=observed`. Its historical validation values use beta=1; the normative discount parameter in the policy objective remains a separate pre-specified choice and is not inferred from the historical series.
 
 == Policy event markers
 
-Candidate metadata:
+Machine-readable metadata is stored in `data/policy/tax_events.csv` for:
 
-* 1989 consumption tax introduction
-* 1997 consumption tax rate increase
-* 2014 consumption tax rate increase
-* 2019 consumption tax rate increase
-* 2023 invoice system introduction
+* 1989-04-01 consumption tax introduction
+* 1997-04-01 consumption tax rate increase
+* 2014-04-01 consumption tax rate increase
+* 2019-10-01 consumption tax standard-rate increase
+* 2023-10-01 invoice system introduction
+
+These event markers are timing metadata only. They do not identify causal effects.
 
 == Identification caution
 
