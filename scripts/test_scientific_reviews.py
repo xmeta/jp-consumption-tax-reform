@@ -64,6 +64,12 @@ paper = "\n".join(
 )
 check("positive self-assessed liability" not in paper.lower(), "reviewed liability/balance terminology regressed")
 check("first-submission manuscript" not in (ROOT / "paper1/README.adoc").read_text(encoding="utf-8").lower(), "publication-readiness wording regressed")
+packet=(ROOT / "reviews/paper1_independent_review_packet.adoc").read_text(encoding="utf-8")
+check("0f64a873ce4f82ceda780888a5a184fca6e330d2" in packet, "independent-review packet lost reviewed commit")
+check("ECONOMIC_IDENTIFICATION" in packet and "MANUSCRIPT_MAJOR_REVISION" in packet, "independent-review packet lost required tracks")
+check("full original critique is not currently versioned" in packet, "Major Revision archival gap is hidden")
+check("must remain `PENDING`" in packet, "review packet can be mistaken for a satisfied gate")
+check("evidence_eligible=false" in packet, "review packet lost non-evidence boundary")
 
 with tempfile.TemporaryDirectory() as tmp:
     root = Path(tmp) / "track-mismatch"

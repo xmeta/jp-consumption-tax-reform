@@ -88,6 +88,7 @@ paper1,research/stage1_filing_bound/test_stage1_untracked_frontier.py,PRODUCT
 paper1,research/stage1_filing_bound/untracked_frontier.csv,PRODUCT
 paper1,research/stage1_filing_bound/untracked_frontier_grid.csv,PRODUCT
 paper1,reviews/paper1_adversarial_2026-09-12.adoc,RELEASE_METADATA
+paper1,reviews/paper1_independent_review_packet.adoc,RELEASE_METADATA
 paper1,scripts/build_product_bundle.py,RELEASE_METADATA
 paper1,scripts/check_clean_tree.py,SHARED
 paper1,scripts/generate_claim_registries.py,SHARED

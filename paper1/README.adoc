@@ -8,6 +8,10 @@ It does not claim an optimal VAT rate, a structural macro effect, a
 point-identified filer MTR distribution, or an unconditional filing-rate lower
 bound.
 
+Independent-review instructions for the two remaining submission gates are in
+`../reviews/paper1_independent_review_packet.adoc`.  The packet does not itself
+satisfy either gate.
+
 The paper asks which identification and robustness statements remain defensible
 when reproducible public aggregate data are available but filer microdata are
 not.

@@ -43,6 +43,8 @@ An internal adversarial review is useful for catching overclaiming but cannot sa
 
 For `paper1`, submission-quality promotion requires adversarial-claim review, independent economic/identification review, and manuscript review against the prior Major Revision critique. The internal adversarial review `P1-AR-001` is complete; the independent gates remain pending.
 
+The frozen reviewer instructions for those two pending Paper 1 tracks are in `reviews/paper1_independent_review_packet.adoc`. The packet is not a completed review and cannot satisfy a gate. The original Major Revision critique is not currently versioned in the repository, so the `MANUSCRIPT_MAJOR_REVISION` gate must remain pending until an authenticated copy is supplied to the independent reviewer.
+
 For `vat_abolition`, standalone-paper promotion requires adversarial-claim review and independent economic/identification review. Neither is currently satisfied.
 
 Therefore neither product is promoted by the presence of green CI alone.

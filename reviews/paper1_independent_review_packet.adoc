@@ -1,0 +1,128 @@
+= Paper 1 Independent Review Packet
+:revdate: 2026-09-13
+
+Review target commit: `0f64a873ce4f82ceda780888a5a184fca6e330d2`.
+
+This packet prepares the two independent review tracks still required before
+`paper1` can be promoted from `WORKING_MANUSCRIPT` to `SUBMISSION_QUALITY`.
+It is a review request, not a completed review, and it must not be registered as
+scientific evidence.
+
+== Reproduce the review target
+
+Checkout the review target commit and run:
+
+[source,shell]
+----
+python scripts/reproduce.py paper1
+python scripts/reproduce.py integrity
+asciidoctor paper1/index.adoc
+----
+
+Read `paper1/index.adoc`, `paper1/data/claim_registry.csv`,
+`data/scientific_state.csv`, `data/claim_graph.csv`, and
+`docs/scientific_reviews.adoc` before judging the manuscript.  Green CI proves
+reproduction and repository invariants only; it does not establish economic
+identification or publication quality.
+
+== Independence requirement
+
+The reviewer must qualify as `INDEPENDENT_REVIEWER` or stronger under
+`docs/scientific_reviews.adoc`.  The reviewer should state any prior authorship,
+implementation role, financial interest, or other conflict that could weaken
+independence.  An internal adversarial review cannot satisfy either track below.
+
+== Track 1: ECONOMIC_IDENTIFICATION
+
+Assess whether the data, assumptions, and reproduced calculations support the
+manuscript's exact identification claims.  At minimum, challenge all of the
+following.
+
+. *Population semantics*: Is the 2024 F71561 mother population correctly treated
+  as a published 2020-Census-based frame benchmark rather than an observed 2024
+  person population?  Are tax units, persons, households, filers, and return
+  records kept distinct throughout?
+. *Stage-1 mismatch frontier*: Does the manuscript keep the total untracked
+  mismatch budget `C_U` unresolved?  Do `R(C_U)` and `C_U^*(A)` remain robustness
+  functions rather than an unconditional filing-rate estimate or confidence
+  interval?
+. *Cross-system tax-event semantics*: Are the pseudo modeled-annual-tax-positive
+  event and the NTA positive self-assessed return balance after credits and
+  withholding kept distinct?  Is any rate discrepancy incorrectly described as
+  measurement error between observations of one event?
+. *Rank transport*: Do `Delta`, `epsilon`, and `eta` remain explicit relaxation
+  budgets/compatibility parameters rather than estimated rank maps, confidence
+  regions, or causal bounds?  Are v3/v4 symmetric-gap and v5 one-sided results
+  interpreted as answers to different model questions?
+. *Marginal incidence*: Does any text imply that the pseudo-filer construction is
+  an observed or point-identified filer MTR distribution?  Are sensitivity-only,
+  recovery-only, and `NOT_READY` results excluded from headline identification
+  claims?
+. *Missing same-person linkage*: Does the absence of public same-person
+  salary/return/payment/refund/source-withholding linkage invalidate any active
+  claim, or is the limitation stated narrowly enough?
+. *External validity and policy use*: Does the manuscript avoid converting its
+  identification results into an optimal tax rate, macro effect, or policy-usable
+  replacement-financing conclusion?
+. *Claim registry consistency*: For every headline sentence, is there an active
+  claim whose status and evidence support language at least that strong?
+
+For each challenge, classify the finding as `BLOCKER`, `IMPORTANT`, or `PASS` and
+identify the exact file/section.  A `BLOCKER` is any issue that makes a headline
+identification claim unsupported or materially changes the stated contribution.
+
+== Track 2: MANUSCRIPT_MAJOR_REVISION
+
+The repository records that this track must check the manuscript against a prior
+Major Revision critique.  The *full original critique is not currently versioned
+in this repository*.  Therefore this gate must remain `PENDING` until the
+independent reviewer receives an authenticated copy of that critique (or it is
+otherwise archived with provenance).  This packet does not reconstruct missing
+review text and must not be treated as an exhaustive substitute.
+
+Once the original critique is available, the reviewer should produce a
+point-by-point disposition (`RESOLVED`, `PARTIALLY_RESOLVED`, `UNRESOLVED`, or
+`SUPERSEDED_BY_NARROWER_CONTRIBUTION`).  In addition, assess the revision themes
+that are already explicit in the current repository:
+
+. Is the paper consistently framed as an identification/robustness study using
+  public aggregate data, rather than as a point-identified optimal-policy or
+  macro-distribution paper?
+. Do the title, abstract, introduction, tables, and conclusion use the same
+  narrower contribution language?
+. Are observed/reproduced results visually and verbally separated from
+  sensitivity-only and recovery-only material?
+. Are provenance, data availability, reproduction instructions, and source
+  boundaries sufficient for an independent reader to audit every headline
+  result?
+. Are limitations and next-data requirements specific enough that missing
+  identification is not hidden behind model output?
+. Does the related-literature section support the claimed novelty without
+  overstating what this paper identifies?
+. Is any remaining issue severe enough that journal targeting or formatting
+  should wait for another substantive revision?
+
+== Required reviewer return
+
+Return separate dispositions for the two tracks.  Each completed review record
+must contain:
+
+* review track and independence class;
+* exact reviewed commit;
+* reviewer conflict/independence statement;
+* numbered findings with severity and file/section locators;
+* explicit resolution criterion for every `BLOCKER` or `IMPORTANT` finding;
+* final disposition: `PASS`, `PASS_WITH_IMPORTANT_REVISIONS`, or `BLOCKED`.
+
+If one independent reviewer covers both tracks, the repository must still record
+separate review IDs because the promotion gates are track-specific.  Completed
+review artifacts belong under `reviews/`, have `evidence_eligible=false`, and may
+never be used as claim evidence.
+
+== Promotion rule
+
+Do not change either pending Paper 1 gate to `SATISFIED` merely because this
+packet exists or because CI is green.  A gate can be satisfied only after the
+corresponding independent review is complete, its findings are resolved as
+required, and `data/scientific_reviews.csv` links the completed review to the
+exact reviewed commit.  Until then `paper1` remains `WORKING_MANUSCRIPT`.
