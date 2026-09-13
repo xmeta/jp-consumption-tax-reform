@@ -1,3 +1,6 @@
+if not __debug__:
+    raise RuntimeError('optimized Python is not supported for executable tests; assertions must remain active')
+
 """Focused schema checks for Issue #121 GDP import preparation."""
 
 import csv

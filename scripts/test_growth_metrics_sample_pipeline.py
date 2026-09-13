@@ -1,3 +1,6 @@
+if not __debug__:
+    raise RuntimeError('optimized Python is not supported for executable tests; assertions must remain active')
+
 """Integration test for the Issue #121 sample GDP pipeline."""
 
 from pathlib import Path

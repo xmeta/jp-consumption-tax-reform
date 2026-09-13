@@ -10,4 +10,5 @@ validation and diagnostics.
 * Observed and forecast values must be separated.
 * Every value must have a source_id.
 * Revisions must be traceable.
+* Publisher-original raw inputs live under `data/raw/`; normalized macro tables live here.
 * Diagnostic metrics must not automatically become optimizer inputs.

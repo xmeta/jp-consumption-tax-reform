@@ -18,6 +18,9 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 
 SOURCE_INTEGRITY = (
+    ("scripts/build_cao_real_gdp_quarterly.py",),
+    ("scripts/test_cao_real_gdp_quarterly_dataset.py",),
+    ("scripts/compute_growth_metrics.py",),
     ("scripts/build_source_catalog.py",),
     ("scripts/build_raw_source_redistribution_audit.py",),
     ("scripts/test_raw_source_redistribution.py",),
@@ -212,6 +215,7 @@ ALL_ORDER = (
 # Only files that are outputs of the commands above belong here. Clean-room
 # deliberately keeps raw/recovery/config/spec inputs intact.
 CLEAN_ROOM_GLOBS = (
+    "data/macro/real_gdp_quarterly.csv",
     "data/source_catalog.csv",
     "data/raw_source_redistribution_audit.csv",
     "data/derived/*.csv",

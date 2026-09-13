@@ -1,9 +1,0 @@
-= Raw GDP inputs
-
-This directory stores archived raw inputs used to derive quarterly real GDP datasets.
-
-== Rules
-
-* Keep original source files unchanged.
-* Record source identifier and revision date in derived datasets.
-* Do not download external data during reproduction.
