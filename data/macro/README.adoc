@@ -1,0 +1,13 @@
+= Macro Dataset Rules
+
+== Purpose
+
+This directory stores macroeconomic observations used for objective-function
+validation and diagnostics.
+
+== Rules
+
+* Observed and forecast values must be separated.
+* Every value must have a source_id.
+* Revisions must be traceable.
+* Diagnostic metrics must not automatically become optimizer inputs.
