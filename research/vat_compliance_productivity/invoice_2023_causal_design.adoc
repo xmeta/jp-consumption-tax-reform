@@ -172,3 +172,25 @@ all design-specific diagnostics plus the independent identification review gate.
 Until then the repository state remains unchanged: current JCCI/SMEA/Fujimaki
 invoice evidence is descriptive; historical VAT quasi-experiments are mechanism
 and design evidence; national `a_alloc` remains `NOT_IDENTIFIED`.
+== Primary execution route as of 2026-09-13
+
+The primary data-access route is TDB-CAREE.  Koizumi (RIETI 24-E-025; published
+in the _Southern Economic Journal_ in 2026) establishes that TDB data can support
+a policy-preperiod supplier-customer graph together with firm sales, employment,
+capital, headquarters location and fiscal-year information and DID / doubly
+robust DID estimation.  The paper evaluates a different tax policy and supplies
+no invoice-system coefficient.
+
+The remaining external gate is narrow: the provider must confirm (1) a
+2023-09-30-or-earlier network snapshot, (2) repeated 2021--2025+ outcomes, and
+(3) a deterministic, institutionally approved link to the public NTA invoice
+registry for corporations.  The exact questions and response disposition are
+frozen in +tdb_caree_invoice_causal_inquiry.adoc+.
+
+A TDB commercial transaction-network purchase is second-ranked only.  The
+current product advertises roughly 750,000 firms / 15 million transaction links
+and a published price of JPY 250,000 basic fee plus JPY 10 per transaction
+record, but public material does not establish that a historical pre-2023 graph
+or repeated outcomes can be purchased.  Do not incur that cost unless CAREE is
+unavailable and TDB confirms the historical snapshot required by the design.
+

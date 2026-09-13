@@ -14,6 +14,8 @@ Issue #26 Phase 1 separates VAT institutional abolition from a 0% statutory rate
 * +invoice_2023_causal_design.adoc+ — Issue #111 causal-evidence boundary, ranked natural experiments, estimands, diagnostics and minimum data request.
 * +invoice_2023_causal_literature_audit.csv+ — bounded direct/historical literature audit through 2026-09-13.
 * +invoice_2023_natural_experiment_design.csv+ — ranked 2023/2026 DiD, event-study and threshold designs with explicit failure modes.
+* +tdb_caree_invoice_causal_access_audit.csv+ — ranked execution routes for the pre-2023 network × firm-outcome causal design.
+* +tdb_caree_invoice_causal_inquiry.adoc+ — frozen provider questions and ready-to-send TDB-CAREE inquiry; not an access approval.
 * +nta_invoice_registry_pretrend_source_manifest_20260913.csv+ — hashes/URLs for the 11 full-snapshot ZIPs and 40 daily-delta ZIPs used for the frozen pre-period capture; no registration identifiers.
 * +nta_invoice_registry_pretrend_observations_20260913.csv+ — privacy-safe monthly stock/history and daily publication-change aggregates; no names, addresses or registration numbers.
 
@@ -154,6 +156,20 @@ event-study or natural-experiment counterfactual.  This is a search-frontier
 result, not a universal nonexistence claim.  Historical Japanese VAT
 quasi-experiments (RIETI 21-E-090 and Ichikawa et al. 2019) remain valuable
 mechanism evidence but are not relabeled as 2023 effects.
+
+The current primary execution route is TDB-CAREE rather than BSBSA alone.  A
+Japanese tax-policy precedent (Koizumi, RIETI 24-E-025; later Southern Economic
+Journal 2026) uses TDB supplier-customer links plus firm sales, employment,
+capital, location and fiscal-year information, freezes the network before the
+policy, and estimates DID / doubly robust DID effects.  This is a method and
+data-access precedent only: it studies a different investment-tax policy.
+
+TDB-CAREE is visibly active in 2026, but its public qualification page retains
+an older 2024 contract-horizon sentence.  The repository therefore does not
+assume current eligibility, 2021--2025+ panel coverage, a pre-October-2023
+network snapshot, or corporate-number linkage.  Those items are frozen as
+provider questions in +tdb_caree_invoice_causal_inquiry.adoc+.  A current-only
+commercial network is not an admissible substitute for pre-treatment exposure.
 
 The preferred direct 2023 design freezes supplier exposure before introduction
 and interacts that exposure with post-2023 event time; post-treatment invoice
