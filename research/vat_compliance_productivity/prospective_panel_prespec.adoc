@@ -31,6 +31,18 @@ Industry, size, legal form and VAT-regime strata are fixed before sampling.
 Oversampling is allowed only when the inclusion probabilities are retained and
 undone by the analysis weights.
 
+The Statistics Bureau Business Register is a plausible probability-frame route in
+principle (`STAT-BUSINESS-REGISTER-OVERVIEW`), but its official provision page
+(`STAT-BUSINESS-REGISTER-PROVISION`) does not establish ordinary direct academic
+access.  This design therefore requires an eligible provider/partner or another
+approved frame and does not assume Business Register access is available.
+
+The 2024 Economic Census for Business Frame is useful for frame diagnostics and
+calibration (`STAT-ECON-CENSUS-2024-OVERVIEW`), but its published private-
+establishment scope excludes some units, including individually operated
+establishments with no employees.  Published Census margins alone therefore do
+not repair target-population units that are absent from the sampling frame.
+
 If no approved probability frame is available, a recruited/convenience pilot
 may still test measurement and treatment mechanics, but every estimate is
 labelled pilot/frame-specific.  It must not be called national `c_VAT`.
@@ -49,6 +61,11 @@ possible by activity/accounting-system logs.  Time is split into:
 * qualified-invoice tasks;
 * VAT calculation/return tasks; and
 * VAT-specific incremental recordkeeping.
+
+The four-week diary is a task-measurement window, not by itself an annualization
+rule.  The primary annual `c_VAT` estimand is reported only after a complete VAT
+compliance cycle is observed or a separately validated annualization mapping is
+available.  Simple multiplication of a short diary window is not sufficient.
 
 Ordinary bookkeeping that would remain without VAT is recorded separately and
 is not charged to `c_VAT`.  Internal hours are valued with a role-specific
@@ -142,6 +159,9 @@ fails:
   under the frozen measurement rule.
 . Attrition or linkage loss cannot be characterized well enough to define the
   analysis population and weights.
+. A complete compliance cycle or separately validated annualization mapping is
+  unavailable; do not report an annual `c_VAT` by mechanically scaling a short
+  diary window.
 
 Passing these gates only authorizes a larger study.  It does not identify a
 national parameter before the required data are actually observed.
