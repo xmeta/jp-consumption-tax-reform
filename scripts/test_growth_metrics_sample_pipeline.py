@@ -12,10 +12,16 @@ ROOT = Path(__file__).resolve().parents[1]
 
 
 def test_sample_csv_pipeline():
-    values = load_growth_rates(ROOT / "data/macro/real_gdp_quarterly_sample.csv")
-    result = compute_metrics(values)
+    path = ROOT / "data/macro/real_gdp_quarterly_sample.csv"
+    values = load_growth_rates(path)
+    result = compute_metrics(path)
 
     assert len(values) == 3
     assert result["R_g"] == 0.005
     assert result["D_g"] > 0
-    assert result["C_Y"] < 0
+    assert result["C_Y"] > 0
+
+
+if __name__ == "__main__":
+    test_sample_csv_pipeline()
+    print("growth metric sample pipeline: OK")

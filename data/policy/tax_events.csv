@@ -1,1 +1,6 @@
 event_date,event_type,description,source_id
+1989-04-01,vat_introduction,Consumption tax introduced at 3 percent,NTA-CONSUMPTION-TAX-1989-START
+1997-04-01,vat_rate_increase,Total consumption-tax rate increased from 3 percent to 5 percent,NTA-70YEAR-CONSUMPTION-TAX-HISTORY
+2014-04-01,vat_rate_increase,Total consumption-tax rate increased from 5 percent to 8 percent,NTA-70YEAR-CONSUMPTION-TAX-HISTORY
+2019-10-01,vat_rate_increase,Standard total consumption-tax rate increased from 8 percent to 10 percent,NTA-70YEAR-CONSUMPTION-TAX-HISTORY
+2023-10-01,invoice_system_introduction,Qualified-invoice system introduced,NTA-70YEAR-CONSUMPTION-TAX-HISTORY

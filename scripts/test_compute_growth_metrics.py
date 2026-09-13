@@ -22,3 +22,10 @@ def test_recession_penalty():
 
 def test_cumulative_growth():
     assert cumulative_growth([0.01, 0.01]) > 0
+
+
+if __name__ == "__main__":
+    test_growth_decline_penalty()
+    test_recession_penalty()
+    test_cumulative_growth()
+    print("growth metric unit tests: OK")
