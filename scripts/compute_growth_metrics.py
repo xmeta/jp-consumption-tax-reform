@@ -16,6 +16,25 @@ def annualize_qoq(rate: float) -> float:
     return (1.0 + rate) ** 4 - 1.0
 
 
+def per_capita_growth(real_gdp_growth: float, population_growth: float) -> float:
+    """Exact GDP-per-capita growth identity from aggregate GDP and population growth."""
+    if population_growth <= -1.0:
+        raise ValueError("population growth must be greater than -100%")
+    return (1.0 + real_gdp_growth) / (1.0 + population_growth) - 1.0
+
+
+def production_decomposition(
+    real_gdp: float, population: float, total_hours_worked: float
+) -> tuple[float, float, float]:
+    """Return GDP/person, GDP/hour, and hours/person with exact multiplicative identity."""
+    if real_gdp < 0.0 or population <= 0.0 or total_hours_worked <= 0.0:
+        raise ValueError("real GDP must be non-negative and population/hours must be positive")
+    gdp_per_person = real_gdp / population
+    gdp_per_hour = real_gdp / total_hours_worked
+    hours_per_person = total_hours_worked / population
+    return gdp_per_person, gdp_per_hour, hours_per_person
+
+
 def growth_decline_penalty(growth_rates: list[float]) -> float:
     """Compute D_g without applying normative weights."""
     return sum(

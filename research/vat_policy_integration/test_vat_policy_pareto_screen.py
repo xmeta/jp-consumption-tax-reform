@@ -20,7 +20,14 @@ def read(path):
 screen = read(SCREEN)
 pairwise = read(PAIRWISE)
 objectives = read(ROOT / "research/vat_policy_integration/pareto_objectives.csv")
-assert [(r["objective_id"], r["direction"]) for r in objectives] == [("cumulative_real_growth", "maximize"), ("growth_decline_penalty", "minimize"), ("fgt2_effect", "minimize"), ("income_gini_effect", "minimize"), ("wealth_gini_effect", "minimize"), ("intergenerational_gap_effect", "minimize")]
+assert [(r["objective_id"], r["direction"]) for r in objectives] == [
+    ("cumulative_per_capita_real_growth", "maximize"),
+    ("per_capita_growth_decline_penalty", "minimize"),
+    ("median_real_equivalized_disposable_income_effect", "maximize"),
+    ("real_gdp_per_hour_effect", "maximize"),
+    ("income_gini_effect", "minimize"),
+    ("fgt2_effect", "minimize"),
+]
 assert all(r["required_for_headline"] == "true" for r in objectives)
 assert len(screen) == 8
 assert len(pairwise) == 28
@@ -48,7 +55,9 @@ by_id = {r["scenario_id"]: r for r in screen}
 assert all(row["required_objective_count"] == "6" for row in screen)
 assert all(row["bounded_required_objective_count"] == "0" for row in screen)
 assert all(row["bounded_required_objectives"] == "" for row in screen)
-assert all("cumulative_real_growth" in row["missing_required_objectives"] for row in screen)
+assert all("cumulative_per_capita_real_growth" in row["missing_required_objectives"] for row in screen)
+assert all("median_real_equivalized_disposable_income_effect" in row["missing_required_objectives"] for row in screen)
+assert all("real_gdp_per_hour_effect" in row["missing_required_objectives"] for row in screen)
 
 subprocess.run(
     [sys.executable, str(ROOT / "research/vat_policy_integration/build_vat_policy_pareto_screen.py"), "--check"],

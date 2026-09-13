@@ -24,6 +24,8 @@ SOURCE_INTEGRITY = (
     ("scripts/test_compute_growth_metrics.py",),
     ("scripts/test_growth_metrics_sample_pipeline.py",),
     ("scripts/build_source_catalog.py",),
+    ("scripts/build_population_welfare_historical_diagnostics.py",),
+    ("scripts/test_population_welfare_historical_diagnostics.py",),
     ("scripts/test_macro_policy_events.py",),
     ("scripts/build_raw_source_redistribution_audit.py",),
     ("scripts/test_raw_source_redistribution.py",),
