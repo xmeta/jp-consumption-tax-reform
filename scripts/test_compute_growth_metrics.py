@@ -1,3 +1,6 @@
+if not __debug__:
+    raise RuntimeError('optimized Python is not supported for executable tests; assertions must remain active')
+
 """Focused tests for Issue #121 growth diagnostics."""
 
 from pathlib import Path

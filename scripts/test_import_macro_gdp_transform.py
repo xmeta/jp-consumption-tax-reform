@@ -1,3 +1,6 @@
+if not __debug__:
+    raise RuntimeError('optimized Python is not supported for executable tests; assertions must remain active')
+
 from scripts.import_macro_gdp import annualize_growth
 
 
