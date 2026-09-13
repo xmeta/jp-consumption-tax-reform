@@ -102,6 +102,7 @@ dry = subprocess.run(
 assert "scripts/build_source_catalog.py" in dry
 assert "scripts/build_population_welfare_historical_diagnostics.py" in dry
 assert "scripts/test_population_welfare_historical_diagnostics.py" in dry
+assert dry.index("scripts/build_source_catalog.py") < dry.index("scripts/build_population_welfare_historical_diagnostics.py")
 assert "research/vat_compliance_productivity/run_vat_compliance_productivity.py" in dry
 assert "research/income_tax_pseudofiler/run_pseudofiler_core.py" in dry
 assert dry.index("scripts/extract_estat_income_tax_tables.py") < dry.index("scripts/build_estat_objective_rank_household_margin_audit.py")

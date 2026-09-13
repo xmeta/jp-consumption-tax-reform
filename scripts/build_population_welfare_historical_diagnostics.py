@@ -103,9 +103,17 @@ def build():
         raise RuntimeError("unexpected 2024 CPI anchor")
     cpi24 = float(cpi["C25"])
 
-    med = read_csv(ROOT / "data/derived/estat_7171_main_income_disposable_quantiles_2024.csv")
-    median_row = next(r for r in med if r["measure_key"] == "p50" and r["semantic_key"] == "total")
-    median_k_yen = float(median_row["value"])
+    median_cells = xlsx_cells(raw["median"], "F71710")
+    expected_median_labels = {
+        "B11": "00000_全国",
+        "D11": "0_平均",
+        "F11": "1_等価可処分所得（ＯＥＣＤ新基準準拠）",
+        "G11": "中位数",
+        "H11": "千円",
+    }
+    if any(median_cells.get(ref) != value for ref, value in expected_median_labels.items()):
+        raise RuntimeError("unexpected NSFCW Table 7-171 median row semantics")
+    median_k_yen = float(median_cells["CU11"])
 
     # Published PDF anchors are fixed by the registered raw files, source
     # locators, source-catalog hashes, and repository manifest. Keep this
