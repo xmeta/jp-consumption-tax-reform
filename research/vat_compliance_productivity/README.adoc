@@ -14,6 +14,7 @@ Issue #26 Phase 1 separates VAT institutional abolition from a 0% statutory rate
 * +invoice_2023_causal_design.adoc+ — Issue #111 causal-evidence boundary, ranked natural experiments, estimands, diagnostics and minimum data request.
 * +invoice_2023_causal_literature_audit.csv+ — bounded direct/historical literature audit through 2026-09-13.
 * +invoice_2023_natural_experiment_design.csv+ — ranked 2023/2026 DiD, event-study and threshold designs with explicit failure modes.
+* +invoice_2023_preanalysis_plan.adoc+ — frozen pre-access analysis plan: exposure timing, fiscal-period alignment, estimator, diagnostics, privacy and stop rules.
 * +tdb_caree_invoice_causal_access_audit.csv+ — ranked execution routes for the pre-2023 network × firm-outcome causal design.
 * +tdb_caree_invoice_causal_inquiry.adoc+ — frozen provider questions and ready-to-send TDB-CAREE inquiry; not an access approval.
 * +nta_invoice_registry_pretrend_source_manifest_20260913.csv+ — hashes/URLs for the 11 full-snapshot ZIPs and 40 daily-delta ZIPs used for the frozen pre-period capture; no registration identifiers.
@@ -177,6 +178,14 @@ registration or post-treatment supplier composition is forbidden as the
 exposure definition.  The required pre-2023 supplier/VAT-status network joined
 to repeated firm outcomes is not publicly available in the repository, so no
 aggregate survey proxy is substituted for the missing microdata.
+
+Before provider access, +invoice_2023_preanalysis_plan.adoc+ now freezes the
+primary estimand and diagnostics.  It excludes fiscal periods straddling
+2023-10-01, treats 2023-04 through 2023-09 as an anticipation window, requires
+at least two clean pre-periods plus a 2022-10 placebo, common-support and
+attrition diagnostics, and prohibits post-treatment registration or current
+network data from defining treatment.  Passing these diagnostics is necessary
+but not sufficient for causal promotion.
 
 The FY2026 invoice reform also creates prospective differential variation.  The
 current 20% special measure ends while individual proprietors receive a 30%

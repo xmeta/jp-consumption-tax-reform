@@ -1,0 +1,109 @@
+= Pre-analysis plan: causal economic effects of the Japanese invoice system
+:revdate: 2026-09-13
+
+== Status and claim boundary
+
+This is the frozen analysis plan for Issue #111. It is written before provider access and before any causal estimate is computed. It does not identify a 2023 invoice-system effect by itself.
+
+The primary target is a *differential reduced-form firm effect* of the October-2023 invoice-system shock by exposure measured only from information fixed before treatment. It is not the national average effect of invoice introduction, a GDP effect, or an abolition effect. `c_VAT`, `rho`, and national `a_alloc` remain `NOT_IDENTIFIED` unless a separate transport/general-equilibrium bridge is established.
+
+== Population and data gate
+
+The first executable population is corporations for which the provider can supply all of the following in one approved environment:
+
+* a supplier-customer graph observed no later than 2023-09-30;
+* stable firm identifiers and repeated outcomes covering at least two clean pre-policy fiscal years and two post-policy fiscal years;
+* annual sales and employment; survival/exit only if true exit can be distinguished from stale/non-updated TDB records;
+* industry, prefecture, firm age/size, network degree and fiscal-year end;
+* a provider-approved deterministic link to the public NTA invoice registry or another provider-approved pre-treatment invoice-exposure variable.
+
+If any of the first three items is unavailable, the rank-1 2023 causal design stops. Name/address probabilistic matching is prohibited.
+
+== Treatment/exposure hierarchy
+
+Let `G_pre` be the supplier-customer graph frozen before 2023-10-01. Post-treatment links must never enter the treatment definition.
+
+The preferred exposure `E_i^pre` is the share of firm `i`'s pre-policy suppliers that satisfy a *provider-confirmed pre-treatment invoice-relevant status* (for example an exact pre-policy VAT exemption/tax-status variable or an approved deterministic administrative crosswalk). Supplier status must be dated before the policy shock.
+
+The following are not admissible as the sole causal exposure:
+
+* qualified-invoice registration observed after the policy was announced or implemented;
+* supplier composition measured after 2023-10-01;
+* TDB annual sales <= JPY 10 million treated as if it were exact statutory base-period taxable sales;
+* current supplier networks backcast to 2023.
+
+If only a sales-based proxy is available, it may be reported as `EXPOSURE_PROXY_DIAGNOSTIC_ONLY`; it cannot promote the invoice effect to `CAUSAL_IDENTIFIED`.
+
+If exact/provider-approved exposure exists, treatment groups are formed using only the pre-policy exposure distribution: upper tercile = high exposure, lower tercile = low exposure, middle tercile excluded from the primary binary contrast. Tercile cut points are computed before post-treatment outcomes are inspected. A continuous-exposure specification is secondary.
+
+== Outcome timing and fiscal-year alignment
+
+The statutory start date is 2023-10-01, but TDB firm outcomes are fiscal-period outcomes and firms have different fiscal year ends. Therefore calendar-year labels must not be used as if every observation received the same treatment duration.
+
+For each firm, derive the fiscal-period interval from its reported fiscal-year end. The fiscal period that straddles 2023-10-01 is a `TRANSITION_PARTIAL_EXPOSURE` period and is excluded from the primary pre/post contrast. The first fiscal period beginning on or after 2023-10-01 is the first fully treated period.
+
+Clean pre-treatment outcomes must end before the anticipation window. The primary clean-pre window ends 2023-03-31; fiscal periods overlapping 2023-04-01 through 2023-09-30 are tagged `ANTICIPATION_WINDOW` and are not used to establish parallel trends.
+
+Primary outcome: log sales. Secondary outcomes: log employment and, only if provider semantics support it, exit/survival. Capital/investment outcomes are secondary because historical TDB coverage may be restricted.
+
+== Primary estimator
+
+When the data gate is satisfied, estimate a multi-period doubly robust difference-in-differences design following the Sant'Anna-Zhao / Callaway-Sant'Anna architecture used as a precedent by Koizumi (RIETI 24-E-025).
+
+The propensity model and outcome model may use only pre-treatment variables: pre-policy log sales, log employment, firm age, supplier/customer degree, industry, prefecture, and fiscal-year-end month. No post-treatment covariate is allowed in the conditioning set.
+
+Primary common-support rule: retain propensity scores in `[0.05, 0.95]`. Report `[0.10, 0.90]` as a robustness restriction. If high- and low-exposure groups lack material overlap, stop causal promotion instead of extrapolating.
+
+A conventional two-way fixed-effect event study may be shown as a diagnostic, but it is not the primary estimator when treatment timing/effect heterogeneity from fiscal-year alignment is present.
+
+== Required diagnostics before causal promotion
+
+All of the following must be produced before any repository claim can move to `CAUSAL_IDENTIFIED`:
+
+. *Pre-trend/event leads*: at least two clean pre-policy fiscal periods, coefficient plot with simultaneous confidence intervals, and a joint pre-trend test. Failure to reject zero alone is insufficient; the confidence set must rule out pre-trends large enough to explain the estimated post effect under a minimum-effect bound declared before post outcomes are inspected.
+. *Placebo date*: repeat the design with a false policy date of 2022-10-01 using only observations available before the real policy.
+. *Anticipation sensitivity*: exclude all fiscal periods overlapping 2023-04-01--2023-09-30; separately report what changes if the anticipation window starts earlier.
+. *Overlap/common support*: propensity distributions, effective sample sizes, and trimming counts by exposure group.
+. *Composition/attrition*: compare pre-policy firm characteristics and reporting continuity; do not label non-reporting as exit unless provider semantics establish true closure/exit.
+. *Network freeze*: prove that every link used to construct `E_i^pre` was observed before 2023-10-01 and was not overwritten by a later network state.
+. *Exposure first stage*: if an approved pre-treatment proxy rather than exact VAT status is used, show its relationship to subsequent invoice-regime exposure without using that relationship to redefine treatment ex post.
+. *Concurrent-shock control*: include sufficiently granular pre-specified industry-by-time and prefecture-by-time controls where support permits; report sensitivity to local industry trends.
+. *Inference sensitivity*: firm-clustered inference is primary for repeated observations; report a coarser pre-policy industry-by-prefecture clustering sensitivity where cell counts permit.
+
+== Interpretation rule
+
+Even a successful estimate is a high-versus-low pre-exposure *differential* effect. Low-exposure firms were also subject to the invoice system. Therefore the estimate is not the average effect of introducing the system nationwide.
+
+Network spillovers can be first-order: Koizumi's different Japanese tax-policy study demonstrates that direct and upstream/downstream effects can differ materially. For Issue #111 this justifies estimating supplier/customer-distance effects as a secondary analysis, but the Koizumi magnitudes are not imported as invoice-system effects.
+
+== Prospective October-2026 complementary experiment
+
+The October-2026 transition from 80% to 70% buyer-side input-credit recognition is a separate prospective experiment and does not identify the original 2023 introduction effect.
+
+For that experiment, exposure must be frozen before 2026-10-01. The repository already holds a privacy-safe August/September 2026 NTA registry baseline. A final pre-change registry/network snapshot should be frozen as close as operationally possible to 2026-09-30 without using post-2026-10 information.
+
+The October-2026 reform also changes the per-supplier purchase cap and interacts with the end of the 20% special measure / later individual-proprietor relief. The 80-to-70 effect may be promoted causally only if those simultaneous margins are separately identified or the analysis sample is demonstrably unaffected by them. If supplier-level purchase amounts are unavailable and cap exposure cannot be separated, stop causal promotion of the 80-to-70 design.
+
+== Frozen outputs
+
+The secure-environment analysis should export only disclosure-approved aggregate outputs:
+
+* event-study / group-time treatment estimates and confidence intervals;
+* sample and trimming counts;
+* pre-trend/placebo/overlap diagnostics;
+* aggregate balance tables;
+* heterogeneous effects by pre-specified size/industry bins when disclosure rules permit.
+
+No TDB firm identifier, corporate number, invoice registration number, company name, address or raw network edge is allowed into this public repository.
+
+== Stop conditions
+
+Retain `NOT_IDENTIFIED` and stop the direct 2023 route if any of the following holds:
+
+* no provider-approved pre-treatment exposure can be constructed;
+* the only available network is current/post-treatment;
+* deterministic NTA linkage is unavailable and no equivalent provider-approved exposure exists;
+* common support fails materially;
+* pre-trends/placebos indicate a confounding differential trend that is not resolved by the frozen design;
+* exit cannot be distinguished from missing/stale reporting for the exit outcome;
+* disclosure rules prevent reporting enough diagnostics to independently audit identification.

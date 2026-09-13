@@ -17,6 +17,7 @@ ACCESS_AUDIT=ROOT/"research/vat_compliance_productivity/firm_level_linkage_acces
 LIT_AUDIT=ROOT/"research/vat_compliance_productivity/invoice_2023_causal_literature_audit.csv"
 INVOICE_DESIGN=ROOT/"research/vat_compliance_productivity/invoice_2023_natural_experiment_design.csv"
 TDB_ACCESS=ROOT/"research/vat_compliance_productivity/tdb_caree_invoice_causal_access_audit.csv"
+PREANALYSIS_PLAN=ROOT/"research/vat_compliance_productivity/invoice_2023_preanalysis_plan.adoc"
 
 def read(p):
     with p.open(encoding="utf-8",newline="") as f: return list(csv.DictReader(f))
@@ -46,6 +47,7 @@ access_audit={r["audit_item"]:r for r in read(ACCESS_AUDIT)}
 invoice_lit=read(LIT_AUDIT)
 invoice_design=read(INVOICE_DESIGN)
 tdb_access=read(TDB_ACCESS)
+preanalysis_plan=PREANALYSIS_PLAN.read_text(encoding="utf-8")
 
 assert len(rows)==1200
 assert all(r["identification_status"]=="MODEL_CONTINGENT_STRESS_TEST_ONLY" for r in rows)
@@ -212,6 +214,28 @@ assert by_route["BSBSA_PLUS_PUBLIC_INVOICE_WITHOUT_NETWORK"]["identification_val
 for r in tdb_access:
     ids=[x for x in r["source_ids"].split(";") if x]
     assert ids and set(ids) <= sources, (r["route_id"], set(ids)-sources)
+
+for required in (
+    "supplier-customer graph observed no later than 2023-09-30",
+    "TRANSITION_PARTIAL_EXPOSURE",
+    "ANTICIPATION_WINDOW",
+    "2022-10-01",
+    "[0.05, 0.95]",
+    "common support",
+    "pre-trend",
+    "placebo",
+    "Network freeze",
+    "NOT_IDENTIFIED",
+):
+    assert required.lower() in preanalysis_plan.lower(), required
+for forbidden_rule in (
+    "qualified-invoice registration observed after the policy was announced or implemented",
+    "supplier composition measured after 2023-10-01",
+    "current supplier networks backcast to 2023",
+):
+    assert forbidden_rule in preanalysis_plan
+assert "Low-exposure firms were also subject to the invoice system" in preanalysis_plan
+assert "not the average effect of introducing the system nationwide" in preanalysis_plan
 
 assert [int(r["design_rank"]) for r in invoice_design] == [1, 2, 3, 4, 5]
 by_invoice_design={r["design_id"]:r for r in invoice_design}
