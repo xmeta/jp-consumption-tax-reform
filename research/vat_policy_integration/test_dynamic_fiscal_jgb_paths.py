@@ -37,7 +37,9 @@ for r in rows:
     closing = D(r["closing_incremental_debt_yen"])
     assert gross_new == redemptions + net_new
     assert closing == opening - redemptions + gross_new
-    assert r["total_debt_gdp_status"] == "NOT_COMPUTED_BASELINE_TOTAL_DEBT_STOCK_OUTSIDE_THIS_INCREMENTAL_MODULE"
+    assert r["fy2024_end_general_government_gross_debt_yen"] == "1361030100000000"
+    assert r["fy2024_end_general_government_gross_debt_gdp_ratio"] == "2.118616059066"
+    assert r["total_debt_gdp_status"] == "BASELINE_OBSERVED_FUTURE_TOTAL_DEBT_PATH_NOT_MODELED"
     assert r["market_feedback_status"] == "NOT_IDENTIFIED_INTEREST_AND_GDP_PATHS_ARE_EXOGENOUS_SENSITIVITIES"
 
 jgb_y1 = [r for r in rows if r["scenario_id"] == "full_abolition_jgb" and r["year"] == "1"]
@@ -55,6 +57,8 @@ assert any(D(r["redemptions_yen"]) > 0 for r in rows if r["scenario_id"] == "ful
 
 jgb = summary["full_abolition_jgb"]
 assert jgb["static_fy2024_jgb_gdp_pct_benchmark"] == "3.894868333"
+assert jgb["fy2024_end_general_government_gross_debt_gdp_ratio"] == "2.118616059066"
+assert jgb["total_debt_gdp_status"] == "BASELINE_OBSERVED_FUTURE_TOTAL_DEBT_PATH_NOT_MODELED"
 assert jgb["dynamic_fiscal_status"] == "MODEL_CONTINGENT_INCREMENTAL_DEBT_PATH_SENSITIVITY"
 assert jgb["modeled_assumption_sets"] == "9"
 assert jgb["reported_path_assumption_set_id"] == "r02_g02"

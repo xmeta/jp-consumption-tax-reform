@@ -151,12 +151,7 @@ def build():
                 fiscal_status = "NOT_IDENTIFIED_RATE_BASE_MIX_AND_BEHAVIOR_REQUIRED"
             else:
                 fiscal_status = "STATIC_CENTRAL_REVENUE_REFERENCE_AVAILABLE_FULL_FISCAL_BALANCE_NOT_MODELED"
-            if scenario["scenario_id"] == "full_abolition_jgb":
-                debt_status = "STATIC_JGB_AMOUNT_REFERENCE_AVAILABLE_DEBT_GDP_AND_DYNAMIC_PATH_NOT_MODELED"
-            elif scenario["financing_strategy"] == "baseline":
-                debt_status = "BASELINE_NO_POLICY_DEBT_CHANGE"
-            else:
-                debt_status = "NOT_MODELED_FINANCING_AND_GROWTH_PATH_REQUIRED"
+            debt_status = dynamic_fiscal[scenario["scenario_id"]]["dynamic_fiscal_status"]
             rows.append({
                 "scenario_id": scenario["scenario_id"],
                 "scenario_label": scenario["scenario_label"],

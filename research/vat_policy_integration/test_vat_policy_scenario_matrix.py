@@ -206,7 +206,9 @@ assert summary["full_abolition_jgb"]["fy2024_nominal_gdp_reference_yen"] == "642
 assert summary["full_abolition_jgb"]["static_incremental_jgb_financing_share_of_fy2024_nominal_gdp"] == "0.038948683327"
 assert summary["full_abolition_jgb"]["static_incremental_jgb_financing_pct_of_fy2024_nominal_gdp"] == "3.894868333"
 assert summary["full_abolition_jgb"]["debt_gdp_reference_status"] == "STATIC_INCREMENTAL_JGB_FINANCING_SHARE_OF_FY2024_NOMINAL_GDP"
-assert summary["full_abolition_jgb"]["debt_gdp_status"] == "STATIC_JGB_AMOUNT_REFERENCE_AVAILABLE_DEBT_GDP_AND_DYNAMIC_PATH_NOT_MODELED"
+assert summary["full_abolition_jgb"]["debt_gdp_status"] == summary["full_abolition_jgb"]["dynamic_fiscal_status"]
+for sid in expected:
+    assert summary[sid]["debt_gdp_status"] == summary[sid]["dynamic_fiscal_status"]
 assert summary["full_abolition_jgb"]["dynamic_fiscal_status"] == "MODEL_CONTINGENT_INCREMENTAL_DEBT_PATH_SENSITIVITY"
 assert summary["full_abolition_jgb"]["dynamic_fiscal_modeled_assumption_sets"] == "9"
 assert summary["full_abolition_jgb"]["dynamic_fiscal_reported_path_assumption_set_id"] == "r02_g02"
