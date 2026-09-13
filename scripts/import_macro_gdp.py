@@ -1,8 +1,7 @@
-"""Prepare quarterly GDP import pipeline for Issue #121.
+"""Normalize quarterly real GDP inputs for Issue #123.
 
-The importer intentionally does not download or transform external sources yet.
-Source-specific parsers should be added only after the authoritative source
-format is fixed.
+This module intentionally works on supplied raw files. It does not download
+external data. Raw source acquisition remains a provenance step.
 """
 
 from pathlib import Path
@@ -11,11 +10,23 @@ from pathlib import Path
 REQUIRED_COLUMNS = [
     "quarter",
     "real_gdp_growth_qoq",
+    "status",
+    "source_id",
+    "revision_date",
+]
+
+OUTPUT_COLUMNS = [
+    "quarter",
+    "real_gdp_growth_qoq",
     "annualized_growth",
     "status",
     "source_id",
     "revision_date",
 ]
+
+
+def annualize_growth(qoq: float) -> float:
+    return (1.0 + qoq) ** 4 - 1.0
 
 
 def validate_schema(path: Path) -> None:
