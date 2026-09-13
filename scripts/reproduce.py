@@ -40,6 +40,7 @@ VAT = (
     ("scripts/test_jcci_invoice_network_distortion_bridge.py",),
     ("scripts/build_smea_fy2025_invoice_transaction_bridge.py",),
     ("scripts/test_smea_fy2025_invoice_transaction_bridge.py",),
+    ("scripts/test_nta_invoice_registry_pretrend_snapshot.py",),
     ("scripts/build_bsws_2019_industry_hourly_wage_bridge.py",),
     ("scripts/build_meti_vat_internal_labor_cost_bridge.py",),
     ("scripts/test_bsws_vat_wage_bridge.py",),

@@ -100,6 +100,30 @@ in an analysis would be a stale-rule error.
 Both 2026 designs are pre-registerable now but cannot yet deliver mature post-
 period estimates as of 2026-09-13.
 
+=== Frozen pre-period registry capture
+
+Before the October-2026 policy step, Issue #111 freezes a privacy-safe public-
+registry baseline using the NTA download interface.  The source manifest covers
+11 full-snapshot ZIPs dated 2026-08-31 and 40 daily delta ZIPs from 2026-07-15
+through 2026-09-10.  It stores official file IDs, download URLs, byte sizes and
+SHA-256 hashes, but no invoice registration numbers.  Identifier-level ZIPs are
+processed only in a local temporary directory and are not committed to the
+public repository.
+
+The accompanying observation snapshot separates three objects: (1) surviving
+full-snapshot registration/cancellation/expiration history effective by the
+2026-08-31 cutoff, (2) latest-row stock and already-announced future-effective
+events, and (3) daily publication-change rows from the 40-business-day delta
+window.  Full-history counts exclude records already removed by process `99`;
+delta publication rows are not interpreted as effective event dates.  This
+prevents survivorship and future-date leakage from being silently treated as
+causal pre-trends.
+
+The capture is `DESCRIPTIVE_REGISTRY_PRETREND_NOT_CAUSAL`.  It can later support
+pre-trend, manipulation and implementation diagnostics for a 2026 design, but
+without a treated/control exposure and firm outcomes it identifies no economic
+effect.
+
 == Designs that are not causal by themselves
 
 `INVOICE_REGISTRY_X_BSBSA` remains useful as a deterministic corporate linkage

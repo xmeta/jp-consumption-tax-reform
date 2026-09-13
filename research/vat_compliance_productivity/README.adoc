@@ -14,6 +14,8 @@ Issue #26 Phase 1 separates VAT institutional abolition from a 0% statutory rate
 * +invoice_2023_causal_design.adoc+ — Issue #111 causal-evidence boundary, ranked natural experiments, estimands, diagnostics and minimum data request.
 * +invoice_2023_causal_literature_audit.csv+ — bounded direct/historical literature audit through 2026-09-13.
 * +invoice_2023_natural_experiment_design.csv+ — ranked 2023/2026 DiD, event-study and threshold designs with explicit failure modes.
+* +nta_invoice_registry_pretrend_source_manifest_20260913.csv+ — hashes/URLs for the 11 full-snapshot ZIPs and 40 daily-delta ZIPs used for the frozen pre-period capture; no registration identifiers.
+* +nta_invoice_registry_pretrend_observations_20260913.csv+ — privacy-safe monthly stock/history and daily publication-change aggregates; no names, addresses or registration numbers.
 
 Observed Japan evidence is generated separately by
 +scripts/extract_meti_vat_internal_hours.py+,
@@ -23,6 +25,7 @@ Observed Japan evidence is generated separately by
 +scripts/build_ichikawa_2019_vat_10m_threshold_bridge.py+,
 +scripts/build_jcci_invoice_network_distortion_bridge.py+,
 +scripts/build_smea_fy2025_invoice_transaction_bridge.py+,
++scripts/extract_nta_invoice_registry_pretrend_snapshot.py+,
 +scripts/build_bsws_2019_industry_hourly_wage_bridge.py+,
 +scripts/build_meti_vat_internal_labor_cost_bridge.py+, and
 +scripts/extract_vat_compliance_evidence.py+.
@@ -167,6 +170,23 @@ cap tightens from 1 billion to 100 million yen.  These margins are pre-
 registerable natural-experiment candidates, but mature post-period outcomes do
 not yet exist as of 2026-09-13.  The 70% rule and cap shock must be modeled
 separately; an 80%-to-50% treatment definition is stale under the current reform.
+
+A privacy-safe registry pre-period capture is now frozen before the October-2026
+change.  The official 2026-08-31 full snapshot comprises 11 ZIP files and the
+2026-07-15 through 2026-09-10 daily window comprises 40 delta ZIP files.  The
+checked-in manifest records file IDs, bytes and SHA-256 hashes while the raw
+identifier-level ZIPs are intentionally excluded from this public repository.
+Latest-row diagnostics give 2,479,965 active corporations, 2,295,687 active
+individual proprietors and 6,820 active unincorporated associations as of the
+2026-08-31 cutoff.  The 40 daily delta files contain 78,216 publication-change
+rows, including deletion (`99`) records that later full snapshots omit.
+
+These registry values are descriptive pre-treatment infrastructure, not causal
+outcomes.  Full-snapshot history is explicitly survivorship-limited because
+deleted records are absent; daily delta rows are publication changes and are not
+relabelled as effective legal-event dates.  Scheduled future registrations,
+expirations and cancellations are separated from events effective by the
+snapshot cutoff to prevent future leakage.
 
 The wage bridge adds 2019 MHLW Basic Survey on Wage Structure components for
 17 industry-total/major-industry rows. Two transparent hourly-wage formulas are

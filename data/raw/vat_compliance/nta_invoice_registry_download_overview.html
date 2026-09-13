@@ -1,0 +1,505 @@
+<!DOCTYPE HTML>
+<html lang="ja" prefix="og: http://ogp.me/ns# article: http://ogp.me/ns/article#">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<meta name="format-detection" content="telephone=no">
+
+
+<meta name="description" content="適格請求書発行事業者の公表情報データをダウンロードすることができます。当サイトでは、前月末時点の公表情報データの全件データファイル及び日次の差分データファイルを作成し、提供しています。">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+
+<title>公表情報ダウンロード｜国税庁インボイス制度適格請求書発行事業者公表サイト</title>
+<link rel="stylesheet" href="/css/style.wysiwyg.css">
+<link rel="stylesheet" href="/css/style.tableconverter.css">
+<link rel="stylesheet" href="/css/main.css">
+<link rel="stylesheet" href="/css/style_print.css">
+<script src="/js/jquery-3.3.1.min.js"></script>
+<script src="/js/jquery_cookie.js"></script>
+<script src="/js/jquery.swView.js"></script>
+<script src="/js/main.js"></script>
+<script src="/js/jquery.zoomsigh-launch.js"></script>
+
+
+
+
+
+<!-- google-analytics -->
+
+</head>
+<body id="body">
+
+<div id="basebg">
+<noscript>
+<p class="jsmessage">
+このサイトではJavascript機能をOnにしてご利用ください。
+</p>
+</noscript>
+<div id="blockskip">
+<a href="#contents">このページの本文へ移動</a>
+</div>
+<div id="baseall">
+<!-- ▼header▼ -->
+<header role="banner">
+<div class="header_wrapper">
+<div class="logo">
+<a href="/index.html"><img class="sp-none" src="/images/pc_sitelogo.png" alt="国税庁 インボイス制度適格請求書発行事業者公表サイト" width="420" height="47"><img class="pc-none" src="/images/sp_sitelogo.png" alt="国税庁 インボイス制度適格請求書発行事業者公表サイト スマートフォン版" width="266" height="62"></a>
+</div>
+<div class="head_menu">
+<ul class="head_link">
+<li><a href="#contents">本文へ</a></li>
+<li><a href="https://www4.zoomsight-sv2.jp/KZC/controller/index.html#https://www.invoice-kohyo.nta.go.jp/" aria-expanded="false" class="zoom_launch_cloud">閲覧支援ツール（音声読み上げ）</a></li>
+<li><a href="/sitemap.html">サイトマップ</a></li>
+</ul>
+<dl class="head_fontSize_menu">
+<dt>文字サイズ</dt>
+<dd>
+<ul class="head_fontsize_list">
+<li id="font_l"><a href="#" class="icon_fontsize_plus">大きく</a></li>
+<li id="font_m"><a href="#">元に戻す</a></li>
+<li id="font_s"><a href="#" class="icon_fontsize_minus">小さく</a></li>
+</ul>
+</dd>
+</dl>
+</div>
+<!-- hamburger menu -->
+<div class="hamburger-menu">
+<button class="button-container hamburgerBtn" type="button">
+<span class="menu-trigger">
+<span></span>
+<span></span>
+<span></span>
+</span>
+<span class="button_text">メニュー</span>
+</button>
+</div>
+</div>
+</header>
+<!-- ▲header▲ -->
+<!-- ======▼nav▼======= -->
+<nav class="global_nav" role="navigation">
+<ul class="nav_menu pc_show">
+<li class="nav_item">
+<a href="/index.html" id="gNav_home_btn" class="gNav_btn current_always"><span>ホーム<br>(登録番号を検索)</span></a>
+</li>
+<li class="nav_item">
+<a href="/news/index.html" role="button" class="gNav_btn icon_gNav" tabindex="0" id="gNav_oshirase_btn" aria-controls="gNav_oshirase_region" aria-expanded="false"><span>お知らせ</span></a>
+<div role="region" class="sub_nav" id="gNav_oshirase_region" aria-hidden="true" aria-labelledby="gNav_oshirase_btn">
+<ul class="sub_nav_group">
+<li class="sub_nav_link icon_arrowrright_subNav sub_nav_group_link"><a href="/news/index.html"><span>お知らせ</span></a></li>
+</ul>
+</div>
+</li>
+<li class="nav_item">
+<a href="/aboutweb/index.html" role="button" class="gNav_btn icon_gNav" tabindex="0" id="gNav_torokubango_btn" aria-controls="gNav_torokubango_region" aria-expanded="false"><span>ご利用ガイド</span></a>
+<div role="region" class="sub_nav" id="gNav_torokubango_region" aria-hidden="true" aria-labelledby="gNav_torokubango_btn">
+<ul class="sub_nav_group">
+<li class="sub_nav_link icon_arrowrright_subNav sub_nav_group_link"><a href="/aboutweb/index.html"><span>ご利用ガイド</span></a></li>
+</ul>
+</div>
+</li>
+<li class="nav_item">
+<a href="/download/index.html" role="button" class="gNav_btn icon_gNav" tabindex="0" id="gNav_download_btn" aria-controls="gNav_download_region" aria-expanded="false"><span>ダウンロード<br>Web-API</span></a>
+<div role="region" class="sub_nav" id="gNav_download_region" aria-hidden="true" aria-labelledby="gNav_download_btn">
+<ul class="sub_nav_group">
+<li class="sub_nav_link icon_arrowrright_subNav sub_nav_group_link"><a href="/download/index.html"><span>公表情報ダウンロード</span></a></li>
+<li class="sub_nav_link icon_arrowrright_subNav"><a href="/web-api/index.html"><span>適格請求書発行事業者<br>公表システムWeb-API<br>機能</span></a></li>
+</ul>
+</div>
+</li>
+<li class="nav_item">
+<a href="/about-toroku/index.html" role="button" class="gNav_btn icon_gNav" tabindex="0" id="gNav_tetsuduki_btn" aria-controls="gNav_tetsuduki_region" aria-expanded="false"><span>登録番号とは</span></a>
+<div role="region" class="sub_nav" id="gNav_tetsuduki_region" aria-hidden="true" aria-labelledby="gNav_tetsuduki_btn">
+<ul class="sub_nav_group">
+<li class="sub_nav_link icon_arrowrright_subNav sub_nav_group_link"><a href="/about-toroku/index.html"><span>登録番号とは</span></a></li>
+<li class="sub_nav_link icon_arrowrright_subNav"><a href="/about-toroku/touroku_no_info.html"><span>登録番号に関する情報</span></a></li>
+</ul>
+</div>
+</li>
+<li class="nav_item">
+<a href="/faq/index.html" role="button" class="gNav_btn icon_gNav" tabindex="0" id="gNav_FAQ_btn" aria-controls="gNav_FAQ_region" aria-expanded="false"><span>よくある質問</span></a>
+<div role="region" class="sub_nav" id="gNav_FAQ_region" aria-hidden="true" aria-labelledby="gNav_FAQ_btn">
+<ul class="sub_nav_group">
+<li class="sub_nav_link icon_arrowrright_subNav sub_nav_group_link"><a href="/faq/index.html"><span>よくある質問</span></a></li>
+</ul>
+</div>
+</li>
+</ul>
+
+<ul class="nav_menu sp_show">
+<li class="nav_item">
+<a href="/index.html" id="gNav_home_btn_sp" class="gNav_btn current_always"><span>ホーム<br>(登録番号を検索)</span></a>
+</li>
+<li class="nav_item">
+<a href="/about-toroku/index.html" role="button" class="gNav_btn icon_gNav" tabindex="0" id="gNav_tetsuduki_btn_sp"><span>登録番号とは</span></a>
+</li>
+<li class="nav_item">
+<a href="/faq/index.html" role="button" class="gNav_btn icon_gNav" tabindex="0" id="gNav_FAQ_btn_sp"><span>よくある質問</span></a>
+</li>
+<li class="nav_item">
+<a href="/aboutweb/index.html" role="button" class="gNav_btn icon_gNav" tabindex="0" id="gNav_torokubango_btn_sp"><span>ご利用ガイド</span></a>
+</li>
+<li class="nav_item">
+<a href="/news/index.html" role="button" class="gNav_btn icon_gNav" tabindex="0" id="gNav_oshirase_btn_sp"><span>お知らせ</span></a>
+</li>
+</ul>
+</nav>
+<nav aria-label="現在位置" class="pankuzu-bg">
+<div class="pankuzu">
+<ol class="clearfix">
+<li><a href="/index.html">ホーム</a></li>
+<li class="pk-thispage">公表情報ダウンロード</li>
+</ol>
+</div>
+</nav>
+<div class="wrap" id="contents">
+<main role="main">
+<div class="main_inner">
+
+
+
+<div class="h1bg"><div><h1>公表情報ダウンロード</h1></div></div>
+
+
+
+
+<div class="text_box text_big"><p>　適格請求書発行事業者の公表情報のデータをダウンロードすることができます。（データダウンロード機能）<br>　当サイトでは、前月末時点に公表しているデータの最新情報を、全件データファイルとして提供するとともに、新規に適格請求書発行事業者として登録された事業者の情報のほか、公表情報の変更・追加や失効年月日等の情報をダウンロードすることができます。<br>　なお、氏名又は名称や所在地の変更があった場合、変更後の最新の情報のみがダウンロードデータに含まれます。</p></div>
+<div class="text_box text_big"><p>　ダウンロード手順について調べたい場合は、「ご利用方法について」を押して、「ダウンロードデータご利用までの手順」をご確認ください。</p></div>
+<p class="innerLink"><a class="innerLink" href="/aboutweb/riyou_houhou.html">ご利用方法について</a></p>
+
+<div class="text_box text_big"><p>　（参考）<a href="/faq/faq-category/300/faq0021.html" class="innerLink">ダウンロードしたファイルが文字化けした場合について</a></p></div>
+<div class="text_box text_big"><p>　ダウンロード機能で提供するデータの項目及びデータ形式については、ダウンロードファイルのデータ定義の「リソース定義書」をご確認ください。</p></div>
+<ul class="linkjump clearfix">
+<li><a href="#cmspagelink01">ダウンロードファイルのデータ定義（データの項目名等について）</a></li>
+</ul>
+<div class="text_box_gray_wrapper"><div class="text_box text_big text_box_gray"><p class="text_box_gray_title">全件データのダウンロード</p><p>　前月末日時点における公表している最新情報をダウンロードすることができます。</p></div></div>
+<div class="img_area"><p class="img_align_left"><a class="img_link innerLink_noicon externalLink_noicon innerLink" href="/download/zenken"><img src="/images/bt_zenkendl.png" width="240" height="42" alt="全件データのダウンロード"></a></p></div>
+<div class="text_box_gray_wrapper"><div class="text_box text_big text_box_gray"><p class="text_box_gray_title">差分データのダウンロード</p><p>　日次の更新情報（新規追加、取消失効など）を日別にダウンロードすることができます。</p></div></div>
+<div class="img_area"><p class="img_align_left"><a class="img_link innerLink_noicon externalLink_noicon innerLink" href="/download/sabun"><img src="/images/bt_sabundl.png" width="240" height="42" alt="差分データのダウンロード"></a></p></div>
+<div class="text_box_blue_wrapper"><div class="text_box text_big text_box_blue"><p>全件データ及び差分データについて、氏名等の一部項目について値を削除して提供しています。<br>詳しくはお知らせの<a href="/news/r04/r04news04.html" class="innerLink">「全件データファイル及び差分データファイルの提供再開について（令和５年４月４日更新）」</a>をご覧ください。</p></div></div>
+<div class="h2bg"><div><h2>ダウンロードファイルについて</h2></div></div>
+<div class="h3bg"><div><h3>ファイル形式・文字コード</h3></div></div>
+<div class="text_box text_big"><p>　ファイル形式は、CSV、XML及びJSON形式の３種類、文字コードは「Unicode（JIS第一～第四水準）」に対応しています。</p></div>
+<div class="h3bg"><div><h3>ファイル作成周期</h3></div></div>
+<div class="h4bg"><div><h4>全件データファイル</h4></div></div>
+<div class="text_box text_big"><p>　毎月初日（土曜日、日曜日、祝日、年末年始（12月29日から１月３日）（以下、「休日」という。）を除く）に前月末時点の全件データファイルを作成し、原則として作成日の翌日の午前６時以降に公開しています。<br>　なお、作成日の翌日が休日に該当する場合は、その直後の平日となります。</p></div>
+<div class="h4bg"><div><h4>差分データファイル</h4></div></div>
+<div class="text_box text_big"><p>　日次で差分データファイルを作成し、原則として作成日の翌日の午前６時以降に公開しています（休日を除く）。<br>　また、過去40日分をダウンロードすることができます。</p></div>
+
+<div class="page_top_link_wrapper"><div class="page_top_link_text text_align_right"><a href="#basebg" class="pageTop_link">ページの先頭へ</a></div></div>
+<div class="h2bg"><div><h2>ダウンロードファイル名称及びダウンロードファイルのデータ定義</h2></div></div>
+<div class="h3bg"><div><h3>ダウンロードファイルの命名規則</h3></div></div>
+<div class="text_box text_big"><p>　ダウンロードファイルの命名規則は下表のとおりです。<br>　データファイルのファイル名は、「作成年月日」及び「一連番号」で構成しており、具体的な値については、以下の１から２をご確認ください。<br>　全件データ及び差分データは、それぞれZip形式に圧縮して公表します。<br>　なお、圧縮ファイルの拡張子は、CSV形式、XML形式及びJSON形式に関係なく「.zip」で共通です。<br>　圧縮ファイルには、データファイルのほかに署名検証用のファイルを格納しています。署名検証用ファイルはOpenPGPにより作成しています。国税庁が作成したファイルか確認（検証）する際にご利用してください。</p></div>
+<div class="table_box">
+<table style="width:95%" class="table">
+  <caption>全件データ</caption>
+  <tr>
+    <th scope="row">ダウンロードファイル(CSV)</th>
+    <td><p>(法人の場合)　　　　h_all_作成年月日_csv[_一連番号].zip<br>(人格のない社団等)　j_all_作成年月日_csv[_一連番号].zip<br>(個人の場合)　　　　k_all_作成年月日_csv[_一連番号].zip</p></td>
+  </tr>
+  <tr>
+    <th scope="row">ダウンロードファイル(XML)</th>
+    <td><p>(法人の場合)　　　　h_all_作成年月日_xml[_一連番号].zip<br>(人格のない社団等)　j_all_作成年月日_xml[_一連番号].zip<br>(個人の場合)　　　　k_all_作成年月日_xml[_一連番号].zip</p></td>
+  </tr>
+  <tr>
+    <th scope="row">ダウンロードファイル(JSON)</th>
+    <td><p>(法人の場合)　　　　h_all_作成年月日_json[_一連番号].zip<br>(人格のない社団等)　j_all_作成年月日_json[_一連番号].zip<br>(個人の場合)　　　　k_all_作成年月日_json[_一連番号].zip</p></td>
+  </tr>
+</table><br>
+<div class="text_box txtCaption"></div></div>
+<div class="table_box">
+<table style="width:95%" class="table">
+  <caption>（解凍後ファイル）</caption>
+  <tr>
+    <th scope="row">CSV選択時</th>
+    <td><p>(法人の場合)　　　　h_all_作成年月日[_一連番号].csv<br>(人格のない社団等)　j_all_作成年月日[_一連番号].csv<br>(個人の場合)　　　　k_all_作成年月日[_一連番号].csv</p></td>
+  </tr>
+  <tr>
+    <th scope="row">XML選択時</th>
+    <td><p>(法人の場合)　　　　h_all_作成年月日[_一連番号].xml<br>(人格のない社団等)　j_all_作成年月日[_一連番号].xml<br>(個人の場合)　　　　k_all_作成年月日[_一連番号].xml</p></td>
+  </tr>
+  <tr>
+    <th scope="row">JSON選択時</th>
+    <td><p>(法人の場合)　　　　h_all_作成年月日[_一連番号].json<br>(人格のない社団等)　j_all_作成年月日[_一連番号].json<br>(個人の場合)　　　　k_all_作成年月日[_一連番号].json</p></td>
+  </tr>
+</table><br>
+<div class="text_box txtCaption"></div></div>
+<div class="table_box">
+<table style="width:95%" class="table">
+  <caption>差分データ</caption>
+  <tr>
+    <th scope="row">ダウンロードファイル(CSV)</th>
+    <td>diff_作成年月日_csv[_一連番号].zip</td>
+  </tr>
+  <tr>
+    <th scope="row">ダウンロードファイル(XML)</th>
+    <td>diff_作成年月日_xml[_一連番号].zip</td>
+  </tr>
+  <tr>
+    <th scope="row">ダウンロードファイル(JSON)</th>
+    <td>diff_作成年月日_json[_一連番号].zip</td>
+  </tr>
+</table><br>
+<div class="text_box txtCaption"></div></div>
+<div class="table_box">
+<table style="width:95%" class="table">
+  <caption>（解凍後ファイル）</caption>
+  <tr>
+    <th scope="row">CSV選択時</th>
+    <td>diff_作成年月日[_一連番号].csv</td>
+  </tr>
+  <tr>
+    <th scope="row">XML選択時</th>
+    <td>diff_作成年月日[_一連番号].xml</td>
+  </tr>
+  <tr>
+    <th scope="row">JSON選択時</th>
+    <td>diff_作成年月日[_一連番号].json</td>
+  </tr>
+</table><br>
+<div class="text_box txtCaption"></div></div>
+<div class="h4bg"><div><h4>1.作成年月日</h4></div></div>
+<div class="text_box text_big"><p>　作成年月日は、データの作成日を8桁の半角数字（西暦の年月日）で表示したものです。</p></div>
+<div class="h4bg"><div><h4>2.一連番号</h4></div></div>
+<h5>法人の場合</h5>
+<div class="text_box text_big"><p>　データの分割を行う際に付与する番号になります。<br>　分割時の「一連番号」及び「グループ内都道府県」の組み合わせは下表のとおり。<br>　なお、ダウンロードファイルのファイル名に都道府県コードは表示されませんが、データ内の都道府県コードには、国内所在地に応じて以下の各都道府県コードが表示されます。</p></div>
+<div class="table_box">
+<table style="width:95%" class="table">
+  <tr>
+    <th scope="col">一連番号</th>
+    <th colspan="6" rowspan="1" scope="col">グループ内都道府県、都道府県コード</th>
+  </tr>
+  <tr>
+    <td class="top" colspan="1" rowspan="2" style="width: 16%">001</td>
+    <td class="top" style="width: 14%">01　北海道</td>
+    <td class="top" style="width: 14%">02　青森</td>
+    <td class="top" style="width: 14%">03　岩手</td>
+    <td class="top" style="width: 14%">04　宮城</td>
+    <td class="top" style="width: 14%">05　秋田</td>
+    <td class="top" style="width: 14%">06　山形</td>
+  </tr>
+  <tr>
+    <td class="top">07　福島</td>
+    <td class="top">08　茨城</td>
+    <td class="top">09　栃木</td>
+    <td class="top">10　群馬</td>
+    <td class="top">11　埼玉</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td class="top">002</td>
+    <td class="top">13　東京</td>
+    <td colspan="5" rowspan="1">&nbsp;</td>
+  </tr>
+  <tr>
+    <td class="top" colspan="1" rowspan="2">003</td>
+    <td class="top">12　千葉</td>
+    <td class="top">14　神奈川</td>
+    <td class="top">15　新潟</td>
+    <td class="top">16　富山</td>
+    <td class="top">17　石川</td>
+    <td class="top">18　福井</td>
+  </tr>
+  <tr>
+    <td class="top">19　山梨</td>
+    <td class="top">20　長野</td>
+    <td class="top">21　岐阜</td>
+    <td class="top">22　静岡</td>
+    <td colspan="2" rowspan="1">&nbsp;</td>
+  </tr>
+  <tr>
+    <td class="top">004</td>
+    <td class="top">23　愛知</td>
+    <td class="top">24　三重</td>
+    <td class="top">25　滋賀</td>
+    <td class="top">26　京都</td>
+    <td class="top">27　大阪</td>
+    <td class="top">28　兵庫</td>
+  </tr>
+  <tr>
+    <td class="top" colspan="1" rowspan="4">005</td>
+    <td class="top">29　奈良</td>
+    <td class="top">30　和歌山</td>
+    <td class="top">31　鳥取</td>
+    <td class="top">32　島根</td>
+    <td class="top">33　岡山</td>
+    <td class="top">34　広島</td>
+  </tr>
+  <tr>
+    <td class="top">35　山口</td>
+    <td class="top">36　徳島</td>
+    <td class="top">37　香川</td>
+    <td class="top">38　愛媛</td>
+    <td class="top">39　高知</td>
+    <td class="top">40　福岡</td>
+  </tr>
+  <tr>
+    <td class="top">41　佐賀</td>
+    <td class="top">42　長崎</td>
+    <td class="top">43　熊本</td>
+    <td class="top">44　大分</td>
+    <td class="top">45　宮崎</td>
+    <td class="top">46　鹿児島</td>
+  </tr>
+  <tr>
+    <td class="top">47　沖縄</td>
+    <td class="top">空文字　国外</td>
+    <td colspan="4" rowspan="1">&nbsp;</td>
+  </tr>
+</table><br>
+<div class="text_box txtCaption"></div></div>
+<h5>人格のない社団等の場合</h5>
+<div class="text_box text_big"><p>　圧縮前のファイルサイズが500MBを超過する場合、500MBごとに複数のファイルに分割した上でダウンロードファイルを作成し、ファイル名に「001」から始まるファイル名の一連番号（3桁の半角数字）が追加されます。<br>　なお、ファイルの分割が発生しない場合は、ファイル名に一連番号は付加しません。</p></div>
+<h5>個人の場合</h5>
+<div class="text_box text_big"><p>　圧縮前のファイルサイズが500MBを超過する場合、500MBごとに複数のファイルに分割した上でダウンロードファイルを作成し、ファイル名に「001」から始まるファイル名の一連番号（３桁の半角数字）が追加されます（CSV形式のみ50MBを超過する場合、50MBごとにファイルを分割した上で、ダウンロードファイルを作成し、ファイル名に「001」から始まるファイル名の一連番号（３桁の半角数字）が追加されます）。<br>　なお、ファイルの分割が発生しない場合は、ファイル名に一連番号は付加しません。</p></div>
+
+<div class="page_top_link_wrapper"><div class="page_top_link_text text_align_right"><a href="#basebg" class="pageTop_link">ページの先頭へ</a></div></div>
+<div class="h3bg"><div><h3 id="cmspagelink01">ダウンロードファイルのデータ定義</h3></div></div>
+<div class="text_box text_big"><p>　ダウンロードファイルで提供するデータ項目及びデータ形式等の詳細については、「リソース定義書」をダウンロード（保存）の上、参照してください。<br>　（なお、掲載しているExcelファイルをブラウザ上で開く場合、セキュリティ警告が表示されることがあります。）</p></div>
+<p class="filelink"><img src="/images/spacer.gif" alt="ファイルダウンロード　新規ウインドウで開きます。" width="1" height="1" class="img-guidance"><a class="downloadLink pdf" href="/files/k-resource-dl.pdf" target="_blank" rel="noopener">リソース定義書（PDF形式）（令和６年５月改訂）（PDF：225KB）</a></p>
+<p class="filelink"><img src="/images/spacer.gif" alt="ファイルダウンロード　新規ウインドウで開きます。" width="1" height="1" class="img-guidance"><a class="downloadLink xls" href="/files/k-resource-dl.xlsx" target="_blank" rel="noopener">リソース定義書（EXCEL形式）（令和６年５月改訂）（エクセル：36KB）</a></p>
+
+<div class="h3bg"><div><h3>データ項目内の一連番号の設定（ソート順）</h3></div></div>
+<div class="h4bg"><div><h4>1.全件データ</h4></div></div>
+<div class="text_box text_big"><p>　全件データは、都道府県グループ別の単位で、それぞれ登録番号（昇順）でソートし、「001」から始まる一連番号（半角数字）を設定しています。</p></div>
+<div class="h4bg"><div><h4>2.差分データ</h4></div></div>
+<div class="text_box text_big"><p>　差分データは、登録番号（昇順）でソートし、「001」から始まる一連番号（半角数字）を設定しています。</p></div>
+<div class="h3bg"><div><h3>デジタル署名</h3></div></div>
+<div class="text_box text_big"><p>　ダウンロードファイルには、OpenPGPを用いてデジタル署名を付与しています。署名の検証方法等については、「国税庁適格請求書発行事業者公表サイトのPGP公開鍵について」を参照してください。</p></div>
+<p class="innerLink"><a class="innerLink" href="/download/pgp_key.html">国税庁適格請求書発行事業者公表サイトのPGP公開鍵について</a></p>
+
+
+<div class="page_top_link_wrapper"><div class="page_top_link_text text_align_right"><a href="#basebg" class="pageTop_link">ページの先頭へ</a></div></div>
+<div class="h3bg"><div><h3>サンプルデータの公開</h3></div></div>
+<div class="text_box text_big"><p>　全件データファイル及び差分データファイルで提供するデータ（Web-API機能を利用した場合のレスポンスも含む）のサンプルを公開しています。<br>　サンプルデータの内容及びご利用方法については、「サンプルデータの説明」を参照してください。</p></div>
+<div class="h4bg"><div><h4>サンプルデータの説明（令和３年11月版）</h4></div></div>
+<p class="filelink"><img src="/images/spacer.gif" alt="ファイルダウンロード　新規ウインドウで開きます。" width="1" height="1" class="img-guidance"><a class="downloadLink pdf" href="index.files/k-sample-explain-r0310.pdf" target="_blank" rel="noopener">提供するサンプルデータについて（PDF：984KB）</a></p>
+
+<div class="h4bg"><div><h4>サンプルデータ（令和３年11月版）</h4></div></div>
+<p class="filelink"><img src="/images/spacer.gif" alt="ファイルダウンロード　新規ウインドウで開きます。" width="1" height="1" class="img-guidance"><a class="downloadLink files" href="index.files/k-sample-dl-r0310.ZIP" target="_blank" rel="noopener">サンプルデータ（ファイル：130KB）</a></p>
+
+
+<div class="page_top_link_wrapper"><div class="page_top_link_text text_align_right"><a href="#basebg" class="pageTop_link">ページの先頭へ</a></div></div>
+<p class="innerLink"><a class="innerLink" href="/index.html">ホームに戻る</a></p>
+
+<div class="text_box text_big"><p><img class="img-guidance" width="1" height="1" alt="外部サイトへリンク　新規ウインドウで開きます。" src="/images/spacer.gif" /><a href="http://www.nta.go.jp/taxes/tetsuzuki/shinsei/annai/toiawase/1679/01.htm" class="externalLink newWindow" target="_blank" rel="noopener noreferrer">※PDFファイルが開けない、印刷できないなどの場合はこちらをご覧ください。（外部サイト）</a></p></div>
+
+
+
+
+</div>
+</main>
+</div>
+<div class="pageTop_fixed">
+<a href="#basebg" class="icon_thispagetop2">ページの先頭へ戻る</a>
+</div>
+<div class="foot_menu_all">
+<div class="foot_menu_wp">
+<div class="foot_menu_in">
+<p><a href="/index.html">ホーム</a></p>
+<div class="open_menu">
+</div>
+</div>
+<div class="foot_menu_in">
+<p><a href="/about-toroku/index.html">登録番号とは</a></p>
+<div class="open_menu">
+<ul>
+<li><a href="/about-toroku/touroku_no_info.html">登録番号に関する情報</a></li>
+</ul>
+</div>
+</div>
+<div class="foot_menu_in">
+<p><a href="/download/index.html">公表情報ダウンロード</a></p>
+<div class="open_menu">
+<ul>
+<li><a href="/download/zenken">全件ダウンロード</a></li>
+<li><a href="/download/sabun">差分ダウンロード</a></li>
+</ul>
+</div>
+</div>
+<div class="foot_menu_in">
+<p><a href="/web-api/index.html">Web-API</a></p>
+<div class="open_menu">
+<ul>
+<li><a href="/web-api/riyou_kiyaku.html">Web-API利用規約</a></li>
+<li><a href="/web-api/pre-reg">アプリケーションID発行届出</a></li>
+<li><a href="/web-api/pre-change">アプリケーションID登録情報変更届出</a></li>
+<li><a href="/web-api/pre-stop">アプリケーションID停止届出</a></li>
+<li><a href="/web-api/web-api-download.html">Web-API仕様書ダウンロード</a></li>
+<li><a href="/web-api/contact">Web-APIお問い合わせ</a></li>
+</ul>
+</div>
+</div>
+<div class="foot_menu_in">
+<p><a href="/aboutweb/index.html">ご利用ガイド</a></p>
+<p><a href="/faq/index.html">よくある質問</a></p>
+<p><a href="/news/index.html">お知らせ</a></p>
+<div class="open_menu">
+</div>
+</div>
+</div><!-- foot_menu_wp -->
+</div>
+<!-- /foot menu all -->
+<!-- foot_link -->
+<div class="foot_link">
+<div class="foot_link_wrapper">
+<ul class="foot_link_menu pc_show">
+<li><a href="/aboutweb/index.html">ご利用ガイド</a></li>
+<li><a href="/contact">ご意見・ご要望</a></li>
+<li><a href="/terms-of-use.html">利用規約</a></li>
+<li><a href="/link.html">関連リンク</a></li>
+<li><a href="/privacy-policy.html">個人情報保護方針</a></li>
+<li><a href="/aboutweb/disclosure.html">情報公開</a></li>
+<li><a href="/aboutweb/privacy.html">個人情報保護</a></li>
+<li><a href="/accessibility/index.html">ウェブアクセシビリティ</a></li>
+<li><a href="https://www.nta.go.jp/">国税庁（法人番号7000012050002）</a></li>
+<li><a href="https://www.nta.go.jp/taxes/shiraberu/zeimokubetsu/shohi/keigenzeiritsu/invoice.htm">インボイス制度</a></li>
+</ul>
+
+<ul class="foot_link_menu sp_show">
+<li><a href="/aboutweb/index.html">ご利用ガイド</a></li>
+<li><a href="/terms-of-use.html">利用規約</a></li>
+<li><a href="/link.html">関連リンク</a></li>
+<li><a href="/privacy-policy.html">個人情報保護方針</a></li>
+<li><a href="/aboutweb/disclosure.html">情報公開</a></li>
+<li><a href="/aboutweb/privacy.html">個人情報保護</a></li>
+<li><a href="/accessibility/index.html">ウェブアクセシビリティ</a></li>
+<li><a href="/sitemap.html">サイトマップ</a></li>
+</ul>
+<!-- /foot_link_menu -->
+</div>
+</div>
+<!-- /foot_link -->
+<!-- SP ご意見・ご要望ボタン -->
+<div class="top_requestLink_sp">
+<div class="top_requestLink_sp_wrapper">
+<ul class="top_requestLink_list">
+<li><a href="/contact">ご意見・ご要望</a></li>
+</ul>
+</div>
+</div>
+<!-- switch display mode -->
+<div class="switch_display">
+<div class="switch_display_wrapper">
+<p>表示：</p>
+<ul class="switch_display_links">
+<li><a href="javascript:void(0)" id="swSp">スマートフォン版</a></li>
+<li><a href="javascript:void(0)" id="swPc" class="btnAcv">PC版</a></li>
+</ul>
+</div>
+</div>
+<!-- /foot_link -->
+<!-- copyright -->
+<footer class="copyright">
+<!-- pagetop -->
+<div class="copyright_wrapper">
+<p class="copyright_text pc_show"><small>(c)2021国税庁（法人番号7000012050002）インボイス制度</small></p>
+<p class="copyright_text sp_show"><small><a href="https://www.nta.go.jp/">(c)2021国税庁（法人番号7000012050002）</a><br><a href="https://www.nta.go.jp/taxes/shiraberu/zeimokubetsu/shohi/keigenzeiritsu/invoice.htm">インボイス制度</a></small></p>
+</div>
+</footer>
+</div>
+</div>
+
+</body>
+</html>
