@@ -25,6 +25,8 @@ subject `調査票情報の利用に関するお問い合わせ`.
 
 This inquiry concerns data interpretation and permitted cross-system use, not
 reservation of a physical onsite facility.
+
+The captured official guidance links the consultation form at `/microdata/contact`; the complete submission URL is `https://www.e-stat.go.jp/microdata/contact`.  Select the subject `調査票情報の利用に関するお問い合わせ`.  This package has not been submitted and remains a provider-inquiry specification only.
 == Facts already established from official secondary metadata
 
 The provider metadata expose `SetaiFugo` and `Ichiren` in both systems.

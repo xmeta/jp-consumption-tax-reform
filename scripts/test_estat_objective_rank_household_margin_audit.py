@@ -13,6 +13,8 @@ AUDIT = ROOT / "data/derived/estat_objective_rank_household_margin_identificatio
 ROUTES = ROOT / "data/derived/estat_objective_rank_restricted_route_audit_2024.csv"
 VARIABLES = ROOT / "data/derived/estat_objective_rank_restricted_variable_map_2024.csv"
 CATALOG = ROOT / "data/source_catalog.csv"
+PROVIDER_INQUIRY = ROOT / "research/vat_policy_integration/nsfcw_2024_provider_inquiry.adoc"
+ONSITE_GUIDANCE = ROOT / "data/raw/objective_rank/emicro_onsite_use_guidance.html"
 
 
 def read(path):
@@ -25,6 +27,9 @@ audit = {r["metric_id"]: r for r in read(AUDIT)}
 catalog = {r["source_id"]: r for r in read(CATALOG)}
 routes = {r["route_id"]: r for r in read(ROUTES)}
 variables = read(VARIABLES)
+
+provider_inquiry = PROVIDER_INQUIRY.read_text(encoding="utf-8")
+onsite_guidance = ONSITE_GUIDANCE.read_text(encoding="utf-8", errors="ignore")
 
 assert len(rows) == 7
 assert audit["examined_official_source_families"]["value"] == "7"
@@ -92,6 +97,12 @@ expected_hashes = {
 for sid, expected in expected_hashes.items():
     assert catalog[sid]["sha256"] == expected
     assert (ROOT / catalog[sid]["raw_file"]).exists()
+
+assert "/microdata/contact" in onsite_guidance
+assert "https://www.e-stat.go.jp/microdata/contact" in provider_inquiry
+assert "調査票情報の利用に関するお問い合わせ" in provider_inquiry
+assert "has not been submitted" in provider_inquiry
+assert "not provider confirmation" in provider_inquiry.lower()
 
 # Guard the tempting invalid mappings explicitly.
 assert not any(

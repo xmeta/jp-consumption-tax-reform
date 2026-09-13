@@ -7,6 +7,12 @@ This document freezes the minimum provider inquiry for Issue #111. It is *not* e
 
 The repository keeps the 2023 invoice-system causal effect `NOT_IDENTIFIED` until a provider-approved pre-treatment network, repeated outcomes, deterministic linkage and design diagnostics are available.
 
+== Official submission route
+
+As of 2026-09-13, the current TDB-CAREE site is active and its data-use qualification page states that researchers at other universities may participate through the prescribed approval process.  The official inquiry address shown by TDB-CAREE is `caree@econ.hit-u.ac.jp`; the qualification page is `https://www7.econ.hit-u.ac.jp/tdb-caree/qualification/`.
+
+The qualification page still contains an older sentence referring to a contract horizon through March 2024.  Therefore the address and page are used only as the current *submission route*; current eligibility, data coverage and linkage permission remain questions for the provider.  This inquiry has not been submitted from this repository.
+
 == Why this is the primary route
 
 Koizumi, _Cascades of Tax Policy through Production Networks: Evidence from Japan_ (RIETI 24-E-025; later Southern Economic Journal, 2026) demonstrates the relevant architecture with TDB data: supplier-customer identities, firm sales/employment/capital/location/fiscal-year information, a network frozen before the policy, and DID / doubly robust DID estimation. The paper concerns a different investment-tax policy and supplies no 2023 invoice treatment effect.
