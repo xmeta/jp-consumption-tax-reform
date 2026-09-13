@@ -18,6 +18,7 @@ LIT_AUDIT=ROOT/"research/vat_compliance_productivity/invoice_2023_causal_literat
 INVOICE_DESIGN=ROOT/"research/vat_compliance_productivity/invoice_2023_natural_experiment_design.csv"
 TDB_ACCESS=ROOT/"research/vat_compliance_productivity/tdb_caree_invoice_causal_access_audit.csv"
 PREANALYSIS_PLAN=ROOT/"research/vat_compliance_productivity/invoice_2023_preanalysis_plan.adoc"
+TDB_INQUIRY=ROOT/"research/vat_compliance_productivity/tdb_caree_invoice_causal_inquiry.adoc"
 
 def read(p):
     with p.open(encoding="utf-8",newline="") as f: return list(csv.DictReader(f))
@@ -48,6 +49,7 @@ invoice_lit=read(LIT_AUDIT)
 invoice_design=read(INVOICE_DESIGN)
 tdb_access=read(TDB_ACCESS)
 preanalysis_plan=PREANALYSIS_PLAN.read_text(encoding="utf-8")
+tdb_inquiry=TDB_INQUIRY.read_text(encoding="utf-8")
 
 assert len(rows)==1200
 assert all(r["identification_status"]=="MODEL_CONTINGENT_STRESS_TEST_ONLY" for r in rows)
@@ -214,6 +216,12 @@ assert by_route["BSBSA_PLUS_PUBLIC_INVOICE_WITHOUT_NETWORK"]["identification_val
 for r in tdb_access:
     ids=[x for x in r["source_ids"].split(";") if x]
     assert ids and set(ids) <= sources, (r["route_id"], set(ids)-sources)
+
+assert "caree@econ.hit-u.ac.jp" in tdb_inquiry
+assert "https://www7.econ.hit-u.ac.jp/tdb-caree/qualification/" in tdb_inquiry
+assert "has not been submitted" in tdb_inquiry
+assert "submission route" in tdb_inquiry.lower()
+assert "current eligibility" in tdb_inquiry.lower()
 
 for required in (
     "supplier-customer graph observed no later than 2023-09-30",
