@@ -1,5 +1,5 @@
 = 識別ゲート付き政策評価契約
-:revdate: 2026-09-12
+:revdate: 2026-09-14
 
 == 正本となる評価順序
 
@@ -40,84 +40,134 @@ break-even boundary のためだけに使う。`NOT_IDENTIFIED` は空値のま�
 
 == Step 1: viability / safety constraints
 
-規範上の第一条件は「毎年の実質成長率が0%より高い」ことである。
-厳密不等号は数値solverで直接扱わず、評価前に stem:[\epsilon_g>0] を固定して
+人口減少それ自体を政策失敗としないため、headline の growth viability は
+総実質GDPではなく、一人当たり実質GDPの成長で定義する。
+人口を stem:[N_t]、実質GDPを stem:[Y_t] とすると
 
 [stem]
 ++++
-g_t(p,\theta) \ge \epsilon_g\quad\forall t
+y_{pc,t}=Y_t/N_t,
+\qquad
+1+g_{pc,t}=\frac{1+g_{Y,t}}{1+g_{N,t}}.
 ++++
 
-とする。これが stem:[g_t>0] の運用上のviability conditionである。
-`epsilon_g` を結果を見て後付けしてはならない。
+近似 stem:[g_{pc}\approx g_Y-g_N] は説明用に限り、機械検証では上の exact identity を使う。
+`GDP/N` は population-normalized production/capacity であり、welfare そのものでも、
+政策誘発の出生・死亡・移住効果を「除去した値」でもない。
 
-深い不確実性を持つ場合、policy-usable な identified set があるときだけ
+厳密不等号は solver で直接扱わず、評価前に stem:[\epsilon_{pc}>0] を固定して
 
 [stem]
 ++++
-\inf_{\theta\in\Theta}g_t(p,\theta)\ge\epsilon_g
+g_{pc,t}(p,\theta)\ge\epsilon_{pc}\quad\forall t
 ++++
 
-の robust constraint を使える。そうでなければ viability は `UNRESOLVED` であり、
-大きな penalty を置いて通過扱いにはしない。
+を headline viability とする。policy-usable な identified set が無ければ
+viability は `UNRESOLVED` であり、大きな penalty や0補完で通過扱いにしない。
 
-インフレ、利払い・債務負担、JGB市場機能、為替は core welfare objective ではなく
-constraint family / state / side effect として扱う。閾値を使う場合は評価前に明示する。
-現行の incremental debt/JGB sensitivity は、この constraint family を検討する材料であり、
-「債務を小さくするほど常に厚生が高い」という Pareto objective にはしない。
+総実質GDPは削除しない。市場規模、税源、debt-service capacity 等の aggregate
+macro/fiscal safety は別の事前規定 guardrail として扱う。したがって
+人口減少だけを理由に welfare failure と判定しない一方、aggregate capacity の
+危険域も無視しない。インフレ、利払い・債務負担、JGB市場機能、為替も
+constraint family / state / side effect として維持する。
+
+政策 stem:[p] と baseline/counterfactual stem:[b] は区別する。observed/baseline
+population path、policy-scenario population path、per-capita normalization を別々に保存し、
+人口を固定した反実仮想を使う場合は sensitivity として identification status を付ける。
 
 == Step 2: multi-objective outcomes
 
-viability を満たす政策について、次の6目的を別々に保持する。
+headline Pareto frontier は次の6目的だけを required とする。単一の固定重みで相殺しない。
 
-=== 累積実質成長
+=== Population-normalized production
 
-正成長の水準を評価するため
-
-[stem]
-++++
-C_Y(p)=\sum_t \beta^{t-1}\log(1+g_t(p))
-++++
-
-を最大化する。これにより、全期間0.1%成長と3%成長を同じ評価にしない。
-`beta` は時間選好を含む規範パラメータなので、使用時は事前に明示する。
-
-=== 成長率低下
-
-従来の良い性質は独立目的として維持する。
+年次評価期間 stem:[t=1,\ldots,T] は事前に固定し、headline では追加の時間選好を入れず
+stem:[\beta_{pc}=1] とする。
 
 [stem]
 ++++
-D_g(p)=\sum_t \beta^{t-1}(g_{t-1}(p)-g_t(p))_+^2
+C_{pc}(p)=\sum_t\log(1+g_{pc,t}(p))
 ++++
 
-を最小化する。`C_Y` と `D_g` は相殺して一つの loss にしない。
-
-=== 景気後退診断 `R_g`
-
-負の実質成長がどの程度発生したかを監査する downside diagnostic として
+を最大化し、
 
 [stem]
 ++++
-R_g(p)=\sum_t I(g_t(p)<0)|g_t(p)|
+D_{pc}(p)=\sum_t(g_{pc,t-1}(p)-g_{pc,t}(p))_+^2
 ++++
 
-を保持する。正本の viability condition は各期の stem:[g_t>0] なので、
-viability を満たす政策では `R_g=0` となる。このため `R_g` を第7の core Pareto objective として
-二重計上せず、viability が `UNRESOLVED` の場合や観測系列の妥当性確認に使う。
-`data/macro/real_gdp_quarterly.csv` に対する履歴診断は規範的な割引率を選ばず `beta=1` で計算する。
+を最小化する。これにより、正の一人当たり成長の水準と「成長率をできるだけ
+低下させない」という規範を分離する。別の stem:[\beta] を使う場合は headline を
+見た後に選ばず、事前登録した sensitivity とする。
 
-=== 分配・貧困
+=== Household material welfare
 
-次をそれぞれ独立に最小化する。
+中央値実質等価可処分所得を独立 objective とする。headline の scalar comparison は、
+事前指定した評価時点 stem:[T] における baseline 比 log level effect
 
-* `P_2`: 二乗貧困ギャップ (FGT2)。core objective として維持する。
-* `G_Y`: 所得Gini。
-* `G_W`: 資産Gini。
-* `Gap_Age`: 世代間格差。
+[stem]
+++++
+\Delta\log M_T^{real}(p)=\log M_T^{real}(p)-\log M_T^{real}(b)
+++++
 
-これらを成長と固定重みで相殺しない。特に深刻な貧困悪化を高いGDP成長だけで
-帳消しにするような scalarization は headline rule としない。
+を最大化する。headline estimand は person-weighted とし、各世帯の OECD-new
+annual disposable income を世帯人員の平方根で除した等価可処分所得を各世帯員へ
+割り当て、その person distribution の median を使う。disposable-income definition、
+equivalence scale（stem:[\sqrt{household\ size}]）、person weighting、reference year、
+評価時点を固定して provenance を残す。既存NSFCW Table 7-171 の published
+all-household median はこの person-weighted headline estimand の代替にせず diagnostic とする。
+
+実質化は
+
+[stem]
+++++
+M_t^{real}=M_t^{nominal}/P_t^{household}
+++++
+
+とし、VATが家計購買力へ価格経路で作用し得るため、GDP deflator を
+`P_household` として機械的に流用しない。household consumption deflator / CPI family の
+採用系列を結果を見る前に指定する。観測頻度を超える線形補間で policy effect を作らない。
+
+=== Labour productivity
+
+総労働時間を stem:[H_t] として
+
+[stem]
+++++
+q_t=Y_t/H_t,
+\qquad
+u_t=H_t/N_t,
+\qquad
+y_{pc,t}=q_tu_t
+++++
+
+を保持する。headline objective は、事前指定した stem:[T] における
+stem:[\Delta\log q_T(p)] を最大化する。`GDP/hour` は labour-productivity metric であり、
+composition、資本深化、技術、産業構成を含み得るため「労働者自身の効率」と同一視しない。
+
+VAT/インボイス制度について `compliance hours released -> productive reallocation -> GDP/hour`
+を主張するには、`c_VAT`, `rho`, `a_alloc` 等の bridge がその scientific state を通過する必要がある。
+歴史的 `GDP/hour` が再現できるだけでは VAT の causal productivity effect は識別されない。
+
+=== Distribution and deep poverty
+
+* `G_Y`: 所得Giniを最小化する。
+* `P_2`: headline では contemporaneous median equivalized disposable income の50%を
+  poverty line とする relative FGT2 を最小化する。
+
+poverty line 自体の変化による意味の違いを隠さないため、baseline poverty line を
+household purchasing-power terms で固定した `FGT2_anchored_real` を別 sensitivity/dashboard とする。
+両系列を同じ estimand として混ぜない。
+
+資産Gini `G_W` と世代間格差 `Gap_Age` は削除せず `EXTENDED_OBJECTIVE` として保存するが、
+objective proliferation を避けるため現行 headline Pareto frontier の required set には入れない。
+将来 headline へ昇格させる場合は contract を明示的に改訂する。
+
+=== Aggregate growth diagnostics
+
+Issue #121 の aggregate `C_Y`, `D_g`, `R_g` は引き続き計算・保存する。ただし
+`C_pc`, `D_pc` と同名・同義にせず、aggregate capacity / recession / decomposition の
+診断に限定する。`R_g` を headline Pareto objective として二重計上しない。
 
 == Step 3: robust Pareto frontier
 
@@ -156,9 +206,18 @@ p^*=\arg\min_p\max_{\theta\in\Theta,\,w\in W}Regret(p;\theta,w).
 
 == Dashboard metrics
 
-objective と diagnostic dashboard は分離する。`R_g`、`P_0`、`P_1`、lower-decile real income、
-growth-incidence profile、overall real GDP level 等は重要な dashboard 指標になり得るが、
-追加しただけで core Pareto objective にはならない。
+objective と diagnostic dashboard は分離する。aggregate `C_Y`, `D_g`, `R_g`、overall real GDP、
+`hours/person`、`FGT2_anchored_real`、`P_0`、`P_1`、lower-decile real income、
+growth-incidence profile 等は重要だが、追加しただけで headline Pareto objective にはならない。
+
+GDPはquarterly、所得分布はannualまたはそれ以下など頻度が異なり得る。observed、interpolated、
+nowcast、model-imputed を区別し、missing years を便宜的に補間して `READY` にしない。
+
+2023--2024の observed historical semantic regression は
+`data/derived/population_welfare_historical_diagnostics.csv` に保存する。これは aggregate
+real GDP が低下しても人口減少がより大きければ exact per-capita growth が正になり得ること、
+`GDP/person = GDP/hour * hours/person`、GDP deflator と household CPI の分離、公開集計だけでは
+FGT2を点識別できないことを再現する。全行 `optimizer_usable=false` であり causal policy effect ではない。
 
 == 政策手段との分離
 
@@ -192,10 +251,12 @@ current-basket tax-content envelope 等の既存診断は引き続き有用だ�
 
 * direct optimizer input は `maturity=READY` かつ `policy_usable=true` に限る。
 * `SENSITIVITY_ONLY` / `PARTIALLY_IDENTIFIED` component は direct point input にしない。
-* core Pareto objectives は `C_Y`, `D_g`, FGT2, income Gini, wealth Gini,
-  intergenerational gap の6つに固定する。
+* headline Pareto objectives は `C_pc`, `D_pc`, median real equivalized disposable income,
+  real GDP/hour, income Gini, relative FGT2 の6つに固定する。
+* wealth Gini / intergenerational gap は `EXTENDED_OBJECTIVE` として保存し、headline-required にしない。
+* aggregate `C_Y`, `D_g`, `R_g` と overall real GDP は dashboard/guardrail 側に残す。
 * inflation / debt service / JGB market function / exchange rate をPareto目的へ混入させない。
-* dashboard と core objectives を分離する。
+* dashboard、extended objectives、headline objectives を機械的に分離する。
 * minimax regret は明示的な normative secondary rule としてのみ存在できる。
 
 この契約変更自体は「最適な消費税率」を決めず、科学的stateも昇格させない。

@@ -9,6 +9,14 @@ OUT = ROOT / "data/derived_catalog.csv"
 
 SPECS = [
     (
+        "POPULATION-WELFARE-HISTORICAL-DIAGNOSTICS-2024",
+        "population_welfare_historical_diagnostics.csv",
+        "scripts/build_population_welfare_historical_diagnostics.py",
+        "STAT-POP-EST-2023;STAT-POP-EST-2024;ESRI-SNA-2024-REAL-GDP-CY;ESRI-SNA-2024-NOMINAL-GDP-CY;ESRI-SNA-2024-GDP-DEFLATOR-CY;ESRI-SNA-2024-EMPLOYMENT-HOURS-CY;ESRI-HOURS-WORKED-EMPLOYED-2024;ESTAT-CPI-2024-NATIONAL-ALL-ITEMS;ESTAT-7171-2024;MHLW-REDISTRIBUTION-2023;MHLW-CSLC-2022-POVERTY",
+        "DERIVED_OBSERVED_POPULATION_WELFARE_PRODUCTIVITY_DIAGNOSTICS_NOT_CAUSAL",
+        "Observed historical diagnostics for Issue 131: exact per-capita growth identity, GDP/person = GDP/hour x hours/person decomposition, CPI-deflated published household median, person-unit equivalized-disposable-income Gini, poverty-line/rate anchors, and explicit non-identification of FGT2 from aggregate publication; no row is optimizer-usable or a causal VAT effect",
+    ),
+    (
         "ESTAT-OBJECTIVE-RANK-HOUSEHOLD-MARGIN-SOURCE-MATRIX-2024",
         "estat_objective_rank_household_margin_source_matrix_2024.csv",
         "scripts/build_estat_objective_rank_household_margin_audit.py",

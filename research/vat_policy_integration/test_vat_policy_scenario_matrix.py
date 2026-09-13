@@ -46,6 +46,10 @@ blank_numeric = [
     "overall_real_gdp_level_effect",
     "annual_real_growth_rate_effect",
     "growth_decline_penalty_effect",
+    "cumulative_per_capita_real_growth_effect",
+    "per_capita_growth_decline_penalty_effect",
+    "median_real_equivalized_disposable_income_effect",
+    "real_gdp_per_hour_effect",
     "income_gini_effect",
     "wealth_gini_effect",
     "intergenerational_gap_effect",
@@ -90,6 +94,10 @@ for col in (
     "real_disposable_income_by_decile_effect_status",
 ):
     assert all(r[col] == distribution_status for r in rows), col
+assert all(r["cumulative_per_capita_real_growth_effect_status"] == "NOT_IDENTIFIED_POLICY_SPECIFIC_REAL_GDP_AND_POPULATION_PATH_REQUIRED" for r in rows)
+assert all(r["per_capita_growth_decline_penalty_effect_status"] == "NOT_EVALUABLE_WITHOUT_FULL_PER_CAPITA_GROWTH_PATH" for r in rows)
+assert all(r["median_real_equivalized_disposable_income_effect_status"] == "NOT_IDENTIFIED_OBJECTIVE_RANK_INCIDENCE_AND_HOUSEHOLD_PRICE_PATH_REQUIRED" for r in rows)
+assert all(r["real_gdp_per_hour_effect_status"] == "NOT_IDENTIFIED_FULL_POLICY_OUTPUT_AND_TOTAL_HOURS_PATH_REQUIRED" for r in rows)
 assert all(r["inflation_effect_status"] == inflation_status for r in rows)
 assert all(r["historical_pass_through_evidence_status"] == historical_pass_through_status for r in rows)
 assert all(r["policy_pass_through_parameter"] == "" for r in rows)
@@ -166,6 +174,10 @@ assert all(
 )
 assert all(summary[sid]["income_gini_status"] == distribution_status for sid in expected)
 assert all(summary[sid]["fgt2_status"] == distribution_status for sid in expected)
+assert all(summary[sid]["cumulative_per_capita_real_growth_status"] == "NOT_IDENTIFIED_POLICY_SPECIFIC_REAL_GDP_AND_POPULATION_PATH_REQUIRED" for sid in expected)
+assert all(summary[sid]["per_capita_growth_decline_penalty_status"] == "NOT_EVALUABLE_WITHOUT_FULL_PER_CAPITA_GROWTH_PATH" for sid in expected)
+assert all(summary[sid]["median_real_equivalized_disposable_income_status"] == "NOT_IDENTIFIED_OBJECTIVE_RANK_INCIDENCE_AND_HOUSEHOLD_PRICE_PATH_REQUIRED" for sid in expected)
+assert all(summary[sid]["real_gdp_per_hour_status"] == "NOT_IDENTIFIED_FULL_POLICY_OUTPUT_AND_TOTAL_HOURS_PATH_REQUIRED" for sid in expected)
 assert all(
     summary[sid]["real_disposable_income_by_decile_status"] == distribution_status
     for sid in expected

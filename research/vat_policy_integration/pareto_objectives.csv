@@ -1,7 +1,7 @@
 objective_id,objective_label,direction,required_for_headline,value_min_column,value_max_column,status_column,admissibility_note
-cumulative_real_growth,Discounted cumulative real growth,maximize,true,,,annual_real_growth_status,Requires an identified full annual growth path for C_Y=sum beta^(t-1)log(1+g_t); institutional-only GDP effects are not substitutes.
-growth_decline_penalty,Growth-rate decline penalty,minimize,true,,,growth_decline_penalty_status,Requires a full annual growth path and preserves D_g as a separate objective.
-fgt2_effect,Squared poverty-gap FGT2 effect,minimize,true,,,fgt2_status,Objective-rank household incidence is required; rate-only tax-content envelopes are not welfare effects.
+cumulative_per_capita_real_growth,Cumulative per-capita real growth,maximize,true,,,cumulative_per_capita_real_growth_status,Requires an identified policy-specific annual real-GDP and population path; historical decomposition is not a causal policy effect.
+per_capita_growth_decline_penalty,Per-capita growth-rate decline penalty,minimize,true,,,per_capita_growth_decline_penalty_status,Requires an identified full per-capita annual growth path and remains separate from aggregate D_g.
+median_real_equivalized_disposable_income_effect,Median real equivalized disposable-income effect,maximize,true,,,median_real_equivalized_disposable_income_status,Requires objective-rank household incidence and a pre-specified household purchasing-power deflator; annual-income deciles are not a substitute.
+real_gdp_per_hour_effect,Real GDP per hour effect,maximize,true,,,real_gdp_per_hour_status,Requires an identified full-policy output-and-hours bridge; VAT compliance-hour sensitivities alone are not a macro productivity effect.
 income_gini_effect,Income Gini effect,minimize,true,,,income_gini_status,Objective-rank household incidence is required; annual-income deciles are not a substitute.
-wealth_gini_effect,Wealth Gini effect,minimize,true,,,wealth_gini_status,Requires a household wealth-policy bridge.
-intergenerational_gap_effect,Intergenerational inequality effect,minimize,true,,,intergenerational_gap_status,Requires an identified intergenerational outcome bridge.
+fgt2_effect,Relative squared poverty-gap FGT2 effect,minimize,true,,,fgt2_status,Headline FGT2 uses the pre-specified contemporaneous relative poverty line; objective-rank household incidence is required.

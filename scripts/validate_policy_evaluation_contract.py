@@ -13,7 +13,8 @@ PARETO = "research/vat_policy_integration/pareto_objectives.csv"
 
 LAYERS = {
     "IDENTIFICATION_GATE", "VIABILITY_CONSTRAINT", "PARETO_OBJECTIVE",
-    "CONSTRAINT_FAMILY", "DASHBOARD", "SECONDARY_DECISION_RULE",
+    "EXTENDED_OBJECTIVE", "CONSTRAINT_FAMILY", "DASHBOARD",
+    "SECONDARY_DECISION_RULE",
 }
 DIRECTIONS = {"none", "maximize", "minimize", "gte", "within_range"}
 BOOL = {"true", "false"}
@@ -23,8 +24,16 @@ CONTRACT_FIELDS = [
     "normative_status", "notes",
 ]
 CORE_OBJECTIVES = {
-    "cumulative_real_growth", "growth_decline_penalty", "fgt2_effect",
-    "income_gini_effect", "wealth_gini_effect", "intergenerational_gap_effect",
+    "cumulative_per_capita_real_growth",
+    "per_capita_growth_decline_penalty",
+    "median_real_equivalized_disposable_income_effect",
+    "real_gdp_per_hour_effect",
+    "income_gini_effect", "fgt2_effect",
+}
+EXTENDED_OBJECTIVES = {"wealth_gini_effect", "intergenerational_gap_effect"}
+AGGREGATE_DIAGNOSTICS = {
+    "overall_real_gdp_level", "cumulative_real_growth",
+    "growth_decline_penalty", "aggregate_recession_downside",
 }
 CONSTRAINT_FAMILIES = {
     "inflation_guardrail", "debt_service_guardrail",
@@ -98,11 +107,11 @@ def validate(root: Path = ROOT) -> list[str]:
     elif "maturity=READY" not in gate.get("formula_or_rule", "") or "policy_usable=true" not in gate.get("formula_or_rule", ""):
         errors.append("identification_gate must require maturity=READY and policy_usable=true")
 
-    viability = by_id.get("annual_real_growth_viability")
+    viability = by_id.get("per_capita_real_growth_viability")
     if viability is None or viability.get("layer") != "VIABILITY_CONSTRAINT":
-        errors.append("annual_real_growth_viability constraint is required")
-    elif "g_t>=epsilon_g" not in viability.get("formula_or_rule", "") or "epsilon_g>0" not in viability.get("formula_or_rule", ""):
-        errors.append("annual_real_growth_viability must encode strict positive growth via pre-specified epsilon_g>0")
+        errors.append("per_capita_real_growth_viability constraint is required")
+    elif "g_pc,t>=epsilon_pc" not in viability.get("formula_or_rule", "") or "epsilon_pc>0" not in viability.get("formula_or_rule", ""):
+        errors.append("per_capita_real_growth_viability must encode strict positive per-capita growth via pre-specified epsilon_pc>0")
 
     objective_ids = {row["item_id"] for row in rows if row.get("layer") == "PARETO_OBJECTIVE"}
     if objective_ids != CORE_OBJECTIVES:
@@ -113,6 +122,30 @@ def validate(root: Path = ROOT) -> list[str]:
         row = by_id.get(objective_id)
         if row and row.get("required_for_headline", "").lower() != "true":
             errors.append(f"{objective_id}: core Pareto objective must be headline-required")
+
+    median = by_id.get("median_real_equivalized_disposable_income_effect")
+    if median is not None:
+        rule = median.get("formula_or_rule", "")
+        if "person-weighted median" not in rule or "sqrt(household_size)" not in rule:
+            errors.append("median real income objective must specify person weighting and sqrt household-size equivalence")
+        if "household price deflator" not in rule:
+            errors.append("median real income objective must pre-specify a household price deflator")
+
+    productivity = by_id.get("real_gdp_per_hour_effect")
+    if productivity is not None and "Y/H" not in productivity.get("formula_or_rule", ""):
+        errors.append("real_gdp_per_hour_effect must encode Y/H productivity")
+
+    extended_ids = {row["item_id"] for row in rows if row.get("layer") == "EXTENDED_OBJECTIVE"}
+    if extended_ids != EXTENDED_OBJECTIVES:
+        errors.append("extended-objective contract mismatch")
+    for objective_id in EXTENDED_OBJECTIVES:
+        row = by_id.get(objective_id)
+        if row and row.get("required_for_headline", "").lower() != "false":
+            errors.append(f"{objective_id}: extended objective must not be headline-required")
+
+    dashboard_ids = {row["item_id"] for row in rows if row.get("layer") == "DASHBOARD"}
+    if not AGGREGATE_DIAGNOSTICS <= dashboard_ids:
+        errors.append("aggregate C_Y/D_g/R_g and GDP level must remain dashboard diagnostics")
 
     constraint_ids = {row["item_id"] for row in rows if row.get("layer") == "CONSTRAINT_FAMILY"}
     if constraint_ids != CONSTRAINT_FAMILIES:
@@ -131,7 +164,6 @@ def validate(root: Path = ROOT) -> list[str]:
     elif regret.get("normative_status") != "EXPLICIT_NORMATIVE_SECONDARY_RULE":
         errors.append("minimax_regret must be explicitly normative")
 
-    dashboard_ids = {row["item_id"] for row in rows if row.get("layer") == "DASHBOARD"}
     if not dashboard_ids:
         errors.append("at least one dashboard metric is required")
     if dashboard_ids & CORE_OBJECTIVES:

@@ -71,9 +71,18 @@ shutil.rmtree(root)
 root = fixture()
 mutate_csv(
     root / "data/policy_evaluation_contract.csv",
-    "item_id", "annual_real_growth_viability", "formula_or_rule", "g_t>=0 for every t",
+    "item_id", "per_capita_real_growth_viability", "formula_or_rule", "g_pc,t>=0 for every t",
 )
-require_error(validate(root), "strict positive growth")
+require_error(validate(root), "strict positive per-capita growth")
+shutil.rmtree(root)
+
+root = fixture()
+mutate_csv(
+    root / "data/policy_evaluation_contract.csv",
+    "item_id", "median_real_equivalized_disposable_income_effect", "formula_or_rule",
+    "Delta_log_M_real_T; household price deflator pre-specified",
+)
+require_error(validate(root), "person weighting and sqrt household-size equivalence")
 shutil.rmtree(root)
 
 root = fixture()
