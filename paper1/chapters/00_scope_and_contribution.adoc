@@ -1,9 +1,9 @@
 == Scope and contribution
 
 This paper studies a narrower question than the companion consumption-tax
-policy project: what can be learned about Japanese personal income-tax
-marginal incidence from public aggregate data when filer microdata are not
-available for a fully reproducible analysis?
+policy project: what can be learned about reconstructing Japanese personal
+income-tax marginal rates from public aggregate data when filer microdata are
+not available for a fully reproducible analysis?
 
 The paper does not estimate an optimal VAT rate, an optimal macro policy mix,
 or a structural GDP effect.  Those questions require additional behavioral and

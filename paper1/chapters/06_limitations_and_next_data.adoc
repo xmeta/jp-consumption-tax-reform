@@ -2,7 +2,7 @@
 
 The principal limitation is not numerical optimization. It is the mismatch
 between public household aggregates and the filer-level population needed for
-marginal income-tax incidence.
+filer-level marginal-rate identification.
 
 === Untracked frame mismatch
 

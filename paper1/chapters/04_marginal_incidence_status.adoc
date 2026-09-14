@@ -1,4 +1,4 @@
-== Marginal-incidence identification status
+== Marginal-rate reconstruction and identification status
 
 The stage-1 result does not by itself identify the filer-level statutory
 marginal-tax-rate distribution.
@@ -43,8 +43,8 @@ The construction still does not observe:
 * the true joint distribution of taxable income and statutory marginal rates.
 
 Accordingly, the generated pseudo-filer MTRs may parameterize ETI or stress-test
-scenarios, but they cannot supply the headline identified incidence result and
-cannot be treated as point-identified inputs to optimal-policy conclusions.
+scenarios, but they cannot supply a headline identified filer-level MTR result
+and cannot be treated as point-identified inputs to optimal-policy conclusions.
 
 The historical V6 file `18_income_tax_pseudofiler_mtr.py` remains a separate
 `RECOVERY_GAP`.  The status above refers to the new independently
@@ -423,7 +423,7 @@ P1-C17 records this pre-specified one-sided result as a reproduced
 model-contingent compatibility diagnostic.  P1-C13 through P1-C16 remain
 distinct results, and P1-C06 remains unreproduced.
 
-=== Static liability versus behavioral incidence
+=== Static liability accounting versus behavioral incidence
 
 Published/imputed F71561 income-tax construction moments can support
 static descriptive accounting sensitivities under explicitly stated official
@@ -432,7 +432,7 @@ household tax liabilities.  This limited descriptive use is the meaning of
 `READY_STATIC_ONLY`; it does not establish tax-concept identity with the 2026
 pseudo-filer calculation.
 
-Static liability incidence does not identify:
+Static liability accounting does not identify:
 
 * filer selection under a policy change;
 * taxable-income elasticities;
