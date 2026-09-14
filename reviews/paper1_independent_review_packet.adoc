@@ -54,8 +54,9 @@ following.
   budgets/compatibility parameters rather than estimated rank maps, confidence
   regions, or causal bounds?  Are v3/v4 symmetric-gap and v5 one-sided results
   interpreted as answers to different model questions?
-. *Marginal incidence*: Does any text imply that the pseudo-filer construction is
-  an observed or point-identified filer MTR distribution?  Are sensitivity-only,
+. *Marginal-rate reconstruction*: Does any text imply that the pseudo-filer
+  construction is an observed or point-identified filer MTR distribution?  Are
+  sensitivity-only,
   recovery-only, and `NOT_READY` results excluded from headline identification
   claims?
 . *Missing same-person linkage*: Does the absence of public same-person

@@ -25,7 +25,7 @@ as a sufficient statistic only under additional assumptions; see
 
 That distinction motivates our refusal to infer behavioral net revenue from a
 static liability reconstruction.  The present paper concerns identification of
-incidence inputs, not estimation of ETI from aggregate household tables.
+marginal-rate inputs, not estimation of ETI from aggregate household tables.
 
 === Tax-benefit microsimulation
 

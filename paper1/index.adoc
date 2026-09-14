@@ -1,4 +1,4 @@
-= Identification and Robustness Frontiers for Personal Income-Tax Marginal Incidence from Public Aggregate Data: Evidence from Japan
+= Reconstructing Personal Income-Tax Marginal Rates from Public Aggregate Data: Identification Limits and Robustness Frontiers in Japan
 :doctype: article
 :lang: en
 :toc: left
@@ -11,10 +11,11 @@ include::data/stage1_attributes.adoc[]
 
 [abstract]
 --
-We study what can be learned about Japanese personal income-tax marginal
-incidence from public aggregate data when filer microdata are unavailable for
-a reproducible analysis. Rather than mapping household aggregates directly
-into a synthetic filer distribution, we separate population selection,
+We study the identification limits of reconstructing Japanese personal
+income-tax marginal rates from public aggregate data when filer microdata are
+unavailable for a reproducible analysis. Rather than mapping household
+aggregates directly into a synthetic filer distribution, we separate population
+selection,
 tax-liability information, and marginal-rate assumptions.
 
 For the first-stage filing bridge, the 2024 survey mother population is treated
@@ -65,7 +66,7 @@ diagnostics: the models answer different compatibility questions.  All of
 these results remain model-contingent rather than an estimated rank map,
 confidence region, causal bound, or identified filer MTR.
 
-Other marginal-incidence quantities remain sensitivity-only, recovery-only, or
+Other marginal-rate quantities remain sensitivity-only, recovery-only, or
 not identified. A machine-readable claim registry prevents calibrated or
 unreproduced results from being presented as reproduced identified facts.
 --
