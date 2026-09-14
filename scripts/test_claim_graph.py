@@ -54,7 +54,7 @@ def claim(cid: str, product: str = "paper1") -> dict[str, str]:
 def build_fixture(root: Path) -> None:
     (root / "source.txt").write_text("source\n", encoding="utf-8")
     (root / "evidence.txt").write_text("evidence\n", encoding="utf-8")
-    claims = [claim(f"P1-C{i:02d}") for i in range(1, 18)]
+    claims = [claim(f"P1-C{i:02d}") for i in range(1, 19)]
     claims[2]["component_id"] = "income_tax_pseudofiler"
     claims[2]["identification_status"] = "SENSITIVITY_ONLY"
     claims[2]["empirical_status"] = "SENSITIVITY_ONLY_REPRODUCED"

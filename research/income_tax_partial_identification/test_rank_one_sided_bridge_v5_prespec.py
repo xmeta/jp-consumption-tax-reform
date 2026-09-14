@@ -55,7 +55,7 @@ assert cfg["paper1_claim_before_ci"] == "false"
 assert cfg["paper1_claim_before_separate_promotion"] == "false"
 
 claims = [r for r in read_csv(CLAIMS) if r["product_id"] == "paper1"]
-assert len(claims) == 17
+assert len(claims) == 18
 by_id = {r["claim_id"]: r for r in claims}
 assert by_id["P1-C17"]["empirical_status"] == (
     "MODEL_CONTINGENT_RANK_ONE_SIDED_BRIDGE_REPRODUCED"

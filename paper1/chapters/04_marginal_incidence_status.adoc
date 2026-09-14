@@ -66,6 +66,44 @@ aggregate liability moment exactly with one nuisance scale.  Such cases are
 reported as nearest-achievable sensitivity diagnostics; the tax-law
 discontinuity is not smoothed away to improve fit.
 
+=== Same-year 2024 tax-law benchmark
+
+The main pseudo-filer sensitivity above combines 2024 aggregate inputs with
+2026 statutory law.  To separate that design choice from the other bridge
+uncertainties, Issue 133 adds a companion same-year benchmark that reruns the
+same construction and the unchanged v2--v5 LP machinery under 2024 statutory
+law.  The 2024 parameter set is generated from repository-tracked NTA filing
+guide pages with source locators and SHA-256 values; the 2026-law run is also
+recomputed as a regression control.
+
+.Tax-law-year sensitivity with 2024 aggregates
+[%header,format=csv]
+|===
+include::{docdir}/data/tax_law_year_benchmark_table.csv[]
+|===
+
+The law-year contrast is material.  Under the central pseudo-filer scenario,
+the equal-decile mean modeled-positive share is 55.5332% under 2024 law versus
+45.0780% under 2026 law.  The v2 minimum symmetric discrepancy rises from
+14.9016 to 23.0907 percentage points when the same 2024 aggregates are evaluated
+under 2024 rather than 2026 law.  At `Delta=0.25`, the analogous v3 minimum
+rises from 8.6825 to 16.5159 percentage points.  The fixed v4 grid has 45/104
+feasible points under 2024 law rather than 70/104, and its minimum feasible grid
+`epsilon` at `Delta=0.25` moves from 10.0 to 17.5 percentage points.
+
+The v5 directional conclusion is qualitatively stable: `eta*=0` remains
+feasible already at `Delta=0` under both tax-law years.  Its conditional MTR
+envelope is not invariant, however: the taxable-income-weighted envelope at
+`Delta=0` changes from 10.0884--12.8680% under 2026 law to
+9.3559--11.5847% under 2024 law.
+
+This comparison is a law-year *sensitivity*, not an identified additive
+decomposition.  The nuisance income scale is recalibrated and the population,
+tax-event, tax-unit, and rank mismatches remain unresolved.  Consequently the
+primary 2026-law v2--v4 symmetric discrepancies cannot be interpreted as pure
+bridge, rank, frame, or measurement mismatch.  P1-C18 records this limitation
+separately while leaving the frozen P1-C14--P1-C17 results intact.
+
 === Pre-specified replacement transport-relaxation frontier
 
 The historical V6 restricted-LP constraint chain remains unreproduced.  We

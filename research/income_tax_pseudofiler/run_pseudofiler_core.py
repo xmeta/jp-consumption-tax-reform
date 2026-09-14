@@ -26,14 +26,10 @@ HERE = Path(__file__).resolve().parent
 ROOT = HERE.parents[1]
 sys.path.insert(0, str(HERE))
 
-from statutory_2026 import (  # noqa: E402
-    employment_income_2026,
-    basic_deduction_2026,
-    ordinary_income_tax_rate_2026,
-    ordinary_national_income_tax_continuous_proxy_2026,
-    ordinary_national_income_tax_2026,
-    public_pension_misc_income_2026,
-)
+import statutory_2026 as statutory_2026  # noqa: E402
+import statutory_2024 as statutory_2024  # noqa: E402
+
+STATUTORY_LAWS = {2024: statutory_2024, 2026: statutory_2026}
 
 LEAF = ROOT / "data/derived/income_tax_household_type_leaf_deciles_2024.csv"
 BRIDGE = ROOT / "data/derived/income_tax_bridge_deciles_2024.csv"
@@ -341,7 +337,7 @@ def new_unit(label, gross_wage=0.0, pre_basic=0.0):
     }
 
 
-def build_units(row, size, scenario, contrib_eq_yen, senior_share):
+def build_units(row, size, scenario, contrib_eq_yen, senior_share, law=statutory_2026):
     _, _, business_mode, other_split, social_mode, pension_mode = SCENARIOS[scenario]
     scale = math.sqrt(size)
 
@@ -350,15 +346,15 @@ def build_units(row, size, scenario, contrib_eq_yen, senior_share):
     other_total = leaf_num(row, "other_member_wage_kY") * 1000.0 * scale
 
     units = [
-        new_unit("head", head_w, employment_income_2026(head_w)),
-        new_unit("spouse", spouse_w, employment_income_2026(spouse_w)),
+        new_unit("head", head_w, law.employment_income(head_w)),
+        new_unit("spouse", spouse_w, law.employment_income(spouse_w)),
     ]
     if other_total > 0:
         n = max(1, int(other_split))
         for i in range(n):
             w = other_total / n
             units.append(new_unit(
-                f"other_{i+1}", w, employment_income_2026(w)
+                f"other_{i+1}", w, law.employment_income(w)
             ))
 
     business = leaf_num(row, "business_kY") * 1000.0 * scale
@@ -381,7 +377,7 @@ def build_units(row, size, scenario, contrib_eq_yen, senior_share):
     elif pension_mode == "merge_to_head_by_household_head_age":
         if pension_total > 0:
             head65 = row["household_type"].startswith("02")
-            units[0]["pre_basic"] += public_pension_misc_income_2026(
+            units[0]["pre_basic"] += law.public_pension_misc_income(
                 pension_total, head65, units[0]["pre_basic"]
             )
     elif pension_mode == "separate_by_F71551_age_share":
@@ -392,13 +388,13 @@ def build_units(row, size, scenario, contrib_eq_yen, senior_share):
                 units.append(new_unit(
                     "pension_separate_u65",
                     0.0,
-                    public_pension_misc_income_2026(pu65, False, 0.0),
+                    law.public_pension_misc_income(pu65, False, 0.0),
                 ))
             if p65 > 0:
                 units.append(new_unit(
                     "pension_separate_65p",
                     0.0,
-                    public_pension_misc_income_2026(p65, True, 0.0),
+                    law.public_pension_misc_income(p65, True, 0.0),
                 ))
     elif pension_mode in {
         "member_split_by_F71911_age_share",
@@ -412,7 +408,7 @@ def build_units(row, size, scenario, contrib_eq_yen, senior_share):
 
             if head_p > 0:
                 head65 = row["household_type"].startswith("02")
-                units[0]["pre_basic"] += public_pension_misc_income_2026(
+                units[0]["pre_basic"] += law.public_pension_misc_income(
                     head_p, head65, units[0]["pre_basic"]
                 )
 
@@ -429,13 +425,13 @@ def build_units(row, size, scenario, contrib_eq_yen, senior_share):
                     units.append(new_unit(
                         label + "_u65",
                         0.0,
-                        public_pension_misc_income_2026(pu65, False, 0.0),
+                        law.public_pension_misc_income(pu65, False, 0.0),
                     ))
                 if p65 > 0:
                     units.append(new_unit(
                         label + "_65p",
                         0.0,
-                        public_pension_misc_income_2026(p65, True, 0.0),
+                        law.public_pension_misc_income(p65, True, 0.0),
                     ))
     else:
         raise ValueError(pension_mode)
@@ -461,25 +457,25 @@ def build_units(row, size, scenario, contrib_eq_yen, senior_share):
 
 
 def household_tax(row, size, nuisance_scale, scenario, contrib_eq_yen,
-                  senior_share, return_units=False):
+                  senior_share, return_units=False, law=statutory_2026):
     units, eq_scale = build_units(
-        row, size, scenario, contrib_eq_yen, senior_share
+        row, size, scenario, contrib_eq_yen, senior_share, law
     )
     out_units = []
     total_calibration_tax = 0.0
     for u in units:
         calibrated_income = u["pre_basic"] * nuisance_scale
-        basic = basic_deduction_2026(calibrated_income)
+        basic = law.basic_deduction(calibrated_income)
         family = (
             nta_salary_dependent_proxy(u["gross_wage"])
             if scenario == "nta_salary_dependents"
             else 0.0
         )
         taxable = max(calibrated_income - basic - u["social"] - family, 0.0)
-        calibration_tax = ordinary_national_income_tax_continuous_proxy_2026(taxable)
-        tax = ordinary_national_income_tax_2026(taxable)
+        calibration_tax = law.ordinary_national_income_tax_continuous_proxy(taxable)
+        tax = law.ordinary_national_income_tax(taxable)
         rounded_taxable = math.floor(taxable / 1000.0) * 1000.0
-        mtr = ordinary_income_tax_rate_2026(rounded_taxable)
+        mtr = law.ordinary_income_tax_rate(rounded_taxable)
         total_calibration_tax += calibration_tax
         if return_units:
             v = dict(u)
@@ -507,12 +503,12 @@ def published_imputed_decile_tax(rows):
     ])
 
 
-def predicted_decile_tax(rows, size_map, nuisance, scenario, contrib, senior):
+def predicted_decile_tax(rows, size_map, nuisance, scenario, contrib, senior, law=statutory_2026):
     return weighted_mean([
         (
             household_tax(
                 r, size_map[r["household_type"]], nuisance,
-                scenario, contrib, senior
+                scenario, contrib, senior, law=law
             ),
             leaf_num(r, "household_count_approx"),
         )
@@ -520,7 +516,7 @@ def predicted_decile_tax(rows, size_map, nuisance, scenario, contrib, senior):
     ])
 
 
-def predicted_decile_exact_tax(rows, size_map, nuisance, scenario, contrib, senior):
+def predicted_decile_exact_tax(rows, size_map, nuisance, scenario, contrib, senior, law=statutory_2026):
     pairs = []
     for r in rows:
         weight = leaf_num(r, "household_count_approx")
@@ -528,7 +524,7 @@ def predicted_decile_exact_tax(rows, size_map, nuisance, scenario, contrib, seni
             continue
         size = size_map[r["household_type"]]
         _, units = household_tax(
-            r, size, nuisance, scenario, contrib, senior, return_units=True
+            r, size, nuisance, scenario, contrib, senior, return_units=True, law=law
         )
         exact_eq_kY = (
             sum(u["income_tax"] for u in units)
@@ -539,13 +535,13 @@ def predicted_decile_exact_tax(rows, size_map, nuisance, scenario, contrib, seni
     return weighted_mean(pairs)
 
 
-def calibrate(rows, size_map, scenario, contrib, senior, target):
+def calibrate(rows, size_map, scenario, contrib, senior, target, law=statutory_2026):
     lo, hi = 0.0, 8.0
-    plo = predicted_decile_tax(rows, size_map, lo, scenario, contrib, senior)
-    phi = predicted_decile_tax(rows, size_map, hi, scenario, contrib, senior)
+    plo = predicted_decile_tax(rows, size_map, lo, scenario, contrib, senior, law)
+    phi = predicted_decile_tax(rows, size_map, hi, scenario, contrib, senior, law)
     while phi < target and hi < 64:
         hi *= 2
-        phi = predicted_decile_tax(rows, size_map, hi, scenario, contrib, senior)
+        phi = predicted_decile_tax(rows, size_map, hi, scenario, contrib, senior, law)
     if target < plo - 1e-9 or target > phi + 1e-9:
         raise RuntimeError(
             f"target {target} outside calibration range [{plo},{phi}]"
@@ -559,7 +555,7 @@ def calibrate(rows, size_map, scenario, contrib, senior, target):
     for _ in range(90):
         mid = (lo + hi) / 2.0
         pmid = predicted_decile_tax(
-            rows, size_map, mid, scenario, contrib, senior
+            rows, size_map, mid, scenario, contrib, senior, law
         )
         cand = (abs(pmid - target), mid, pmid)
         if cand < best:
@@ -572,7 +568,7 @@ def calibrate(rows, size_map, scenario, contrib, senior, target):
     # Also evaluate both sides of the final discontinuity.
     for x in [lo, hi, (lo + hi) / 2.0]:
         px = predicted_decile_tax(
-            rows, size_map, x, scenario, contrib, senior
+            rows, size_map, x, scenario, contrib, senior, law
         )
         cand = (abs(px - target), x, px)
         if cand < best:
@@ -598,7 +594,10 @@ def worker_group(htype):
     return "unmapped"
 
 
-def build_outputs():
+def build_outputs(tax_law_year=2026):
+    if tax_law_year not in STATUTORY_LAWS:
+        raise ValueError(f"unsupported tax law year: {tax_law_year}")
+    law = STATUTORY_LAWS[tax_law_year]
     leaf = read_csv(LEAF)
     bridge = {int(r["decile"]): r for r in read_csv(BRIDGE)}
     inst = {int(r["decile"]): r for r in read_csv(INST)}
@@ -673,10 +672,10 @@ def build_outputs():
                 rows, bridge[d], scenario
             )
             nuisance, fit = calibrate(
-                rows, size_map, scenario, contrib, senior, target_tax
+                rows, size_map, scenario, contrib, senior, target_tax, law
             )
             exact_fit = predicted_decile_exact_tax(
-                rows, size_map, nuisance, scenario, contrib, senior
+                rows, size_map, nuisance, scenario, contrib, senior, law
             )
             calibration.append({
                 "decile": d,
@@ -695,7 +694,7 @@ def build_outputs():
                 "other_member_wage_split": other_split,
                 "social_deduction_proxy": social_mode,
                 "family_deduction_proxy": (
-                    "NTA2024 dependent composition x 2026 statutory amounts"
+                    f"NTA2024 dependent composition x {tax_law_year} statutory amounts"
                     if scenario == "nta_salary_dependents"
                     else "none/absorbed in nuisance"
                 ),
@@ -706,10 +705,10 @@ def build_outputs():
                     "moment-matching scale; not behavioral or causal",
                 "model_status": STATUS,
                 "input_source_ids": INPUT_SOURCE_IDS,
-                "statutory_parameter_artifact": STATUTORY_ARTIFACT,
+                "statutory_parameter_artifact": f"data/derived/income_tax_{tax_law_year}_statutory_parameters.csv",
                 "calibration_target_concept": CALIBRATION_TARGET_CONCEPT,
                 "calibration_target_source_id": CALIBRATION_TARGET_SOURCE_ID,
-                "modeled_tax_concept": MODELED_TAX_CONCEPT,
+                "modeled_tax_concept": f"{tax_law_year}_ORDINARY_NATIONAL_INCOME_TAX_EXCLUDING_RECONSTRUCTION_SPECIAL_INCOME_TAX",
                 "target_model_alignment_status": TARGET_MODEL_ALIGNMENT,
                 "target_numeric_reconciliation_status": TARGET_NUMERIC_RECONCILIATION,
             })
@@ -721,7 +720,7 @@ def build_outputs():
                     continue
                 _, units = household_tax(
                     r, size_map[r["household_type"]], nuisance,
-                    scenario, contrib, senior, return_units=True
+                    scenario, contrib, senior, return_units=True, law=law
                 )
                 for u in units:
                     if u["pre_basic"] <= 0 and u["income_tax"] <= 0:
@@ -820,10 +819,10 @@ def build_outputs():
             "model_status": STATUS,
             "scenario_count": len(rows),
             "input_source_ids": INPUT_SOURCE_IDS,
-            "statutory_parameter_artifact": STATUTORY_ARTIFACT,
+            "statutory_parameter_artifact": f"data/derived/income_tax_{tax_law_year}_statutory_parameters.csv",
             "calibration_target_concept": CALIBRATION_TARGET_CONCEPT,
             "calibration_target_source_id": CALIBRATION_TARGET_SOURCE_ID,
-            "modeled_tax_concept": MODELED_TAX_CONCEPT,
+            "modeled_tax_concept": f"{tax_law_year}_ORDINARY_NATIONAL_INCOME_TAX_EXCLUDING_RECONSTRUCTION_SPECIAL_INCOME_TAX",
             "target_model_alignment_status": TARGET_MODEL_ALIGNMENT,
             "target_numeric_reconciliation_status": TARGET_NUMERIC_RECONCILIATION,
         })
@@ -841,7 +840,7 @@ def render(rows):
 
 
 def specs():
-    cal, scen, summ, groups = build_outputs()
+    cal, scen, summ, groups = build_outputs(2026)
     return [
         (OUT_CAL, cal),
         (OUT_SCEN, scen),
