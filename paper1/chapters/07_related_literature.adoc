@@ -47,11 +47,89 @@ identified when redistribution of the underlying microdata is unavailable and
 the reproducible researcher instead observes public aggregate tables from
 different populations.
 
-=== Aggregate-data reconstruction
+=== Aggregate data, ecological bounds, and data combination
 
-The paper therefore treats synthetic reconstruction as a selection device,
-not an identification result.  Maximum-entropy or calibrated pseudo-unit
-solutions may be useful for sensitivity analysis, but conclusions are promoted
-to identified claims only when they hold over the admissible population set or
-when an explicit robustness frontier states the dependence on unresolved
-quantities.
+The closest methodological literature asks what can be learned when the joint
+microdata needed for an individual-level estimand are unavailable.  Classical
+ecological bounds, beginning with <<duncan-davis1953>>, constrain latent cell
+counts using observed aggregate margins rather than selecting a unique
+individual-level table.  More recently, <<moon2026>> obtains partial-identification
+bounds from marginal aggregate distributions by optimization.  Our maintained
+problem differs in one important respect: the Japanese household and tax
+tables can differ in population, unit, income concept, and tax event, so a
+within-population ecological bound cannot by itself bridge the sources.
+
+Statistical matching and data-combination methods instead study variables split
+across sources with no common record.  <<dorazio-dizio-scanu2006>> surveys the
+identifying role of matching assumptions.  In econometrics, <<fan-sherman-shum2014>>
+derive sharp bounds rather than forcing point identification when outcomes and
+covariates are observed in separate data sets, while
+<<dhaultfoeuille-gaillac-maurel2025>> characterize a sharp identified set for an
+unlinkable-data problem using optimal transport.  These papers motivate the
+separation between an observed margin and an unobserved coupling.  Our
+rank-bridge calculations do not statistically match records, estimate a latent
+linkage, or claim sharpness for the full Japanese tax problem; they range over
+explicitly restricted couplings as model-contingent sensitivity analyses.
+
+=== Couplings, transport, and dependence uncertainty
+
+Optimal transport provides a natural language for distributions with fixed
+margins and admissible couplings; see <<galichon2016>> for the economic
+formulation.  The v3-v5 matrix stem:[T_{dq}] is exactly such a finite coupling:
+both margins are fixed at 0.1 because each source has been reduced to ten equal
+rank bins.  The cost
+
+[stem]
+++++
+W(T)=\sum_{d,q}|d-q|T_{dq}
+++++
+
+is average absolute displacement in decile-index units, and the model restricts
+stem:[W(T)\le\Delta].  Crucially, stem:[\Delta] is not estimated from linked
+records, not a confidence radius, and not an empirically calibrated Wasserstein
+radius.  It is a pre-specified sensitivity budget.  Nor is this a partial-
+transport model: all normalized population mass is coupled.  The analysis also
+does not select the cost-minimizing coupling as the estimated truth; it
+optimizes the reported functional over all couplings satisfying the stated
+budget and the additional tax constraints.
+
+This logic is related to Fréchet--Hoeffding reasoning: fixed marginals alone
+leave dependence unresolved, and sharp generic bounds range over compatible
+joint distributions; see <<nelsen-et-al2004>>.  Our transport sets add
+rank-displacement and tax-system restrictions, but population and concept
+mismatch prevent us from relabeling their endpoints as generic
+Fréchet--Hoeffding bounds or as statistically sharp identified sets.
+
+=== Calibration, entropy, and synthetic populations
+
+There is also a distinct literature that chooses one joint reconstruction
+consistent with aggregate controls.  <<ireland-kullback1968>> studies
+contingency tables with fixed marginals using a relative-entropy criterion.
+<<deville-sarndal1992>> develops survey calibration weights satisfying known
+auxiliary totals, and <<beckman-baggerly-mckay1996>> uses iterative proportional
+fitting plus seed microdata to construct synthetic populations.  These methods are valuable when
+a representative synthetic population is the target, but matching the margins
+does not make the selected joint distribution uniquely identified by those
+margins.
+
+The paper therefore treats maximum-entropy, calibrated pseudo-unit, and
+pseudo-filer constructions as reference selections or sensitivity devices, not
+as identification results.  Conclusions are promoted to identified claims only
+when they hold over the maintained admissible population set; otherwise the
+selection rule or robustness budget remains visible in the claim.  This is also
+why we do not invoke generic distributionally robust optimization as a separate
+identification argument: the uncertainty sets here are purpose-built feasible
+couplings and tax constraints, not probability-distance balls around an
+estimated joint distribution.
+
+=== Methodological boundary
+
+The paper does not claim a new optimal-transport algorithm, statistical-matching
+estimator, ecological-inference estimator, or synthetic-population generator.
+Its methodological contribution is narrower: it combines public Japanese
+aggregate tax and household tables while keeping population mismatch,
+dependence uncertainty, reconstruction selection, and rank-transport
+sensitivity as distinct layers with different evidence statuses.  In
+particular, stem:[T_{dq}] is an unobserved coupling variable and
+stem:[\Delta] indexes a sensitivity family; neither is evidence of record
+linkage or of the true cross-source rank correspondence.

@@ -17,6 +17,26 @@
 
 - [[[ohno2023]]] Ohno, Taro. 2023. “Development of Microsimulation and Burden Structure of Personal Income Taxation.” _Public Policy Review_ 19(4): 1–38. DOI: 10.57520/prippr.19-4-2.
 
+- [[[duncan-davis1953]]] Duncan, Otis Dudley, and Beverly Davis. 1953. “An Alternative to Ecological Correlation.” _American Sociological Review_ 18(6): 665–666. DOI: 10.2307/2088122.
+
+- [[[moon2026]]] Moon, Sarah. 2026. “Partial Identification of Individual-Level Parameters Using Aggregate Data in a Nonparametric Model.” _Econometric Reviews_ 45(5): 681–702. DOI: 10.1080/07474938.2025.2604682.
+
+- [[[dorazio-dizio-scanu2006]]] D'Orazio, Marcello, Marco Di Zio, and Mauro Scanu. 2006. _Statistical Matching: Theory and Practice_. Chichester: Wiley. DOI: 10.1002/0470023554.
+
+- [[[fan-sherman-shum2014]]] Fan, Yanqin, Robert Sherman, and Matthew Shum. 2014. “Identifying Treatment Effects Under Data Combination.” _Econometrica_ 82(2): 811–822. DOI: 10.3982/ECTA10601.
+
+- [[[dhaultfoeuille-gaillac-maurel2025]]] D'Haultfœuille, Xavier, Christophe Gaillac, and Arnaud Maurel. 2025. “Partially Linear Models under Data Combination.” _Review of Economic Studies_ 92(1): 238–267. DOI: 10.1093/restud/rdae022.
+
+- [[[galichon2016]]] Galichon, Alfred. 2016. _Optimal Transport Methods in Economics_. Princeton: Princeton University Press. DOI: 10.23943/princeton/9780691172767.001.0001.
+
+- [[[nelsen-et-al2004]]] Nelsen, Roger B., José Juan Quesada Molina, José Antonio Rodríguez Lallena, and Manuel Úbeda Flores. 2004. “Best-Possible Bounds on Sets of Bivariate Distribution Functions.” _Journal of Multivariate Analysis_ 90(2): 348–358. DOI: 10.1016/j.jmva.2003.09.002.
+
+- [[[ireland-kullback1968]]] Ireland, C. T., and S. Kullback. 1968. “Contingency Tables with Given Marginals.” _Biometrika_ 55(1): 179–188. DOI: 10.1093/biomet/55.1.179.
+
+- [[[deville-sarndal1992]]] Deville, Jean-Claude, and Carl-Erik Särndal. 1992. “Calibration Estimators in Survey Sampling.” _Journal of the American Statistical Association_ 87(418): 376–382. DOI: 10.1080/01621459.1992.10475217.
+
+- [[[beckman-baggerly-mckay1996]]] Beckman, Richard J., Keith A. Baggerly, and Michael D. McKay. 1996. “Creating Synthetic Baseline Populations.” _Transportation Research Part A: Policy and Practice_ 30(6): 415–429. DOI: 10.1016/0965-8564(96)00004-3.
+
 == Official statistical sources
 
 * Statistics Bureau of Japan. 2024. _National Survey of Family Income, Consumption and Wealth: Sample Design_. https://www.stat.go.jp/data/zenkokukakei/2024/pdf/hyohon2024.pdf
