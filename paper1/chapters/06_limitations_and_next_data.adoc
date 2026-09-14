@@ -31,6 +31,50 @@ statutory-report information records concerning payments to non-residents
 supplied to foreign tax authorities in FY2024, but that is a record count rather
 than a deduplicated final-return-person bound and is not used to set stem:[C_U].
 
+=== Sampling and imputation uncertainty
+
+The LP and sensitivity results condition on the realized published aggregate
+vector.  Their width represents structural/model-contingent uncertainty under
+the stated constraints; it does not incorporate sampling confidence coverage
+for F71561 or a probability distribution for the official income-tax
+imputation.
+
+The official 2024 NSFCW sample-design document reports design-stage expected
+standard-error rates for broad aggregates.  For example, the nationwide
+all-household annual-income forecast is 0.5%.  The document explicitly describes
+these as forecasts based on the prior survey and says achieved standard-error
+rates are to be calculated by bootstrap and published later.  The 0.5% figure
+is therefore not an achieved standard error for the detailed F71561
+household-type x decile x imputed-income-tax moments used here.
+
+The official income/assets estimation document supplies point-estimation
+weights, calibration and propensity-score integration, while the annual
+non-consumption-expenditure document supplies the household tax-construction
+rules.  In the official materials audited as of 2026-09-14, we do not have a
+cell-compatible achieved variance/covariance or replicate-weight release for
+these F71561 inputs, and the tax-construction method provides no stochastic
+imputation-error distribution.
+
+.Sampling-aware robustness status
+[cols="2,2,3",options="header"]
+|===
+| Layer | Status | Current treatment
+| Structural bridge uncertainty | represented | LP/frontier/sensitivity analysis conditional on published moments
+| Broad NSFCW sampling precision | design forecast only | diagnostic; not transferred to F71561 tax cells
+| Detailed F71561 sampling uncertainty | `NOT_AVAILABLE_FOR_CURRENT_LP` | no synthetic stem:[M^-,M^+] interval
+| F71561 tax-imputation uncertainty | `NOT_AVAILABLE_FOR_CURRENT_LP` | official assumptions documented; no invented probability interval
+| Suppression / rounding | separately documented where possible | not relabelled as sampling uncertainty
+|===
+
+Accordingly, we do not perturb every F71561 tax cell by an arbitrary percentage
+and call the result sampling-aware.  Such a perturbation would be a researcher-
+chosen stress test, not a confidence construction.  The evidence and reopen
+conditions are recorded in
+`research/income_tax_partial_identification/sampling_imputation_uncertainty_audit.adoc`.
+If compatible achieved standard errors plus a defensible joint uncertainty
+construction, covariance information, or replicate weights become available,
+statistical propagation can be added without changing the structural taxonomy.
+
 === Data that would materially tighten identification
 
 The highest-value additional data would be:

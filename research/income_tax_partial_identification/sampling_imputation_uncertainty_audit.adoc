@@ -1,0 +1,146 @@
+= Sampling and imputation uncertainty audit
+:toc:
+:stem: latexmath
+
+== Status
+
+----
+STATISTICAL_INTERVALS_NOT_AVAILABLE_FOR_CURRENT_F71561_LP
+----
+
+Audit date: 2026-09-14.
+
+This audit separates three objects that must not be conflated:
+
+. structural uncertainty from unobserved population/rank/tax-unit bridges;
+. sampling uncertainty in published NSFCW aggregate moments; and
+. model uncertainty in the official household-level construction of annual tax.
+
+The current Paper 1 LPs address the first object conditionally on the realized
+published aggregate vector. They do not provide sampling confidence regions.
+
+== Official sources retained
+
+The audit uses four Statistics Bureau sources retained in `data/raw`:
+
+* `STAT-F71561-DESIGN`: 2024 NSFCW sample design;
+* `STAT-NSFCW-2024-INCOME-ASSET-ESTIMATION-METHOD`: point-estimation and
+  weighting method for income/assets results;
+* `STAT-NSFCW-2024-ANNUAL-NONCONSUMPTION-METHOD`: construction of annual
+  tax/social-insurance amounts; and
+* `STAT-NSFCW-2024-RESULTS-PAGE-20260914`: official results-page snapshot on
+  the audit date.
+
+== Sampling evidence
+
+The sample-design document describes a stratified multi-stage survey. Its
+Table 11 reports *design-stage expected* standard-error rates. The document
+states that these forecasts scale the prior survey's standard-error rates by
+the square root of the ratio of prior/current approximate aggregated household
+counts and assume unchanged coefficients of variation.
+
+For nationwide total households, the Table 11 forecast for annual income is
+0.5%. This number is not an achieved standard error for F71561's detailed
+household-type x equivalized-income-decile x income-tax cells.
+
+The same document states that achieved standard-error rates are to be computed
+using the bootstrap and published later. The current official results-page
+snapshot lists the sample-design, result-estimation, usage-note and annual
+non-consumption-estimation materials, but no achieved bootstrap standard-error,
+variance/covariance or replicate-weight release corresponding to the detailed
+F71561 moments used by Paper 1.
+
+The result-estimation document supplies the point estimator and aggregation
+weights. It documents adjustment factors, propensity-score integration for the
+monitor survey and household-distribution calibration. It does not supply a
+cell-compatible variance/covariance matrix or replicate weights for the Paper 1
+F71561 inputs.
+
+== Tax-imputation evidence
+
+The annual non-consumption-expenditure method states that annual tax and social
+insurance are not collected directly on the annual-income/assets questionnaire.
+They are constructed household by household from survey items.
+
+For income tax, the construction applies income deductions and the tax schedule,
+estimates family/dependency relationships, omits some deductions when the
+survey lacks the necessary information, and applies stated assumptions to
+interest/dividend taxation. The method does not publish a probability model,
+standard error or confidence interval for this tax construction.
+
+Consequently, the published F71561 income-tax cells are official imputed
+statistics, but their imputation uncertainty cannot currently be translated
+into statistically justified cell intervals from the public materials retained
+here.
+
+== Sampling-aware robustness status
+
+[cols="2,3,2,3",options="header"]
+|===
+| Uncertainty layer | Available official evidence | Current status | Paper 1 treatment
+
+| Structural bridge / latent linkage
+| Aggregate source definitions and explicit model restrictions
+| Represented conditionally
+| LP/frontier/sensitivity analysis; not a statistical confidence region
+
+| Broad NSFCW sampling precision
+| Table 11 design-stage forecasts; nationwide total-household annual-income forecast = 0.5%
+| Diagnostic only
+| Not transferred to detailed F71561 cells
+
+| Detailed F71561 sampling uncertainty
+| Point-estimation weights are public; compatible achieved cell SE/covariance or replicate weights are not in the audited release
+| `NOT_AVAILABLE_FOR_CURRENT_LP`
+| No synthetic interval moments are created
+
+| F71561 income-tax imputation uncertainty
+| Official deterministic construction method and assumptions
+| `NOT_AVAILABLE_FOR_CURRENT_LP`
+| No probability distribution or confidence interval is invented
+
+| Suppression / rounding
+| Published symbol and confidentiality rules
+| Partly bounded/documented separately
+| Kept distinct from sampling uncertainty
+|===
+
+== Decision on interval moments
+
+An interval restriction such as
+
+[stem]
+++++
+M^- \le M \le M^+
+++++
+
+would be appropriate only if its bounds can be tied to uncertainty information
+that is compatible with the same published moments. The current public evidence
+does not support such bounds for the detailed F71561 inputs used by the LP.
+
+In particular, applying the broad 0.5% annual-income design forecast to tax
+cells would silently assume both portability across estimands and an
+unpublished dependence structure. An arbitrary percentage sensitivity would be
+a researcher-chosen stress test, not sampling inference. Paper 1 therefore does
+not label such a perturbation as sampling-aware and does not recompute its LP
+under a pseudo-confidence band.
+
+== Reopen condition
+
+Reopen statistical propagation when an official release or authorized
+microdata route provides enough information to map sampling uncertainty to the
+same moments used by the LP, for example:
+
+* achieved cell-compatible standard errors with a justified joint construction;
+* a covariance estimator adequate for simultaneous moment uncertainty; or
+* replicate weights / bootstrap replicates from which the required joint
+  uncertainty can be reconstructed.
+
+For tax-imputation uncertainty, a defensible propagation additionally requires
+an official or otherwise justified stochastic model/sensitivity specification
+for the imputation inputs rather than treating the published construction as a
+random draw without evidence.
+
+Until then, the paper reports structural/model-contingent envelopes conditional
+on the realized published moments and explicitly leaves statistical confidence
+coverage unclaimed.

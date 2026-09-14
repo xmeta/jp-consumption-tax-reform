@@ -77,6 +77,12 @@ def main():
     by_id = {r["claim_id"]: r for r in rows}
     if by_id["P1-C03"]["status"] != "SENSITIVITY_ONLY_REPRODUCED":
         errors.append("P1-C03 pseudo-filer must remain reproduced sensitivity-only")
+    c03_forbidden = by_id["P1-C03"]["forbidden_claim"].lower()
+    c04_forbidden = by_id["P1-C04"]["forbidden_claim"].lower()
+    if "sampling uncertainty" not in c03_forbidden:
+        errors.append("P1-C03 must forbid treating pseudo-filer envelopes as sampling-confidence propagation")
+    if "sampling-error-free" not in c04_forbidden:
+        errors.append("P1-C04 must forbid treating published F71561 moments as sampling-error-free")
     if by_id["P1-C05"]["status"] != "EXTERNAL_STAGE2_DIAGNOSTIC_REPRODUCED":
         errors.append("P1-C05 must remain an external reproduced diagnostic")
     if by_id["P1-C06"]["status"] != "DOCUMENTED_PRIOR_RUN_NOT_REPRODUCED":
@@ -121,6 +127,8 @@ def main():
             errors.append(f"{cid} must forbid one-event measurement-error interpretation")
         if "申告納税額" not in by_id[cid]["forbidden_claim"]:
             errors.append(f"{cid} must explicitly distinguish the NTA self-assessed-balance event")
+        if "sampling uncertainty" not in forbidden:
+            errors.append(f"{cid} must forbid sampling-confidence interpretation of conditional envelopes")
     if "pure rank mismatch" not in by_id["P1-C15"]["forbidden_claim"].lower():
         errors.append("P1-C15 must forbid interpreting the 8.6825pp floor as pure rank mismatch")
     c17_forbidden = by_id["P1-C17"]["forbidden_claim"].lower()
@@ -167,6 +175,14 @@ def main():
     for phrase in prohibited:
         if phrase.lower() in paper.lower():
             errors.append(f"prohibited manuscript phrase: {phrase}")
+    required_uncertainty_phrases = [
+        "realized published aggregate vector",
+        "not a sampling confidence set",
+        "NOT_AVAILABLE_FOR_CURRENT_LP",
+    ]
+    for phrase in required_uncertainty_phrases:
+        if phrase.lower() not in paper.lower():
+            errors.append(f"missing manuscript uncertainty guardrail: {phrase}")
     if "\x0b" in paper:
         errors.append("manuscript contains vertical-tab control character; check LaTeX backslash escaping")
 
