@@ -11,10 +11,11 @@ developed by <<manski2003>>, surveyed by <<tamer2010>>, and updated by
 
 Our stage-1 result is especially close in spirit to this literature because the
 unobserved population mismatch is left as an explicit nuisance parameter and
-the conclusion is stated as a threshold frontier.  We do not yet construct
-sampling confidence regions for the full latent MTR set.  The distinction
-between an identified set and statistical confidence regions follows
-<<chernozhukov-hong-tamer2007>>.
+the conclusion is stated as a threshold frontier.  The current analysis
+conditions on the realized published aggregate vector and does not construct
+sampling confidence regions for the latent MTR set.  The distinction between an
+identified set conditional on realized moments and statistical confidence
+regions follows <<chernozhukov-hong-tamer2007>>.
 
 === Taxable-income responses and marginal rates
 

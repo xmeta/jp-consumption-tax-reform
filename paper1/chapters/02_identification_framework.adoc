@@ -1,8 +1,12 @@
 == Identification framework
 
-Let stem:[M] denote the collection of public aggregate moments and let
+Let stem:[M] denote the realized published aggregate vector and let
 stem:[\pi] denote a latent distribution over tax units, income-source states,
-and tax-law states compatible with those moments.
+and tax-law states compatible with those moments.  In the analysis below,
+stem:[M] is conditioned on as fixed after publication.  Sampling variation in
+the survey estimators and uncertainty in the official tax-imputation procedure
+are separate statistical/model-uncertainty layers and are not encoded by the
+width of stem:[\Theta(M)].
 
 Define the feasible set
 
@@ -23,6 +27,9 @@ For a policy-relevant functional stem:[\theta(\pi)], its identified set is
 
 The lower and upper endpoints are obtained by optimization over the feasible
 set, not by selecting one convenient latent distribution.
+They are structural or model-contingent endpoints conditional on the realized
+published moments; they are not a sampling confidence set and carry no claimed
+frequentist coverage for the survey or tax-imputation process.
 
 === Reference selections are not truth
 
