@@ -1,7 +1,9 @@
 #!/usr/bin/env python3
 """Regression and independent exact-rank checks for v5 slack diagnostics."""
 if not __debug__:
-    raise RuntimeError("optimized Python is not supported for executable tests")
+    raise RuntimeError(
+        "optimized Python is not supported for executable tests; assertions must remain active"
+    )
 
 from pathlib import Path
 import csv
