@@ -26,45 +26,39 @@ budget stem:[C_U^*(A)] for any externally supplied admissibility threshold
 stem:[A]. The actual value of stem:[C_U] is not identified, so the analysis
 does not claim an unconditional filing-rate lower bound.
 
-A separately pre-specified rank-transport sensitivity nests the exact
-same-rank bridge and lowers its minimum cross-system, cross-concept rate
-discrepancy from 14.9016 to 8.6825 percentage points at a rank-displacement budget of
-stem:[Delta=0.25].  Further rank freedom through the unrestricted
-stem:[Delta=5] endpoint does not lower the discrepancy, and zero discrepancy
-remains infeasible.  The bridge compares a pseudo modeled-annual-tax-positive
-event with the NTA positive self-assessed return balance after credits and
-withholding; it is not measurement error between observations of one tax event.
+The model-contingent evidence is organized as a three-level compatibility
+hierarchy rather than as a sequence of model versions.  Under exact-rank,
+symmetric compatibility (v2 / P1-C14), the minimum common cross-system,
+cross-concept rate discrepancy is 14.9016 percentage points.  Relaxing the
+unobserved rank correspondence while retaining symmetric compatibility
+(v3-v4 / P1-C15-P1-C16) lowers the minimum discrepancy to 8.6825 percentage
+points at stem:[Delta=0.25], after which further rank freedom through the
+unrestricted stem:[Delta=5] endpoint does not lower it.  Zero symmetric
+discrepancy remains infeasible.  On the separately pre-specified fixed-budget
+surface, 70 of 104 budget pairs are feasible, every feasible point retains
+positive-width overall MTR envelopes, and the overall MTR bounds are unchanged
+across the positive pre-specified rank budgets at a fixed `epsilon`.
 
-Because those primary pseudo-filer results apply 2026 statutory law to 2024
-aggregates, we also run a same-year 2024-law benchmark.  The v2 minimum
-symmetric discrepancy becomes 23.0907 rather than 14.9016 percentage points,
-the v3 `Delta=0.25` minimum becomes 16.5159 rather than 8.6825 percentage
-points, and v4 feasibility falls from 70/104 to 45/104 fixed grid points.  Thus
-the symmetric-gap magnitudes are materially tax-law-year-sensitive and must not
-be attributed solely to bridge uncertainty.  The v5 one-sided result
-`eta*=0` at `Delta=0` survives the same-year benchmark, although its MTR
-envelope changes.
+The third level changes the compatibility question using the audited tax-flow
+ordering.  Under tax-flow-consistent one-sided compatibility
+(v5 / P1-C17), the minimum directional-violation budget is stem:[eta^*=0]
+already at exact same rank and at every pre-specified rank budget.  A positive
+symmetric discrepancy can therefore coexist with zero one-sided violation: the
+symmetric and directional designs test different restrictions rather than
+providing competing estimates of one quantity.
 
-A fourth pre-specified fixed-budget surface evaluates the previously committed
-stem:[Delta] and `epsilon` grids without minimizing
-`epsilon`.  Seventy of 104 budget pairs are feasible.  Every feasible
-point retains positive-width overall MTR envelopes, and for each feasible
-`epsilon` the taxable- and liability-weighted MTR bounds are identical
-across all positive pre-specified rank budgets
-`Delta=0.25,...,5`.
+Because the primary pseudo-filer results apply 2026 statutory law to 2024
+aggregates, we also run a same-year 2024-law benchmark.  The exact-rank
+symmetric minimum becomes 23.0907 rather than 14.9016 percentage points, the
+rank-relaxed symmetric minimum at `Delta=0.25` becomes 16.5159 rather than
+8.6825 percentage points, and fixed-grid feasibility falls from 70/104 to
+45/104 points.  The one-sided conclusion `eta*=0` at `Delta=0` survives the
+same-year benchmark, although its MTR envelope changes.  Thus the symmetric-gap
+magnitudes are materially tax-law-year-sensitive and must not be attributed
+solely to bridge uncertainty.
 
-After separately auditing the NTA calculated-tax, tax-credit, withholding, and
-self-assessed-balance flow, a fifth model was pre-specified before its results
-were computed.  It replaces the symmetric rate-gap requirement by the
-one-sided compatibility condition that transported positive self-assessed
-balance should not exceed the pseudo modeled calculated-tax-positive rate
-except for a directional-violation budget stem:[eta].  The pre-specified result
-is stem:[eta^*=0] at every rank budget, including exact same-rank
-stem:[Delta=0]; the separate zero-violation minimum-rank-cost solve also returns
-stem:[Delta^*=0].  This does not invalidate the v3/v4 symmetric-gap
-diagnostics: the models answer different compatibility questions.  All of
-these results remain model-contingent rather than an estimated rank map,
-confidence region, causal bound, or identified filer MTR.
+All three compatibility levels remain model-contingent rather than an estimated
+rank map, confidence region, causal bound, or identified filer MTR.
 
 Other marginal-rate quantities remain sensitivity-only, recovery-only, or
 not identified. A machine-readable claim registry prevents calibrated or

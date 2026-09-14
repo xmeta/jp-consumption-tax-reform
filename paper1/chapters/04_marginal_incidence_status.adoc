@@ -159,15 +159,47 @@ The historical P1-C06 restricted-LP claim consequently remains
 `DOCUMENTED_PRIOR_RUN_NOT_REPRODUCED`.  The v1 replacement result is tracked
 separately as P1-C13, a model-contingent sensitivity claim.
 
-=== Pre-specified same-rank v2 frontier
+=== Compatibility hierarchy for the rank bridge
 
-After v1 was completed, the repository reproduced a stronger NTA object from
+The rank-based results below should be read by identifying restriction, not by
+the order in which repository versions were developed.  All three levels use
+the same public aggregates and preserve explicit population and tax-event
+mismatches; they differ in which bridge restriction is imposed.
+
+.Compatibility hierarchy and promoted claims
+[cols="2,2,3,2,2",options="header"]
+|===
+| Level | Core restriction | Scientific question | Reproducibility label | Promoted result
+| Exact-rank / symmetric
+| stem:[Delta=0] and two-sided rate gap bounded by stem:[epsilon]
+| Can the two different positive-event rates be made close under exact rank correspondence?
+| v2 / P1-C14
+| stem:[epsilon^*=14.9016] percentage points
+| Rank-relaxed / symmetric
+| stem:[W(T)\le Delta] and two-sided rate gap bounded by stem:[epsilon]
+| How much symmetric incompatibility remains when rank correspondence is relaxed, and how do conditional MTR envelopes vary over fixed budgets?
+| v3-v4 / P1-C15-P1-C16
+| stem:[epsilon^*=8.6825] points at stem:[Delta=0.25]; 70/104 fixed budget pairs feasible
+| Tax-flow-consistent / one-sided
+| stem:[W(T)\le Delta] and stem:[r_d^B-r_d^{PF}\le eta]
+| Must the downstream positive-balance rate exceed the upstream modeled calculated-tax-positive rate?
+| v5 / P1-C17
+| stem:[eta^*=0] already at stem:[Delta=0]
+|===
+
+The version labels are retained to locate pre-specifications, generated outputs,
+tests, and claim-registry entries.  They are not an identification ranking.
+
+=== Exact-rank symmetric compatibility (v2)
+
+The exact-rank symmetric tier uses a stronger reproduced NTA object from
 Annual Statistics Table 2-2(1): exact administrative counts for 25 ordered
 total-net-income classes by primary income type and filing-status category.
 The 125 positive-self-assessed-balance cells also agree exactly with the independently
 extracted NTA Sample Survey Table 2 cells.
 
-Before computing v2 endpoints, a second model was pre-specified.  It does not
+Before numerical endpoints were computed, this exact-rank design was
+pre-specified.  It does not
 match NTA and F71561 income amounts in yen.  Instead, it partitions the ordered
 NTA Table 2-2(1) population into ten equal rank bins and assumes only that
 F71561 decile stem:[d] corresponds to NTA rank decile stem:[d].
@@ -214,13 +246,15 @@ In particular, v2 does not establish:
 P1-C13 remains unchanged, P1-C06 remains unreproduced, and v2 is tracked
 separately as P1-C14.
 
-=== Pre-specified rank-transport-budget v3 frontier
+=== Rank-relaxed symmetric compatibility (v3-v4)
 
-P1-C14 still imposes exact correspondence between the two *rank bins*, even
-though the underlying populations and income concepts differ.  We therefore
-pre-specified a third model before computing its numerical results.  v3
-preserves the v2 NTA grouped-income uncertainty but replaces exact same-rank
-matching by a population coupling stem:[T_{dq}] between F71561 decile
+==== Minimum-discrepancy frontier (v3)
+
+Exact-rank symmetric compatibility still imposes exact correspondence between
+the two *rank bins*, even though the underlying populations and income concepts
+differ.  The rank-relaxed symmetric tier therefore preserves the same grouped
+NTA uncertainty and symmetric discrepancy criterion while replacing exact
+same-rank matching by a population coupling stem:[T_{dq}] between F71561 decile
 stem:[d] and NTA rank decile stem:[q].
 
 Both margins of stem:[T] equal 0.1.  Positive self-assessed balance transport is represented
@@ -289,7 +323,7 @@ point-valued filer MTR.
 
 P1-C13 and P1-C14 remain unchanged, and P1-C06 remains unreproduced.
 
-=== Fixed-budget rank-displacement x discrepancy surface v4
+==== Fixed-budget sensitivity surface (v4)
 
 The v3 minimum-discrepancy frontier answers how small the common cross-concept
 rate discrepancy can be for a given rank-displacement budget.  It does not by itself
@@ -298,8 +332,9 @@ Because the v3 minimum `epsilon` objective can force the pseudo-filer
 mixture to an extreme scenario boundary, a numerically collapsed endpoint at
 that frontier is not evidence of point identification.
 
-We therefore pre-specified v4 before computing its numerical surface.  v4
-leaves the v3 LP constraints unchanged and reuses only grids that had already
+Within the same rank-relaxed symmetric tier, a separate fixed-budget design
+was pre-specified before its numerical surface was computed.  It leaves the
+rank-relaxed LP constraints unchanged and reuses only grids that had already
 been committed in prior specifications:
 
 * the v3 rank-displacement grid
@@ -352,10 +387,10 @@ sensitivity result.  It is not a confidence region, posterior region, causal
 bound, statistically sharp identified set, or point-identified filer MTR.
 P1-C13 through P1-C15 remain unchanged, and P1-C06 remains unreproduced.
 
-=== One-sided tax-event compatibility bridge v5
+=== Tax-flow-consistent one-sided compatibility (v5)
 
-The semantic audit preceding v5 changes the compatibility question rather than
-the underlying public data.  NTA Sample Survey Tables 1, 4, and 5 separately
+The third hierarchy level changes the compatibility question rather than the
+underlying public data.  The semantic audit preceding v5 uses NTA Sample Survey Tables 1, 4, and 5, which separately
 report calculated income tax, tax credits, source withholding, and
 self-assessed balance within the already positive-self-assessed-balance target.
 Across the common 25 income classes and five primary-income categories, the

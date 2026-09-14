@@ -24,18 +24,18 @@ as a public benchmark.  The diagnostic leaves the unresolved number of
 frame-incompatible persons in that processing-row benchmark explicit rather
 than imputing a filing rate.
 
-Fourth, after pre-specifying each model before inspecting its endpoints, we
-report three model-contingent transport diagnostics and a fourth fixed-budget
-sensitivity surface.  The first uses aggregate NTA primary-income-type
-composition.  The second uses the stronger 25-class NTA income-rank
-information with an exact same-rank bridge while leaving within-class
-positive-self-assessed-balance allocation unrestricted at rank boundaries.  The third
-weakens exact same-rank correspondence to a pre-specified rank-displacement
-budget and reports the resulting minimum-discrepancy frontier.  The fourth
-reuses the already committed rank-displacement and discrepancy grids and
-evaluates conditional MTR envelopes without minimizing the discrepancy budget.
-These models quantify compatibility and sensitivity under explicit bridge
-assumptions rather than turning their outputs into identified MTR sets.
+Fourth, after pre-specifying each design before inspecting its endpoints, we
+organize the rank-based evidence as a compatibility hierarchy.  The first tier
+imposes exact-rank correspondence and symmetric cross-concept compatibility
+(v2 / P1-C14).  The second relaxes rank correspondence while retaining the
+symmetric criterion, reporting both the minimum-discrepancy frontier and a
+fixed-budget MTR sensitivity surface (v3-v4 / P1-C15-P1-C16).  The third keeps
+the rank transport but replaces symmetric closeness with the tax-flow-consistent
+one-sided ordering implied by calculated tax, credits, withholding, and final
+self-assessed balance (v5 / P1-C17).  This hierarchy separates the effect of
+relaxing rank assumptions from the effect of changing the compatibility
+question; its outputs remain model-contingent diagnostics rather than identified
+MTR sets.
 
 Fifth, every substantive statement is tied to a machine-readable claim
 registry, making overstatement detectable during revision.
