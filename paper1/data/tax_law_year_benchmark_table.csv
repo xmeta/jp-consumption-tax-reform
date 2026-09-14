@@ -1,3 +1,5 @@
-Tax law applied to 2024 aggregates,Central mean pseudo positive-tax share,v2 minimum symmetric discrepancy,v3 minimum discrepancy at Delta=0.25,v4 feasible fixed-budget points,v4 minimum feasible grid epsilon at Delta=0.25,v5 eta* at Delta=0,v5 taxable-MTR envelope at Delta=0
-2024,55.5332%,23.0907 pp,16.5159 pp,45/104,17.5000 pp,0.0000 pp,9.3559–11.5847%
-2026,45.0780%,14.9016 pp,8.6825 pp,70/104,10.0000 pp,0.0000 pp,10.0884–12.8680%
+Tax law applied,Nuisance scale calibrated under,Central mean pseudo positive-tax share,v2 minimum symmetric discrepancy,v3 minimum discrepancy at Delta=0.25,v4 feasible fixed-budget points,v4 minimum feasible grid epsilon at Delta=0.25,v5 eta* at Delta=0,v5 taxable-MTR envelope at Delta=0
+2024,2024,55.5332%,23.0907 pp,16.5159 pp,45/104,17.5000 pp,0.0000 pp,9.3559–11.5847%
+2026,2024,36.0724%,12.0629 pp,4.5562 pp,85/104,5.0000 pp,0.0000 pp,7.6523–11.5982%
+2024,2026,59.7184%,28.1125 pp,19.3563 pp,36/104,20.0000 pp,0.0000 pp,10.1944–12.6557%
+2026,2026,45.0780%,14.9016 pp,8.6825 pp,70/104,10.0000 pp,0.0000 pp,10.0884–12.8680%

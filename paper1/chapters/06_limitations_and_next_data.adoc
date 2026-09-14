@@ -142,15 +142,16 @@ income rank.  Such data would identify the transition through credits and
 source withholding rather than representing it by a symmetric budget or a
 one-sided ordering restriction.
 
-The Issue-133 same-year benchmark adds tax-law year as a separately visible
-sensitivity dimension.  Replacing 2026 law with 2024 law while holding the 2024
-aggregate inputs and model family fixed moves the exact-rank symmetric gap from
-14.9016 to 23.0907 percentage points, the rank-relaxed `Delta=0.25` floor from
-8.6825 to 16.5159 percentage points, and the fixed symmetric-grid feasible count
-from 70/104 to 45/104.  The one-sided zero directional violation remains
-feasible at `Delta=0`.  These contrasts show that the symmetric-gap magnitudes
-cannot be decomposed into population/frame, tax-event, rank, pseudo-model, and
-law-year components from current aggregates.
+The Issue-133 2x2 benchmark makes tax-law substitution and nuisance
+recalibration separately visible within the model.  With 2024-calibrated scales
+held fixed, applying 2026 rather than 2024 law moves v2 from 23.0907 to 12.0629
+percentage points and v3 at `Delta=0.25` from 16.5159 to 4.5562.  With
+2026-calibrated scales held fixed, the corresponding changes are 28.1125 to
+14.9016 and 19.3563 to 8.6825 percentage points.  Recalibration offsets part of
+the law substitution, and the two algebraic decomposition paths differ because
+the pseudo-filer is nonlinear.  This separates two model mechanisms but still
+does not identify population/frame, tax-event, rank, pseudo-model, or causal
+law-year contributions from current aggregates.
 
 Microdata or sufficiently detailed tabulations could validate or replace the
 pseudo modeled-annual-tax-positive calibration and show whether the positive

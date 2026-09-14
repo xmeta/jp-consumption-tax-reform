@@ -48,14 +48,16 @@ symmetric and directional designs test different restrictions rather than
 providing competing estimates of one quantity.
 
 Because the primary pseudo-filer results apply 2026 statutory law to 2024
-aggregates, we also run a same-year 2024-law benchmark.  The exact-rank
-symmetric minimum becomes 23.0907 rather than 14.9016 percentage points, the
-rank-relaxed symmetric minimum at `Delta=0.25` becomes 16.5159 rather than
-8.6825 percentage points, and fixed-grid feasibility falls from 70/104 to
-45/104 points.  The one-sided conclusion `eta*=0` at `Delta=0` survives the
-same-year benchmark, although its MTR envelope changes.  Thus the symmetric-gap
-magnitudes are materially tax-law-year-sensitive and must not be attributed
-solely to bridge uncertainty.
+aggregates, we also run a 2x2 tax-law-year benchmark that separates applied law
+from nuisance-scale calibration.  Holding the 2024-calibrated scales fixed,
+switching from 2024 to 2026 law moves the v2 symmetric minimum from 23.0907 to
+12.0629 percentage points and the v3 `Delta=0.25` minimum from 16.5159 to
+4.5562; holding the 2026-calibrated scales fixed gives 28.1125 to 14.9016 and
+19.3563 to 8.6825 percentage points respectively.  `eta*=0` at `Delta=0`
+survives all four cells.  The decomposition is model-contingent and
+path-dependent, not causal identification, but it shows that law substitution
+itself is materially consequential rather than merely being absorbed by
+recalibration.
 
 All three compatibility levels remain model-contingent rather than an estimated
 rank map, confidence region, causal bound, or identified filer MTR.

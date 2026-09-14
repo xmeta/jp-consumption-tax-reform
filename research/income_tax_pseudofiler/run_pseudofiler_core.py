@@ -136,7 +136,7 @@ _NTA_SOCIAL_ROWS = None
 _NTA_FAMILY_ROWS = None
 
 
-def salary_class_lookup(gross_wage_yen, path, value_col):
+def salary_class_row(gross_wage_yen, path):
     global _NTA_SOCIAL_ROWS, _NTA_FAMILY_ROWS
     if path == NTA_SOCIAL:
         if _NTA_SOCIAL_ROWS is None:
@@ -151,14 +151,19 @@ def salary_class_lookup(gross_wage_yen, path, value_col):
 
     g = max(float(gross_wage_yen), 0.0)
     if g <= 0:
-        return 0.0
+        return None
     rows = sorted(rows, key=lambda r: float(r["upper_salary_yen_inclusive"]))
     chosen = rows[-1]
     for r in rows:
         if g <= float(r["upper_salary_yen_inclusive"]):
             chosen = r
             break
-    return num(chosen[value_col])
+    return chosen
+
+
+def salary_class_lookup(gross_wage_yen, path, value_col):
+    row = salary_class_row(gross_wage_yen, path)
+    return 0.0 if row is None else num(row[value_col])
 
 
 def nta_salary_social_proxy(gross_wage_yen):
@@ -169,12 +174,25 @@ def nta_salary_social_proxy(gross_wage_yen):
     )
 
 
-def nta_salary_dependent_proxy(gross_wage_yen):
-    return salary_class_lookup(
-        gross_wage_yen,
-        NTA_FAMILY,
-        "dependent_deduction_2026_amounts_on_2024_composition_per_employee_yen",
+def nta_salary_dependent_proxy(gross_wage_yen, law=statutory_2026):
+    if law is statutory_2026:
+        return salary_class_lookup(
+            gross_wage_yen,
+            NTA_FAMILY,
+            "dependent_deduction_2026_amounts_on_2024_composition_per_employee_yen",
+        )
+    row = salary_class_row(gross_wage_yen, NTA_FAMILY)
+    if row is None:
+        return 0.0
+    amounts = law.dependent_deduction_amounts()
+    total = (
+        num(row["general_dependent_count"]) * amounts["D_GENERAL"]
+        + num(row["specified_dependent_count"]) * amounts["D_SPECIFIED"]
+        + num(row["elderly_co_resident_dependent_count"]) * amounts["D_ELDERLY_CORESIDENT"]
+        + num(row["elderly_other_dependent_count"]) * amounts["D_ELDERLY_OTHER"]
     )
+    employees = num(row["full_year_employee_count"])
+    return total / employees if employees else 0.0
 
 
 def num(x):
@@ -467,7 +485,7 @@ def household_tax(row, size, nuisance_scale, scenario, contrib_eq_yen,
         calibrated_income = u["pre_basic"] * nuisance_scale
         basic = law.basic_deduction(calibrated_income)
         family = (
-            nta_salary_dependent_proxy(u["gross_wage"])
+            nta_salary_dependent_proxy(u["gross_wage"], law)
             if scenario == "nta_salary_dependents"
             else 0.0
         )
@@ -594,9 +612,11 @@ def worker_group(htype):
     return "unmapped"
 
 
-def build_outputs(tax_law_year=2026):
+def build_outputs(tax_law_year=2026, nuisance_scales=None, nuisance_calibration_tax_law_year=None):
     if tax_law_year not in STATUTORY_LAWS:
         raise ValueError(f"unsupported tax law year: {tax_law_year}")
+    if nuisance_scales is not None and nuisance_calibration_tax_law_year not in STATUTORY_LAWS:
+        raise ValueError("fixed nuisance scales require a supported calibration tax-law year")
     law = STATUTORY_LAWS[tax_law_year]
     leaf = read_csv(LEAF)
     bridge = {int(r["decile"]): r for r in read_csv(BRIDGE)}
@@ -671,9 +691,15 @@ def build_outputs(tax_law_year=2026):
             size_map, size_meta = scenario_size_map(
                 rows, bridge[d], scenario
             )
-            nuisance, fit = calibrate(
-                rows, size_map, scenario, contrib, senior, target_tax, law
-            )
+            if nuisance_scales is None:
+                nuisance, fit = calibrate(
+                    rows, size_map, scenario, contrib, senior, target_tax, law
+                )
+            else:
+                nuisance = float(nuisance_scales[(d, scenario)])
+                fit = predicted_decile_tax(
+                    rows, size_map, nuisance, scenario, contrib, senior, law
+                )
             exact_fit = predicted_decile_exact_tax(
                 rows, size_map, nuisance, scenario, contrib, senior, law
             )

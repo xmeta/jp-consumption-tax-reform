@@ -66,43 +66,45 @@ aggregate liability moment exactly with one nuisance scale.  Such cases are
 reported as nearest-achievable sensitivity diagnostics; the tax-law
 discontinuity is not smoothed away to improve fit.
 
-=== Same-year 2024 tax-law benchmark
+=== Tax-law-year 2x2 benchmark
 
-The main pseudo-filer sensitivity above combines 2024 aggregate inputs with
-2026 statutory law.  To separate that design choice from the other bridge
-uncertainties, Issue 133 adds a companion same-year benchmark that reruns the
-same construction and the unchanged v2--v5 LP machinery under 2024 statutory
-law.  The 2024 parameter set is generated from repository-tracked NTA filing
-guide pages with source locators and SHA-256 values; the 2026-law run is also
-recomputed as a regression control.
+The main pseudo-filer sensitivity combines 2024 aggregate inputs with 2026
+statutory law.  Issue 133 therefore varies the applied statutory-law year and
+the law year used to calibrate each nuisance income scale separately.  The
+2024 parameter set is generated from repository-tracked NTA filing-guide pages
+with source locators and SHA-256 values, and the 2026/2026 cell is recomputed as
+a regression control.  The Table-17 dependent-composition scenario also uses
+the dependent-deduction amounts from the selected law-year module.
 
-.Tax-law-year sensitivity with 2024 aggregates
+.Tax-law-year and nuisance-calibration sensitivity with 2024 aggregates
 [%header,format=csv]
 |===
 include::{docdir}/data/tax_law_year_benchmark_table.csv[]
 |===
 
-The law-year contrast is material.  Under the central pseudo-filer scenario,
-the equal-decile mean modeled-positive share is 55.5332% under 2024 law versus
-45.0780% under 2026 law.  The v2 minimum symmetric discrepancy rises from
-14.9016 to 23.0907 percentage points when the same 2024 aggregates are evaluated
-under 2024 rather than 2026 law.  At `Delta=0.25`, the analogous v3 minimum
-rises from 8.6825 to 16.5159 percentage points.  The fixed v4 grid has 45/104
-feasible points under 2024 law rather than 70/104, and its minimum feasible grid
-`epsilon` at `Delta=0.25` moves from 10.0 to 17.5 percentage points.
+The diagonal same-law comparison remains material: v2 is 23.0907 percentage
+points in the 2024-law/2024-calibration cell versus 14.9016 in the
+2026-law/2026-calibration cell, while v3 at `Delta=0.25` is 16.5159 versus
+8.6825 percentage points.  The central modeled-positive share is 55.5332%
+versus 45.0780%.
 
-The v5 directional conclusion is qualitatively stable: `eta*=0` remains
-feasible already at `Delta=0` under both tax-law years.  Its conditional MTR
-envelope is not invariant, however: the taxable-income-weighted envelope at
-`Delta=0` changes from 10.0884--12.8680% under 2026 law to
-9.3559--11.5847% under 2024 law.
+The off-diagonal cells separate law substitution from recalibration within the
+model.  Holding the 2024-calibrated scales fixed, changing only the applied law
+from 2024 to 2026 moves v2 from 23.0907 to 12.0629 percentage points, v3 from
+16.5159 to 4.5562 percentage points, and v4 feasibility from 45/104 to 85/104.
+Holding the 2026-calibrated scales fixed, the same law substitution moves v2
+from 28.1125 to 14.9016 percentage points, v3 from 19.3563 to 8.6825, and v4
+feasibility from 36/104 to 70/104.  The mechanical law-year effect is therefore
+material under either calibration anchor, while recalibration offsets part of
+the diagonal movement.
 
-This comparison is a law-year *sensitivity*, not an identified additive
-decomposition.  The nuisance income scale is recalibrated and the population,
-tax-event, tax-unit, and rank mismatches remain unresolved.  Consequently the
-primary 2026-law v2--v4 symmetric discrepancies cannot be interpreted as pure
-bridge, rank, frame, or measurement mismatch.  P1-C18 records this limitation
-separately while leaving the frozen P1-C14--P1-C17 results intact.
+The v5 directional conclusion is qualitatively stable: `eta*=0` at `Delta=0`
+in all four cells, although its conditional MTR envelope changes.  The 2x2
+decomposition is algebraic and path-dependent inside this nonlinear model; it
+is not an identified causal decomposition.  Population, tax-event, tax-unit,
+pseudo-unit, and rank mismatches remain unresolved.  P1-C18 records this
+limitation separately while leaving the frozen P1-C14--P1-C17 headline
+artifacts intact.
 
 === Pre-specified replacement transport-relaxation frontier
 

@@ -109,3 +109,10 @@ def public_pension_misc_income(gross_pension_yen, age65plus, other_income_yen=0.
     elif other > 10_000_000:
         out += 100_000.0
     return min(max(out, 0.0), g)
+
+
+def dependent_deduction_amounts():
+    return {
+        r["rule_id"]: float(r["constant_yen"])
+        for r in _BY_GROUP["dependent_deduction"]
+    }
