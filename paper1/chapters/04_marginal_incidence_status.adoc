@@ -163,6 +163,10 @@ separately as P1-C13, a model-contingent sensitivity claim.
 
 === Compatibility hierarchy for the rank bridge
 
+Appendix B gives the complete common LP notation, grouped-data constraints,
+model-specific v2-v5 restrictions, endpoint objectives, and the analytical v3
+aggregate-rate floor.  The results below use that formulation.
+
 The rank-based results below should be read by identifying restriction, not by
 the order in which repository versions were developed.  All three levels use
 the same public aggregates and preserve explicit population and tax-event

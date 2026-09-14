@@ -1,0 +1,456 @@
+[appendix]
+== Mathematical formulation of the v2-v5 compatibility LPs
+
+This appendix gives a manuscript-level specification of the v2-v5 linear
+programs.  It is a mathematical restatement of the frozen pre-specifications
+and current implementations; it does not alter any feasible set, objective,
+grid, or numerical result.
+
+The four versions share one grouped-data and pseudo-scenario core.  We define
+that core once and then state v2-v5 as restrictions or objective changes.
+
+=== Indices and fixed scenario set
+
+Let stem:[d=1,\ldots,10] index F71561/pseudo rank deciles,
+stem:[q=1,\ldots,10] index NTA rank deciles, and
+stem:[j=1,\ldots,25] index ordered NTA total-net-income classes.
+The pseudo-filer scenario index is stem:[s\in\mathcal S], with
+stem:[|\mathcal S|=13].  The fixed scenario set is
+
+`central`, `f71911_topcode10`, `size_lower`, `size_upper`,
+`business_proportional`, `other_wage_split2`,
+`no_social_deduction_proxy`, `nta_salary_social`,
+`nta_salary_dependents`, `pension_head_merge`,
+`pension_age_split_separate`, `pension_member_split`, and
+`pension_member_split_f71551`.
+
+No scenario is selected or removed after observing an LP result.
+=== NTA grouped-data constants and normalization
+
+For income class stem:[j], let stem:[A_j] be the Table 2-2(1) population count
+and stem:[P_j] the positive-self-assessed-balance count.  Define
+
+[stem]
+++++
+N=\sum_{j=1}^{25}A_j,\qquad
+a_j=A_j/N,\qquad p_j=P_j/N.
+++++
+
+Let stem:[C_j=\sum_{k\le j}a_k], with stem:[C_0=0], and define the ten
+normalized NTA rank bins stem:[B_q=[(q-1)/10,q/10]].  The population mass from
+class stem:[j] overlapping rank bin stem:[q] is the fixed quantity
+
+[stem]
+++++
+h_{jq}=\max\{0,\min(C_j,q/10)-\max(C_{j-1},(q-1)/10)\}.
+++++
+
+Thus stem:[\sum_q h_{jq}=a_j] and stem:[\sum_j h_{jq}=0.1].  The construction
+uses only the ordering and published grouped counts; it does not assume a
+within-class income density.
+
+The aggregate NTA positive-self-assessed-balance rate is
+
+[stem]
+++++
+\bar b=\sum_jp_j={\sum_jP_j\over N}.
+++++
+=== Pseudo-filer scenario constants
+
+For each decile-scenario pair stem:[(d,s)], the pseudo construction supplies
+three constants used by the LPs:
+
+* stem:[u_{ds}], the modeled annual-income-tax-positive share;
+* stem:[m^T_{ds}], the taxable-income-weighted mean statutory MTR;
+* stem:[m^L_{ds}], the income-tax-liability-weighted mean statutory MTR.
+
+To make the weighting primitives explicit, index the retained pseudo tax units
+within stem:[(d,s)] by stem:[i].  The construction retains a generated tax unit
+when its modeled pre-basic-deduction income is positive or its modeled ordinary
+income-tax liability is positive.  Let stem:[w_i] be the approximate household
+count attached to the source leaf, stem:[x_i=\max\{X_i,0\}] the nonnegative
+modeled taxable income, stem:[\ell_i=\max\{L_i,0\}] the nonnegative modeled
+ordinary national income-tax liability, and stem:[\rho_i] the statutory
+marginal rate.  Then the committed scenario constants are
+
+[stem]
+++++
+m^T_{ds}=
+{\sum_i w_i x_i\rho_i\over\sum_i w_i x_i},\qquad
+m^L_{ds}=
+{\sum_i w_i\ell_i\rho_i\over\sum_i w_i\ell_i},
+++++
+
+with a zero value when the corresponding denominator is zero, and
+
+[stem]
+++++
+u_{ds}={\sum_i w_i\mathbf 1\{L_i>0\}\over\sum_i w_i}.
+++++
+
+These ratios are computed before the LP.  The LP therefore mixes fixed
+scenario-level constants; it does not introduce a ratio objective.
+=== Common decision variables and constraints
+
+For every F decile and scenario introduce mixture weights
+stem:[\lambda_{ds}\ge0] satisfying
+
+[stem]
+++++
+\sum_{s\in\mathcal S}\lambda_{ds}=1\qquad\forall d.
+++++
+
+The pseudo modeled-positive rate and the two MTR functionals are therefore
+
+[stem]
+++++
+r_d^{PF}=\sum_s\lambda_{ds}u_{ds},\qquad
+\theta_d^T=\sum_s\lambda_{ds}m^T_{ds},\qquad
+\theta_d^L=\sum_s\lambda_{ds}m^L_{ds}.
+++++
+
+For each NTA class/rank overlap introduce positive-balance mass
+stem:[y_{jq}] with
+
+[stem]
+++++
+0\le y_{jq}\le h_{jq},\qquad
+\sum_{q=1}^{10}y_{jq}=p_j\qquad\forall j.
+++++
+
+The positive-balance mass in NTA rank bin stem:[q] is
+
+[stem]
+++++
+g_q=\sum_{j=1}^{25}y_{jq}.
+++++
+
+These constraints preserve each published grouped-class positive total while
+leaving its unobserved within-class rank allocation free inside the observed
+population overlap.
+For v3-v5, introduce the population rank coupling stem:[T_{dq}\ge0] and the
+positive-balance transport mass stem:[z_{dq}\ge0].  Their common constraints
+are
+
+[stem]
+++++
+\sum_qT_{dq}=0.1\quad\forall d,\qquad
+\sum_dT_{dq}=0.1\quad\forall q,
+++++
+
+[stem]
+++++
+0\le z_{dq}\le T_{dq}\qquad\forall d,q,
+++++
+
+and
+
+[stem]
+++++
+\sum_dz_{dq}=g_q=\sum_jy_{jq}\qquad\forall q.
+++++
+
+The NTA positive-balance rate transported to F decile stem:[d] is
+
+[stem]
+++++
+r_d^B=10\sum_qz_{dq}.
+++++
+
+The factor 10 converts positive mass in an F rank bin of population mass 0.1
+into a within-bin rate.  The transport constraints imply
+
+[stem]
+++++
+{1\over10}\sum_dr_d^B=\sum_qg_q=\sum_jp_j=\bar b.
+++++
+
+Define the average absolute rank-displacement cost
+
+[stem]
+++++
+W(T)=\sum_{d=1}^{10}\sum_{q=1}^{10}|d-q|T_{dq}.
+++++
+=== v2: exact-rank symmetric compatibility
+
+v2 fixes exact same-rank correspondence.  In the common transport notation this
+is the restriction
+
+[stem]
+++++
+T_{dq}=0\ (d\ne q),\qquad T_{dd}=0.1,
+++++
+
+which implies stem:[z_{dd}=g_d] and
+
+[stem]
+++++
+r_d^B=10g_d=10\sum_jy_{jd}\equiv r_d^{NTA}.
+++++
+
+The implementation algebraically eliminates stem:[T] and stem:[z] in this
+special case.  With stem:[0\le\varepsilon\le1], v2 imposes
+
+[stem]
+++++
+-\varepsilon\le r_d^{PF}-r_d^{NTA}\le\varepsilon
+\qquad\forall d
+++++
+
+and solves
+
+[stem]
+++++
+\varepsilon_2^*=\min\ \varepsilon.
+++++
+
+At each fixed budget in the pre-specified grid
+
+[stem]
+++++
+\varepsilon\in\{0,0.025,0.05,0.075,0.10,0.125,0.15,0.175,0.20,
+0.225,0.25,0.275,0.30\}
+++++
+
+and at stem:[\varepsilon_2^*], feasibility is checked and each endpoint
+functional defined below is separately minimized and maximized over this same
+feasible set.
+=== v3: rank-relaxed symmetric compatibility
+
+v3 retains the common transport system and imposes the rank budget
+
+[stem]
+++++
+W(T)\le\Delta,
+++++
+
+where the pre-specified grid is
+stem:[\Delta\in\{0,0.25,0.5,1,2,3,4,5\}].  For each fixed stem:[\Delta],
+with stem:[0\le\varepsilon\le1], the symmetric bridge restriction is
+
+[stem]
+++++
+-\varepsilon\le r_d^{PF}-r_d^B\le\varepsilon
+\qquad\forall d.
+++++
+
+The minimum-discrepancy frontier is
+
+[stem]
+++++
+\varepsilon_3^*(\Delta)=\min\ \varepsilon
+\quad\text{subject to the common constraints and }W(T)\le\Delta.
+++++
+
+The zero-discrepancy threshold problem instead fixes stem:[\varepsilon=0] and
+solves
+
+[stem]
+++++
+\Delta_0^*=\min\ W(T)
+++++
+
+subject to the common constraints and the zero-discrepancy bridge.  If that
+problem is infeasible under unrestricted coupling, no finite threshold is
+reported.  At each frontier point, stem:[\varepsilon] is fixed at
+stem:[\varepsilon_3^*(\Delta)] before the 84 conditional endpoint objectives
+are solved.
+=== v4: fixed rank/discrepancy budget surface
+
+v4 does not optimize stem:[\varepsilon].  It reuses the v3 common transport
+constraints and fixes both budgets on the pre-specified Cartesian grid
+
+[stem]
+++++
+\Delta\in\{0,0.25,0.5,1,2,3,4,5\},
+++++
+
+[stem]
+++++
+\varepsilon\in\{0,0.025,0.05,0.075,0.10,0.125,0.15,
+0.175,0.20,0.225,0.25,0.275,0.30\}.
+++++
+
+For each of the 104 pairs, v4 solves the feasibility problem
+
+[stem]
+++++
+\min\ 0
+++++
+
+subject to the common constraints,
+stem:[W(T)\le\Delta], and
+stem:[-\varepsilon\le r_d^{PF}-r_d^B\le\varepsilon] for every stem:[d].
+For every feasible pair the same endpoint functionals are minimized and
+maximized separately.  No endpoint is defined for an infeasible pair.
+
+=== v5: one-sided tax-flow compatibility
+
+v5 retains the common grouped-data and transport constraints but replaces the
+symmetric bridge by one directional inequality.  With
+stem:[0\le\eta\le1], for every stem:[d],
+
+[stem]
+++++
+r_d^B-r_d^{PF}\le\eta.
+++++
+For every fixed
+stem:[\Delta\in\{0,0.25,0.5,1,2,3,4,5\}], v5 solves
+
+[stem]
+++++
+\eta^*(\Delta)=\min\ \eta
+++++
+
+subject to the common constraints, the one-sided restriction, and
+stem:[W(T)\le\Delta].  There is deliberately no mirror inequality restricting
+stem:[r_d^{PF}-r_d^B].
+
+The zero-violation threshold fixes stem:[\eta=0] and solves
+
+[stem]
+++++
+\min\ W(T)
+++++
+
+subject to the common constraints and stem:[r_d^B\le r_d^{PF}] for every
+stem:[d].  At each frontier point, stem:[\eta] is fixed at
+stem:[\eta^*(\Delta)] before the endpoint objectives are solved.
+
+=== Endpoint functionals and the 84 solves
+
+For every feasible fixed-budget or frontier feasible set, define the following
+42 scalar quantities:
+
+* ten stem:[\theta_d^T] taxable-income-weighted MTRs;
+* ten stem:[\theta_d^L] liability-weighted MTRs;
+* ten stem:[r_d^{PF}] pseudo modeled-positive rates;
+* ten NTA bridge rates, stem:[r_d^{NTA}] in v2 or stem:[r_d^B] in v3-v5;
+* the equal-decile overall taxable-income-weighted MTR
+  stem:[\bar\theta^T=10^{-1}\sum_d\theta_d^T];
+* the equal-decile overall liability-weighted MTR
+  stem:[\bar\theta^L=10^{-1}\sum_d\theta_d^L].
+
+Each scalar quantity is minimized once and maximized once.  Therefore the
+endpoint family contains exactly stem:[42\times2=84] LP objectives.
+=== Canonical linear-program form
+
+After choosing the version and fixing any external budget values, collect the
+active decision variables into a vector stem:[x].  For v3, for example,
+
+[stem]
+++++
+x=(\{\lambda_{ds}\},\{y_{jq}\},\{T_{dq}\},\{z_{dq}\},\varepsilon).
+++++
+
+The common equalities are the scenario simplices, NTA class positive-mass
+conservation, both transport margins, and NTA-rank positive-margin
+conservation.  Variable bounds contain non-negativity, the overlap capacities
+stem:[y_{jq}\le h_{jq}], and the unit-range bound on an optimized common
+relaxation.  The inequality blocks contain stem:[z_{dq}\le T_{dq}], an optional
+rank budget, and the version-specific symmetric or one-sided bridge.
+
+Every frontier, feasibility, threshold, or endpoint solve can therefore be
+written as
+
+[stem]
+++++
+\min_x\ c^\top x
+\quad\text{subject to}\quad
+A_{eq}x=b_{eq},\quad A_{ub}x\le b_{ub},\quad \ell\le x\le u.
+++++
+
+A maximum endpoint is implemented as minimization with the sign of stem:[c]
+reversed.  For a feasibility solve stem:[c=0].  For a minimum-discrepancy
+frontier stem:[c] selects stem:[\varepsilon] or stem:[\eta]; for a zero-gap
+threshold stem:[c] is the coefficient vector of stem:[W(T)].  The endpoint
+vectors select one of the 42 linear functionals above.
+
+This block representation is also the implementation structure: v2 constructs
+stem:[(\lambda,y)] directly; v3 adds stem:[(T,z)] and optional epsilon; v4
+reuses the v3 matrices with fixed budgets; and v5 reuses the v3 common matrices
+while replacing the two symmetric bridge rows per decile with one directional
+row.
+=== Analytical aggregate-rate floor for v3
+
+The v3 symmetric discrepancy has a lower bound that does not require solving
+the full rank-transport LP.  Let
+
+[stem]
+++++
+m_d=\min_{s\in\mathcal S}u_{ds}.
+++++
+
+Because stem:[r_d^{PF}] is a convex mixture of the scenario rates,
+stem:[r_d^{PF}\ge m_d].  The symmetric bridge implies
+stem:[r_d^B\ge r_d^{PF}-\varepsilon], while the transport construction implies
+stem:[r_d^B\ge0].  Hence every feasible v3 solution must satisfy
+
+[stem]
+++++
+r_d^B\ge\max\{0,m_d-\varepsilon\}.
+++++
+
+Summing across deciles and using
+stem:[\sum_dr_d^B=10\bar b] gives the necessary aggregate/non-negativity
+condition
+
+[stem]
+++++
+\sum_{d=1}^{10}\max\{0,m_d-\varepsilon\}\le10\bar b.
+++++
+
+Equivalently,
+
+[stem]
+++++
+\sum_{d=1}^{10}\min\{m_d,\varepsilon\}
+\ge\sum_{d=1}^{10}m_d-10\bar b.
+++++
+
+The smallest stem:[\varepsilon] satisfying this scalar water-filling condition
+is the unrestricted nonnegative-rate analytical floor.
+Dropping only the per-decile non-negativity refinement yields the still simpler
+mean-rate bound
+
+[stem]
+++++
+\varepsilon\ge {1\over10}\sum_dm_d-\bar b.
+++++
+
+For the committed v3 inputs,
+
+[stem]
+++++
+{1\over10}\sum_dm_d=0.307486,\qquad
+\bar b=0.220795,
+++++
+
+so the simple aggregate-rate lower bound is 0.086691, or 8.6691 percentage
+points.  Solving the scalar non-negativity condition above gives 0.086825, or
+8.6825 percentage points.  The independent committed water-filling artifact
+matches the full v3 LP minimum for every pre-specified
+stem:[\Delta\ge0.25] through stem:[\Delta=5].
+
+The analytical calculation is a lower bound implied by the fixed pseudo
+scenario set, the NTA aggregate positive-balance rate, and nonnegative
+transported row rates.  It is not a fitted parameter, confidence bound,
+measurement-error estimate, or claim that the two source events are identical.
+The full LP remains necessary to determine whether grouped-rank and transport
+restrictions add incompatibility above this aggregate floor; at
+stem:[\Delta=0] they do, while on the positive pre-specified v3 grid they do
+not raise the optimum above 8.6825 percentage points.
+
+=== Interpretation and source-of-truth boundary
+
+The pseudo event is modeled ordinary annual income tax greater than zero.  The
+NTA event is positive self-assessed return balance after credits and source
+withholding.  The populations, units, and income concepts also differ.  Thus
+stem:[\varepsilon] and stem:[\eta] are compatibility budgets under explicit
+bridge models, not sampling-error or causal parameters.
+
+The frozen pre-specification files remain the implementation contracts.  This
+appendix is intended to make those contracts reconstructible from the
+manuscript without requiring Python inspection; any future change to a
+pre-specified feasible set or objective requires a separate scientific change,
+not a documentation edit.
