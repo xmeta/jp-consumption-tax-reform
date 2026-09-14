@@ -88,9 +88,13 @@ directions, v5 imposes only the tax-flow-consistent direction
 stem:[r_d^{B}-r_d^{PF}\le\eta].  The minimum directional-violation budget is
 stem:[\eta^*=0] at all eight pre-specified rank budgets, and the separate
 zero-violation minimum-rank-cost solve is feasible already at
-stem:[\Delta=0].  Thus the positive v3/v4 symmetric discrepancy does not imply
-a violation of the subset direction.  The two findings are compatible because
-they answer different questions.
+stem:[\Delta=0].  The post-result slack audit sharpens the interpretation:
+at exact same rank five deciles can bind but none must bind over the full fixed
+frontier set, and at every positive rank budget all ten can bind while none must
+bind.  Thus stem:[\eta^*=0] is a compatibility/falsification result, not evidence
+that the directional inequalities are uniformly tight.  The positive v3/v4
+symmetric discrepancy therefore does not imply a violation of the subset
+direction; the findings answer different questions.
 
 This further sharpens the data priority.  Better rank linkage is still
 valuable for replacing model-contingent rank transport, but the highest-value

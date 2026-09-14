@@ -39,6 +39,8 @@ paper1,paper1/data/rank_bridge_v2_summary_table.csv,PRODUCT
 paper1,paper1/data/rank_bridge_v3_frontier_table.csv,PRODUCT
 paper1,paper1/data/rank_epsilon_v4_overall_table.csv,PRODUCT
 paper1,paper1/data/rank_one_sided_v5_overall_table.csv,PRODUCT
+paper1,paper1/data/rank_one_sided_v5_slack_same_rank_table.csv,PRODUCT
+paper1,paper1/data/rank_one_sided_v5_slack_summary_table.csv,PRODUCT
 paper1,paper1/data/stage1_attributes.adoc,PRODUCT
 paper1,paper1/data/stage1_frontier_table.csv,PRODUCT
 paper1,paper1/data/tax_law_year_benchmark_table.csv,PRODUCT
@@ -48,6 +50,7 @@ paper1,paper1/scripts/generate_frontier_table.py,PRODUCT
 paper1,paper1/scripts/generate_rank_bridge_v2_table.py,PRODUCT
 paper1,paper1/scripts/generate_rank_bridge_v3_table.py,PRODUCT
 paper1,paper1/scripts/generate_rank_epsilon_v4_table.py,PRODUCT
+paper1,paper1/scripts/generate_rank_one_sided_v5_slack_table.py,PRODUCT
 paper1,paper1/scripts/generate_rank_one_sided_v5_table.py,PRODUCT
 paper1,paper1/scripts/generate_stage1_attributes.py,PRODUCT
 paper1,paper1/scripts/generate_tax_law_year_benchmark_table.py,PRODUCT
@@ -67,7 +70,10 @@ paper1,research/income_tax_partial_identification/rank_epsilon_surface_v4_endpoi
 paper1,research/income_tax_partial_identification/rank_epsilon_surface_v4_spec.adoc,PRODUCT
 paper1,research/income_tax_partial_identification/rank_epsilon_surface_v4_summary.csv,PRODUCT
 paper1,research/income_tax_partial_identification/rank_one_sided_bridge_v5_endpoints.csv,PRODUCT
+paper1,research/income_tax_partial_identification/rank_one_sided_bridge_v5_minimum_decile_diagnostics.csv,PRODUCT
 paper1,research/income_tax_partial_identification/rank_one_sided_bridge_v5_minimum_violation_frontier.csv,PRODUCT
+paper1,research/income_tax_partial_identification/rank_one_sided_bridge_v5_slack_bounds.csv,PRODUCT
+paper1,research/income_tax_partial_identification/rank_one_sided_bridge_v5_slack_summary.csv,PRODUCT
 paper1,research/income_tax_partial_identification/rank_one_sided_bridge_v5_spec.adoc,PRODUCT
 paper1,research/income_tax_partial_identification/rank_one_sided_bridge_v5_zero_violation_threshold.csv,PRODUCT
 paper1,research/income_tax_partial_identification/replacement_transport_lp_endpoints.csv,PRODUCT

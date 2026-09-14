@@ -46,8 +46,11 @@ then require stem:[\eta^*=0] at all eight pre-specified rank budgets, agreement
 between HiGHS-DS and HiGHS-IPM, a zero-violation minimum-rank-cost solution at
 stem:[\Delta=0], and deterministic regeneration of 672 endpoint rows.  A
 separate reduced LP verifies the exact-same-rank stem:[(\Delta,\eta)=(0,0)]
-feasibility without calling the v5 directional-constraint construction.  The
-test also enforces the pre-specified frontier inclusion
+feasibility without calling the v5 directional-constraint construction.  A
+post-result diagnostic then minimizes and maximizes every decile slack over the
+fixed frontier feasible set; an independently formulated reduced LP reproduces
+all ten exact-same-rank slack bounds without using the v5 inequality builder.
+The test also enforces the pre-specified frontier inclusion
 stem:[\eta^*_{v5}(\Delta)\le\varepsilon^*_{v3}(\Delta)].  These checks validate
 the computation conditional on the one-sided model; they do not validate
 same-person linkage, the household-to-tax-unit reconstruction, or the economic

@@ -396,12 +396,24 @@ frozen specification.  The first result is:
   10.0884%--12.8680%, and the liability-weighted envelope is
   10.8806%--13.7776%, at each pre-specified Delta.
 
+A post-result diagnostic in
+`run_rank_one_sided_bridge_v5_slack_diagnostics.py` leaves the frozen v5
+pre-specification unchanged and evaluates
+`slack_d = eta* + r_d^PF - r_d^B` over the full fixed-frontier feasible set.
+At `Delta=0`, five deciles can bind but none must bind; for every positive
+pre-specified Delta all ten can bind but none must bind.  An independently
+formulated reduced LP reproduces all ten exact-rank slack bounds.  The
+one-witness binding pattern is retained only as a reproducibility diagnostic
+because the frontier optimum is non-unique.
+
 This means the positive v2/v3 symmetric discrepancy is not required as a
-*directional subset violation* once the tax events are ordered correctly.  It
-does not establish person-level linkage, true rank correspondence, a causal
-bound, or a statistically sharp identified set.  The v5 endpoint set is also
-not claimed to nest the v3 endpoint set because the two are evaluated at
-different optimized compatibility budgets.
+*directional subset violation* once the tax events are ordered correctly, but
+`eta_star=0` is best read as a model-contingent falsification/compatibility
+result rather than tight identification.  It does not establish person-level
+linkage, true rank correspondence, a causal bound, or a statistically sharp
+identified set.  The v5 endpoint set is also not claimed to nest the v3
+endpoint set because the two are evaluated at different optimized compatibility
+budgets.
 
 Current implementation status:
 `MODEL_CONTINGENT_RANK_ONE_SIDED_SUBSET_COMPATIBILITY`.
