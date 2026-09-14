@@ -97,9 +97,28 @@ current reproducible implementation and the lost historical artifact are kept
 as separate objects.  The restricted-LP endpoint chain remains a recovery-only
 object.
 
+=== Reader-facing claim-status summary
+
+The table below is generated from the repository claim graph and cross-checked
+against `paper1/data/claim_registry.csv`.  `Identification status` refers only
+to the narrow empirical object named in each row: for example, `READY` on an
+external NTA diagnostic does not identify filer MTRs or a household-to-filer
+bridge.  `SENSITIVITY_ONLY` marks model-contingent v1-v5 bridge results, while
+`RECOVERY_ONLY` marks the historical restricted-LP result that is retained only
+as an unreproduced recovery target.
+
+.Selected Paper 1 claim status and interpretation limits
+[%header,format=csv,cols="1,2,2,1.5,3,4"]
+|===
+include::{docdir}/data/claim_status_summary_table.csv[]
+|===
+
 === Machine-readable claims
 
 The normative status of each claim is stored in
 `paper1/data/claim_registry.csv`.  The manuscript validator rejects unknown
 statuses and requires `NOT_READY`, sensitivity, external-diagnostic, and
-point-check claims to retain explicit forbidden-claim language.
+point-check claims to retain explicit forbidden-claim language.  The
+reader-facing table above is generated rather than maintained independently so
+that its topic, empirical status, evidence scope, source, and forbidden
+interpretation cannot silently drift from the registry.

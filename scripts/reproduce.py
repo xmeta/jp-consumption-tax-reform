@@ -182,6 +182,8 @@ PAPER1 = (
     *PAPER1_GENERATORS,
     ("scripts/generate_claim_registries.py", "--product", "paper1"),
     ("scripts/generate_claim_registries.py", "--check", "--product", "paper1"),
+    ("paper1/scripts/generate_claim_status_summary.py",),
+    ("paper1/scripts/generate_claim_status_summary.py", "--check"),
     *((path, "--check") for (path,) in PAPER1_GENERATORS),
     ("paper1/scripts/validate_claim_registry.py",),
 )
@@ -272,6 +274,7 @@ CLEAN_ROOM_GLOBS = (
     "paper1/data/rank_one_sided_v5_slack_summary_table.csv",
     "paper1/data/rank_one_sided_v5_slack_same_rank_table.csv",
     "paper1/data/tax_law_year_benchmark_table.csv",
+    "paper1/data/claim_status_summary_table.csv",
     "paper1/data/claim_registry.csv",
     "research/vat_claim_registry.csv",
 )
