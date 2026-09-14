@@ -98,74 +98,66 @@ The highest-value additional data would be:
   characteristics without synthetic assignment;
 . repeated-year equivalents permitting validation of stability and transport.
 
-P1-C13 requires more than 22 percentage points of common relaxation under
-both pre-specified v1 decile-weight schemes.  The subsequently reproduced NTA
-25-income-class filing-status table allows P1-C14 to condition on substantially
-richer NTA-side income-rank information; under the separately pre-specified
-same-rank bridge, its minimum common relaxation is 14.9016 percentage points.
+The aggregate-composition baseline P1-C13 requires more than 22 percentage
+points of common relaxation under both pre-specified v1 decile-weight schemes.
+The richer NTA income-rank table then supports a more informative compatibility
+hierarchy without converting the public aggregates into linked microdata.
 
-P1-C15 then weakens exact same-rank matching with a separately pre-specified
-rank-displacement budget.  At the first positive grid point,
-stem:[Delta=0.25], the minimum discrepancy falls to 8.6825 percentage points
-and remains there through unrestricted stem:[Delta=5].  The same 8.6825-point floor is reproduced independently from the NTA
-aggregate positive-self-assessed-balance rate and the lower envelope of the
-fixed pseudo modeled-annual-tax-positive scenario set, with nonnegative
-transported decile rates imposed.  This is a cross-concept floor: it cannot be
-interpreted as pure rank mismatch or pure measurement error because the two
-positive events differ.  Zero discrepancy remains
-infeasible even with unrestricted rank coupling.
+=== Compatibility-hierarchy conclusion
 
-P1-C16 holds the discrepancy budget fixed instead of minimizing it and
-evaluates the Cartesian product of the already committed v3 stem:[Delta] grid
-and v2 stem:[epsilon] grid.  Seventy of 104 points are feasible.  Every
-feasible point retains positive-width overall MTR envelopes.  Among the
-positive pre-specified rank budgets, all taxable- and liability-weighted MTR
-endpoints are identical for stem:[Delta=0.25,0.5,1,2,3,4,5] at a fixed
-stem:[epsilon], while the envelopes widen materially as stem:[epsilon] is
-relaxed.  Some transported-NTA decile-rate endpoints do continue to widen with
-stem:[Delta], so this is an MTR-envelope statement rather than full saturation
-of the transport model.
+Read together, P1-C14 through P1-C17 form three distinct compatibility tests:
 
-P1-C17 then changes the compatibility question after the separate NTA
-tax-flow audit.  Rather than penalizing the two positive-event rates in both
-directions, v5 imposes only the tax-flow-consistent direction
-stem:[r_d^{B}-r_d^{PF}\le\eta].  The minimum directional-violation budget is
-stem:[\eta^*=0] at all eight pre-specified rank budgets, and the separate
-zero-violation minimum-rank-cost solve is feasible already at
-stem:[\Delta=0].  The post-result slack audit sharpens the interpretation:
-at exact same rank five deciles can bind but none must bind over the full fixed
-frontier set, and at every positive rank budget all ten can bind while none must
-bind.  Thus stem:[\eta^*=0] is a compatibility/falsification result, not evidence
-that the directional inequalities are uniformly tight.  The positive v3/v4
-symmetric discrepancy therefore does not imply a violation of the subset
-direction; the findings answer different questions.
+. *Exact-rank / symmetric compatibility (P1-C14; v2).*  Under the unobserved
+  same-rank correspondence, the minimum common symmetric discrepancy is
+  14.9016 percentage points.
+. *Rank-relaxed / symmetric compatibility (P1-C15-P1-C16; v3-v4).*  At the
+  first positive pre-specified rank budget, stem:[Delta=0.25], the minimum
+  discrepancy falls to 8.6825 percentage points and remains there through the
+  unrestricted stem:[Delta=5] endpoint.  The independent aggregate-rate /
+  nonnegativity calculation reproduces the same floor, so zero symmetric
+  discrepancy remains infeasible even with unrestricted rank coupling.  On the
+  fixed-budget surface, 70 of 104 points are feasible and every feasible point
+  retains positive-width overall MTR envelopes.
+. *Tax-flow-consistent / one-sided compatibility (P1-C17; v5).*  Once the
+  audited event ordering is encoded as
+  stem:[r_d^{B}-r_d^{PF}\le eta] rather than a two-sided closeness requirement,
+  the minimum directional-violation budget is stem:[eta^*=0] at all eight
+  pre-specified rank budgets, including exact same rank.  The slack audit shows
+  that no decile must bind over the exact-rank feasible set, so zero violation
+  is a compatibility/falsification result rather than a tight identification
+  result.
 
-This further sharpens the data priority.  Better rank linkage is still
-valuable for replacing model-contingent rank transport, but the highest-value
-new evidence is now a directly comparable tax-unit denominator that observes
-both positive calculated tax and the downstream positive self-assessed balance
-by income rank.  Such data would identify the transition from calculated tax
-through tax credits and source withholding to the final return balance,
-including the persons currently absent from the positive-balance-conditioned
-Sample Survey.  It would therefore test the v5 event ordering quantitatively
-rather than merely impose it as a directional compatibility condition.
+The apparent contrast between a positive symmetric discrepancy and zero
+one-sided violation is therefore substantive rather than contradictory.  The
+symmetric designs ask whether two different positive-event rates can be made
+close in both directions; the one-sided design asks only whether the downstream
+positive-balance rate must exceed the upstream modeled calculated-tax-positive
+rate.  They answer different questions under different restrictions.
+
+This hierarchy also sharpens the data priority.  Better rank linkage would
+replace the model-contingent transport assumption, but the highest-value new
+evidence is a directly comparable tax-unit denominator that observes both
+positive calculated tax and the downstream positive self-assessed balance by
+income rank.  Such data would identify the transition through credits and
+source withholding rather than representing it by a symmetric budget or a
+one-sided ordering restriction.
 
 The Issue-133 same-year benchmark adds tax-law year as a separately visible
 sensitivity dimension.  Replacing 2026 law with 2024 law while holding the 2024
-aggregate inputs and model family fixed moves the v2 minimum symmetric gap from
-14.9016 to 23.0907 percentage points, the v3 `Delta=0.25` floor from 8.6825 to
-16.5159 percentage points, and the v4 feasible-grid count from 70/104 to 45/104.
-The v5 zero directional violation remains feasible at `Delta=0`.  These
-contrasts show that the symmetric-gap magnitudes cannot be decomposed into
-population/frame, tax-event, rank, pseudo-model, and law-year components from
-current aggregates.
+aggregate inputs and model family fixed moves the exact-rank symmetric gap from
+14.9016 to 23.0907 percentage points, the rank-relaxed `Delta=0.25` floor from
+8.6825 to 16.5159 percentage points, and the fixed symmetric-grid feasible count
+from 70/104 to 45/104.  The one-sided zero directional violation remains
+feasible at `Delta=0`.  These contrasts show that the symmetric-gap magnitudes
+cannot be decomposed into population/frame, tax-event, rank, pseudo-model, and
+law-year components from current aggregates.
 
-Microdata or sufficiently detailed tabulations could also validate or replace
-the pseudo modeled-annual-tax-positive calibration and show whether the
-positive symmetric v3/v4 gap reflects population/frame mismatch, tax-event
-definition, pseudo-model misspecification, tax-law timing, or some combination.
-Neither stem:[Delta] nor stem:[epsilon] is estimated by P1-C16, stem:[eta] is not
-an estimated transition, withholding, tax-credit, or measurement-error rate in
+Microdata or sufficiently detailed tabulations could validate or replace the
+pseudo modeled-annual-tax-positive calibration and show whether the positive
+symmetric gap reflects population/frame mismatch, tax-event definition,
+pseudo-model misspecification, tax-law timing, or some combination.  Neither
+stem:[Delta] nor stem:[epsilon] is estimated by P1-C16, stem:[eta] is not an
+estimated transition, withholding, tax-credit, or measurement-error rate in
 P1-C17, and P1-C18 does not identify an additive causal contribution of the
 2024-to-2026 statutory change.
 
