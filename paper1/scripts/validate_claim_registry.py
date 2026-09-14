@@ -23,7 +23,7 @@ ALLOWED = {
     "NOT_READY",
 }
 
-REQUIRED = {f"P1-C{i:02d}" for i in range(1, 18)}
+REQUIRED = {f"P1-C{i:02d}" for i in range(1, 19)}
 LOCAL_SOURCE_STATUSES = {
     "ROBUSTNESS_FRONTIER_REPRODUCED",
     "READY_STATIC_ONLY",
@@ -99,6 +99,8 @@ def main():
         errors.append("P1-C16 must remain model-contingent fixed-budget rank-epsilon surface")
     if by_id["P1-C17"]["status"] != "MODEL_CONTINGENT_RANK_ONE_SIDED_BRIDGE_REPRODUCED":
         errors.append("P1-C17 must remain model-contingent one-sided subset-compatibility bridge")
+    if by_id["P1-C18"]["status"] != "SENSITIVITY_ONLY_REPRODUCED":
+        errors.append("P1-C18 must remain a reproduced tax-law-year sensitivity")
 
     # Semantic boundary introduced by the post-v4 NTA terminology audit.
     # NTA 申告納税額>0 is a positive self-assessed return balance after

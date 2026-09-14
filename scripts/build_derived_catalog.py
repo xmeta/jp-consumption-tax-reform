@@ -619,6 +619,14 @@ SPECS = [
         "Regime-level range summary: current, 5%, and zero-rate administration-retained regimes have zero institutional dividend by construction; abolition range is a chosen stress grid, not an empirical bound",
     ),
     (
+        "NTA-2024-STATUTORY-PARAMETERS",
+        "income_tax_2024_statutory_parameters.csv",
+        "scripts/build_income_tax_2024_statutory_parameters.py",
+        "NTA-2024-FILING-GUIDE-SALARY;NTA-2024-FILING-GUIDE-PENSION;NTA-2024-FILING-GUIDE-BASIC;NTA-2024-FILING-GUIDE-DEPENDENT;NTA-2024-FILING-GUIDE-RATE",
+        "DERIVED_REPRODUCED_VERIFIED_RULES",
+        "Versioned 2024 ordinary national income-tax parameters for the Issue-133 same-year benchmark; official filing-guide sources, locators and raw SHA-256 values retained",
+    ),
+    (
         "NTA-2026-STATUTORY-PARAMETERS",
         "income_tax_2026_statutory_parameters.csv",
         "scripts/build_income_tax_2026_statutory_parameters.py",

@@ -202,7 +202,7 @@ claims = [
     r for r in read(ROOT / "data/claim_graph.csv")
     if r["product_id"] == "paper1"
 ]
-assert len(claims) == 17
+assert len(claims) == 18
 by_claim = {r["claim_id"]: r for r in claims}
 assert by_claim["P1-C17"]["empirical_status"] == (
     "MODEL_CONTINGENT_RANK_ONE_SIDED_BRIDGE_REPRODUCED"

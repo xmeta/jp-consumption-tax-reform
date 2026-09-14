@@ -34,6 +34,16 @@ remains infeasible.  The bridge compares a pseudo modeled-annual-tax-positive
 event with the NTA positive self-assessed return balance after credits and
 withholding; it is not measurement error between observations of one tax event.
 
+Because those primary pseudo-filer results apply 2026 statutory law to 2024
+aggregates, we also run a same-year 2024-law benchmark.  The v2 minimum
+symmetric discrepancy becomes 23.0907 rather than 14.9016 percentage points,
+the v3 `Delta=0.25` minimum becomes 16.5159 rather than 8.6825 percentage
+points, and v4 feasibility falls from 70/104 to 45/104 fixed grid points.  Thus
+the symmetric-gap magnitudes are materially tax-law-year-sensitive and must not
+be attributed solely to bridge uncertainty.  The v5 one-sided result
+`eta*=0` at `Delta=0` survives the same-year benchmark, although its MTR
+envelope changes.
+
 A fourth pre-specified fixed-budget surface evaluates the previously committed
 stem:[Delta] and `epsilon` grids without minimizing
 `epsilon`.  Seventy of 104 budget pairs are feasible.  Every feasible

@@ -89,9 +89,9 @@ def validate(root: Path = ROOT, *, check_outputs: bool = True) -> list[str]:
     if {row["product_id"] for row in claims} != {"paper1", "vat_abolition"}:
         errors.append("schema: product set must be exactly paper1 and vat_abolition")
     paper_ids = {row["claim_id"] for row in claims if row["product_id"] == "paper1"}
-    expected_paper_ids = {f"P1-C{i:02d}" for i in range(1, 18)}
+    expected_paper_ids = {f"P1-C{i:02d}" for i in range(1, 19)}
     if paper_ids != expected_paper_ids:
-        errors.append("schema: Paper 1 projection must contain exactly P1-C01..P1-C17")
+        errors.append("schema: Paper 1 projection must contain exactly P1-C01..P1-C18")
 
     with state_path.open(encoding="utf-8", newline="") as handle:
         state_rows = list(csv.DictReader(handle))

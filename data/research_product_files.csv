@@ -7,6 +7,7 @@ paper1,REPRODUCE.adoc,RELEASE_METADATA
 paper1,STATUS.adoc,RELEASE_METADATA
 paper1,data/claim_evidence.csv,SHARED
 paper1,data/claim_graph.csv,SHARED
+paper1,data/derived/income_tax_2024_statutory_parameters.csv,PRODUCT
 paper1,data/input_provenance.csv,SHARED
 paper1,data/recovery/recovery_gaps.csv,SHARED
 paper1,data/recovery/v6_recovered_values.csv,SHARED
@@ -40,6 +41,7 @@ paper1,paper1/data/rank_epsilon_v4_overall_table.csv,PRODUCT
 paper1,paper1/data/rank_one_sided_v5_overall_table.csv,PRODUCT
 paper1,paper1/data/stage1_attributes.adoc,PRODUCT
 paper1,paper1/data/stage1_frontier_table.csv,PRODUCT
+paper1,paper1/data/tax_law_year_benchmark_table.csv,PRODUCT
 paper1,paper1/data/transport_lp_summary_table.csv,PRODUCT
 paper1,paper1/index.adoc,PRODUCT
 paper1,paper1/scripts/generate_frontier_table.py,PRODUCT
@@ -48,6 +50,7 @@ paper1,paper1/scripts/generate_rank_bridge_v3_table.py,PRODUCT
 paper1,paper1/scripts/generate_rank_epsilon_v4_table.py,PRODUCT
 paper1,paper1/scripts/generate_rank_one_sided_v5_table.py,PRODUCT
 paper1,paper1/scripts/generate_stage1_attributes.py,PRODUCT
+paper1,paper1/scripts/generate_tax_law_year_benchmark_table.py,PRODUCT
 paper1,paper1/scripts/generate_transport_lp_table.py,PRODUCT
 paper1,paper1/scripts/validate_claim_registry.py,PRODUCT
 paper1,requirements-data-extraction.txt,SHARED
@@ -70,7 +73,10 @@ paper1,research/income_tax_partial_identification/rank_one_sided_bridge_v5_zero_
 paper1,research/income_tax_partial_identification/replacement_transport_lp_endpoints.csv,PRODUCT
 paper1,research/income_tax_partial_identification/replacement_transport_lp_minimum_relaxation.csv,PRODUCT
 paper1,research/income_tax_partial_identification/replacement_transport_lp_spec.adoc,PRODUCT
+paper1,research/income_tax_partial_identification/tax_law_year_benchmark.adoc,PRODUCT
+paper1,research/income_tax_partial_identification/tax_law_year_bridge_benchmark.csv,PRODUCT
 paper1,research/income_tax_pseudofiler/README.adoc,PRODUCT
+paper1,research/income_tax_pseudofiler/tax_law_year_pseudofiler_benchmark.csv,PRODUCT
 paper1,research/stage1_filing_bound/46_income_tax_stage1_population_overlap.py,PRODUCT
 paper1,research/stage1_filing_bound/47_income_tax_stage1_contamination_frontier.py,PRODUCT
 paper1,research/stage1_filing_bound/48_income_tax_stage1_untracked_frontier.py,PRODUCT

@@ -1,0 +1,50 @@
+= 2024 tax-law same-year benchmark
+
+== Status
+
+`SENSITIVITY_ONLY_NOT_IDENTIFIED_TAX_LAW_YEAR_BENCHMARK`.
+
+This Issue-133 benchmark reruns the existing pseudo-filer construction on the
+same 2024 household and administrative aggregates under two statutory-law
+sets: 2024 and 2026. It does not change the frozen v2-v5 specifications or
+their committed 2026-law outputs.
+
+== Reproducible statutory inputs
+
+The 2024 law set is generated from repository-tracked National Tax Agency
+2024 filing-guide pages covering employment income, public-pension
+miscellaneous income, the basic deduction, dependent deductions, and the
+ordinary progressive income-tax quick table. Each raw source is registered in
+`data/source_catalog.csv` with its locator and SHA-256; the normalized rules are
+`data/derived/income_tax_2024_statutory_parameters.csv`.
+
+== Comparison
+
+`run_tax_law_year_benchmark.py` reuses the same 13 pseudo-filer scenarios and
+the same v2-v5 LP implementations. Only the statutory-law functions are
+switched. The 2026-law run is regression-checked against the already committed
+headline artifacts before the 2024-law contrast is interpreted.
+
+For the central pseudo-filer scenario, the equal-decile mean modeled-positive
+share is 55.5332% under 2024 law versus 45.0780% under 2026 law. The v2
+same-rank minimum symmetric discrepancy is 23.0907 pp versus 14.9016 pp. At
+`Delta=0.25`, the v3 minimum discrepancy is 16.5159 pp versus 8.6825 pp. On
+the inherited v4 104-point grid, 45 points are feasible under 2024 law versus
+70 under 2026 law, and the first feasible grid epsilon at `Delta=0.25` moves
+from 10.0 pp to 17.5 pp.
+
+The one-sided v5 result is qualitatively more robust: `eta*=0` remains feasible
+at `Delta=0`, `0.25`, and `5` under both law years. The conditional MTR
+envelope still changes: at `Delta=0`, the taxable-income-weighted envelope is
+9.3559--11.5847% under 2024 law versus 10.0884--12.8680% under 2026 law.
+
+== Interpretation
+
+The contrast demonstrates material *tax-law-year sensitivity*. It does not
+identify a causal or additive contribution of the 2024-to-2026 law change to
+any bridge discrepancy, because the pseudo-filer nuisance scale is recalibrated
+and the underlying household/tax-administration population, tax-event, tax-unit,
+and rank mismatches remain unresolved. Accordingly, the 2026-law v2-v4
+symmetric discrepancies must not be described as pure rank, frame, event, or
+measurement mismatch. The same-year benchmark is a companion sensitivity, not
+a replacement identified result.

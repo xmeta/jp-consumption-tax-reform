@@ -88,6 +88,8 @@ INCOME_TAX = (
     ("scripts/test_estat_f71911_bridge.py",),
     ("scripts/extract_estat_rank_bridge_diagnostics.py",),
     ("scripts/test_estat_rank_bridge_diagnostics.py",),
+    ("scripts/build_income_tax_2024_statutory_parameters.py",),
+    ("scripts/test_income_tax_2024_statutory_parameters.py",),
     ("scripts/build_income_tax_2026_statutory_parameters.py",),
     ("scripts/test_income_tax_2026_statutory_parameters.py",),
     ("scripts/extract_nta_table17_and_f71551.py",),
@@ -136,6 +138,8 @@ INCOME_TAX = (
     ("research/income_tax_partial_identification/test_rank_one_sided_bridge_v5_prespec.py",),
     ("research/income_tax_partial_identification/run_rank_one_sided_bridge_v5.py",),
     ("research/income_tax_partial_identification/test_rank_one_sided_bridge_v5.py",),
+    ("research/income_tax_partial_identification/run_tax_law_year_benchmark.py",),
+    ("research/income_tax_partial_identification/test_tax_law_year_benchmark.py",),
 )
 
 PROVENANCE = (
@@ -167,6 +171,7 @@ PAPER1_GENERATORS = (
     ("paper1/scripts/generate_rank_bridge_v3_table.py",),
     ("paper1/scripts/generate_rank_epsilon_v4_table.py",),
     ("paper1/scripts/generate_rank_one_sided_v5_table.py",),
+    ("paper1/scripts/generate_tax_law_year_benchmark_table.py",),
 )
 
 PAPER1 = (
@@ -227,6 +232,7 @@ CLEAN_ROOM_GLOBS = (
     "data/derived_catalog.csv",
     "data/input_provenance.csv",
     "research/income_tax_pseudofiler/pseudofiler_*.csv",
+    "research/income_tax_pseudofiler/tax_law_year_pseudofiler_benchmark.csv",
     "research/income_tax_partial_identification/replacement_transport_lp_endpoints.csv",
     "research/income_tax_partial_identification/replacement_transport_lp_feasibility.csv",
     "research/income_tax_partial_identification/replacement_transport_lp_minimum_*.csv",
@@ -247,6 +253,7 @@ CLEAN_ROOM_GLOBS = (
     "research/income_tax_partial_identification/rank_one_sided_bridge_v5_minimum_*.csv",
     "research/income_tax_partial_identification/rank_one_sided_bridge_v5_transport_plans.csv",
     "research/income_tax_partial_identification/rank_one_sided_bridge_v5_zero_violation_threshold.csv",
+    "research/income_tax_partial_identification/tax_law_year_bridge_benchmark.csv",
     "research/stage1_filing_bound/inputs.csv",
     "research/stage1_filing_bound/results.csv",
     "research/stage1_filing_bound/contamination_frontier.csv",
@@ -258,6 +265,7 @@ CLEAN_ROOM_GLOBS = (
     "paper1/data/rank_bridge_v3_frontier_table.csv",
     "paper1/data/rank_epsilon_v4_overall_table.csv",
     "paper1/data/rank_one_sided_v5_overall_table.csv",
+    "paper1/data/tax_law_year_benchmark_table.csv",
     "paper1/data/claim_registry.csv",
     "research/vat_claim_registry.csv",
 )
