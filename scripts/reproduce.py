@@ -138,6 +138,8 @@ INCOME_TAX = (
     ("research/income_tax_partial_identification/test_rank_one_sided_bridge_v5_prespec.py",),
     ("research/income_tax_partial_identification/run_rank_one_sided_bridge_v5.py",),
     ("research/income_tax_partial_identification/test_rank_one_sided_bridge_v5.py",),
+    ("research/income_tax_partial_identification/run_rank_one_sided_bridge_v5_slack_diagnostics.py",),
+    ("research/income_tax_partial_identification/test_rank_one_sided_bridge_v5_slack_diagnostics.py",),
     ("research/income_tax_partial_identification/run_tax_law_year_benchmark.py",),
     ("research/income_tax_partial_identification/test_tax_law_year_benchmark.py",),
 )
@@ -171,6 +173,7 @@ PAPER1_GENERATORS = (
     ("paper1/scripts/generate_rank_bridge_v3_table.py",),
     ("paper1/scripts/generate_rank_epsilon_v4_table.py",),
     ("paper1/scripts/generate_rank_one_sided_v5_table.py",),
+    ("paper1/scripts/generate_rank_one_sided_v5_slack_table.py",),
     ("paper1/scripts/generate_tax_law_year_benchmark_table.py",),
 )
 
@@ -253,6 +256,7 @@ CLEAN_ROOM_GLOBS = (
     "research/income_tax_partial_identification/rank_one_sided_bridge_v5_minimum_*.csv",
     "research/income_tax_partial_identification/rank_one_sided_bridge_v5_transport_plans.csv",
     "research/income_tax_partial_identification/rank_one_sided_bridge_v5_zero_violation_threshold.csv",
+    "research/income_tax_partial_identification/rank_one_sided_bridge_v5_slack_*.csv",
     "research/income_tax_partial_identification/tax_law_year_bridge_benchmark.csv",
     "research/stage1_filing_bound/inputs.csv",
     "research/stage1_filing_bound/results.csv",
@@ -265,6 +269,8 @@ CLEAN_ROOM_GLOBS = (
     "paper1/data/rank_bridge_v3_frontier_table.csv",
     "paper1/data/rank_epsilon_v4_overall_table.csv",
     "paper1/data/rank_one_sided_v5_overall_table.csv",
+    "paper1/data/rank_one_sided_v5_slack_summary_table.csv",
+    "paper1/data/rank_one_sided_v5_slack_same_rank_table.csv",
     "paper1/data/tax_law_year_benchmark_table.csv",
     "paper1/data/claim_registry.csv",
     "research/vat_claim_registry.csv",

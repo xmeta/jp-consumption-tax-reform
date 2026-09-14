@@ -403,6 +403,37 @@ stem:[\Delta^*=0].  HiGHS-DS and HiGHS-IPM agree on both results.  An
 independent reduced LP that does not use the v5 directional-constraint builder
 also verifies the exact-same-rank stem:[(\Delta,\eta)=(0,0)] feasibility.
 
+Because the frontier optimum is not unique, a binding pattern from one solver
+witness is not itself an identified feature of the model.  We therefore define
+the decile slack at a fixed frontier point as
+stem:[s_d=\eta^*+r_d^{PF}-r_d^B] and separately minimize and maximize each
+stem:[s_d] over the full fixed stem:[(\Delta,\eta^*)] feasible set.  The
+committed one-witness summaries and solution-invariant binding diagnostics are:
+
+.V5 directional-constraint slack diagnostics
+[%header,format=csv]
+|===
+include::{docdir}/data/rank_one_sided_v5_slack_summary_table.csv[]
+|===
+
+At exact same rank, the witness has two binding deciles, but this is not
+structural.  Five of ten deciles can bind somewhere in the exact-rank feasible
+set and none must bind across all feasible solutions.  The exact-rank
+per-decile ranges are:
+
+.Exact-same-rank v5 slack ranges at stem:[(\Delta,\eta)=(0,0)]
+[%header,format=csv]
+|===
+include::{docdir}/data/rank_one_sided_v5_slack_same_rank_table.csv[]
+|===
+
+For every positive pre-specified rank budget all ten deciles can bind in some
+feasible solution, but no decile must bind.  The near-binding threshold is
+0.0001 in rate units (0.01 percentage point), while numerical binding uses the
+existing stem:[10^{-8}] feasibility tolerance.  The scenario mixture enters
+stem:[r_d^{PF}] before the constraint is evaluated; individual scenario-rate
+differences are therefore not separate v5 constraint slacks.
+
 At the minimum directional-violation frontier, the equal-decile overall
 taxable-income-weighted MTR envelope is 10.0884--12.8680% and the
 income-tax-liability-weighted envelope is 10.8806--13.7776% at every
@@ -414,10 +445,14 @@ symmetric discrepancy.  v3/v4 ask how close the two event rates can be made in
 both directions, whereas v5 asks only whether the downstream NTA
 positive-balance rate must exceed the upstream pseudo calculated-tax-positive
 rate.  A positive symmetric gap can therefore coexist with zero directional
-violation.  The v5 result does not show that the two tax events are equal, that
-the same-rank correspondence is observed, or that the pseudo model is true.
-It also does not convert the MTR envelopes into confidence intervals, causal
-bounds, or statistically sharp identified sets.
+violation.  The slack ranges further show that stem:[\eta^*=0] should be read as a
+model-contingent falsification/compatibility diagnostic rather than a tight
+identification result: no decile is forced to bind even under exact same-rank
+transport, and wide positive slack is feasible.  The v5 result does not show
+that the two tax events are equal, that the same-rank correspondence is
+observed, or that the pseudo model is true.  It also does not convert the MTR
+envelopes into confidence intervals, causal bounds, or statistically sharp
+identified sets.
 
 P1-C17 records this pre-specified one-sided result as a reproduced
 model-contingent compatibility diagnostic.  P1-C13 through P1-C16 remain

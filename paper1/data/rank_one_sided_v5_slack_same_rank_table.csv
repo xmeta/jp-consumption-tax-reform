@@ -1,0 +1,11 @@
+Decile,one-witness slack,feasible-set slack range,can bind,must bind
+1,8.7597 pp,7.8556 pp–19.5829 pp,False,False
+2,33.9823 pp,13.1371 pp–57.8826 pp,False,False
+3,10.1538 pp,9.5739 pp–54.6891 pp,False,False
+4,15.2841 pp,0.0000 pp–50.4604 pp,True,False
+5,2.7734 pp,0.0000 pp–58.6992 pp,True,False
+6,13.3915 pp,0.0000 pp–35.5275 pp,True,False
+7,-0.0000 pp,0.0000 pp–41.7852 pp,True,False
+8,-0.0000 pp,0.0000 pp–46.8463 pp,True,False
+9,59.3736 pp,7.4353 pp–59.8028 pp,False,False
+10,10.4361 pp,8.5216 pp–29.3043 pp,False,False

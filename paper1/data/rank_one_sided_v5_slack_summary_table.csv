@@ -1,0 +1,9 @@
+Delta,witness slack min / median / max,witness binding / near-binding deciles,deciles that can bind,deciles that must bind
+0,0.0000 pp / 10.2950 pp / 59.3736 pp,2 / 2,5,0
+0.25,2.7424 pp / 11.9632 pp / 59.3736 pp,0 / 0,10,0
+0.5,0.0000 pp / 11.7726 pp / 47.0834 pp,1 / 1,10,0
+1,2.7424 pp / 10.2950 pp / 59.8028 pp,0 / 0,10,0
+2,2.7424 pp / 10.2950 pp / 59.8028 pp,0 / 0,10,0
+3,2.7424 pp / 10.2950 pp / 59.8028 pp,0 / 0,10,0
+4,2.7424 pp / 10.2950 pp / 59.8028 pp,0 / 0,10,0
+5,2.7424 pp / 10.2950 pp / 59.8028 pp,0 / 0,10,0
