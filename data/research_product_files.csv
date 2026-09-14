@@ -35,6 +35,7 @@ paper1,paper1/chapters/07_related_literature.adoc,PRODUCT
 paper1,paper1/chapters/08_references.adoc,PRODUCT
 paper1,paper1/chapters/09_data_availability.adoc,PRODUCT
 paper1,paper1/data/claim_registry.csv,PRODUCT
+paper1,paper1/data/claim_status_summary_table.csv,PRODUCT
 paper1,paper1/data/rank_bridge_v2_summary_table.csv,PRODUCT
 paper1,paper1/data/rank_bridge_v3_frontier_table.csv,PRODUCT
 paper1,paper1/data/rank_epsilon_v4_overall_table.csv,PRODUCT
@@ -46,6 +47,7 @@ paper1,paper1/data/stage1_frontier_table.csv,PRODUCT
 paper1,paper1/data/tax_law_year_benchmark_table.csv,PRODUCT
 paper1,paper1/data/transport_lp_summary_table.csv,PRODUCT
 paper1,paper1/index.adoc,PRODUCT
+paper1,paper1/scripts/generate_claim_status_summary.py,PRODUCT
 paper1,paper1/scripts/generate_frontier_table.py,PRODUCT
 paper1,paper1/scripts/generate_rank_bridge_v2_table.py,PRODUCT
 paper1,paper1/scripts/generate_rank_bridge_v3_table.py,PRODUCT
