@@ -1,7 +1,7 @@
 = Paper 1 Independent Review Packet
-:revdate: 2026-09-13
+:revdate: 2026-09-15
 
-Review target commit: `0f64a873ce4f82ceda780888a5a184fca6e330d2`.
+Review target commit: `0ea0a6cdb3ad298f2b26695da20f96fe55c493f5`.
 
 This packet prepares the two independent review tracks still required before
 `paper1` can be promoted from `WORKING_MANUSCRIPT` to `SUBMISSION_QUALITY`.
@@ -54,6 +54,16 @@ following.
   budgets/compatibility parameters rather than estimated rank maps, confidence
   regions, or causal bounds?  Are v3/v4 symmetric-gap and v5 one-sided results
   interpreted as answers to different model questions?
+. *LP reconstructibility*: Does Appendix B define the v2-v5 optimization family
+  completely enough to reconstruct the decision variables, normalizations,
+  grouped-NTA constraints, 13-scenario mixture, transport constraints, MTR
+  primitives, and 84 endpoint solves without reading Python?  Do those formulas
+  match the frozen specifications and executable implementation?
+. *v3 analytical hierarchy*: Is the 8.6691-percentage-point aggregate mean-rate
+  lower bound derived correctly, is the 8.6825-point non-negativity/water-filling
+  floor distinguished from it, and is the rank-transport LP correctly presented
+  as adding incompatibility at `Delta=0` but not above the analytical floor on
+  the pre-specified positive-`Delta` grid?
 . *Marginal-rate reconstruction*: Does any text imply that the pseudo-filer
   construction is an observed or point-identified filer MTR distribution?  Are
   sensitivity-only,
@@ -93,6 +103,10 @@ that are already explicit in the current repository:
   narrower contribution language?
 . Are observed/reproduced results visually and verbally separated from
   sensitivity-only and recovery-only material?
+. Does the reader-facing claim-status table make the distinction among
+  `PARTIALLY_IDENTIFIED`, `SENSITIVITY_ONLY`, `RECOVERY_ONLY`, and narrow
+  diagnostic `READY` objects clear without implying that a ready diagnostic
+  identifies the household-to-filer bridge or filer MTRs?
 . Are provenance, data availability, reproduction instructions, and source
   boundaries sufficient for an independent reader to audit every headline
   result?
