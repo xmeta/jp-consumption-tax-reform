@@ -39,7 +39,7 @@ The F71561-to-NTA bridge is decomposed conceptually into
 ++++
 \text{candidate person}
 \rightarrow
-\text{final-return filer}
+\text{Table 2-1 Final-return processing-row person}
 \rightarrow
 \text{positive self-assessed balance}.
 ++++

@@ -1,4 +1,4 @@
-= Proposition: F71561 Stage-1 Robustness Frontier
+= Proposition: F71561 Stage-1 Population / Processing-Row Overlap Robustness Frontier
 :revdate: 2026-09-08
 :stem: latexmath
 
@@ -43,13 +43,14 @@ R(C_U)=
 \frac{\max\{0,B_R-C_U\}}{P}.
 ++++
 
-This is a conditional robustness function, not an unconditional identified
-filing-rate lower bound.
+This is a conditional population / processing-row overlap robustness function,
+not a filing rate, participation estimate, or unconditional identified lower
+bound.
 
 == Threshold proposition
 
 For any externally supplied admissibility threshold stem:[A\in[0,1]], the
-benchmark-adjusted participation rate remains above stem:[A] for every
+benchmark overlap rate remains above stem:[A] for every
 untracked mismatch budget satisfying
 
 [stem]

@@ -89,7 +89,7 @@ frontier is already valid without a point estimate of `C_U`.  Its bounded FY2024
 public-source tightening audit is now also stopped: the NTA annual-report
 self-assessment tables do not split Table 2-1 final-return persons by residence
 status, and incompatible population stocks or withholding statistics cannot set
-`C_U`.  Reopen only for a directly comparable frame/filing crosswalk or person
+`C_U`.  Reopen only for a directly comparable frame/processing-row crosswalk or person
 count, or a substantive administrative-information response.
 
 == M2 VAT decision-readiness boundary

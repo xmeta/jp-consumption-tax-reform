@@ -1,4 +1,4 @@
-Scenario,C_U persons,Remaining nominal overlap benchmark,Robustness rate
+Scenario,C_U persons,Remaining nominal overlap benchmark,Benchmark overlap rate (not filing rate)
 C_U=0,0,"11,353,338",9.0001%
 C_U=1m,"1,000,000","10,353,338",8.2074%
 C_U=2m,"2,000,000","9,353,338",7.4147%

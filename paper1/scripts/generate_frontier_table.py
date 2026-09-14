@@ -30,7 +30,7 @@ def build():
 def render(rows):
     lines = [
         "Scenario,C_U persons,Remaining nominal overlap benchmark,"
-        "Robustness rate"
+        "Benchmark overlap rate (not filing rate)"
     ]
     for row in rows:
         escaped = []
