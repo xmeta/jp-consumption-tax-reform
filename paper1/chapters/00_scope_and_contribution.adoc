@@ -18,10 +18,11 @@ Second, we distinguish observed moments, partial identified sets, reference
 selections, sensitivity constructions, recovered prior-run evidence, and
 quantities that remain not identified.
 
-Third, we derive a reproducible stage-1 filing-participation robustness
-frontier using the exact NTA Table 2-1 Final-return processing row as a public
-benchmark.  The result leaves the unresolved number of frame-incompatible
-persons in that processing-row benchmark explicit rather than imputing it.
+Third, we derive a reproducible stage-1 population / processing-row overlap
+robustness diagnostic using the exact NTA Table 2-1 Final-return processing row
+as a public benchmark.  The diagnostic leaves the unresolved number of
+frame-incompatible persons in that processing-row benchmark explicit rather
+than imputing a filing rate.
 
 Fourth, after pre-specifying each model before inspecting its endpoints, we
 report three model-contingent transport diagnostics and a fourth fixed-budget

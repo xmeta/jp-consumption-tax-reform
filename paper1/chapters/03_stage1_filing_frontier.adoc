@@ -1,4 +1,4 @@
-== Stage-1 filing-participation robustness frontier
+== Stage-1 population / processing-row overlap robustness diagnostic
 
 The first selection step asks how strongly the public survey-frame benchmark
 can constrain overlap with the NTA Table 2-1 Final-return processing-row benchmark.
@@ -69,8 +69,10 @@ B_R =
 {stage1-residual-benchmark}.
 ++++
 
-At zero additional untracked mismatch, this corresponds to a benchmark rate of
-{stage1-robustness-rate-cu0-pct}%.
+At zero additional untracked mismatch, this corresponds to a benchmark overlap
+rate of {stage1-robustness-rate-cu0-pct}% relative to the deliberately loose
+Census denominator stem:[P].  This is not a filing rate, a participation
+estimate, or an unconditional lower bound.
 
 === General untracked-mismatch frontier
 
@@ -84,7 +86,7 @@ R(C_U)=
 ++++
 
 For any externally supplied admissibility threshold stem:[A\in[0,1]], the
-benchmark-adjusted rate remains above stem:[A] whenever
+benchmark overlap rate remains above stem:[A] whenever
 
 [stem]
 ++++
@@ -93,17 +95,21 @@ C_U<C_U^*(A),
 C_U^*(A)=\max\{0,B_R-PA\}.
 ++++
 
-This is the main stage-1 result. The function stem:[C_U^*(A)] gives the exact
-break-even mismatch budget implied by the public-data benchmark for any
-externally supplied threshold. It does not identify the actual value of
-stem:[C_U] and therefore does not unconditionally reject any threshold.
+This is a stage-1 identification diagnostic, not a filing-rate estimate.  The
+function stem:[C_U^*(A)] gives the exact break-even mismatch budget implied by
+the public-data benchmark for any externally supplied threshold.  It does not
+identify the actual value of stem:[C_U] and therefore does not identify an
+actual filing rate or unconditionally reject any threshold.  The published-
+source audit also found no directly comparable resident/non-resident person
+split for the Table 2-1 processing row, so no institutional point value, upper
+bound, or sensitivity range is imposed on stem:[C_U].
 
 === Robustness grid
 
 The following generated grid illustrates stem:[R(C_U)] without relying on any
 recovered V6 threshold.
 
-.Stage-1 robustness rate as the total untracked mismatch budget increases
+.Stage-1 benchmark overlap rate as the total untracked mismatch budget increases
 [%header,format=csv]
 |===
 include::{docdir}/data/stage1_frontier_table.csv[]

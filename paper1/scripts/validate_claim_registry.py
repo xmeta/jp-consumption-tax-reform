@@ -85,6 +85,12 @@ def main():
         errors.append("P1-C07 must remain a non-inferential reproduced point check")
     if by_id["P1-C08"]["status"] != "ROBUSTNESS_FRONTIER_REPRODUCED":
         errors.append("P1-C08 must remain a reproduced robustness frontier")
+    c08_allowed = by_id["P1-C08"]["allowed_claim"].lower()
+    c08_forbidden = by_id["P1-C08"]["forbidden_claim"].lower()
+    if "benchmark-overlap" not in c08_allowed:
+        errors.append("P1-C08 must frame the frontier as a benchmark-overlap diagnostic")
+    if "filing/participation rate" not in c08_forbidden:
+        errors.append("P1-C08 must forbid filing/participation-rate interpretation")
     if by_id["P1-C09"]["status"] != "DOCUMENTED_PRIOR_RUN_NOT_REPRODUCED":
         errors.append("P1-C09 recovered threshold must remain unreproduced")
     if by_id["P1-C10"]["status"] != "NOT_READY":
@@ -134,6 +140,8 @@ def main():
     prohibited = [
         "income_tax = READY",
         "filing rate is point identified",
+        "stage-1 filing-participation robustness frontier",
+        "benchmark-adjusted participation rate",
         "fully sharp identified set",
         "score_power=2.0 prior is rejected whenever",
         "replacement transport-relaxation lp identifies the filer mtr",

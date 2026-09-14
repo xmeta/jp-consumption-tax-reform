@@ -1,4 +1,4 @@
-= F71561 Stage-1 Filing Participation: Robustness Frontier
+= F71561 Stage-1 Population / Processing-Row Overlap Robustness Diagnostic
 :revdate: 2026-09-08
 :stem: latexmath
 
@@ -51,8 +51,9 @@ C_U^*(A)=
 \max\{0,11{,}353{,}338-126{,}146{,}099A\}.
 ++++
 
-This function is the reproduced stage-1 result. It does not identify the actual
-stem:[C_U] and therefore does not imply an unconditional threshold rejection.
+This function is the reproduced stage-1 overlap diagnostic. It does not identify
+the actual stem:[C_U], an actual filing rate, or an unconditional threshold
+rejection.
 
 Recovered V6 threshold values are kept outside the reproduced result set until
 their source-generating chain is restored.
