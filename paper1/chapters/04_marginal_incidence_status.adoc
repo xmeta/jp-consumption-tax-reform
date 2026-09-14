@@ -281,8 +281,79 @@ sensitivity budget, not an estimate of the true cross-system rank error.
 stem:[Delta=5] is the unrestricted-coupling endpoint for two equal ten-bin
 margins.
 
-The resulting discrepancy frontier is generated directly from the committed
-research output:
+===== Proposition: aggregate-rate lower bound on common symmetric discrepancy
+
+Let stem:[p_d=r_d^{PF}] be the pseudo modeled-positive-event rate in decile
+stem:[d], stem:[b_d=r_d^B] the transported NTA positive-balance rate, and
+
+[stem]
+++++
+m_d=\min_{s\in\mathcal S}u_{ds}
+++++
+
+the minimum pseudo positive-event rate attainable over the thirteen fixed
+scenarios in that decile.  The v3 bridge imposes
+stem:[|p_d-b_d|\le\varepsilon] for every decile, while the scenario simplex
+implies stem:[p_d\ge m_d].  Because the NTA transport preserves the aggregate
+positive-balance rate stem:[\bar b], averaging the one-sided implication
+stem:[p_d-b_d\le\varepsilon] yields
+
+[stem]
+++++
+\varepsilon
+\ge {1\over10}\sum_{d=1}^{10}p_d-\bar b
+\ge {1\over10}\sum_{d=1}^{10}m_d-\bar b.
+++++
+
+For the committed v3 inputs,
+
+[stem]
+++++
+{1\over10}\sum_dm_d=0.307486,\qquad \bar b=0.220795,
+++++
+
+so every feasible v3 solution, regardless of stem:[T] or stem:[Delta], must
+satisfy stem:[\varepsilon\ge0.086691], i.e. **8.6691 percentage points**.
+This is an aggregate-rate compatibility bound, not a rank-transport result.
+
+===== Corollary: aggregate rate plus non-negativity
+
+The transported NTA rates also satisfy stem:[b_d\ge0].  Combining this with
+stem:[p_d\ge m_d] and the symmetric bridge gives
+
+[stem]
+++++
+b_d\ge\max\{0,m_d-\varepsilon\}.
+++++
+
+Since stem:[\sum_db_d=10\bar b], aggregate feasibility therefore requires
+
+[stem]
+++++
+\sum_{d=1}^{10}\max\{0,m_d-\varepsilon\}\le10\bar b,
+++++
+
+or, equivalently,
+
+[stem]
+++++
+\sum_{d=1}^{10}\min\{m_d,\varepsilon\}
+\ge\sum_{d=1}^{10}m_d-10\bar b.
+++++
+
+The smallest stem:[\varepsilon] satisfying this scalar water-filling condition
+is **8.6825 percentage points** (0.0868252768522 before percentage-point scaling), as
+independently recorded in
+`rank_bridge_lp_v3_analytical_rate_floor.csv`.  The 0.0134-percentage-point
+increase over the 8.6691-point mean bound is therefore induced by decile-rate
+non-negativity at the aggregate layer, not by rank transport.  Appendix B gives
+the same derivation in the common v2-v5 notation.
+
+===== Rank-transport LP as refinement and check
+
+The full LP is still needed to determine whether grouped-rank and transport
+restrictions force a discrepancy above that analytical floor.  The resulting
+frontier is generated directly from the committed research output:
 
 .Rank-transport v3 minimum-discrepancy frontier
 [%header,format=csv]
@@ -292,32 +363,30 @@ include::{docdir}/data/rank_bridge_v3_frontier_table.csv[]
 
 At `Delta=0`, v3 reproduces v2 exactly:
 stem:[\varepsilon_3^*=14.9016] percentage points, including all 84
-minimum-relaxation endpoint objectives in the executable regression test.  At
-the first positive pre-specified budget, `Delta=0.25`, the minimum common
-discrepancy falls to 8.6825 percentage points, a 6.2191-percentage-point
+minimum-relaxation endpoint objectives in the executable regression test, so
+exact-rank restrictions add substantial incompatibility above the aggregate
+floor.  At the first
+positive pre-specified budget, `Delta=0.25`, the LP attains 8.6825 percentage
+points, exactly the aggregate/non-negativity floor, a 6.2191-percentage-point
 reduction relative to exact same-rank matching.  It remains 8.6825 percentage
 points for every larger pre-specified budget through the unrestricted
 stem:[Delta=5] endpoint.
 
-This plateau can be reproduced without solving the full rank-transport LP.
-Across the fixed thirteen pseudo-filer scenarios, the equal-decile average of
-the decile-specific *minimum* pseudo shares with modeled annual income tax
-greater than zero is 30.7486%.  The NTA Table 2-2(1) aggregate
-positive-self-assessed-balance rate is 22.0795%.  Their
-simple average-rate gap is 8.6691 percentage points.  Requiring transported
-NTA decile rates to remain nonnegative raises the unrestricted common
-discrepancy floor slightly to 8.6825 percentage points; the independent
-water-filling calculation in
-`rank_bridge_lp_v3_analytical_rate_floor.csv` exactly matches the LP
-frontier.  The separately pre-specified stem:[\varepsilon=0] problem remains
-infeasible even when rank coupling is unrestricted.
+The plateau follows directly from the proposition and the attained
+`Delta=0.25` solution.  The analytical 8.6825-point floor is independent of
+stem:[Delta], so no larger rank budget can push the optimum below it; and every
+solution feasible at `Delta=0.25` remains feasible when stem:[Delta] is relaxed.
+Thus the rank restrictions cease to determine the optimum on the positive
+pre-specified grid.  The separately pre-specified stem:[\varepsilon=0]
+problem remains infeasible even when rank coupling is unrestricted.
 
-These results narrow the interpretation of the v2 discrepancy.  Allowing a
+This hierarchy narrows the interpretation of the v2 discrepancy.  Allowing a
 small amount of rank transport removes much of the additional incompatibility
-created by exact same-rank matching, but arbitrary rank transport cannot remove
-the residual cross-concept aggregate-rate incompatibility *within the fixed v3
-model and pseudo-filer scenario set*.  This does not establish that either public source
-is erroneous, nor does it identify a true cross-system rank map.
+created by exact same-rank matching, while the residual positive-budget floor
+is already forced by aggregate cross-event rates and non-negativity *within the
+fixed v3 model and thirteen-scenario set*.  It does not establish that either
+public source is erroneous, estimate measurement error, equate the two tax
+events, identify a true cross-system rank map, or provide a causal bound.
 
 The raw v3 research artifacts also contain MTR endpoints evaluated exactly on
 the minimum-discrepancy frontier.  For positive stem:[Delta] those endpoints
