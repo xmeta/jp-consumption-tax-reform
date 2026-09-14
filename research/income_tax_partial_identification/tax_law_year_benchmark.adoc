@@ -1,50 +1,77 @@
-= 2024 tax-law same-year benchmark
+= 2024 tax-law 2x2 benchmark
 
 == Status
 
-`SENSITIVITY_ONLY_NOT_IDENTIFIED_TAX_LAW_YEAR_BENCHMARK`.
+`SENSITIVITY_ONLY_NOT_IDENTIFIED_TAX_LAW_YEAR_2X2_BENCHMARK`.
 
-This Issue-133 benchmark reruns the existing pseudo-filer construction on the
-same 2024 household and administrative aggregates under two statutory-law
-sets: 2024 and 2026. It does not change the frozen v2-v5 specifications or
-their committed 2026-law outputs.
+Issue 133 uses the same 2024 household and administrative aggregates and the
+same frozen v2--v5 bridge specifications throughout.  The benchmark varies two
+model inputs separately: the statutory tax-law year used to evaluate pseudo tax
+units, and the statutory tax-law year under which each decile/scenario nuisance
+income scale was calibrated.
 
 == Reproducible statutory inputs
 
-The 2024 law set is generated from repository-tracked National Tax Agency
-2024 filing-guide pages covering employment income, public-pension
-miscellaneous income, the basic deduction, dependent deductions, and the
-ordinary progressive income-tax quick table. Each raw source is registered in
+The 2024 law set is generated from repository-tracked National Tax Agency 2024
+filing-guide pages covering employment income, public-pension miscellaneous
+income, the basic deduction, dependent deductions, and the ordinary progressive
+income-tax quick table.  Each raw source is registered in
 `data/source_catalog.csv` with its locator and SHA-256; the normalized rules are
 `data/derived/income_tax_2024_statutory_parameters.csv`.
 
-== Comparison
+The Table-17 dependent-composition sensitivity now applies the dependent-
+deduction amounts from the selected statutory-law module.  The ordinary 2026
+production path retains its pre-existing values exactly; the 2024 benchmark no
+longer obtains its statutory amounts from the 2026-derived proxy column.
 
-`run_tax_law_year_benchmark.py` reuses the same 13 pseudo-filer scenarios and
-the same v2-v5 LP implementations. Only the statutory-law functions are
-switched. The 2026-law run is regression-checked against the already committed
-headline artifacts before the 2024-law contrast is interpreted.
+== 2x2 design
 
-For the central pseudo-filer scenario, the equal-decile mean modeled-positive
-share is 55.5332% under 2024 law versus 45.0780% under 2026 law. The v2
-same-rank minimum symmetric discrepancy is 23.0907 pp versus 14.9016 pp. At
-`Delta=0.25`, the v3 minimum discrepancy is 16.5159 pp versus 8.6825 pp. On
-the inherited v4 104-point grid, 45 points are feasible under 2024 law versus
-70 under 2026 law, and the first feasible grid epsilon at `Delta=0.25` moves
-from 10.0 pp to 17.5 pp.
+`run_tax_law_year_benchmark.py` first calibrates the nuisance scales under 2024
+law and under 2026 law.  It then evaluates both statutory-law sets under each
+fixed scale map.  The four cells are therefore:
 
-The one-sided v5 result is qualitatively more robust: `eta*=0` remains feasible
-at `Delta=0`, `0.25`, and `5` under both law years. The conditional MTR
-envelope still changes: at `Delta=0`, the taxable-income-weighted envelope is
-9.3559--11.5847% under 2024 law versus 10.0884--12.8680% under 2026 law.
+* 2024 law / 2024-law calibration: same-year recalibrated benchmark;
+* 2026 law / 2024-law calibration: law substitution holding the 2024 scale fixed;
+* 2024 law / 2026-law calibration: reverse law substitution holding the 2026 scale fixed;
+* 2026 law / 2026-law calibration: committed headline regression control.
+
+The 2026/2026 cell reproduces the frozen v2--v5 headline artifacts.  The two
+off-diagonal cells isolate the mechanical law substitution from nuisance-scale
+recalibration *within this model*.
+
+== Results
+
+The diagonal comparison remains material: v2 is 23.0907 pp in the 2024/2024
+cell versus 14.9016 pp in the 2026/2026 cell, and v3 at `Delta=0.25` is 16.5159
+pp versus 8.6825 pp.  The diagonal central modeled-positive share is 55.5332%
+versus 45.0780%.
+
+Holding the 2024-calibrated nuisance scales fixed, substituting 2026 law for
+2024 law moves the central modeled-positive share from 55.5332% to 36.0724%,
+v2 from 23.0907 to 12.0629 pp, and v3 at `Delta=0.25` from 16.5159 to 4.5562
+pp; v4 feasibility rises from 45/104 to 85/104 grid points.  Holding the
+2026-calibrated scales fixed gives the same qualitative result: the modeled-
+positive share moves from 59.7184% to 45.0780%, v2 from 28.1125 to 14.9016 pp,
+v3 from 19.3563 to 8.6825 pp, and v4 feasibility from 36/104 to 70/104.
+
+Thus the mechanical law substitution is material under either calibration
+anchor.  Recalibration offsets part of that movement, which is why the diagonal
+2024/2024-to-2026/2026 change is smaller than either fixed-calibration v2 or v3
+law substitution.  The exact decomposition is path-dependent because the
+model is nonlinear.
+
+The one-sided v5 conclusion is more robust: `eta*=0` at `Delta=0` in all four
+cells.  Its conditional taxable-income-weighted MTR envelope still varies, from
+7.6523--11.5982% in the 2026-law/2024-calibration cell to 10.1944--12.6557% in
+the 2024-law/2026-calibration cell.
 
 == Interpretation
 
-The contrast demonstrates material *tax-law-year sensitivity*. It does not
-identify a causal or additive contribution of the 2024-to-2026 law change to
-any bridge discrepancy, because the pseudo-filer nuisance scale is recalibrated
-and the underlying household/tax-administration population, tax-event, tax-unit,
-and rank mismatches remain unresolved. Accordingly, the 2026-law v2-v4
-symmetric discrepancies must not be described as pure rank, frame, event, or
-measurement mismatch. The same-year benchmark is a companion sensitivity, not
-a replacement identified result.
+The 2x2 grid separates statutory-law substitution from nuisance recalibration
+algebraically inside the specified pseudo-filer model.  It does **not** identify
+a causal or population-level additive contribution of the 2024-to-2026 law
+change.  Population/frame, tax-event, tax-unit, pseudo-unit, and rank mismatches
+remain unresolved, and the two decomposition paths need not assign the same
+share to law substitution versus recalibration.  P1-C18 therefore remains a
+reproduced sensitivity result rather than an identified, causal, or policy-
+usable estimate.

@@ -141,6 +141,13 @@ def public_pension_misc_income_2026(gross_pension_yen, age65plus, other_income_y
         out += 100_000.0
     return min(max(out, 0.0), g)
 
+
+def dependent_deduction_amounts():
+    return {
+        r["rule_id"]: float(r["constant_yen"])
+        for r in _BY_GROUP["dependent_deduction"]
+    }
+
 # Generic aliases used by the tax-law-year benchmark engine.
 employment_income = employment_income_2026
 basic_deduction = basic_deduction_2026
